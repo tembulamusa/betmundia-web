@@ -33,6 +33,16 @@
     /* overflow: hidden; */
 }
 
+.colored-bg {
+    background: rgb(231, 6, 84);
+    color: #ffffff;
+}
+
+.light-bg {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
 .game-buttons {
     position: absolute;
     left: 50%;
@@ -58,7 +68,10 @@
     font-weight: bold;
 }
 
-.casino-demo-btn {
+.casino-demo-btn,
+.casino-demo-btn.btn-primary,
+.casino-demo-btn.btn-primary:focus,
+.casino-demo-btn.btn-primary:hover {
     background-color: #f0f0f0 !important;
     border: 2px solid #eee !important;
     color: #666 !important;
@@ -304,7 +317,7 @@
     overflow: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
 }
 
 .primary-color {

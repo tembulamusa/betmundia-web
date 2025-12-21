@@ -28,7 +28,7 @@ const LoginModal = (props) => {
                 dialog className="popover-login-modal"
                 aria-labelledby="contained-modal-title-vcenter">
                 <Modal.Header closeButton className="no-header">
-                    <Modal.Title>LOGIN IN TO betmundial</Modal.Title>
+                    <Modal.Title className="uppercase">Login To BetMundial</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-0">
                     <BodyLogin setUser={setUser} />

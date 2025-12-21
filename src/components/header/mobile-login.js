@@ -223,7 +223,7 @@ const BodyLogin = (props) => {
                         <div className='row !pr-0 px-0 !mr-0'>
                             <div className='col-3'><button className='mt-4 btn btn-default btn-lg' style={{
                                 marginTop: "10px",
-                                padding: "8px 12px", 
+                                padding: "8px 12px",
                                 fontSize: "14px",
                                 background: "#151525",
                                 color: "#ffffff",
@@ -231,7 +231,7 @@ const BodyLogin = (props) => {
                             }} onClick={() => dispatch({ type: "SET", key: "showloginmodal", payload: false })}>Cancel</button></div>
                             <div className='col-9 !pr-0'>
                                 <button
-                                    className={`btn btn-lg btn-primary mt-4 deposit-withdraw-button`}
+                                    className={`btn btn-lg btn-primary mt-4 w-full`}
                                     type="submit" style={{
                                         marginTop: "10px",
                                         padding: "5px", fontSize: "14px"

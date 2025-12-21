@@ -6,12 +6,12 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import Breakfast from '../../assets/img/banner/carousel/breakfast.jpg';
 import App from '../../assets/img/banner/carousel/app.jpg';
 import Sharebet from '../../assets/img/banner/carousel/Sharebet.png';
-import FreeBet from '../../assets/img/banner/carousel/1.jpg';
-import MultiBet from '../../assets/img/banner/carousel/multibet.png';
-import Epl from '../../assets/img/banner/carousel/moses-epl.png';
-import Live from '../../assets/img/banner/carousel/Live-Betting.jpg';
+import MultiBet from '../../assets/img/banner/carousel/multibet.jpg';
+import Epl from '../../assets/img/banner/carousel/vuna.jpg';
+import Live from '../../assets/img/banner/carousel/live.png';
 import Casino from '../../assets/img/banner/carousel/casino.png';
 import Jackpot from '../../assets/img/banner/carousel/jackpot.jpg';
+import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpg';
 import { Link } from 'react-router-dom';
 
 
@@ -31,9 +31,9 @@ const CarouselLoader = (props) => {
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={FreeBet}
+                    src={Breakfast}
                     onLoad={onImageLoaded}
-                    alt="betmundial"
+                    alt="breakfast"
                     effects="blur"
                 />
             </Carousel.Item>
@@ -41,9 +41,9 @@ const CarouselLoader = (props) => {
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={Breakfast}
+                    src={MundialLeague}
                     onLoad={onImageLoaded}
-                    alt="breakfast"
+                    alt="betmundial"
                     effects="blur"
                 />
             </Carousel.Item>

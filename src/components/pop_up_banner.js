@@ -3,25 +3,23 @@ import { Modal, Button } from "react-bootstrap";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useNavigate } from "react-router-dom";
 import { getFromLocalStorage } from "./utils/local-storage";
+import { Link } from 'react-router-dom';
+
+import AviatorImg from '../assets/img/popups/aviator.jpg';
+import AviatrixImg from '../assets/img/popups/aviatrix.jpg';
+import JetXImg from '../assets/img/popups/jetx.jpg';
+import VirtualLeagueImg from '../assets/img/popups/mundial-league.jpg';
+import SpacemanImg from '../assets/img/popups/spaceman.jpg';
 
 const images = [
-    { src: "../assets/img/popups/aviator.jpg", link: "/casino-game/aviator/aviator" },
-    { src: "../assets/img/popups/2.1.jpg", link: "/casino-game/aviatrix/aviatrix/sure-popular" },
-    { src: "../assets/img/popups/3.1.jpg", link: "/casino-game/smartsoft/jetx/sure-popular" },
-    { src: "../assets/img/popups/4.1.jpg", link: "/casino-game/eurovirtuals/virtual-league" },
-    { src: "../assets/img/popups/5.1.jpg", link: "/casino-game/pragmatic/spaceman/sure-popular" },
+    { src: AviatorImg, link: "/casino-game/aviator/aviator" },
+    { src: AviatrixImg, link: "/casino-game/aviatrix/aviatrix/sure-popular" },
+    { src: JetXImg, link: "/casino-game/smartsoft/jetx/sure-popular" },
+    { src: VirtualLeagueImg, link: "/casino-game/eurovirtuals/virtual-league" },
+    { src: SpacemanImg, link: "/casino-game/pragmatic/spaceman/sure-popular" },
 ];
 
-const loadBannerImg = (img) => {
 
-    let sport_image;
-    try {
-        sport_image = require(img);
-    } catch (error) {
-        sport_image = require(`../assets/img/popups/aviator.jpg`);
-    }
-    return sport_image
-}
 
 const PopupBanner = () => {
     const navigate = useNavigate();
@@ -73,18 +71,20 @@ const PopupBanner = () => {
 
                     <Modal.Body className="p-0 d-flex flex-column align-items-center">
                         {/* Image */}
-                        <LazyLoadImage
-                            className="popup-responsive-image"
-                            src={loadBannerImg(randomImage.src)}
-                            alt="Popup Promotion"
-                        />
+                        <Link to={randomImage.link}>
+                            <LazyLoadImage
+                                className="popup-responsive-image"
+                                src={randomImage.src}
+                                alt="Popup Promotion"
+                            />
+                        </Link>
 
                         <div className="buttons-container">
                             <Button
                                 onClick={() => setShow(false)}
-                                className="no-thanks-button text-xl"
+                                className="no-thanks-button text-xl btn-default !bg-transparent border-1 border-white"
                             >
-                                Cancel
+                                Close
                             </Button>
                             <Button
                                 onClick={handlePlayNow}

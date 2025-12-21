@@ -4,8 +4,9 @@ import { Context } from "../../context/store";
 import { Link, useNavigate } from "react-router-dom";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import MundialLeagueImg from '../../assets/img/casino/mundial-league-thumbnail.jpg';
 import { Button } from "react-bootstrap";
-import {isMobile} from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 
 
@@ -15,12 +16,12 @@ const PopularGames = (props) => {
     const navigate = useNavigate();
     const [alertMessage, setAlertMessage] = useState({})
 
-    const fetchTopCasino = async() => {
+    const fetchTopCasino = async () => {
         let endpoint = "top-games-list";
-        await makeRequest({url: endpoint, method: "GET", api_version:"casinoGames"}).then(([status, result]) => {
+        await makeRequest({ url: endpoint, method: "GET", api_version: "casinoGames" }).then(([status, result]) => {
             if (status == 200) {
                 setLocalStorage("toppopularcasino", result)
-                dispatch({type:"SET", key: "toppopularcasino", payload: result});             
+                dispatch({ type: "SET", key: "toppopularcasino", payload: result });
             }
         });
     }
@@ -30,7 +31,7 @@ const PopularGames = (props) => {
         if (!getTopCasino) {
             fetchTopCasino();
         } else {
-            dispatch({type: "SET", key:"toppopularcasino", payload: getTopCasino});
+            dispatch({ type: "SET", key: "toppopularcasino", payload: getTopCasino });
         }
 
     }, [])
@@ -40,8 +41,8 @@ const PopularGames = (props) => {
         let sport_image;
         try {
             sport_image = imgUrl;
-            if(sport_image.trim() == "") {
-                sport_image = require(`../../assets/img/casino/default.png`);  
+            if (sport_image.trim() == "") {
+                sport_image = require(`../../assets/img/casino/default.png`);
             }
         } catch (error) {
             sport_image = require(`../../assets/img/casino/default.png`);
@@ -49,7 +50,7 @@ const PopularGames = (props) => {
         return sport_image
     }
 
-    const launchGame = async (game, moneyType=1) => {
+    const launchGame = async (game, moneyType = 1) => {
         if (game?.aggregator?.toLowerCase() == "suregames") {
             navigate(`/${game?.game_id.toLowerCase()}`)
             return
@@ -76,26 +77,25 @@ const PopularGames = (props) => {
                 return false
             }
         });
-}
+    }
     return (
         <div className="popular-games marquee-card !mr-0 !pl-3">
             {
-                state?.toppopularcasino && 
+                state?.toppopularcasino &&
                 state?.toppopularcasino[0]?.gameList?.map((game, idx) => (
                     <div>
                         <div
                             className="cursor-pointer popular-game casino-game"
-                            onClick={() => launchGame(game, 1)}      
+                            onClick={() => launchGame(game, 1)}
                             key={game.game_id}>
-
-                            <LazyLoadImage 
-                                src={getCasinoImageIcon(game.image_url)}
+                            <LazyLoadImage
+                                src={game?.provider_name.toLowerCase() === "unicraft" ? MundialLeagueImg : getCasinoImageIcon(game.image_url)}
                                 alt={game?.game_name}
-                                className={'virtual-game-image'}/>
+                                className={'virtual-game-image'} />
                         </div>
                     </div>
                 ))
-                
+
             }
 
         </div>

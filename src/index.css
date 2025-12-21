@@ -1333,6 +1333,24 @@ img.highlights-content-img {
   width: 50%;
 }
 
+.btn-primary {
+  background-color: #e50658 !important;
+  border-color: #e50658 !important;
+  padding: 8px 10px !important;
+}
+
+.btn-primary:hover {
+  background-color: #e50658 !important;
+  border-color: #e50658 !important;
+}
+
+.btn-default {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  padding: 8px 10px !important;
+}
+
 .popular-game {
   width: 160px;
   height: 100%;

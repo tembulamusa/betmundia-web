@@ -5,21 +5,20 @@ import { getFromLocalStorage } from "../utils/local-storage";
 
 import Two from "../../assets/img/casino/carousel/2.jpg";
 import Nine from "../../assets/img/casino/carousel/9.jpg";
-import Ten from "../../assets/img/casino/carousel/10.png";
-import Eleven from "../../assets/img/casino/carousel/11.jpg";
+import Ten from "../../assets/img/casino/carousel/10.jpg";
 import Thirteen from "../../assets/img/casino/carousel/13.jpg";
 import Fourteen from "../../assets/img/casino/carousel/14.png";
 import Fifteen from "../../assets/img/casino/carousel/15.png";
 import Sixteen from "../../assets/img/casino/carousel/16.jpg";
+import MundiaLeague from "../../assets/img/casino/carousel/mundial-league.jpg";
 
 const banners = [
     { src: Fifteen, link: "/casino-game/aviator/aviator", requiresAuth: true },
     { src: Two, link: "/casino-game/pragmatic/spaceman/sure-popular", requiresAuth: true },
     { src: Nine, link: "/casino-game/smartsoft/jetx/sure-popular", requiresAuth: true },
     { src: Ten, link: "/casino-game/aviatrix/aviatrix/sure-popular", requiresAuth: true },
-    { src: Eleven, link: "/surecoin", requiresAuth: false },
     { src: Thirteen, link: "/casino", requiresAuth: false },
-    // { src: Fourteen, link: "/casino-game/eurovirtuals/virtual-league", requiresAuth: true },
+    { src: MundiaLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
     { src: Sixteen, link: null, requiresAuth: false }, 
 ];
 

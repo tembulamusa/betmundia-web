@@ -67,7 +67,7 @@ const CasinoJackpots = () => {
   };
 
   return (
-    <section className="p-6 bg-primary text-white w-full">
+    <section className="p-6 py-3 bg-primary text-white w-full">
       <h2 className="text-left text-3xl text-custom-orange ">Casino Jackpots</h2>
       <div className="relative flex justify-center items-center w-full">
         {/* Navigation Arrows on Mobile */}
@@ -111,7 +111,7 @@ const CasinoJackpots = () => {
               >
                 <div
                   className={`p-4 rounded-lg border-2 ${tier.bg} ${tier.text} transition-all duration-500 cursor-pointer shadow-lg
-                    ${isActive ? `${tier.desc}-bg` : "primary-color"}
+                    ${isActive ? `${tier.desc}-bg` : "light-bg"}
                     w-full sm:w-[calc(100%-1rem)] md:w-[calc(50%-1rem)] lg:w-[calc(25%-1rem)] mx-2`}
                 >
                   <p className="text-lg font-semibold">{tier.name || jackpot.name}</p>
