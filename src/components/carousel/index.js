@@ -105,7 +105,7 @@ const CarouselLoader = (props) => {
                 </Link>
             </Carousel.Item>
 
-            <Carousel.Item >
+            {/* <Carousel.Item >
                 <Link to={"/jackpot"}>
                     <img
                         className="d-block w-100"
@@ -116,7 +116,7 @@ const CarouselLoader = (props) => {
                         effects="blur"
                     />
                 </Link>
-            </Carousel.Item>
+            </Carousel.Item> */}
 
             <Carousel.Item >
                 <Link to={"/app"}>
