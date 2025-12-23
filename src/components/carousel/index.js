@@ -27,7 +27,7 @@ const CarouselLoader = (props) => {
             indicators={false}
             className='banner-imgs'>
 
-            <Carousel.Item >
+            {/* <Carousel.Item >
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
@@ -36,7 +36,7 @@ const CarouselLoader = (props) => {
                     alt="breakfast"
                     effects="blur"
                 />
-            </Carousel.Item>
+            </Carousel.Item> */}
             <Carousel.Item >
                 <img
                     className="d-block w-100"
