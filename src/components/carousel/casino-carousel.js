@@ -13,10 +13,10 @@ import Sixteen from "../../assets/img/casino/carousel/16.jpg";
 import MundiaLeague from "../../assets/img/casino/carousel/mundial-league.jpg";
 
 const banners = [
-    { src: Fifteen, link: "/casino-game/aviator/aviator", requiresAuth: true },
+    // { src: Fifteen, link: "/casino-game/aviator/aviator", requiresAuth: true },
     { src: Two, link: "/casino-game/pragmatic/spaceman/sure-popular", requiresAuth: true },
     { src: Nine, link: "/casino-game/smartsoft/jetx/sure-popular", requiresAuth: true },
-    { src: Ten, link: "/casino-game/aviatrix/aviatrix/sure-popular", requiresAuth: true },
+    // { src: Ten, link: "/casino-game/aviatrix/aviatrix/sure-popular", requiresAuth: true },
     { src: Thirteen, link: "/casino", requiresAuth: false },
     { src: MundiaLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
     { src: Sixteen, link: null, requiresAuth: false }, 
