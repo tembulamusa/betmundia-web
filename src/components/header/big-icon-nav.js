@@ -207,7 +207,7 @@ const BigIconMenu = () => {
                 style={{ maxWidth: '100%', backgroundColor: 'transparent' }}
             >
                 <ListGroup as="ul" horizontal className="flex space-x-4 big-icon-list">
-                    <li key={"home-menu-item"} className={`${pathname == "/home" || "/" ? "active" : ''} big-icon-item text-center capitalize`}>
+                    <li key={"home-menu-item"} className={`${pathname === "/" || pathname === "/home" ? "active" : ''} big-icon-item text-center capitalize`}>
                         <a href={"/"} title={"home"}>
                             <div className="big-icon-icon"><img className="mx-auto" src={getSportImageIcon("home.svg")} alt={"home"} /></div>
                             <div className="big-icon-name">{"Home"}</div>

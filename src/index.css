@@ -1970,20 +1970,22 @@ label {
 }
 
 .big-icon-name {
-  /* font-size: 0.85rem; */
+  font-size: 1.2rem;
   color: #ffffff;
   opacity: 0.7;
   font-weight: 400;
   flex-flow: wrap;
   display: flex;
+  text-align: center !important;
   white-space: nowrap;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .big-icon-icon img {
-  width: 32px;
-  height: 32px;
-  opacity: 0.8;
+  width: 44x;
+  height: 44px;
+  opacity: 0.9;
   transition: opacity 0.2s, filter 0.2s;
 }
 
@@ -1994,7 +1996,7 @@ label {
 .big-icon-item.active .big-icon-icon img {
   opacity: 1;
   /* Fully visible icon on active */
-  filter: brightness(0) invert(1);
+  /* filter: brightness(0) invert(1); */
   /* Makes the icon appear white */
 }
 

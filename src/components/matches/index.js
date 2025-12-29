@@ -1334,7 +1334,7 @@ export const JackpotMatchList = (props) => {
 
     return (
         <div className="matches is-jackpot-matches full-width mt-3">
-            <MatchHeaderRow jackpot={true} first_match={matches ? matches?.matches[0] : {}} />
+            <MatchHeaderRow three_way={true} jackpot={true} first_match={matches ? matches?.matches[0] : {}} />
             <Container className="web-element">
                 {(matches && Object.entries(matches?.matches) || [])?.map(([key, match]) => (
                     <>
@@ -1416,7 +1416,7 @@ const MatchList = (props) => {
                 live={live}
                 first_match={matches ? matches[0] : {}}
                 fetching={fetching}
-                three_way={three_way}
+                three_way
                 sub_types={subTypes}
                 subTypes={subTypes}
             />
