@@ -20,7 +20,7 @@ const Live = (props) => {
     const { sportid, categoryid, competitionid } = useParams();
     const [limit, setLimit] = useState(300);
     const [producers, setProducers] = useState([]);
-    const [threeWay, setThreeWay] = useState(true);
+    const [threeWay, setThreeWay] = useState(false);
     const [refresh, setRefresh] = useState(false);
     const [page,] = useState(1);
     const [betradarSportId, setBetradarSportId] = useState(1);
@@ -132,6 +132,7 @@ const Live = (props) => {
             }
             setBetradarSportId(state?.selectedLivesport?.betradar_sport_id)
         }
+        setThreeWay(['competition', 'threeway'].includes(state?.selectedLivesport?.sport_type?.toLowerCase()));
 
     }, [state?.selectedLivesport]);
 
@@ -164,7 +165,7 @@ const Live = (props) => {
             <CarouselLoader />
             {<MatchList
                 fetching={fetching}
-                three_way={state?.selectedLivesport ? state?.selectedLivesport?.sport_type == "threeway" : threeWay}
+                three_way
                 live
                 setReload={setReload}
                 matches={matches}
