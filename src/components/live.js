@@ -158,12 +158,13 @@ const Live = (props) => {
         }
     }, []);
 
+
     return (
         <>
             <CarouselLoader />
             {<MatchList
                 fetching={fetching}
-                three_way={state?.selectedLivesport ? state?.selectedLivesport?.sport_type == "threeway" : true}
+                three_way={state?.selectedLivesport ? state?.selectedLivesport?.sport_type == "threeway" : threeWay}
                 live
                 setReload={setReload}
                 matches={matches}

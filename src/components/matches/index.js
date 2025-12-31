@@ -184,18 +184,18 @@ const MatchHeaderRow = (props) => {
                         extraMarketDisplays?.map((extra_market) => (
                             <div className={`d-flex flex-column ${extra_market?.id == 18 ? "pr-0" : ""}`} key={extra_market.name}>
                                 <span className={'small text-center text-uppercase bold'}>
-                                    {extra_market.name}
+                                    {extra_market?.name}
                                 </span>
                                 <div className={'mt-3 c-btn-group'}>
                                     <a className="c-btn-header" href='#/'>
-                                        {(extra_market.extra_markets_display[0])}
+                                        {(extra_market?.extra_markets_display[0])}
                                     </a>
                                     <a className="c-btn-header" href='#/'>
-                                        {(extra_market.extra_markets_display[1])}
+                                        {(extra_market?.extra_markets_display[1])}
                                     </a>
                                     {extra_market?.extra_market_cols > 2 &&
                                         <a className={`c-btn-header`} href='#/'>
-                                            {(extra_market.extra_markets_display[2])}
+                                            {(extra_market?.extra_markets_display[2])}
                                         </a>}
                                 </div>
                             </div>
@@ -859,18 +859,31 @@ const MatchMarket = (props) => {
                 ((!jackpot || (jackpot && jackpotstatus == "ACTIVE") || live)
                     &&
                     market_status == "Active") && outcomes?.map((marketOdd, idx) => {
+                        const cleanedOddValue = (() => {
+                            let val = marketOdd?.odd_value;
+
+                            if (val == null) return val;
+
+                            // force string
+                            val = String(val);
+
+                            val = val.replace("java.math.BigDecimal,", "");
+
+                            return val;
+                        })();
+
                         let matchWithDetails = {
                             ...match,
                             market_status: market_status,
-                            ...marketOdd,
+                            odd_value: cleanedOddValue, // 👈 overridden here
                             producer_id: producerId || match?.odds?.[marketName]?.producer_id
                         };
-                        delete matchWithDetails.odds;
 
+                        delete matchWithDetails.odds;
                         return (
                             marketOdd.odd_active == 1
-                                && marketOdd.odd_value
-                                && (!pdown && marketOdd.odd_value !== 'NaN') || (jackpot && jackpotstatus == "ACTIVE")
+                                && matchWithDetails.odd_value
+                                && (!pdown && matchWithDetails.odd_value !== 'NaN') || (jackpot && jackpotstatus == "ACTIVE")
                                 ?
                                 <>
                                     <OddButton
@@ -991,11 +1004,11 @@ const MatchRow = (props) => {
         return (
             <>
                 {
-                    starttime == '0'
+                    starttime === '0'
                         ?
                         <span className=''>Not  Started</span>
                         :
-                        <span><span className='text-blue-700'>{diffHrs > 0 && diffHrs + " Hrs"} {startDiff >= 0 && diffMins + " Mins"}</span> to start</span>
+                        <span><span className='text-[#f0f0f0]'>{diffHrs > 0 && diffHrs + " Hrs"} {startDiff >= 0 && diffMins + " Mins"}</span> to start</span>
 
                 }
 
@@ -1028,7 +1041,7 @@ const MatchRow = (props) => {
                                     ?
                                     <>ID: {match?.game_id} </>
                                     :
-                                    <span className='text-red-500 ml-2'>
+                                    <span className='text-[#f0f0f0] ml-2'>
                                         {updatedMatchTime?.minutes == 90
                                             ?
                                             "90:00+"
@@ -1061,7 +1074,7 @@ const MatchRow = (props) => {
                     </div>
 
                     {(live) &&
-                        <div className="text-red-500 font-bold">
+                        <div className="text-[#FFB200] font-bold">
                             <br />
                             {teamScore((updatedMatchScore || match?.score), true)}
                             <br />
@@ -1099,6 +1112,7 @@ const MatchRow = (props) => {
                                         initialMatch={match}
                                         marketName={"1x2"}
                                         marketId={1}
+                                        buttonCount={3}
                                         special_bet_value=""
                                         jackpot={jackpot}
                                         jackpotstatus={jackpotstatus}
@@ -1117,6 +1131,7 @@ const MatchRow = (props) => {
                                         initialMatch={match}
                                         marketName={"Double Chance"}
                                         marketId={10}
+                                        buttonCount={3}
                                         betStop={betStop}
                                         special_bet_value=""
                                         jackpot={jackpot}
@@ -1134,6 +1149,7 @@ const MatchRow = (props) => {
                                     <MatchMarket
                                         initialMatch={match}
                                         marketName={"Total"}
+                                        buttonCount={2}
                                         marketId={18}
                                         transitioned={transitioned}
                                         setTransitioned={setTransitioned}

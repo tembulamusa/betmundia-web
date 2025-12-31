@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 27.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#DE0752;}
-	.st1{fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round;stroke-opacity:0.957;}
+	.st0{fill:#FFFFFF;}
 </style>
-<g id="BG">
-	<path class="st0" d="M191.4,200H17.2C7.7,200,0,192.3,0,182.8V17.2C0,7.7,7.7,0,17.2,0h174c4.9,0,8.8,4,8.8,8.8v182.6
-		C200,196.1,196.1,200,191.4,200z"/>
-	<path class="st1" d="M126.7,147.2H78.4 M22.1,100.6c0-18.4,0-27.6,4.2-35.2c4.2-7.6,11.8-12.4,27.1-21.8l16.1-10
-		c16.1-10,24.2-15,33.1-15s17,5,33.1,15l16.1,10c15.3,9.5,22.9,14.2,27.1,21.8c4.2,7.6,4.2,16.8,4.2,35.2v12.2
-		c0,31.4,0,47.1-9.4,56.8c-9.4,9.8-24.6,9.8-54.9,9.8H86.5c-30.3,0-45.5,0-54.9-9.8c-9.4-9.7-9.4-25.4-9.4-56.8V100.6z"/>
-</g>
-<g id="American_Footbal">
+<g>
+	<path class="st0" d="M184.2,79.3L158,60.1V33.9c0-2.6-2.1-4.8-4.8-4.8h-18.7c-2.6,0-4.8,2.1-4.8,4.8v5.5l-24.5-18
+		c-3.1-2.3-7.3-2.3-10.4,0l-79,58c-3.9,2.9-4.8,8.4-1.9,12.3s8.4,4.8,12.3,1.9L100,39.4l73.8,54.2c1.6,1.2,3.4,1.7,5.2,1.7
+		c2.7,0,5.4-1.2,7.1-3.6C189,87.7,188.2,82.2,184.2,79.3z"/>
+	<path class="st0" d="M30.2,101.1v71.7c0,5.3,4.3,9.6,9.6,9.6h34.9v-59.5c0-3.7,3-6.7,6.7-6.7h37.1c3.7,0,6.7,3,6.7,6.7v59.5h34.9
+		c5.3,0,9.6-4.3,9.6-9.6v-71.7L100,50L30.2,101.1z"/>
 </g>
 </svg>

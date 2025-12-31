@@ -1983,8 +1983,8 @@ label {
 }
 
 .big-icon-icon img {
-  width: 44x;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   opacity: 0.9;
   transition: opacity 0.2s, filter 0.2s;
 }
