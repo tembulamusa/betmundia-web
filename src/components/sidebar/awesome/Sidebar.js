@@ -304,9 +304,9 @@ const ProSidebar = (props) => {
                                                                         label={category?.category_name}
                                                                         icon={<img style={{ borderRadius: '50%', height: '15px' }}
                                                                             className=''
-                                                                            src={getSportImageIcon(category?.flag_icon, 'img/flags-1-1')}
+                                                                            src={getSportImageIcon(category?.cat_flag, 'img/flags-1-1')}
                                                                             alt='' />}
-                                                                        className='inner-submenu'
+                                                                        className={`inner-submenu`}
                                                                         key={idx}>
 
                                                                         {category?.competitions?.map((league, leagueKey) => (
