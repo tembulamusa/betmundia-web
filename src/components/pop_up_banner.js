@@ -14,9 +14,9 @@ import SpacemanImg from '../assets/img/popups/spaceman.jpg';
 const images = [
     // { src: AviatorImg, link: "/casino-game/aviator/aviator" },
     // { src: AviatrixImg, link: "/casino-game/aviatrix/aviatrix/sure-popular" },
-    { src: JetXImg, link: "/casino-game/smartsoft/jetx/sure-popular" },
+    // { src: JetXImg, link: "/casino-game/smartsoft/jetx/sure-popular" },
     { src: VirtualLeagueImg, link: "/casino-game/eurovirtuals/virtual-league" },
-    { src: SpacemanImg, link: "/casino-game/pragmatic/spaceman/sure-popular" },
+    // { src: SpacemanImg, link: "/casino-game/pragmatic/spaceman/sure-popular" },
 ];
 
 
