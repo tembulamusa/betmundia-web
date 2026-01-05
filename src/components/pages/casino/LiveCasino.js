@@ -92,7 +92,7 @@ const LiveCasino = (props) => {
             window.dga.connect(url)
         } catch (e) {
             // printed message
-            GiConsoleController.err
+            // GiConsoleController.err
         }
     }
 

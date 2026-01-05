@@ -92,7 +92,8 @@ const CasinoGame = (props) => {
                 {alertMessage && <div className="game-launch-issue"><Alert message={alertMessage} /></div>}
 
                 {
-                    game?.dg_available
+
+                    game?.game_type?.toLowerCase() == "live games"
                     &&
                     <div className="pragmatic">
                         <div id={`betlimit-${game?.['game_id']}`} className="prag-bet-limits">

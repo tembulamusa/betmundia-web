@@ -65,6 +65,7 @@ import PageviewTracker from "./components/utils/pageview-tracker";
 import { PromoTracker } from "./promo-tracker";
 import PromoWins from "./components/pages/promo-wins";
 import './index.css';
+import LiveCasino from "./components/pages/casino/LiveCasino";
 
 const container = document.getElementById("app");
 
@@ -93,6 +94,7 @@ const App = () => {
                                 <Routes>
 
                                     <Route exact path="/casino" element={<Casino />} />
+                                    <Route exact path="/live-casino" element={<LiveCasino />} />
                                     <Route exact path="/casino1" element={<CasinoHome />} />
                                     <Route exact path="/casino/:filterType" element={<Casino />} />
                                     <Route exact path="/casino/:filterType/:filterName" element={<Casino />} />

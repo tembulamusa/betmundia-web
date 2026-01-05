@@ -2,7 +2,7 @@ let xlg = {
     websocket: null,
     wsUri: null,
     tableId: null,
-    casinoId: "ppcwx00000016711",
+    casinoId: "ppcnq00000020079",
     tryToConnect: true,
 
     // public
@@ -62,7 +62,7 @@ let xlg = {
         if (data.hasOwnProperty("totalSeatedPlayers")) {
             let totalSeats = data.avalaibleSeats ? "/ " + data.totalSeatedPlayers + data.availableSeats : ""
 
-            $("#seated-player-num-" + gameId).html( '<span class="mr-1"><img class="mb-1 mr-2 inline-block fill-white" src="/seated-player.svg" width="12" /></span>' + data.totalSeatedPlayers + totalSeats)
+            $("#seated-player-num-" + gameId).html('<span class="mr-1"><img class="mb-1 mr-2 inline-block fill-white" src="/seated-player.svg" width="12" /></span>' + data.totalSeatedPlayers + totalSeats)
             $("#seated-players-" + gameId).css("display", "block")
         }
 
@@ -158,15 +158,18 @@ let xlg = {
     },
     // public
     onConnect: function () {
-        const tables = ["201", "203", "204", "225", "229", "230", "240",
-            "303", "545", "401", "402", "701", "801", "901", "902", "1001",
-            "1024", "1101", "1301", "1320", "1401", "1501", "1601", "1701"
+        const tables = ["1001", "101", "102", "1024", "103",
+            "105", "104", "107", "108", "109", "110", "1101",
+            "111", "114", "123", "1301", "1320", "1401", "1601",
+            "1701", "173", "201", "203", "204", "211a1", "2201",
+            "225", "230", "240", "303", "401", "402", "545", "701",
+            "801", "901", "902"
         ];
 
-        dga.available("ppcwx00000016711")
+        dga.available("ppcnq00000020079")
 
         tables.forEach(function (value) {
-            dga.subscribe("ppcwx00000016711", value, "KES")
+            dga.subscribe("ppcnq00000020079", value, "KES")
         })
     },
     // public
