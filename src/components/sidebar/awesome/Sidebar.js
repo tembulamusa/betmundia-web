@@ -132,12 +132,12 @@ const ProSidebar = (props) => {
 
     const getSportImageIcon = (sport_name, folder = 'svg', topLeagues = false) => {
 
-        let default_img = 'sure'
+        let default_img = 'default';
         let sport_image;
         try {
             sport_image = topLeagues ? require(`../../../assets/img/flags-1-1/${sport_name}.svg`) : require(`../../../assets/${folder}/${sport_name}.svg`);
         } catch (error) {
-            sport_image = require(`../../../assets/${folder}/${default_img}.svg`);
+            sport_image = require(`../../../assets/${folder}/${default_img}.gif`);
         }
         return sport_image
     }
