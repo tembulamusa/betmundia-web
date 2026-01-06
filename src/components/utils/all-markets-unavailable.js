@@ -10,7 +10,6 @@ const AllMarketsUnavailable = (props) => {
         <>
             <CarouselLoader />
             <div className="m-3">
-
                 <NoEvents message={"Event Not Found"} />
             </div >
         </>

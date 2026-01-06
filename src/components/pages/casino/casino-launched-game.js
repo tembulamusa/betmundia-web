@@ -143,6 +143,9 @@ const CasinoLaunchedGame = (props) => {
                     title={state?.casinolaunch?.game?.game?.game_name + state?.casinolaunch?.game?.game?.id}
                     width="100%"
                     height="100%"
+                    allowFullScreen          // ✅ required
+                    webkitAllowFullScreen    // ✅ Safari
+                    mozAllowFullScreen       // ✅ Firefox (older)
                     src={noStateGame || ""}
                 ></iframe>
             </div>

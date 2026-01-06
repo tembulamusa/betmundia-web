@@ -703,6 +703,19 @@ const MarketRow = (props) => {
                     </Row>
 
                     {mutableMkts && mutableMkts?.map((mkt_odds) => {
+                        // const cleanedOddValue = (() => {
+                        //     console.log("marketOdd", mkt_odds);
+                        //     let val = marketOdd?.odd_value;
+
+                        //     if (val == null) return val;
+
+                        //     // force string
+                        //     val = String(val);
+
+                        //     val = val.replace("java.math.BigDecimal,", "");
+
+                        //     return mkt_odds;
+                        // })();
                         return (<>
                             {(["active", "suspended"].includes(mkt_odds?.market_status?.toLowerCase()))
                                 && <Col className="match-detail" style={{ width: width, float: "left" }}>
