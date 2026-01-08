@@ -94,7 +94,19 @@ const Casino = (props) => {
             dispatch({type: "DEL", key: "nosports"});
         }
     }, [])
+useEffect(() => {
+    // Dynamically add Pragmatic DGA script
+    const script = document.createElement("script");
+    script.src = "/dgAPI.js";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
 
+    return () => {
+      // Cleanup script when leaving page
+      document.body.removeChild(script);
+    };
+  }, []);
 
     return (
         <>

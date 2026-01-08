@@ -176,7 +176,9 @@ let xlg = {
     disconnect: function () {
         let self = this;
         self.tryToConnect = false;
-        self.websocket.close();
+        if (self.websocket !== null && self.websocket.readyState !== 3) {
+            self.websocket.close();
+        }
     },
     // public
     subscribe: function (casinoId, tableId, currency) {
@@ -251,4 +253,8 @@ let xlg = {
 };
 
 let dga = xlg;
-dga.connect("prelive-dga0.pragmaticplaylive.net")
+if (window.location.href.toLowerCase().includes('casino')) {
+    dga.connect("prelive-dga0.pragmaticplaylive.net")
+} else {
+    dga.disconnect()
+}
