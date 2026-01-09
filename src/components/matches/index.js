@@ -490,7 +490,8 @@ const OddButton = (props) => {
             start_time={match.start_time}
             sub_type_id={match?.sub_type_id}
             special_bet_value={match?.special_bet_value || ''}
-            onClick={handleButtonOnClick}>
+            onClick={handleButtonOnClick}
+        >
             {!detail &&
                 (
                     <span className="theodds odd-fix">
@@ -717,7 +718,8 @@ const MarketRow = (props) => {
                         //     return mkt_odds;
                         // })();
                         return (<>
-                            {(["active", "suspended"].includes(mkt_odds?.market_status?.toLowerCase()))
+                            {
+                                (["active", "suspended"].includes(mkt_odds?.market_status?.toLowerCase()))
                                 && <Col className="match-detail" style={{ width: width, float: "left" }}>
                                     {/* <div>{mkt_odds.market_status}</div> */}
                                     <MktOddsButton
@@ -727,7 +729,8 @@ const MarketRow = (props) => {
                                         live={live}
                                         pdown={pdown}
                                     />
-                                </Col>}
+                                </Col>
+                            }
                         </>)
                     })
                     }
@@ -872,23 +875,11 @@ const MatchMarket = (props) => {
                 ((!jackpot || (jackpot && jackpotstatus == "ACTIVE") || live)
                     &&
                     market_status == "Active") && outcomes?.map((marketOdd, idx) => {
-                        const cleanedOddValue = (() => {
-                            let val = marketOdd?.odd_value;
 
-                            if (val == null) return val;
-
-                            // force string
-                            val = String(val);
-
-                            val = val.replace("java.math.BigDecimal,", "");
-
-                            return val;
-                        })();
 
                         let matchWithDetails = {
                             ...match,
                             market_status: market_status,
-                            odd_value: cleanedOddValue, // 👈 overridden here
                             producer_id: producerId || match?.odds?.[marketName]?.producer_id
                         };
 

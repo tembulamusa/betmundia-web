@@ -95,16 +95,26 @@ const Casino = (props) => {
         }
     }, [])
 useEffect(() => {
+    // Check if script already exists or if dga/xlg is already loaded
+    const existingScript = document.querySelector('script[src="/dgAPI.js"]');
+    if (existingScript || (typeof window !== 'undefined' && window.dga)) {
+      return;
+    }
+
     // Dynamically add Pragmatic DGA script
     const script = document.createElement("script");
     script.src = "/dgAPI.js";
     script.async = true;
     script.defer = true;
+    script.id = "dgAPI-script"; // Add ID for easier identification
     document.body.appendChild(script);
 
     return () => {
-      // Cleanup script when leaving page
-      document.body.removeChild(script);
+      // Only cleanup if script was added by this component
+      const scriptToRemove = document.getElementById("dgAPI-script");
+      if (scriptToRemove && scriptToRemove === script) {
+        document.body.removeChild(scriptToRemove);
+      }
     };
   }, []);
 
