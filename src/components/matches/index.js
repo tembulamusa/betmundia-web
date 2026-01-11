@@ -878,7 +878,7 @@ const MatchMarket = (props) => {
 
 
                         let matchWithDetails = {
-                            ...match,
+                            ...match, ...marketOdd,
                             market_status: market_status,
                             producer_id: producerId || match?.odds?.[marketName]?.producer_id
                         };
@@ -897,7 +897,8 @@ const MatchMarket = (props) => {
                                         live={live}
                                         jackpot={jackpot} />
                                 </>
-                                : <><LockedButton /></>)
+                                : <><LockedButton /></>
+                        )
                     })
             }
 
