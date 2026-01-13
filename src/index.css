@@ -89,7 +89,7 @@ code {
 }
 
 .betslip-sport-icon {
-  width: 30px;
+  width: 20px;
   display: inline-block;
   margin: -10px -5px -5px;
 }
@@ -1236,9 +1236,9 @@ li.bet-option {
   z-index: 999999;
   margin-bottom: 0;
   margin-top: 0;
-  background: #0f0f1f;
+  background: rgba(255, 255, 255, 0.055);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0 7px;
+  padding: 0 4px;
   color: #ffffff;
 }
 

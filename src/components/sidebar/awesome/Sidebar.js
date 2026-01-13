@@ -253,7 +253,7 @@ const ProSidebar = (props) => {
                                     competitions?.map((sport, idx) => (
                                         <div>
                                             <SubMenu title={sport?.sport_name} defaultOpen={sport?.sport_name == "Soccer"}
-                                                icon={<img style={{ borderRadius: '50%', height: '30px' }}
+                                                icon={<img style={{ borderRadius: '50%', height: '24px' }}
                                                     src={getSportImageIcon(sport?.sport_name)} alt='' />}
                                                 label={sport?.sport_name}
                                                 onOpenChange={() => handleOpenChange(sport)}
