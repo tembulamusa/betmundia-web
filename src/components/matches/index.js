@@ -1422,6 +1422,7 @@ const MatchList = (props) => {
         fetchingcount
     } = props;
     const [state, dispatch] = useContext(Context);
+
     useEffect(() => {
         dispatch({ type: "SET", key: "matchlisttype", payload: "normal" });
         return () => {
@@ -1437,7 +1438,7 @@ const MatchList = (props) => {
                 live={live}
                 first_match={matches ? matches[0] : {}}
                 fetching={fetching}
-                three_way
+                three_way={three_way}
                 sub_types={subTypes}
                 subTypes={subTypes}
             />

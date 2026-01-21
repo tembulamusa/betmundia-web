@@ -50,6 +50,7 @@ const Live = (props) => {
     useEffect(() => {
         handleGameSocket("listen");
         socket.on(`socket-io#live-match-page#${state?.selectedLivesport?.betradar_sport_id || 1}`, (data) => {
+            alert("live match data received", data);
             setMatches((preveMatches) => {
                 let odds = {}
                 let selectedSport = state?.selectedLivesport ? state?.selectedLivesport?.betradar_sport_id : 1
@@ -58,7 +59,6 @@ const Live = (props) => {
                     odds["1x2"] = { "sub_type_id": 1, "name": "1x2", "special_bet_value": "", "outcomes": [] };
                     odds["Double Chance"] = { "sub_type_id": 10, "name": "Double Chance", "special_bet_value": "", "outcomes": [] };
                     odds["Total"] = { "sub_type_id": 18, "name": "Total", "special_bet_value": "2.5", "outcomes": [] };
-
                 } else {
                     odds[state?.selectedLivesport?.dafault_display_markets] = {
                         "sub_type_id": state?.selectedLivesport?.default_market,
@@ -66,10 +66,8 @@ const Live = (props) => {
                     }
 
                 }
-
                 data.odds = odds;
                 data.sport_name = sport_name;
-
                 let startTime = data.start_time[1] || "";
                 data.start_time = startTime;
                 let index = preveMatches?.findIndex(ev => ev.match_id == data.match_id);
@@ -133,7 +131,6 @@ const Live = (props) => {
             setBetradarSportId(state?.selectedLivesport?.betradar_sport_id)
         }
         setThreeWay(['competition', 'threeway'].includes(state?.selectedLivesport?.sport_type?.toLowerCase()));
-
     }, [state?.selectedLivesport]);
 
     useEffect(() => {
@@ -165,7 +162,7 @@ const Live = (props) => {
             <CarouselLoader />
             {<MatchList
                 fetching={fetching}
-                three_way
+                three_way={['competition', 'threeway'].includes(state?.selectedLivesport?.sport_type?.toLowerCase())}
                 live
                 setReload={setReload}
                 matches={matches}

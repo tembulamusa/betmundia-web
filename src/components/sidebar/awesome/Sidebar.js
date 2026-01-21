@@ -179,6 +179,7 @@ const ProSidebar = (props) => {
                 setCompetitions(newCompetitions);
                 dispatch({ type: "SET", key: "categories", payload: newCompetitions })
                 setLocalStorage("categories", newCompetitions, 5 * 60 * 1000)
+                // console.log("Updated competitions for sport ", newCompetitions);
 
             }
 
