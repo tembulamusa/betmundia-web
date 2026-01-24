@@ -20,7 +20,7 @@ const Live = (props) => {
     const { sportid, categoryid, competitionid } = useParams();
     const [limit, setLimit] = useState(300);
     const [producers, setProducers] = useState([]);
-    const [threeWay, setThreeWay] = useState(false);
+    const [threeWay, setThreeWay] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [page,] = useState(1);
     const [betradarSportId, setBetradarSportId] = useState(1);
@@ -50,7 +50,6 @@ const Live = (props) => {
     useEffect(() => {
         handleGameSocket("listen");
         socket.on(`socket-io#live-match-page#${state?.selectedLivesport?.betradar_sport_id || 1}`, (data) => {
-            alert("live match data received", data);
             setMatches((preveMatches) => {
                 let odds = {}
                 let selectedSport = state?.selectedLivesport ? state?.selectedLivesport?.betradar_sport_id : 1
@@ -129,8 +128,11 @@ const Live = (props) => {
                 fetchData();
             }
             setBetradarSportId(state?.selectedLivesport?.betradar_sport_id)
+            setThreeWay(['competition', 'threeway'].includes(state?.selectedLivesport?.sport_type?.toLowerCase()));
+        } else {
+            setBetradarSportId(1);
+            setThreeWay(true);
         }
-        setThreeWay(['competition', 'threeway'].includes(state?.selectedLivesport?.sport_type?.toLowerCase()));
     }, [state?.selectedLivesport]);
 
     useEffect(() => {
@@ -162,7 +164,7 @@ const Live = (props) => {
             <CarouselLoader />
             {<MatchList
                 fetching={fetching}
-                three_way={['competition', 'threeway'].includes(state?.selectedLivesport?.sport_type?.toLowerCase())}
+                three_way={threeWay}
                 live
                 setReload={setReload}
                 matches={matches}

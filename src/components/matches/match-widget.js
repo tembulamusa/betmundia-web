@@ -5,11 +5,11 @@ import '../../assets/css/theme.css';
 
 const MatchWidget = (props) => {
     const { parentMatchId } = props;
-     
+
     const loadWidget = (parentMatchId) => {
         if (!window.SIR) {
             const script = document.createElement("script");
-            script.src = "https://widgets.sir.sportradar.com/507f748510ff83b1f73738bd3df69714/widgetloader";
+            script.src = "https://widgets.sir.sportradar.com/d9d6a9c373db18dfdf63352e1c1d9321/widgetloader";
             script.async = true;
             script.setAttribute("n", "SIR");
             script.onload = () => {
@@ -34,18 +34,18 @@ const MatchWidget = (props) => {
     };
 
     useEffect(() => {
-        if(parentMatchId) {
+        if (parentMatchId) {
             loadWidget(parentMatchId);
         }
     }, [parentMatchId]);
 
-  return (
-      <div class="widgets">
-        <div>
-          <div class="sr-widget sr-widget-1"></div>
+    return (
+        <div class="widgets">
+            <div>
+                <div class="sr-widget sr-widget-1"></div>
+            </div>
         </div>
-    </div>
-  );
+    );
 };
 
-export default MatchWidget;
+export default MatchWidget;
