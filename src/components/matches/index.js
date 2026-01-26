@@ -575,21 +575,30 @@ const MarketRow = (props) => {
     useEffect(() => {
         if (betstopMessage) {
             let affectedMarkets = betstopMessage.markets.split(",");
+            console.log(
+                "betstop message:: ", betstopMessage?.market_status,
+                "Affected Markets:", affectedMarkets,
+                "SubType Id", marketDetail?.sub_type_id,
+                "Includes subtype Id:::  ", affectedMarkets.includes(marketDetail.sub_type_id)
+            );
+
             if (affectedMarkets.includes('all')
                 || affectedMarkets.includes(marketDetail.sub_type_id)) {
                 setMutableMkts((prevMarkets) => {
                     const newOdds = [...prevMarkets];
                     newOdds.forEach((odd) => {
-                        if (odd.market_status.toLowerCase() == "active") {
-                            odd.market_status = betstopMessage.market_status
-                        }
+                        // if (odd.market_status.toLowerCase() == "active"
+                        //     ||
+                        //     odd.market_status.toLowerCase() == "suspended") {
+                        odd.market_status = betstopMessage.market_status
+                        // }
                     }
 
                     )
                     return newOdds;
 
                 });
-                setMarketStatus(betstopMessage.market_status);
+                setMarketStatus(betstopMessage?.market_status);
             }
             setBetstopMessage(null);
         }
@@ -669,7 +678,10 @@ const MarketRow = (props) => {
         const fullmatch = { ...match, ...mktodds, producer_id: producerId };
 
         if (
-            !pdown &&
+            !pdown
+            // &&
+            // marketStatus?.toLowerCase() === "active"
+            &&
             fullmatch?.odd_value !== 'NaN' &&
             fullmatch?.odd_active === 1 &&
             ["active"].includes(fullmatch?.market_status.toLowerCase())
@@ -967,6 +979,7 @@ const MatchRow = (props) => {
                     });
                 } else {
                     let marketIds = data.markets.split(",");
+
                     marketIds.forEach(item => {
                         setMatch((prevMatch) => {
                             let newOdds = prevMatch.odds;
@@ -974,7 +987,7 @@ const MatchRow = (props) => {
                             Object.keys(newOdds).forEach(key => {
                                 if (newOdds[key].sub_type_id == item) {
                                     newOdds[key].outcomes.forEach((item, idx) => {
-                                        newOdds[key].outcomes[idx].market_status = data.market_status
+                                        newOdds[key].outcomes[idx].market_status = data?.market_status
                                     })
                                 }
                             })
