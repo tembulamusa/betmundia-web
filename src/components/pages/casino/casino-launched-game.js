@@ -107,7 +107,7 @@ const CasinoLaunchedGame = (props) => {
 
     useEffect(() => {
         if (!bitvilleGame) return;
-        console.log("Loading Bitville script...", state?.bitvilleGame);
+        if (!state?.bitvilleGame?.token) return;
         const script = document.createElement("script");
         script.src = `${state?.bitvilleGame?.game_base_url}/js/BVComponents.min.js?v=1.1.0`;
         script.async = true;
@@ -186,7 +186,25 @@ const CasinoLaunchedGame = (props) => {
                         <div
                             id="bv-loader"
                             style={{}}
-                        />
+                        >
+                            {
+                                !state?.bitvilleGame?.token
+                                &&
+                                <div class="flex items-start gap-3 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-red-800">
+                                    <svg class="h-10 w-10 text-red-500 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 9v2m0 4h.01M5.455 19h13.09c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.723 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+
+                                    <div>
+                                        <p class="font-semibold text-2xl">Error</p>
+                                        <p class="">
+                                            Something went wrong. Please try again.
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
                         :
                         <>
                             <iframe
