@@ -185,7 +185,7 @@ const CasinoLaunchedGame = (props) => {
                         ?
                         <div
                             id="bv-loader"
-                            style={{}}
+                            style={{ height: "100%", width: "100%" }}
                         >
                             {
                                 !state?.bitvilleGame?.token
