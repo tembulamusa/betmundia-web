@@ -100,7 +100,7 @@ const MatchHeaderRow = (props) => {
         three_way,
     } = props;
 
-    //const [state, ]  = useContext(Context);
+    //const [state, ]  = useContext(Context);f
     const categories = getFromLocalStorage('categories');
     const sport_id = new URL(window.location).searchParams.get('sport_id') || 79
     let sport = categories?.all_sports?.filter((category) => category.sport_id == sport_id)
@@ -575,13 +575,6 @@ const MarketRow = (props) => {
     useEffect(() => {
         if (betstopMessage) {
             let affectedMarkets = betstopMessage.markets.split(",");
-            console.log(
-                "betstop message:: ", betstopMessage?.market_status,
-                "Affected Markets:", affectedMarkets,
-                "SubType Id", marketDetail?.sub_type_id,
-                "Includes subtype Id:::  ", affectedMarkets.includes(marketDetail.sub_type_id)
-            );
-
             if (affectedMarkets.includes('all')
                 || affectedMarkets.includes(marketDetail.sub_type_id)) {
                 setMutableMkts((prevMarkets) => {
@@ -609,6 +602,7 @@ const MarketRow = (props) => {
         if (socket.connected) {
             handleGameSocket("listen", match?.parent_match_id, marketDetail?.sub_type_id);
             const handleSocketData = (data) => {
+
                 if (Object.keys(data.event_odds).length > 0) {
                     Object.values(data.event_odds)?.sort((a, b) => a?.outcome_id - b?.outcome_id)?.forEach((evodd, ivg) => {
                         evodd.name = data.match_market.market_name;
@@ -618,9 +612,9 @@ const MarketRow = (props) => {
                                     && ev.outcome_id == evodd.outcome_id
                                     && (!evodd.special_bet_value || (ev.special_bet_value == evodd.special_bet_value)));
 
-                            if (marketStatus.toLowerCase() !== "active"
+                            if ((["active", "handedover"].includes(marketStatus.toLowerCase()) === false)
                                 &&
-                                evodd.market_status.toLowerCase() == "active") {
+                                ["active", "handedover"].includes(evodd.market_status.toLowerCase())) {
                                 setMarketStatus(evodd.market_status);
                             }
                             if (index !== -1) {
@@ -684,7 +678,7 @@ const MarketRow = (props) => {
             &&
             fullmatch?.odd_value !== 'NaN' &&
             fullmatch?.odd_active === 1 &&
-            ["active"].includes(fullmatch?.market_status.toLowerCase())
+            ["active", "handedover"].includes(fullmatch?.market_status.toLowerCase())
         ) {
             return <OddButton match={fullmatch} detail mkt={"detail"} live={live} />;
         }
@@ -694,8 +688,8 @@ const MarketRow = (props) => {
     return (
         <>
             {(
-                ["active", "suspended"].includes(marketStatus?.toLowerCase())
-                && mutableMkts?.some(odd => ["active", "suspended"].includes(odd?.market_status?.toLowerCase()))
+                ["active", "suspended", "handedover"].includes(marketStatus?.toLowerCase())
+                && mutableMkts?.some(odd => ["active", "suspended", "handedover"].includes(odd?.market_status?.toLowerCase()))
             )
                 &&
                 <div className="top-matches event-row">
@@ -731,7 +725,7 @@ const MarketRow = (props) => {
                         // })();
                         return (<>
                             {
-                                (["active", "suspended"].includes(mkt_odds?.market_status?.toLowerCase()))
+                                (["active", "suspended", "handedover"].includes(mkt_odds?.market_status?.toLowerCase()))
                                 && <Col className="match-detail" style={{ width: width, float: "left" }}>
                                     {/* <div>{mkt_odds.market_status}</div> */}
                                     <MktOddsButton
@@ -1316,7 +1310,7 @@ export const MarketList = (props) => {
                 {/* filter here */}
                 {Object.entries(matchwithmarkets?.odds || {}).map(([mkt_id, markets]) => {
 
-                    return (["active", "suspended"].includes(markets?.market_status.toLowerCase()) && markets.outcomes.length > 0) &&
+                    return (["active", "suspended", "handedover"].includes(markets?.market_status.toLowerCase()) && markets.outcomes.length > 0) &&
                         <MarketRow
                             betstopMessage={betstopMessage}
                             setBetstopMessage={setBetstopMessage}
