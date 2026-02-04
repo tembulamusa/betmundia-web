@@ -10,7 +10,7 @@ const LiveScore = () => {
     return (
         <>
             <iframe
-                src="https://s5dev.sir.sportradar.com/BetMundialmts/en/1/season/118703/team/9"
+                src="https://statshub.sportradar.com/betmundialsmts/en/sport/1"
                 className={'w-full min-h-screen'}
                 title="betmundial Livescore">
 

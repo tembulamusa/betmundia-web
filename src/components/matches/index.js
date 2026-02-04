@@ -304,12 +304,11 @@ const SideBets = (props) => {
 
     const openLiveStats = (parent_match_id) => {
 
-        window.open(`https://s5dev.sir.sportradar.com/BetMundialmts/en/1/season/118703/team/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
+        window.open(`https://s5dev.sir.sportradar.com/betmundialmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
     }
     return (
         <div
             className={` ${picked} align-self-center more-markets-container m-lg-2`}>
-
             <div
                 onClick={() => openLiveStats(match?.parent_match_id)}
                 className='side !pl-2 !ml-3 text-white font-bold opacity-70 hover:opacity-100 cursor-pointer'>
@@ -880,7 +879,7 @@ const MatchMarket = (props) => {
             {
                 ((!jackpot || (jackpot && jackpotstatus == "ACTIVE") || live)
                     &&
-                    market_status == "Active") && outcomes?.map((marketOdd, idx) => {
+                    ["active", "handedover"].includes(market_status?.toLowerCase())) && outcomes?.map((marketOdd, idx) => {
 
 
                         let matchWithDetails = {
@@ -910,7 +909,7 @@ const MatchMarket = (props) => {
 
             {
 
-                !jackpot && market_status !== "Active" &&
+                !jackpot && !["active", "handedover"].includes(market_status?.toLowerCase()) &&
                 ((btnCount == 2) ? [1, 2].map((btn, idx) => (
                     <><LockedButton btnStatus={market_status} /></>
                 )) : [1, 2, 3].map((btn, idx) => (
