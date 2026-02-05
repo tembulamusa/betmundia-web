@@ -51,10 +51,10 @@ const Signup = (props) => {
             setMessage(response?.message);
             dispatch({ type: "SET", key: "regmsisdn", payload: values?.msisdn })
             if ([200, 201, 204].includes(status)) {
-                Notify({ status: 200, message: "Registration successful. Please Verify the code sent to your phone" })
+                Notify({ status: 200, message: "Registration successful. Please login to your account" })
                 setTimeout(() => {
                 }, 3000);
-                navigate("/verify-account");
+                navigate("/login");
             } else {
                 Notify({ status: 400, message: "Error Making registration" })
                 setIsLoading(false);
