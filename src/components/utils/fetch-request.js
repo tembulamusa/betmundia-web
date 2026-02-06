@@ -39,7 +39,7 @@ const makeRequest = async ({ url, method, data = null, use_jwt = false, api_vers
     let headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "origin": "betmundial.co.ke"
+        "origin": "betmundial.com"
     };
 
     let user = getFromLocalStorage('user');

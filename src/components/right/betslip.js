@@ -187,7 +187,8 @@ const BetSlip = (props) => {
 
         useEffect(() => {
             if (props.code) {
-                fetchSharedBetslip(props.code);
+                setInputShareCode(props.code);   // 👈 fill input
+                fetchSharedBetslip(props.code);  // 👈 auto submit
             }
         }, [fetchSharedBetslip, props.code]);
 

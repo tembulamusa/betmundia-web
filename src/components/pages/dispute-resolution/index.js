@@ -52,7 +52,7 @@ const DisputeResolution = () => {
                         <AccordionItemPanel>
                             <p>
                                 You can contact the betmundial Customer Services team by way of email
-                                customercare@betmundial.co.ke or call our customer care lines or inbox us through
+                                customercare@betmundial.com or call our customer care lines or inbox us through
                                 our
                                 social Media Pages Facebook, betmundial, Instagram betmundial etc. Queries
                                 will

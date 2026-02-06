@@ -297,7 +297,7 @@ const PrivacyPolicy = () => {
                             <h1>Changes to This Privacy Policy </h1>
                             <p>We may update our Privacy Policy from time to time. Thus, we advise you to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately, after they are posted.  </p>
                             <h1>Contact Us</h1>
-                            <p>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us through email on customercare@betmundial.co.ke </p>
+                            <p>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us through email on customercare@betmundial.com </p>
                         </AccordionItemPanel>
                     </AccordionItem>
 

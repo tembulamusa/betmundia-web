@@ -24,7 +24,7 @@ const FAQs = () => {
                     <AccordionItem>
                         <AccordionItemHeading>
                             <AccordionItemButton>
-                                What is betmundial.co.ke?
+                                What is betmundial.com?
                             </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
@@ -40,7 +40,7 @@ const FAQs = () => {
                             </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
-                            <p>You can contact our customer support team via email at customercare@betmundial.co.ke or call our helpline at +254724599488. Our team is available 24/7 to assist you with any queries or issues you may have.</p>
+                            <p>You can contact our customer support team via email at customercare@betmundial.com or call our helpline at +254724599488. Our team is available 24/7 to assist you with any queries or issues you may have.</p>
                         </AccordionItemPanel>
                     </AccordionItem>
 
@@ -54,7 +54,7 @@ const FAQs = () => {
                         <AccordionItemPanel>
                             <p>There are two ways to register with betmundial: via SMS and using our online platform.</p>
                             <p><b>SMS Registration:</b> Send an SMS "JOIN" to 29488. You will receive a confirmation message from 29488 confirming that you are registered.</p>
-                            <p><b>Online Registration:</b> Go to www.betmundial.co.ke and click on the Register button on the top right corner of the page. Fill the required fields (including phone number and creating a unique password), read and accept the terms and conditions, and confirm that you are over 18 years old.</p>
+                            <p><b>Online Registration:</b> Go to www.betmundial.com and click on the Register button on the top right corner of the page. Fill the required fields (including phone number and creating a unique password), read and accept the terms and conditions, and confirm that you are over 18 years old.</p>
                         </AccordionItemPanel>
                     </AccordionItem>
 
@@ -68,7 +68,7 @@ const FAQs = () => {
                         <AccordionItemPanel>
                             <p>To reset your password:</p>
                             <ol>
-                                <li>Open your web browser and go to betmundial.co.ke.</li>
+                                <li>Open your web browser and go to betmundial.com.</li>
                                 <li>Click on login.</li>
                                 <li>Click on ‘forgot password’ then enter your phone number and click GET RESET CODE.</li>
                                 <li>You will receive an SMS with a reset CODE. Enter the CODE and choose your new password.</li>
@@ -122,7 +122,7 @@ const FAQs = () => {
                         <AccordionItemPanel>
                             <p>To place a bet online:</p>
                             <ol>
-                                <li>Open your web browser and go to betmundial.co.ke.</li>
+                                <li>Open your web browser and go to betmundial.com.</li>
                                 <li>Log in by entering your phone number and password.</li>
                                 <li>Select your preferred sport and events up to a maximum of 30 matches.</li>
                                 <li>Enter your stake amount and click on “Place Bet”.</li>
@@ -134,7 +134,7 @@ const FAQs = () => {
                     <AccordionItem>
                         <AccordionItemHeading>
                             <AccordionItemButton>
-                                Deposit using Mpesa directly from betmundial.co.ke
+                                Deposit using Mpesa directly from betmundial.com
                             </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
@@ -187,7 +187,7 @@ const FAQs = () => {
                         </AccordionItemHeading>
                         <AccordionItemPanel>
                             <ol style={{ paddingLeft: '1.2em' }}>
-                                <li><strong>Open</strong> your web browser and go to: <strong>betmundial.co.ke</strong>.</li>
+                                <li><strong>Open</strong> your web browser and go to: <strong>betmundial.com</strong>.</li>
                                 <li><strong>Select login</strong>, (If Not Logged In).</li>
                                 <li>Enter your <strong>phone number</strong> and <strong>password</strong> to access your account.</li>
                                 <li>Select <strong>'Menu'</strong> at the top left.</li>

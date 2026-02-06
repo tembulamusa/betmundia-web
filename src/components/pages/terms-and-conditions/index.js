@@ -71,7 +71,7 @@ const TermsAndConditions = (props) => {
                                 by betmundial as described in paragraph 1.2. below. By using the Service, You agree to be bound by these Terms
                                 and Conditions.</p>
                             <p>1.2.  The Service includes:</p>
-                            <p>1.2.1. betmundial's Website (www.betmundial.co.ke) and any other remote product We may offer from time to time |("Website");</p>
+                            <p>1.2.1. betmundial's Website (www.betmundial.com) and any other remote product We may offer from time to time |("Website");</p>
                             <p>1.2.2. betmundial's Tele-betting services i.e. betting via USSD or SMS; and</p>
 
                             <p>1.3. The Terms apply equally irrespective of whether the Service is accessed via telephone, desktop browser, mobile
