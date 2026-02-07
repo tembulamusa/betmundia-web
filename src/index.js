@@ -121,6 +121,7 @@ const App = () => {
                                     <Route exact path="/forgot-password" element={<ForgotPassword />} />
                                     <Route exact path="/verify-account" element={<VerifyAccount />} />
                                     <Route exact path="/app" element={<MobileApp />} />
+                                    <Route exact path="/betslip/share/:code" element={<Index />} />
                                     <Route exact path="/logout" element={<Logout />} />
                                     <Route path="/check-deposit-status" element={<CheckDepositStatus />} />
                                     <Route exact path="/exclude" element={<Exclude />} />
