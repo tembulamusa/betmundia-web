@@ -89,9 +89,9 @@ code {
 }
 
 .betslip-sport-icon {
-  width: 20px;
   display: inline-block;
-  margin: -10px -5px -5px;
+  margin: -10px 2px -6px 0;
+  width: 16px;
 }
 
 .bet-option {

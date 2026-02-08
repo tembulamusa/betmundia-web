@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Formik, Form } from 'formik';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import makeRequest from "../../utils/fetch-request";
+import { getFromLocalStorage } from "../../utils/local-storage";
 
 const Header = React.lazy(() => import('../../header/header'));
 const SideBar = React.lazy(() => import('../../sidebar/awesome/Sidebar'));
 const Right = React.lazy(() => import('../../right/index'));
 const Footer = React.lazy(() => import('../../footer/footer'));
+
+const getMobileFromStorage = () => {
+    const user = getFromLocalStorage("user");
+    const fromUser = user?.phone || user?.mobile || user?.msisdn;
+    if (fromUser) return fromUser;
+    try {
+        const raw = window.localStorage.getItem("reset_mobile");
+        return raw || '';
+    } catch {
+        return '';
+    }
+};
 
 const ResetPassword = (props) => {
 
@@ -14,10 +29,8 @@ const ResetPassword = (props) => {
     const [otp_sent, setOtpSent] = useState(false);
     const [resetID, setResetID] = useState('');
     const [mobile, setMobile] = useState('');
-
-    const initialValues = {
-        mobile: '',
-    };
+    const [resending, setResending] = useState(false);
+    const hasAutoSubmitted = useRef(false);
 
     const initialResetFormValues = {
         id: '',
@@ -26,39 +39,97 @@ const ResetPassword = (props) => {
         repeat_password: ''
     };
 
-    const handleSubmit = values => {
-        setMobile(values.mobile);
-        let endpoint = '/code';
-        makeRequest({ url: endpoint, method: 'POST', data: values }).then(([status, response]) => {
-            setSuccess(status == 200 || status == 201);
-            setMessage(response.success.message);
-            setOtpSent(true);
-            setResetID(response.success.id);
+    const handleSubmit = (mobileValue) => {
+        const num = mobileValue !== undefined && mobileValue !== '' ? mobileValue : mobile;
+        if (!num) {
+            toast.error('Please enter a mobile number.');
+            return;
+        }
+        const endpoint = '/code';
+        const data = { mobile: num };
+        makeRequest({ url: endpoint, method: 'POST', data }).then(([status, response]) => {
+            const ok = status === 200 || status === 201;
+            setSuccess(ok);
+            const msg = response?.success?.message || response?.error?.message || response?.message || (ok ? 'Code sent to your phone.' : 'Failed to send code.');
+            setMessage(msg);
+            if (ok) {
+                setOtpSent(true);
+                setResetID(response.success?.id ?? '');
+                setMobile(num);
+                toast.success(msg);
+            } else {
+                toast.error(msg);
+            }
+        }).catch(() => {
+            const errMsg = 'Failed to send code. Please try again.';
+            setSuccess(false);
+            setMessage(errMsg);
+            toast.error(errMsg);
         });
     };
+
+    const handleResendCode = () => {
+        if (resending || !mobile) return;
+        setResending(true);
+        const endpoint = '/code';
+        makeRequest({ url: endpoint, method: 'POST', data: { mobile } }).then(([status, response]) => {
+            const ok = status === 200 || status === 201;
+            const msg = response?.success?.message || response?.error?.message || (ok ? 'Code sent again.' : 'Failed to resend code.');
+            setMessage(msg);
+            setSuccess(ok);
+            if (ok) {
+                toast.success(msg);
+            } else {
+                toast.error(msg);
+            }
+        }).catch(() => {
+            const errMsg = 'Failed to resend code. Please try again.';
+            setMessage(errMsg);
+            setSuccess(false);
+            toast.error(errMsg);
+        }).finally(() => {
+            setResending(false);
+        });
+    };
+
+    useEffect(() => {
+        const storedMobile = getMobileFromStorage();
+        setMobile(storedMobile);
+        if (storedMobile && !hasAutoSubmitted.current) {
+            hasAutoSubmitted.current = true;
+            handleSubmit(storedMobile);
+        }
+        return () => {
+            setSuccess(false);
+            setMessage(null);
+            setOtpSent(false);
+            setResetID('');
+            setResending(false);
+        };
+    }, []);
 
     const handleSubmitPasswordReset = values => {
         values.mobile = mobile;
         values.id = resetID;
-        let endpoint = '/v1/reset-password';
+        const endpoint = '/v1/reset-password';
         makeRequest({ url: endpoint, method: 'POST', data: values }).then(([status, response]) => {
-            setSuccess(status == 200 || status == 201);
-            setMessage(response.error ? response.error.message : response.success.message);
-            response.error ? setSuccess(false) : setSuccess(true);
-
-            let timer = setInterval(() => {
-                clearInterval(timer);
-                window.location.href = "/";
-            }, 3000);
+            const ok = status === 200 || status === 201;
+            const msg = response?.error?.message || response?.success?.message || response?.message || (ok ? 'Password reset successfully.' : 'Something went wrong.');
+            setSuccess(ok);
+            setMessage(msg);
+            if (ok) {
+                toast.success(msg);
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 2000);
+            } else {
+                toast.error(msg);
+            }
+        }).catch(() => {
+            setSuccess(false);
+            setMessage('Failed to reset password. Please try again.');
+            toast.error('Failed to reset password. Please try again.');
         });
-    };
-
-    const validate = values => {
-        let errors = {};
-        if (!values.mobile || !values.mobile.match(/(254|0|)?[71]\d{8}/g)) {
-            errors.mobile = 'Please enter a valid phone number';
-        }
-        return errors;
     };
 
     const validatePasswordReset = password_reset_values => {
@@ -98,51 +169,6 @@ const ResetPassword = (props) => {
         );
     };
 
-    const MyOtpForm = (props) => {
-        const { errors, values, submitForm, setFieldValue } = props;
-
-        const onFieldChanged = (ev) => {
-            let field = ev.target.name;
-            let value = ev.target.value;
-            setFieldValue(field, value);
-        };
-
-        return (
-            <Form className={`${otp_sent ? 'd-none' : 'd-block'}`}>
-                <div className="pt-0">
-                    <div className="row">
-                        <div className="form-group row d-flex justify-content-center mt-5">
-                            <div className="col-md-12">
-                                <label>Mobile Number</label>
-                                <input
-                                    value={values.mobile}
-                                    className="text-dark deposit-input form-control col-md-12 input-field"
-                                    id="mobile"
-                                    name="mobile"
-                                    type="text"
-                                    placeholder='Phone number'
-                                    onChange={ev => onFieldChanged(ev)}
-                                    onKeyPress={ev => handleKeyPress(ev, submitForm)}
-                                />
-                                {errors.mobile && <div className='text-danger'> {errors.mobile} </div>}
-                            </div>
-                        </div>
-
-                        <div className="form-group row d-flex justify-content-left mb-4">
-                            <div className="col-md-3">
-                                <button type="submit"
-                                    onClick={submitForm}
-                                    className='btn btn-lg btn-primary mt-5 col-md-12 deposit-withdraw-button'>
-                                    Send OTP
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </Form>
-        );
-    };
-
     const MyPasswordResetForm = (props) => {
         const { errors, values, submitForm, setFieldValue } = props;
 
@@ -153,87 +179,88 @@ const ResetPassword = (props) => {
         };
 
         return (
-            <Form className={`${otp_sent ? 'd-block' : 'd-none'}`}>
+            <Form className="d-block">
                 <div className="pt-0">
                     <div className="row">
-                        <hr />
                         <div className="col-md-12">
-                            <div className="col-md-12">
-                                <div className="form-group row d-flex justify-content-center mt-5">
-                                    <label>OTP</label>
-                                    <input
-                                        value={values.code}
-                                        className="text-dark deposit-input form-control col-md-12 input-field"
-                                        id="otp"
-                                        name="code"
-                                        type="text"
-                                        placeholder='OTP'
-                                        onChange={ev => onFieldChanged(ev)}
-                                        onKeyPress={ev => handleKeyPress(ev, submitForm)}
-                                    />
-                                    {errors.code && <div className='text-danger'>{errors.code}</div>}
-                                </div>
+                            <div className="form-group row d-flex justify-content-center mt-3">
+                                <label>Mobile Number</label>
+                                <input
+                                    value={mobile}
+                                    className="text-dark deposit-input form-control col-md-12 input-field bg-light"
+                                    id="mobile"
+                                    name="mobile"
+                                    type="text"
+                                    readOnly
+                                    aria-readonly="true"
+                                />
                             </div>
                             <div className="form-group row d-flex justify-content-center mt-5">
-                                <div className="col-md-12">
-                                    <label>Password</label>
-                                    <input
-                                        value={values.password}
-                                        className="text-dark deposit-input form-control col-md-12 input-field"
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        placeholder='Password'
-                                        onChange={ev => onFieldChanged(ev)}
-                                        onKeyPress={ev => handleKeyPress(ev, submitForm)}
-                                    />
-                                    {errors.password && <div className='text-danger'>{errors.password}</div>}
-                                </div>
+                                <label>Code (OTP)</label>
+                                <input
+                                    value={values.code}
+                                    className="text-dark deposit-input form-control col-md-12 input-field"
+                                    id="otp"
+                                    name="code"
+                                    type="text"
+                                    placeholder='Enter the code sent to your phone'
+                                    onChange={ev => onFieldChanged(ev)}
+                                    onKeyPress={ev => handleKeyPress(ev, submitForm)}
+                                />
+                                {errors.code && <div className='text-danger small mt-1'>{errors.code}</div>}
+                                <p className="small text-muted mt-1 mb-0">
+                                    Didn&apos;t receive the code?{' '}
+                                    <button
+                                        type="button"
+                                        className="btn btn-link p-0 align-baseline small text-primary text-decoration-underline"
+                                        onClick={handleResendCode}
+                                        disabled={resending}
+                                    >
+                                        {resending ? 'Sending…' : 'Resend code'}
+                                    </button>
+                                </p>
                             </div>
                             <div className="form-group row d-flex justify-content-center mt-5">
-                                <div className="col-md-12">
-                                    <label>Confirm Password</label>
-                                    <input
-                                        value={values.repeat_password}
-                                        className="text-dark deposit-input form-control col-md-12 input-field"
-                                        id="confirm_password"
-                                        name="repeat_password"
-                                        type="password"
-                                        placeholder='Password'
-                                        onChange={ev => onFieldChanged(ev)}
-                                        onKeyPress={ev => handleKeyPress(ev, submitForm)}
-                                    />
-                                    {errors.repeat_password && <div className='text-danger'>{errors.repeat_password}</div>}
-                                </div>
+                                <label>Password</label>
+                                <input
+                                    value={values.password}
+                                    className="text-dark deposit-input form-control col-md-12 input-field"
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    placeholder='Password'
+                                    onChange={ev => onFieldChanged(ev)}
+                                    onKeyPress={ev => handleKeyPress(ev, submitForm)}
+                                />
+                                {errors.password && <div className='text-danger'>{errors.password}</div>}
                             </div>
-                        </div>
-
-                        <div className="form-group row d-flex justify-content-left mb-4">
-                            <div className="col-md-3">
-                                <button type="submit"
-                                    onClick={submitForm}
-                                    className='btn btn-lg btn-primary mt-5 col-md-12 deposit-withdraw-button'>
-                                    Reset Password
-                                </button>
+                            <div className="form-group row d-flex justify-content-center mt-5">
+                                <label>Confirm Password</label>
+                                <input
+                                    value={values.repeat_password}
+                                    className="text-dark deposit-input form-control col-md-12 input-field"
+                                    id="confirm_password"
+                                    name="repeat_password"
+                                    type="password"
+                                    placeholder='Password'
+                                    onChange={ev => onFieldChanged(ev)}
+                                    onKeyPress={ev => handleKeyPress(ev, submitForm)}
+                                />
+                                {errors.repeat_password && <div className='text-danger'>{errors.repeat_password}</div>}
+                            </div>
+                            <div className="form-group row d-flex justify-content-left mb-4">
+                                <div className="">
+                                    <button type="submit"
+                                        onClick={submitForm}
+                                        className='btn btn-lg btn-primary mt-5 col-md-12 deposit-withdraw-button'>
+                                        Reset Password
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </Form>
-        );
-    };
-
-    const OptForm = () => {
-        return (
-            <Formik
-                initialValues={initialValues}
-                onSubmit={handleSubmit}
-                validateOnChange={false}
-                validateOnBlur={false}
-                validate={validate}
-            >
-                {(props) => <MyOtpForm {...props} />}
-            </Formik>
+            </Form >
         );
     };
 
@@ -252,32 +279,30 @@ const ResetPassword = (props) => {
     };
 
     const Alert = () => {
+        if (!message) return null;
         return (
-            <div className={`alert alert-dismissible ${success ? 'alert-success' : 'alert-danger'}`}>
-                <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
+            <div className={`alert alert-dismissible mb-4 ${success ? 'alert-success' : 'alert-danger'}`} role="alert">
+                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 {message}
             </div>
         );
     };
 
     return (
-        <div className='container-fluid'>
-            <div className='row'>
-                <Header />
-                <div className='col-md-3 sidebar'>
-                    <SideBar />
-                </div>
-                <div className='col-md-9 main'>
-                    <div className='row'>
-                        <FormTitle />
-                        {success && <Alert />}
-                        {otp_sent ? <PasswordResetForm /> : <OptForm />}
-                    </div>
-                </div>
-                <Right />
-                <Footer />
+        <>
+            <ToastContainer position="top-center" autoClose={5000} closeOnClick pauseOnFocusLoss draggable />
+            <div className='col-md-12 bg-primary p-4 text-center'>
+                Change Password
             </div>
-        </div>
+
+            <div className="row">
+                <div className="col-md-12 p-5 d-flex flex-column align-items-center">
+                    <Alert />
+                    <PasswordResetForm />
+                </div>
+            </div>
+        </>
+
     );
 };
 

@@ -29,7 +29,7 @@ const Withdrawal = (props) => {
                 setMessage({ status: 200, message: "withdrawal request sent successfully." })
                 dispatch({ type: "SET", key: "toggleuserbalance", payload: state?.toggleuserbalance ? !state?.toggleuserbalance : true })
             }
-            setMessage(response);
+            setMessage({ ...response, status: status, message: response?.message || response?.data?.message || "Error sending withdrawal request" });
         })
     }
 

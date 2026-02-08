@@ -2458,17 +2458,16 @@ th {
     box-sizing: border-box;
 }
 
-
-input,
 button,
+input,
 select,
 textarea {
+    background: #0f0f1f;
+    border: 1px solid rgba(255, 255, 255, 0.23);
+    border-radius: 2px;
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
-    background: #fff;
-    border: none;
-    border-radius: 2px;
     padding: 3px 5px;
 }
 

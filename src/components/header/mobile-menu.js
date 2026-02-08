@@ -15,7 +15,7 @@ import ComingSoon from '../pages/comingsoon/ComingSoon';
 
 
 function MobileMenu(props) {
-  const {user} = props;
+  const { user } = props;
   const [show, setShow] = useState(false);
   const [state, dispatch] = useContext(Context);
   const [darkMode, setDarkMode] = useState(false);
@@ -43,7 +43,7 @@ function MobileMenu(props) {
   );
 
   const CanvasBottom = () => {
-      
+
     return (
       <div className='flex text-center '>
         {/* <div
@@ -59,11 +59,11 @@ function MobileMenu(props) {
           <><IoMoon  className='big-offcanvas-icon mx-auto'/> Dark Theme</>
         )}
         </div> */}
-        
+
         <div className='col-6 offcanvas-big-icon p-5'>
           <Link
             to="/logout"
-            
+
             onMouseOver={(e) => (e.currentTarget.style.color = '#c82333')}
             onMouseOut={(e) => (e.currentTarget.style.color = '#dc3545')}
           >
@@ -75,11 +75,11 @@ function MobileMenu(props) {
       </div>
     );
   };
-  
+
   return (
     <span className="inline-block" style={{ height: 'auto' }}>
       <span className='font-[500] cursor-pointer user-profile' onClick={handleShow}>
-        <FaRegUser className='inline-block user-profile-icon'/> <span className='hidden md:inline-block'>My</span> Account
+        <FaRegUser className='inline-block user-profile-icon' /> <span className='hidden md:inline-block'>My</span> Account
       </span>
 
       <Offcanvas
@@ -87,7 +87,7 @@ function MobileMenu(props) {
         show={show}
         onHide={handleClose}
         className="header-account"
-        style={{height: 'auto' }} 
+        style={{ height: 'auto' }}
       >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>
@@ -101,13 +101,14 @@ function MobileMenu(props) {
           </div>
 
           <div className="cd" onClick={() => setShow(false)}>
-            <Link to={"/deposit"}  className="cd-l"><GiTwoCoins className='inline-block mr-3' /> Deposit</Link>
+            <Link to={"/deposit"} className="cd-l"><GiTwoCoins className='inline-block mr-3' /> Deposit</Link>
             <Link to={"/withdraw"} className="cd-l"><BiMoneyWithdraw className='mr-3 inline-block' /> Withdraw</Link>
             <Link to={"/promo-wins"}><FaGifts className='mr-3 inline-block' /> Promo Wins (0)</Link>
-            <div className="cd-l" onClick={() => dispatch({type: "SET", key:"showcheckmpesadepositstatus", payload: true})}><FaCheckToSlot className='mr-3 inline-block' /> Check MPESA Deposit status</div>
+            <div className="cd-l" onClick={() => dispatch({ type: "SET", key: "showcheckmpesadepositstatus", payload: true })}><FaCheckToSlot className='mr-3 inline-block' /> Check MPESA Deposit status</div>
             <Link to="/my-bets" className="cd-l"><IoListCircleOutline className='mr-3 inline-block' /> My bets</Link>
             <Link to="/promotions" className="cd-l"><FaGifts className='mr-3 inline-block' /> Promotions</Link>
             <Link to="/exclude" className="cd-l"><MdCancel className='mr-3 inline-block' /> Exclude myself from betting</Link>
+            <Link to="/reset-password" className="cd-l"><MdCancel className='mr-3 inline-block' /> Change Password</Link>
           </div>
 
           <CanvasBottom />
