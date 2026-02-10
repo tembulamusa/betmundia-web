@@ -157,7 +157,7 @@ const Deposit = (props) => {
                         <div className="col"> 2. Select Lipa na mpesa</div>
                     </div>
                     <div className="row">
-                        <div className="col"> 3. Enter Paybill number: <span className='text-2x font-bold'>444142/444738</span></div>
+                        <div className="col"> 3. Enter Paybill number: <span className='text-2x font-bold'>444142/</span></div>
                     </div>
                     <div className="row">
                         <div className="col"> 4. Account Number:
@@ -232,7 +232,7 @@ const Deposit = (props) => {
                                 >
                                     <Accordion.Item eventKey={0}>
                                         <Accordion.Header className='capitalize'>
-                                            <span className='capitalize'>Deposit via paybill number (444142/444738)</span>
+                                            <span className='capitalize'>Deposit via paybill number (444142/)</span>
                                         </Accordion.Header>
                                         <Accordion.Body>
                                             <PaymentInstructions />

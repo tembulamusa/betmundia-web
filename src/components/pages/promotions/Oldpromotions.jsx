@@ -46,7 +46,7 @@ const Promotions = () => {
                         <span><u>How to get it</u></span>
                         <ul>
                             <li>
-                                Deposit KES.50 and above to Betmundial Paybill 444142/444738 using your phone number as the account number
+                                Deposit KES.50 and above to Betmundial Paybill 444142/ using your phone number as the account number
                             </li>
                         </ul>
                         <div className="col-md-12">

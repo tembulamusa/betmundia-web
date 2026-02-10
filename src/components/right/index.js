@@ -40,7 +40,7 @@ const PaybillNumbersSection = () => (
           <span className="lazy lazy-loaded">
             <img src={Mpesa} style={{ maxWidth: "110px" }} alt='paybill' />
           </span>
-          <span style={{ paddingRight: "10px" }}>444142/444738</span>
+          <span style={{ paddingRight: "10px" }}>444142</span>
         </li>
       </ul>
     </div>
