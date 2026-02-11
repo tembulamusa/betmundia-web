@@ -163,7 +163,7 @@ const Index = (props) => {
                         live={false}
                         matches={matches}
                         producers={producers}
-                        three_way={['competition', 'threeway'].includes(state?.filtersport?.sport_type?.toLowerCase())}
+                        three_way={['competition', 'threeway'].includes(state?.filtersport?.sport_type?.toLowerCase()) ?? true}
                         fetching={fetching}
                         subTypes={state?.filtersport
                             ?

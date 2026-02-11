@@ -17,6 +17,8 @@ const BigIconMenu = () => {
     const [casinoProviders, setCasinoProviders] = useState([]);
     const navigate = useNavigate();
     const loc = useLocation();
+    const excludedProviderList = ["unicraft", "aviatorllc"];
+
 
 
     const linkItems = [
@@ -178,8 +180,15 @@ const BigIconMenu = () => {
         refCurrent?.addEventListener('scroll', handleScroll);
         return () => refCurrent?.removeEventListener('scroll', handleScroll);
     }, []);
+
     useEffect(() => {
-        setCasinoProviders(state?.casinofilters?.providers);
+        const providers = state?.casinofilters?.providers || [];
+
+        const filteredProviders = providers.filter(provider =>
+            !excludedProviderList.includes(provider?.name?.toLowerCase())
+        );
+
+        setCasinoProviders(filteredProviders);
     }, [state?.casinofilters])
 
     useEffect(() => {
