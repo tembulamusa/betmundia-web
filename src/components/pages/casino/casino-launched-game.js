@@ -18,7 +18,7 @@ const CasinoLaunchedGame = (props) => {
     const { provider, gameName } = useParams();
     const [bitvilleGame, setBitvilleGame] = useState(false);
     const surePopular = window.location.pathname.includes("sure-popular");
-    const directLaunch = ['virtual-league', 'aviator']
+    const directLaunch = ['virtual-league']
 
     const findGameId = (provider, gameName) => {
         const games = state?.casinofilters?.games?.[0]?.gameList || [];
@@ -51,9 +51,9 @@ const CasinoLaunchedGame = (props) => {
 
     const launchOldWay = async () => {
         let endpoint = `Eurovirtuals/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/${"550e8400-e29b-41d4-a716-446655440000"}`;
-        if (provider.toLowerCase() === "aviator") {
-            endpoint = `intouchvas/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/1-Aviator`;
-        }
+        // if (provider.toLowerCase() === "aviator") {
+        //     endpoint = `intouchvas/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/1-Aviator`;
+        // }
         await makeRequest({ url: endpoint, method: "GET", api_version: "CasinoGameLaunch" }).then(
             ([status, result]) => {
                 if (status === 200) {
