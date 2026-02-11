@@ -18,7 +18,7 @@ const CasinoLaunchedGame = (props) => {
     const { provider, gameName } = useParams();
     const [bitvilleGame, setBitvilleGame] = useState(false);
     const surePopular = window.location.pathname.includes("sure-popular");
-    const directLaunch = ['virtual-league']
+    const directLaunch = ['mundial-league', 'aviator']
 
     const findGameId = (provider, gameName) => {
         const games = state?.casinofilters?.games?.[0]?.gameList || [];
@@ -50,14 +50,18 @@ const CasinoLaunchedGame = (props) => {
     };
 
     const launchOldWay = async () => {
-        let endpoint = `Eurovirtuals/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/${"550e8400-e29b-41d4-a716-446655440000"}`;
-        // if (provider.toLowerCase() === "aviator") {
-        //     endpoint = `intouchvas/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/1-Aviator`;
-        // }
+        let endpoint = `Unicraft/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/${"uicraftvirtuals"}`;
+        if (provider.toLowerCase() === "aviatorllc") {
+            endpoint = `Bitville/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/14914`;
+        }
         await makeRequest({ url: endpoint, method: "GET", api_version: "CasinoGameLaunch" }).then(
             ([status, result]) => {
                 if (status === 200) {
                     setNoStateGame(result?.gameUrl || result?.game_url);
+                    if (result?.aggregator?.toLowerCase() == "bitville") {
+                        dispatch({ type: "SET", key: "bitvilleGame", payload: result });
+                        setBitvilleGame(true);
+                    }
                 } else {
                     navigate("/casino");
                 }
@@ -114,7 +118,6 @@ const CasinoLaunchedGame = (props) => {
 
         script.onload = () => {
             if (!window.bv?.Parent) return;
-
             const bvComponent = new window.bv.Parent(
                 "bv-loader",
                 `${state?.bitvilleGame?.game_base_url}/partner`
