@@ -23,7 +23,7 @@ const Index = (props) => {
     const location = useLocation();
     const { sportid, categoryid, competitionid } = useParams();
     const [allSportId, setAllSportId] = useState();
-
+    const [three_way, setThreeWay] = useState(true);
     const [matches, setMatches] = useState();
     const [limit, setLimit] = useState(300);
     const [page, setPage] = useState(1);
@@ -87,6 +87,12 @@ const Index = (props) => {
         //     }
         // } 
         endpoint = endpoint.replaceAll(" ", '');
+        if (filtersport) {
+            setThreeWay((['competition', 'threeway'].includes(filtersport?.sport_type?.toLowerCase())));
+        } else {
+            setThreeWay(true);
+        }
+
 
         makeRequest({ url: endpoint, method: method, api_version: 2 }).then(([status, result]) => {
             setFetchingCount(fetchcount);
@@ -163,7 +169,7 @@ const Index = (props) => {
                         live={false}
                         matches={matches}
                         producers={producers}
-                        three_way={['competition', 'threeway'].includes(state?.filtersport?.sport_type?.toLowerCase()) ?? true}
+                        three_way={three_way}
                         fetching={fetching}
                         subTypes={state?.filtersport
                             ?
