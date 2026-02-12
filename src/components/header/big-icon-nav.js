@@ -17,7 +17,7 @@ const BigIconMenu = () => {
     const [casinoProviders, setCasinoProviders] = useState([]);
     const navigate = useNavigate();
     const loc = useLocation();
-    const excludedProviderList = ["unicraft", "aviatorllc"];
+    const excludedProviderList = ["unicraft"];
 
 
 

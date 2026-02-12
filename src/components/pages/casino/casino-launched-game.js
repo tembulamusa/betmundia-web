@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../../context/store";
-import { getFromLocalStorage, setLocalStorage } from "../../utils/local-storage";
+import { getFromLocalStorage, setLocalStorage, removeItem } from "../../utils/local-storage";
 import { useNavigate, useParams } from "react-router-dom";
 import { MdOutlineClose } from "react-icons/md";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -20,6 +20,17 @@ const CasinoLaunchedGame = (props) => {
     const surePopular = window.location.pathname.includes("sure-popular");
     const directLaunch = ['mundial-league', 'aviator']
 
+    const handleSessionExpired = () => {
+        window.alert("Session expired. Please log in again.");
+        removeItem("user");
+        removeItem("casinolaunch");
+        dispatch({ type: "DEL", key: "user" });
+        dispatch({ type: "SET", key: "casinolaunch", payload: { game: "", url: "" } });
+        dispatch({ type: "SET", key: "showloginmodal", payload: true });
+        dispatch({ type: "SET", key: "sessionMessage", payload: "Session expired. Please log in again." });
+        navigate("/casino");
+    };
+
     const findGameId = (provider, gameName) => {
         const games = state?.casinofilters?.games?.[0]?.gameList || [];
         const matchedGame = games.find(
@@ -38,9 +49,14 @@ const CasinoLaunchedGame = (props) => {
         await makeRequest({ url: endpoint, method: "GET", api_version: "CasinoGameLaunch" }).then(
             ([status, result]) => {
                 if (status === 200) {
-                    setNoStateGame(result?.gameUrl || result?.game_url);
-                    if (result?.aggregator?.toLowerCase() == "bitville") {
-                        dispatch({ type: "SET", key: "bitvilleGame", payload: result });
+                    const url = result?.gameUrl || result?.game_url || result?.token;
+                    if (url) {
+                        setNoStateGame(url);
+                        if (result?.aggregator?.toLowerCase() == "bitville") {
+                            dispatch({ type: "SET", key: "bitvilleGame", payload: result });
+                        }
+                    } else {
+                        handleSessionExpired();
                     }
                 } else {
                     navigate("/casino");
@@ -60,10 +76,15 @@ const CasinoLaunchedGame = (props) => {
         await makeRequest({ url: endpoint, method: "GET", api_version: "CasinoGameLaunch" }).then(
             ([status, result]) => {
                 if (status === 200) {
-                    setNoStateGame(result?.gameUrl || result?.game_url);
-                    if (result?.aggregator?.toLowerCase() == "bitville") {
-                        dispatch({ type: "SET", key: "bitvilleGame", payload: result });
-                        setBitvilleGame(true);
+                    const url = result?.gameUrl || result?.game_url || result?.token;
+                    if (url) {
+                        setNoStateGame(url);
+                        if (result?.aggregator?.toLowerCase() == "bitville") {
+                            dispatch({ type: "SET", key: "bitvilleGame", payload: result });
+                            setBitvilleGame(true);
+                        }
+                    } else {
+                        handleSessionExpired();
                     }
                 } else {
                     navigate("/casino");
@@ -94,13 +115,17 @@ const CasinoLaunchedGame = (props) => {
             } else {
                 let game = state?.casinolaunch || getFromLocalStorage("casinolaunch");
                 dispatch({ type: "SET", key: "casinolaunch", payload: game });
-                if (game?.aggregator?.toLowerCase() == "bitville"
-                    ||
-                    game?.game?.aggregator?.toLowerCase() == "bitville"
-                ) {
-                    setBitvilleGame(true);
+                const parsedUrl = game?.url || game?.game?.token || game?.gameUrl || game?.game?.game_url;
+                if (parsedUrl || game?.game?.aggregator?.toLowerCase() == "bitville") {
+                    if (game?.aggregator?.toLowerCase() == "bitville"
+                        || game?.game?.aggregator?.toLowerCase() == "bitville"
+                    ) {
+                        setBitvilleGame(true);
+                    }
+                    setNoStateGame(parsedUrl);
+                } else {
+                    handleSessionExpired();
                 }
-                setNoStateGame(game.url);
             }
         }
 
@@ -114,7 +139,10 @@ const CasinoLaunchedGame = (props) => {
 
     useEffect(() => {
         if (!bitvilleGame) return;
-        if (!state?.bitvilleGame?.token) return;
+        if (!state?.bitvilleGame?.token) {
+            handleSessionExpired();
+            return
+        };
         const script = document.createElement("script");
         script.src = `${state?.bitvilleGame?.game_base_url}/js/BVComponents.min.js?v=1.1.0`;
         script.async = true;
