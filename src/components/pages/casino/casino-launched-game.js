@@ -54,6 +54,9 @@ const CasinoLaunchedGame = (props) => {
         if (provider.toLowerCase() === "aviatorllc") {
             endpoint = `Bitville/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/14914`;
         }
+        if (provider.toLowerCase() === "spribe") {
+            endpoint = `Bitville/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/1370`;
+        }
         await makeRequest({ url: endpoint, method: "GET", api_version: "CasinoGameLaunch" }).then(
             ([status, result]) => {
                 if (status === 200) {
