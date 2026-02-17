@@ -5,7 +5,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 // import banner5 from '../../assets/img/banner/products/Daily-JackPot.png'
 import Breakfast from '../../assets/img/banner/carousel/breakfast.jpg';
 import App from '../../assets/img/banner/carousel/app.jpeg';
-import Sharebet from '../../assets/img/banner/carousel/Sharebet.png';
+import Sharebet from '../../assets/img/banner/carousel/Sharebet.jpeg';
 import MultiBet from '../../assets/img/banner/carousel/multibet.jpeg';
 import Epl from '../../assets/img/banner/carousel/vuna.jpeg';
 import Live from '../../assets/img/banner/carousel/live.png';
