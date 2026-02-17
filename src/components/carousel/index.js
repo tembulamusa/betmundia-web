@@ -4,14 +4,14 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 
 // import banner5 from '../../assets/img/banner/products/Daily-JackPot.png'
 import Breakfast from '../../assets/img/banner/carousel/breakfast.jpg';
-import App from '../../assets/img/banner/carousel/app.jpg';
+import App from '../../assets/img/banner/carousel/app.jpeg';
 import Sharebet from '../../assets/img/banner/carousel/Sharebet.png';
-import MultiBet from '../../assets/img/banner/carousel/multibet.jpg';
-import Epl from '../../assets/img/banner/carousel/vuna.jpg';
+import MultiBet from '../../assets/img/banner/carousel/multibet.jpeg';
+import Epl from '../../assets/img/banner/carousel/vuna.jpeg';
 import Live from '../../assets/img/banner/carousel/live.png';
 import Casino from '../../assets/img/banner/carousel/casino.png';
 import Jackpot from '../../assets/img/banner/carousel/jackpot.jpg';
-import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpg';
+import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg';
 import { Link } from 'react-router-dom';
 
 

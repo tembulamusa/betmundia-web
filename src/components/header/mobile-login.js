@@ -241,7 +241,7 @@ const BodyLogin = (props) => {
                             </div>
                         </div>
 
-                        <div className='cursor-pointer px-0 mt-4 font-[500] hover:underline' to="/forgot-password" title="Forgot password" onClick={() => navigateAway("/forgot-password")} style={{ color: 'rgba(231, 6, 84, 1)' }}>
+                        <div className='cursor-pointer px-0 mt-4 font-[500] hover:underline' to="/forgot-password" title="Forgot password" onClick={() => navigateAway("/forgot-password")} style={{ color: '#a71f66' }}>
                             <span className="">Forgot Password</span>
                         </div>
                         <div className="my-5 px-0 cursor-pointer ">

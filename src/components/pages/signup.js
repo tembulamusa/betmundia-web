@@ -229,14 +229,14 @@ const Signup = (props) => {
                                     Signup
                                 </button>
                             </div>
-                            <Link to="/login" title="Already Registered?" className='mt-4 text-2xl hover:underline' style={{ color: 'rgba(231, 6, 84, 1)' }}>
+                            <Link to="/login" title="Already Registered?" className='mt-4 text-2xl hover:underline' style={{ color: '#a71f66' }}>
                                 <span className="font-[500]">Have an account? Login here</span>
                             </Link>
                         </div>
 
                         <div className='disclaimer mt-5 text-center' style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                             <p>
-                                By registering for an account, you agree to our <Link to={"/terms"} style={{ color: 'rgba(231, 6, 84, 1)' }}>Terms of Use,</Link> <Link to={"/privacy-policy"} style={{ color: 'rgba(231, 6, 84, 1)' }}>Privacy Policy</Link> and Responsible Gambling Policy.
+                                By registering for an account, you agree to our <Link to={"/terms"} style={{ color: '#a71f66' }}>Terms of Use,</Link> <Link to={"/privacy-policy"} style={{ color: '#a71f66' }}>Privacy Policy</Link> and Responsible Gambling Policy.
                             </p>
                             <p className='mt-4'>
                                 You must be 18yrs and above in order to sign up.

@@ -147,7 +147,7 @@
 
 .casino-list-block ul li:hover,
 .casino-list-block ul li.active {
-    background-color: rgba(231, 6, 84, 0.958) !important;
+    background-color: #a71f66 !important;
     color: #ffffff;
     /* transition: all ease-in-out 0.3s; */
     padding-left: 8px;

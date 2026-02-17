@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { getFromLocalStorage } from "./utils/local-storage";
 import { Link } from 'react-router-dom';
 
-import AviatorImg from '../assets/img/popups/aviator.jpg';
-import AviatrixImg from '../assets/img/popups/aviatrix.jpg';
+import AviatorImg from '../assets/img/popups/aviator.jpeg';
+import AviatrixImg from '../assets/img/popups/aviatrix.jpeg';
 import JetXImg from '../assets/img/popups/jetx.jpg';
-import VirtualLeagueImg from '../assets/img/popups/mundial-league.jpg';
-import SpacemanImg from '../assets/img/popups/spaceman.jpg';
+import VirtualLeagueImg from '../assets/img/popups/mundial-league.jpeg';
+import SpacemanImg from '../assets/img/popups/spaceman.jpeg';
 
 const images = [
     { src: AviatorImg, link: "/casino-game/aviator/aviator" },

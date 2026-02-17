@@ -19,8 +19,6 @@ const BigIconMenu = () => {
     const loc = useLocation();
     const excludedProviderList = ["unicraft"];
 
-
-
     const linkItems = [
         // {name: "home", icon:"home.svg", link:"/", parentTo:null},
         { name: "live", icon: "livescore.svg", link: "/live", parentTo: null },

@@ -92,7 +92,7 @@
 }
 
 .filter-icon {
-    /* background: rgba(231, 6, 84, 0.958); */
+    /* background: #a71f66; */
     width: -moz-fit-content;
     width: fit-content;
     /* margin: 5px 0px 5px 0px; */
@@ -154,7 +154,7 @@
     position: sticky !important;
     margin-left: 2px;
     outline: none !important;
-    color: rgba(231, 6, 84, 0.958);
+    color: #a71f66;
     border-radius: ;
     margin-right: 5px !important;
     margin-top: 5px !important;
@@ -945,7 +945,7 @@ li a,
 }
 
 .top-matches button:hover {
-    background: rgba(231, 6, 84, 0.958) !important;
+    background: #a71f66 !important;
     color: #fff;
 }
 
@@ -2176,7 +2176,7 @@ events-header {
 
 .top-matches button.picked,
 .matches .top-matches .match-detail button.home-team.picked {
-    background: rgba(231, 6, 84, 0.958) !important;
+    background: #a71f66 !important;
 }
 
 
@@ -10697,7 +10697,7 @@ button.close {
 }
 
 .modal-header {
-    background-color: rgba(231, 6, 84, 0.958) !important;
+    background-color: #a71f66 !important;
     color: #ffffff;
     border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
@@ -15699,7 +15699,7 @@ li a.live-game:hover {
 
 .login-button {
     color: #ffffff;
-    background-color: rgba(231, 6, 84, 0.958) !important;
+    background-color: #a71f66 !important;
     border-color: #24367e;
     height: 29px;
     padding: 0px 10px;
@@ -15943,8 +15943,8 @@ li a.live-game:hover {
 
 .btn-secondary {
     color: #fff;
-    background-color: rgba(231, 6, 84, 0.958);
-    background-color: rgba(231, 6, 84, 0.958);
+    background-color: #a71f66;
+    background-color: #a71f66;
     padding: 5px 20px;
     font-size: 14px;
     line-height: 24px;
@@ -15961,8 +15961,8 @@ li a.live-game:hover {
 .btn-secondary:active,
 .show>.btn-secondary.dropdown-toggle {
 
-    background-color: rgba(231, 6, 84, 0.958);
-    border-color: rgba(231, 6, 84, 0.958);
+    background-color: #a71f66;
+    border-color: #a71f66;
 }
 
 .dropdown-item {
@@ -15975,8 +15975,8 @@ li a.live-game:hover {
 .btn-check:focus+.btn-secondary,
 .btn-secondary:focus {
     color: #fff;
-    background-color: rgba(231, 6, 84, 0.958);
-    border-color: rgba(231, 6, 84, 0.958);
+    background-color: #a71f66;
+    border-color: #a71f66;
 }
 
 .promo-pannel {

@@ -85,7 +85,7 @@ code {
 }
 
 .bg-pink {
-  background: rgba(231, 6, 84, 0.958);
+  background: #a71f66;
 }
 
 .betslip-sport-icon {
@@ -109,13 +109,13 @@ code {
 }
 
 .home-tab-active {
-  border-bottom-color: rgba(231, 6, 84, 0.958);
-  color: rgba(231, 6, 84, 0.958);
+  border-bottom-color: #a71f66;
+  color: #a71f66;
 }
 
 .home-tabs:hover {
-  border-bottom-color: rgba(231, 6, 84, 0.958);
-  color: rgba(231, 6, 84, 0.958);
+  border-bottom-color: #a71f66;
+  color: #a71f66;
   /* opacity: 0.; */
   transition: all ease-in 1s;
 }
@@ -140,7 +140,7 @@ code {
 }
 
 .btn.bg-primary {
-  background: rgba(231, 6, 84, 0.958) !important;
+  background: #a71f66 !important;
   border: 1px solid rgba(255, 255, 255, 0.31) !important;
   color: #ffffff;
 }
@@ -1017,8 +1017,8 @@ input.std-input::placeholder {
 
 .main-tabs-submenu.active,
 .main-tabs-submenu:hover {
-  border-bottom-color: rgba(231, 6, 84, 0.958);
-  color: rgba(231, 6, 84, 0.958);
+  border-bottom-color: #a71f66;
+  color: #a71f66;
   transition: all ease-in 0.4s;
   -moz-transition: all ease-in 0.4s;
   -webkit-transition: all ease-in 0.4s;
@@ -1184,8 +1184,8 @@ input.std-input::placeholder {
 .plain-tabs.nav-tabs .nav-link.active {
   background-color: transparent;
   color: inherit;
-  background: rgba(231, 6, 84, 0.958) !important;
-  border-bottom-color: rgba(231, 6, 84, 0.958) !important;
+  background: #a71f66 !important;
+  border-bottom-color: #a71f66 !important;
 }
 
 .plain-tabs .tab-content {
@@ -1409,7 +1409,7 @@ img.highlights-content-img {
 }
 
 .highlight-color {
-  color: rgba(231, 6, 84, 0.958);
+  color: #a71f66;
 }
 
 .blink-me {
@@ -1660,8 +1660,8 @@ h1.std-title {
 
 .livescore-footer-links .footer-item.active,
 .livescore-footer-links .footer-item:hover {
-  border-bottom-color: rgba(231, 6, 84, 0.958) !important;
-  color: rgba(231, 6, 84, 0.958) !important;
+  border-bottom-color: #a71f66 !important;
+  color: #a71f66 !important;
   opacity: 1;
 }
 
@@ -1767,7 +1767,7 @@ h1.std-title {
 }
 
 .user-profile-icon {
-  background: rgba(231, 6, 84, 1);
+  background: #a71f66;
   width: 20px;
   height: 20px;
   padding: 4px;
@@ -1795,7 +1795,7 @@ svg.big-offcanvas-icon {
 }
 
 .ps-menu-button.ps-open {
-  background: rgba(231, 6, 84, 0.958) !important;
+  background: #a71f66 !important;
   color: white !important;
 }
 
@@ -1806,7 +1806,7 @@ svg.big-offcanvas-icon {
 }
 
 .betslip-header.bg-secondary {
-  background: rgba(231, 6, 84, 0.958) !important;
+  background: #a71f66 !important;
 }
 
 .header-menu li.active,
@@ -1835,7 +1835,7 @@ svg.big-offcanvas-icon {
 }
 
 .red-bg {
-  background: rgba(231, 6, 84, 1) !important;
+  background: #a71f66 !important;
   color: #ffffff !important;
 }
 
