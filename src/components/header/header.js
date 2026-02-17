@@ -19,6 +19,7 @@ import DepositModal from '../webmodals/deposit-modal';
 import useInterval from "../../hooks/set-interval.hook";
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import socket from '../utils/socket-connect';
+import HeaderNav from './header-nav';
 
 const ProfileMenu = React.lazy(() => import('./profile-menu'));
 const HeaderLogin = React.lazy(() => import('./top-login'));
@@ -217,7 +218,10 @@ const Header = (props) => {
 
                         <div className="col-md-7 col-sm-6" id="navbar-collapse-main">
                             {/* {user ? <ProfileMenu user={user}/> : <HeaderLogin setUser={setUser}/>} */}
-                            {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
+                            <div className="flex">
+                                <HeaderNav />
+                                {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
+                            </div>
                         </div>
 
                     </Container>
