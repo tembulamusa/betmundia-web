@@ -295,6 +295,10 @@ const BetslipSubmitForm = (props) => {
                                 amtDiff = 5.00
                             }
                             dispatch({ type: "SET", key: "promptdepositrequest", payload: { show: true, payableAmt: amtDiff, message: { status: 400, message: response.result } } })
+                        } else if (qmessage.status == 403) {
+                            removeItem("user");
+                            dispatch({ type: "SET", key: "showloginmodal", payload: true })
+
                         } else {
                             setMessage(qmessage);
                         }

@@ -71,39 +71,7 @@ const HeaderNav = (props) => {
 
                 <ListGroup as="ul" xs="12" horizontal className={`font-bold nav navbar-nav og d-flex ale ss  col-lg-12 col-md-12 col-sm-12 change-display ${searching && "!hidden"}`}>
 
-                    {/* <li className={pathname == '/' ? "active" : ''}>
-                        <Link className="cg fm ox anl url-link not-selectable " to={"/"} title="Home"><span className=" space-icons"><FontAwesomeIcon icon={HomeIcon} /> </span> Home</Link>
-                    </li>
-                    <li className={pathname == '/live' ? "active" : ''}>
-                        <Link className={`cg fm ox anl url-link`} to={"/live"}
-                           title="Live"><span className=" space-icons"><FontAwesomeIcon icon={faVideo} /> </span>Live</Link>
-                    </li>
 
-                    <li className={pathname == '/jackpot' ? 'active' : ''}>
-                        <Link className="cg fm ox anl url-link" to={"/jackpot"}>
-                            <span className=" space-icons"><FontAwesomeIcon icon={faCoins} /> </span> Jackpot
-                        </Link>
-                    </li>
-                    <li className={pathname == '/app' ? 'active' : ''}>
-                        <Link className="g url-link" to={"/app"}>
-                            <span>
-                                <FontAwesomeIcon icon={faMobile} className="hide1"/> APP
-                            </span>
-                        </Link>
-                    </li>
-
-                   
-                    <li className={pathname == '/promotions' || pathname.includes("promotions") ? 'active' : ''}>
-                        <Link className="g url-link" to={"/promotions"}>
-                            <span className=" space-icons"><FontAwesomeIcon icon={faVolumeUp} /> </span> Promotions
-                        </Link>
-                    </li>
-
-                    <li className={pathname == '/print-matches' ? 'active py-3' : 'py-md-0 py-lg-3 py-sm-0 d-flex align-items-center'}>
-                        <Link className="g url-link fix-print" to={"/print-matches"}>
-                            <span className=" space-icons hide1"><FontAwesomeIcon icon={faPrint}/> </span>Print  Matches
-                        </Link>
-                    </li> */}
 
                     <li className={pathname == '/print-matches' ? 'spacing-end' : 'spacing-end'}>
                         <Link className="g url-link fix-display" to="#" title="Search"
@@ -111,16 +79,7 @@ const HeaderNav = (props) => {
                             <span className=" space-icons"><FontAwesomeIcon icon={faSearch} /> </span><span className={'hide2'}>Search</span>
                         </Link>
                     </li>
-                    {/* <li className={pathname == '/how-to-play' ? 'active' : ''}>
-                        <Link className="g url-link fix-display" to={"/how-to-play"}>
-                            <span className=" space-icons"><FontAwesomeIcon icon={faQuestionCircle} /> </span> <span className={'hide2'}>Help</span>
-                        </Link>
-                    </li>
-                    <li className={""}>
-                        <Link className="g url-link fix-display" to="#" title="Current Time">
-                            <span className=" space-icons"><FontAwesomeIcon icon={faClock} /> </span> <span className={'hide2'}>{time}</span>
-                        </Link>
-                    </li> */}
+
                 </ListGroup>
 
             </Container>
