@@ -341,7 +341,7 @@ const BetslipSubmitForm = (props) => {
 
             let stake_after_tax = (stake / 100) * 100
             let ext = stake - stake_after_tax;
-            let raw_possible_win = stake * Float(odds);
+            let raw_possible_win = Float(stake * odds);
 
             if (jackpot) {
                 raw_possible_win = jackpotData?.jackpot_amount
@@ -356,7 +356,7 @@ const BetslipSubmitForm = (props) => {
             let computeExAmt = stake - Float(stake_after_tax, 2);
             setStakeAfterTax(Float(stake_after_tax, 2));
             setExciseTax(Math.round(computeExAmt * (10 ** 2)) / (10 ** 2));
-            setNetWin(nw > Float(5000000) ? Float(5000000) : Float(nw, 2));
+            setNetWin(nw > Float(5000000) ? Float(5000000) : nw);
             setPossibleWin(Float(raw_possible_win, 2));
             setWithholdingTax(Float(wint, 2));
             setBonus(Float(stake_after_tax * Float(odds) * Float(centageInt), 2))
@@ -531,11 +531,11 @@ const BetslipSubmitForm = (props) => {
                                             <td colSpan="2"></td>
                                         </tr>
                                         {!jackpot && <tr className="bet-win-tr hide-on-affix">
-                                            <td className='opacity-70 py-2'>Stake after tax</td>
+                                            {/* <td className='opacity-70 py-2'>Stake after tax</td>
                                             <td className='text-right py-2 pr-2'>
                                                 KSH. <span
                                                     id="pos_win">{formatNumber(stakeAfterTax)}</span>
-                                            </td>
+                                            </td> */}
                                         </tr>}
 
                                         <tr className="bet-win-tr hide-on-affix">
@@ -575,7 +575,7 @@ const BetslipSubmitForm = (props) => {
                                         <tr className="bet-win-tr hide-on-affix">
                                             <td className='py-2 px-3'>{'possible Win'}</td>
                                             <td className='px-3 text-right py-2'>KSH. <span
-                                                id="net-amount">{formatNumber(jackpot ? jackpotData?.jackpot_amount : Float((netWin + bonus), 2))}</span></td>
+                                                id="net-amount">{formatNumber(jackpot ? jackpotData?.jackpot_amount : parseFloat((netWin + bonus)).toFixed(2))}</span></td>
                                         </tr>
                                         <tr>
                                             <td className='w-1/2 px-3 py-3'>
