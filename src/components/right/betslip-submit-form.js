@@ -341,8 +341,7 @@ const BetslipSubmitForm = (props) => {
 
             let stake_after_tax = (stake / 100) * 100
             let ext = stake - stake_after_tax;
-            let raw_possible_win = stake_after_tax * Float(odds);
-            raw_possible_win += raw_possible_win * Float(centageInt);
+            let raw_possible_win = stake * Float(odds);
 
             if (jackpot) {
                 raw_possible_win = jackpotData?.jackpot_amount
@@ -353,7 +352,7 @@ const BetslipSubmitForm = (props) => {
             let taxable_amount = raw_possible_win - stake;
 
             let wint = taxable_amount * 0.2;
-            let nw = raw_possible_win - wint;
+            let nw = raw_possible_win;
             let computeExAmt = stake - Float(stake_after_tax, 2);
             setStakeAfterTax(Float(stake_after_tax, 2));
             setExciseTax(Math.round(computeExAmt * (10 ** 2)) / (10 ** 2));
@@ -561,20 +560,22 @@ const BetslipSubmitForm = (props) => {
                                                         <span id="tax"> {formatNumber(bonus)}</span>
                                                     </td>
                                                 </tr>
-                                                <tr className="bet-win-tr hide-on-affix opacity-70">
+                                                {/* <tr className="bet-win-tr hide-on-affix opacity-70">
                                                     <td className='px-3'> Win</td>
                                                     <td className='text-right px-3'>KES. <span id="tax">{formatNumber(possibleWin)}</span></td>
-                                                </tr>
+                                                </tr> */}
+                                                {/* 
                                                 <tr className="bet-win-tr hide-on-affix opacity-70">
-                                                    <td className='px-3'> Withholding (20%)</td>
+                                                    <td className='px-3'> Withholding (20%)</td> 
                                                     <td className='text-right px-3'>KES. <span id="tax">{formatNumber(withholdingTax)}</span></td>
                                                 </tr>
+                                                */}
                                             </>
                                         )}
                                         <tr className="bet-win-tr hide-on-affix">
-                                            <td className='py-2 px-3'>{'possible payout'}</td>
+                                            <td className='py-2 px-3'>{'possible Win'}</td>
                                             <td className='px-3 text-right py-2'>KSH. <span
-                                                id="net-amount">{formatNumber(jackpot ? jackpotData?.jackpot_amount : Float((netWin), 2))}</span></td>
+                                                id="net-amount">{formatNumber(jackpot ? jackpotData?.jackpot_amount : Float((netWin + bonus), 2))}</span></td>
                                         </tr>
                                         <tr>
                                             <td className='w-1/2 px-3 py-3'>

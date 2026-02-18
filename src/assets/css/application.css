@@ -378,22 +378,18 @@ li.bet-option {}
 .place-bet-btn.primary,
 .place_bet_button {
   display: inline-block;
-  background-color: rgba(231, 6, 84, 0.95) !important;
+  background-color: #a71f66 !important;
   color: #fff !important;
-
   padding: 10px 14px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-
+  border: 1px solid rgba(255, 255, 255, 0.025);
   font-size: 14px;
   font-weight: 600;
   text-align: center;
   cursor: pointer;
-
   transition: background-color 0.25s ease,
     transform 0.15s ease,
     box-shadow 0.25s ease;
-
   width: 100% !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
