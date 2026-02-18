@@ -52,8 +52,16 @@ const Casino = (props) => {
             endpoint = `provider/games-list/${providerId}/${categoryId}?page=${page}&limit=${limit}`;
         }
 
-        const [status, result] = await makeRequest({ url: endpoint, method: "GET", api_version: "casinoGames" });
-        if (status === 200) {
+        let search_term = state?.searchterm || "";
+        let method = "GET";
+        let data = null;
+        if (search_term && search_term.length >= 3) {
+            method = "POST";
+            data = { search: search_term };
+            endpoint = `games/search`;
+        }
+        const [status, result] = await makeRequest({ url: endpoint, method: method, data: data, api_version: "casinoGames" });
+        if ([200, 201].includes(status)) {
             let fetchedGames;
             if (endpoint.includes("game-type")) {
 
@@ -79,7 +87,7 @@ const Casino = (props) => {
     };
     useEffect(() => {
         fetchCasinoGames();
-    }, [state?.casinogamesfilter]);
+    }, [state?.casinogamesfilter, state?.searchterm]);
 
     useEffect(() => {
         dispatch({ type: "SET", key: "nosports", payload: true });
