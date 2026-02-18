@@ -91,11 +91,14 @@ const HeaderNav = (props) => {
                             <input type="text"
                                 onChange={(ev) => updateSearchTerm(ev)}
                                 placeholder={'Start typing to search for team ...'}
+                                style={{ border: "1px solid rgba(255,255,255, 0.22) !important" }}
                                 className={'form-control input-field border-0  no-border-radius'}
                             />
                         </div>
 
-                        <button className={'btn text-white -align-right'} onClick={() => dismissSearch()}>
+                        <button
+                            style={{ border: "1px solid rgba(255,255,255, 0.22) !important" }}
+                            className={'btn text-white -align-right'} onClick={() => dismissSearch()}>
                             <FontAwesomeIcon icon={faTimes} /> Close
                         </button>
                     </div>

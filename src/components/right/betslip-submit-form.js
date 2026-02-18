@@ -60,7 +60,7 @@ const BetslipSubmitForm = (props) => {
         "sgr_bonus_percent_14": "22",
         "sgr_bonus_percent_6": "6",
         "sgr_bonus_percent_15": "26",
-        "sgr_bonus_percent_3": "3",
+        "sgr_bonus_percent_3": "1.5",
         "sgr_bonus_percent_12": "15",
         "sgr_bonus_percent_4": "4",
         "sgr_bonus_percent_13": "16",
@@ -79,12 +79,35 @@ const BetslipSubmitForm = (props) => {
         "sgr_bonus_percent_24": "66"
     });
 
+    const setbonusMatrix = () => {
+        let winMatrix = getFromLocalStorage("sgrBonusMatrix");
+        if (winMatrix) {
+            setDbWinMatrix(winMatrix);
+            dispatch({ type: "SET", key: "sgrBonusMatrix", payload: winMatrix })
+
+        } else {
+            makeRequest({ url: '/sports/config/sgr', method: 'GET', api_version: 2 })
+                .then(([status, response]) => {
+                    if (status === 200) {
+                        setLocalStorage("sgrBonusMatrix", response?.data, 24 * 60 * 60 * 1000);
+                        setDbWinMatrix(response?.data);
+                        dispatch({ type: "SET", key: "sgrBonusMatrix", payload: response?.data })
+
+                    } else {
+                        console.error("Failed to fetch SGR Bonus Matrix:", response);
+                    }
+                })
+        }
+    };
     useEffect(() => {
         fetch("https://api64.ipify.org?format=json")
             .then((response) => response.json())
             .then((data) => setIpInfo(data.ip))
             .catch((error) => setIpInfo({ city: "Error fetching IP" }));
+
+        setbonusMatrix();
     }, []);
+
 
 
     const rebet = async () => {
@@ -329,7 +352,7 @@ const BetslipSubmitForm = (props) => {
                 total_games = max_games;
             }
             let strConstruct = `sgr_bonus_percent_${total_games}`
-            let centageInt = parseInt(dbWinMatrix[strConstruct]) / 100 || 0;
+            let centageInt = (parseInt(dbWinMatrix[strConstruct]) / 100) || 0;
 
 
             setTotalGames(Object.keys(state?.[betslipkey] || {}).length);
@@ -359,7 +382,7 @@ const BetslipSubmitForm = (props) => {
             setNetWin(nw > Float(5000000) ? Float(5000000) : nw);
             setPossibleWin(Float(raw_possible_win, 2));
             setWithholdingTax(Float(wint, 2));
-            setBonus(Float(stake_after_tax * Float(odds) * Float(centageInt), 2))
+            setBonus(Float(raw_possible_win * (dbWinMatrix[strConstruct] / 100), 2));
             dispatch({ type: "SET", key: "totalodds", payload: Float(odds) })
             dispatch({ type: "SET", key: "slipnetwin", payload: Float(nw, 2) })
         } else {

@@ -189,38 +189,29 @@ const Right = (props) => {
   const [bongeBonusMessage, setBongeBonusMessage] = useState('Select 3 or more games to win big bonus');
   const [bonusCentage, setBonusCentage] = useState(3);
   const [dbWinMatrix, setDbWinMatrix] = useState({
-    "sgr_bonus_percent_29": "98",
-    "sgr_bonus_percent_27": "85",
-    "sgr_bonus_percent_28": "95",
-    "sgr_bonus_percent_9": "9",
-    "sgr_bonus_percent_10": "10",
-    "sgr_bonus_max_games": "20",
-    "sgr_bonus_percent_11": "14",
-    "sgr_bonus_percent_30": "100",
-    "sgr_bonus_percent_7": "7",
-    "sgr_bonus_percent_8": "8",
-    "sgr_bonus_percent_5": "5",
-    "sgr_bonus_percent_14": "22",
-    "sgr_bonus_percent_6": "6",
-    "sgr_bonus_percent_15": "26",
-    "sgr_bonus_percent_3": "3",
-    "sgr_bonus_percent_12": "15",
-    "sgr_bonus_percent_4": "4",
-    "sgr_bonus_percent_13": "16",
-    "sgr_bonus_percent_18": "38",
-    "sgr_bonus_percent_19": "46",
-    "sgr_bonus_percent_16": "30",
     "sgr_bonus_enabled": "1",
-    "sgr_bonus_percent_17": "34",
-    "sgr_bonus_percent_21": "54",
-    "sgr_bonus_percent_22": "58",
-    "sgr_bonus_percent_20": "50",
-    "sgr_bonus_min_odds": "1.30",
-    "sgr_bonus_percent_25": "70",
-    "sgr_bonus_percent_26": "80",
-    "sgr_bonus_percent_23": "62",
-    "sgr_bonus_percent_24": "66"
+    "sgr_bonus_max_games": "15",
+    "sgr_bonus_min_odds": "1.4",
+    "sgr_bonus_percent_3": "1.5",
+    "sgr_bonus_percent_4": "2.5",
+    "sgr_bonus_percent_5": "3.5",
+    "sgr_bonus_percent_6": "4.5",
+    "sgr_bonus_percent_7": "5.5",
+    "sgr_bonus_percent_8": "6.5",
+    "sgr_bonus_percent_9": "7.5",
+    "sgr_bonus_percent_10": "8.5",
+    "sgr_bonus_percent_11": "9.5",
+    "sgr_bonus_percent_12": "11.5",
+    "sgr_bonus_percent_13": "12.5",
+    "sgr_bonus_percent_14": "14.5",
+    "sgr_bonus_percent_15": "15.5",
   });
+
+  useEffect(() => {
+    if (state?.sgrBonusMatrix) {
+      setDbWinMatrix(state?.sgrBonusMatrix);
+    }
+  }, [state?.sgrBonusMatrix]);
   const showShareModalDialog = () => {
     const loggedInUser = getFromLocalStorage("user") ?? null;
     if (!loggedInUser) {
@@ -230,21 +221,21 @@ const Right = (props) => {
     }
   };
 
-  const getDbWinMatrix = () => {
-    let endpoint = "/sports/config/sgr";
+  // const getDbWinMatrix = () => {
+  //   let endpoint = "/sports/config/sgr";
 
-    makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([status, result]) => {
-      if (status == 200) {
-        if (result.status == 200) {
-          setDbWinMatrix(result?.data);
-        }
-      }
-    });
+  //   makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([status, result]) => {
+  //     if (status == 200) {
+  //       if (result.status == 200) {
+  //         setDbWinMatrix(result?.data);
+  //       }
+  //     }
+  //   });
 
-  }
-  useEffect(() => {
-    getDbWinMatrix();
-  }, []);
+  // }
+  // useEffect(() => {
+  //   getDbWinMatrix();
+  // }, []);
   useEffect(() => {
     if (dbWinMatrix) {
       dispatch({ type: "SET", key: "bonusCentages", dbWinMatrix });

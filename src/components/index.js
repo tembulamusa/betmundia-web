@@ -74,8 +74,11 @@ const Index = (props) => {
             //     endpoint = "/sports/competitions/matches?page=" + (page || 1) + "&sport_id = " + (state?.filtersport?.sport_id||sportid || 79) + `&limit=${limit || 200}`;
             // }
         }
+        let data = null;
         if (search_term && search_term.length >= 3) {
-            endpoint = `/matches/pre-match?limit=10&search=${search_term}`;
+            method = "POST";
+            data = { search: search_term, sport_id: filtersport?.sport_id || allSportId || 79 };
+            endpoint = `/sports/matches/search`;
         }
         // else {
         //     if(state?.filtercompetition ) {
@@ -94,10 +97,13 @@ const Index = (props) => {
         }
 
 
-        makeRequest({ url: endpoint, method: method, api_version: 2 }).then(([status, result]) => {
+        makeRequest({ url: endpoint, method: method, data: data, api_version: 2, }).then(([status, result]) => {
             setFetchingCount(fetchcount);
 
-            if (status == 200) {
+            if ([200, 201].includes(status)) {
+
+                console.log("Fetched matches", result);
+
                 setMatches(result?.data?.items || result) //(matches?.length > 0 && page > 1) ? [...matches, ...result?.data?.items] : result?.data?.items || result)
                 setFetching(false);
                 setProducers(result?.producer_statuses);
