@@ -193,7 +193,7 @@ input[type="password"].form-control {
 }
 
 .secondary-text {
-  color: #FFB200;
+  color: rgba(255, 215, 0);
 }
 
 .bright-blue-text {
@@ -757,7 +757,7 @@ tr.my-bets td {
 }
 
 .cancel-bet {
-  border: 2px solid #FFB200 !important;
+  border: 2px solid rgba(255, 215, 0) !important;
   border-radius: 5px !important;
   outline: none;
   height: auto;
@@ -2093,6 +2093,17 @@ button.locked-button:hover {
 }
 
 @media screen and (max-width: 648px) {
+  .mobile-margin-icon {
+    margin-left: 8px;
+  }
+
+  .mobile-margin-icon svg {}
+
+  .search-form {
+    background: rgba(0, 0, 0, 0.797);
+    left: 0;
+  }
+
   .no-big-icon-nav .amt {
     margin-top: 74px !important;
   }

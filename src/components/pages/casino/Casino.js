@@ -14,6 +14,8 @@ import { ShimmerTable } from "react-shimmer-effects";
 import NoEvents from '../../utils/no-events';
 import CategoryListing from './category-listing';
 import CasinoJackpots from './casino-jackpots';
+import CasinoSidebar from './casino-sidebar';
+import MobileCategoriesMenu from './mobile-categories-menu';
 
 const Casino = (props) => {
     const { filterType, filterName } = useParams();
@@ -126,11 +128,15 @@ const Casino = (props) => {
         };
     }, []);
 
+
     return (
         <>
             <CasinoCarousel />
-
             <CasinoJackpots />
+
+            <div className="casino-mobile-categories">
+                <MobileCategoriesMenu />
+            </div>
 
             <div className="casino-games-list">
                 {fetching && <ShimmerTable row={3} />}

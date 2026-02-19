@@ -12,6 +12,9 @@ import Live from '../../assets/img/banner/carousel/live.png';
 import Casino from '../../assets/img/banner/carousel/casino.png';
 import Jackpot from '../../assets/img/banner/carousel/jackpot.jpg';
 import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg';
+import KaribuBonus from '../../assets/img/banner/carousel/karibu-bonus.png';
+import DepositBonus from '../../assets/img/banner/carousel/deposit-bonus.png';
+import Freebet from '../../assets/img/banner/carousel/free-bets.png';
 import { Link } from 'react-router-dom';
 
 
@@ -27,16 +30,36 @@ const CarouselLoader = (props) => {
             indicators={false}
             className='banner-imgs'>
 
-            {/* <Carousel.Item >
+            <Carousel.Item >
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={Breakfast}
+                    src={KaribuBonus}
                     onLoad={onImageLoaded}
-                    alt="breakfast"
+                    alt="karibu-bonus"
                     effects="blur"
                 />
-            </Carousel.Item> */}
+            </Carousel.Item>
+            <Carousel.Item >
+                <img
+                    className="d-block w-100"
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
+                    src={DepositBonus}
+                    onLoad={onImageLoaded}
+                    alt="deposit-bonus"
+                    effects="blur"
+                />
+            </Carousel.Item>
+            <Carousel.Item >
+                <img
+                    className="d-block w-100"
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
+                    src={Freebet}
+                    onLoad={onImageLoaded}
+                    alt="free-bets"
+                    effects="blur"
+                />
+            </Carousel.Item>
             <Carousel.Item >
                 <img
                     className="d-block w-100"

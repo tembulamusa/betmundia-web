@@ -69,7 +69,7 @@ const HeaderNav = (props) => {
             <Container id="navbar-collapse-main"
                 className={`d-sm-flex d-flex flex-row  header-menu ${searching ? 'hidden' : 'd-block'}`}>
 
-                <ListGroup as="ul" xs="12" horizontal className={`font-bold nav navbar-nav og d-flex ale ss  col-lg-12 col-md-12 col-sm-12 change-display ${searching && "!hidden"}`}>
+                <ListGroup as="ul" xs="12" horizontal className={`font-bold nav navbar-nav og d-flex ale ss  col-lg-12 col-md-12 col-sm-12 change-display ${searching && "!hidden"} mobile-margin-icon`}>
 
 
 
