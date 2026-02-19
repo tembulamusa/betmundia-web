@@ -12,9 +12,9 @@ import {
 import { PiPlanetBold } from "react-icons/pi";
 
 const OddsGraph = ({ oddsHistory, currentOdds, resultMessage }) => {
-  const limitedData = oddsHistory.slice(-15).map((odds, index) => ({ 
-    time: index, 
-    odds 
+  const limitedData = oddsHistory.slice(-15).map((odds, index) => ({
+    time: index,
+    odds
   }));
 
   const [playerCount, setPlayerCount] = useState(Math.floor(Math.random() * 400) + 100);
@@ -34,23 +34,23 @@ const OddsGraph = ({ oddsHistory, currentOdds, resultMessage }) => {
     <div className="relative">
       {/* Graph */}
       <ResponsiveContainer width="100%" height={200}>
-        <LineChart 
-          data={limitedData} 
+        <LineChart
+          data={limitedData}
           margin={{ top: 20, right: 20, bottom: 0, left: 0 }}
           key={resultMessage}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="time" hide />
           <YAxis domain={[1, 10]} hide={true} />
-          <Tooltip 
+          <Tooltip
             formatter={(value) => [`${value.toFixed(2)}x`, "Multiplier"]}
             labelFormatter={() => ""}
           />
-          <Line 
-            type="monotone" 
-            dataKey="odds" 
-            stroke="#4bc0c0" 
-            strokeWidth={2} 
+          <Line
+            type="monotone"
+            dataKey="odds"
+            stroke="#4bc0c0"
+            strokeWidth={2}
             dot={false}
             isAnimationActive={false}
           />
@@ -60,14 +60,14 @@ const OddsGraph = ({ oddsHistory, currentOdds, resultMessage }) => {
             y={lastPoint.odds}
             r={0} // Hide the default dot
             shape={({ cx, cy }) => (
-              <foreignObject 
-                x={cx - 12} 
-                y={cy - 12} 
-                width={24} 
+              <foreignObject
+                x={cx - 12}
+                y={cy - 12}
+                width={24}
                 height={24}
               >
                 <div className="flex items-center justify-center">
-                  <PiPlanetBold className="text-[#e70654] text-xl transform -rotate-45" />
+                  <PiPlanetBold className="text-[#a71f66 ] text-xl transform -rotate-45" />
                 </div>
               </foreignObject>
             )}

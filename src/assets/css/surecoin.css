@@ -5,14 +5,15 @@
 .rotating-images-wrapper {
     /* display: flex; */
     clear: both;
-    position:relative;
+    position: relative;
 }
 
 .rotating-image-container {
-    position:relative;
+    position: relative;
     min-width: 200px;
     min-height: 200px;
 }
+
 .rotating-img {
     /* width: auto; */
     height: 150px;
@@ -50,6 +51,7 @@
 .higher-z {
     z-index: 999;
 }
+
 .user-choice {
     color: #143ee4;
 }
@@ -57,11 +59,12 @@
 .user-choice.tails {
     color: #bb0243;
 }
+
 .rotating-img.is-spinning {
     transform-style: preserve-3d;
     animation: rotation .3s linear infinite;
     transition: all .11s;
-     
+
 }
 
 .prep-to-start {
@@ -77,19 +80,25 @@
 @keyframes prepToStart {
     0% {
         transform: perspective(1000px) rotateY(20deg);
-      }
-      100%{ transform: perspective(1000px) rotateY(360deg);}
-}
-@keyframes rotation {
-    0% {
-        transform: perspective(1000px) rotateY(0deg);
-      }
-      100%{    transform: perspective(1000px) rotateY(11500deg);
+    }
+
+    100% {
+        transform: perspective(1000px) rotateY(360deg);
     }
 }
 
-  .sure-coin-header {
-    background: rgba(255,255,255,0.06);
+@keyframes rotation {
+    0% {
+        transform: perspective(1000px) rotateY(0deg);
+    }
+
+    100% {
+        transform: perspective(1000px) rotateY(11500deg);
+    }
+}
+
+.sure-coin-header {
+    background: rgba(255, 255, 255, 0.06);
     height: 40px;
     padding: 5px 0px;
     font-weight: 500;
@@ -116,13 +125,15 @@
     -webkit-transform: translate(-60px, 10px);
     z-index: 99;
 }
+
 .casino-service-sure-coin {
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     padding: 10px 10px;
     position: relative;
 }
+
 .coin-settings {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255, 255, 255, 0.06);
     padding-left: 6px;
     margin-bottom: 7px;
     border-radius: 8px;
@@ -130,9 +141,9 @@
     padding-top: 8px;
     margin-top: 8px;
 }
-.launched-sure-coin{
-    
-}
+
+.launched-sure-coin {}
+
 .sure-coin-amount-input-section {
     background: rgba(0, 0, 0, 0.8);
     border-radius: 20px;
@@ -158,6 +169,7 @@
     color: #FFB200;
     top: 8%;
 }
+
 .tail.selected-btn {
     background-color: #bb02438a !important;
     color: #ffffff !important;
@@ -183,10 +195,12 @@
     text-transform: uppercase;
     font-weight: bold;
 }
+
 .sound-interact-prompt-cover .sound-selector {
     margin-top: 20%;
     max-width: 200px;
 }
+
 .won-gif-container {
     position: absolute;
     width: 200px;
@@ -214,21 +228,21 @@
 }
 
 .network-changes.show {
-    
+
     padding: .75rem 1.25rem;
     border-radius: 3px;
     height: 40px;
     transition: all ease-in-out 500ms;
     -moz-transition: all ease-in-out 500ms;
-    -webkit-transition: all ease-in-out 500ms;}
+    -webkit-transition: all ease-in-out 500ms;
+}
 
 .network-changes.just-back {
     background-color: #cce5ff;
     color: #004085;
 }
-@media screen and (min-width: 760px) {
-  
-}
+
+@media screen and (min-width: 760px) {}
 
 .css-rehya9-MuiSwitch-root {
     display: inline-flex;
@@ -251,9 +265,9 @@
 }
 
 .css-17jyosd-MuiSwitch-thumb {
-    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
-    -moz-box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
-    -webkit-box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    -webkit-box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
     background-color: currentColor;
     width: 25px !important;
     height: 25px !important;
@@ -271,39 +285,45 @@
     margin-right: 7px;
     color: #bb0243;
 }
+
 .win-state {
     padding: 10px;
 }
+
 .info-box.chosen-box {
     color: #FFB200;
 
 }
+
 .info-box {
     padding: 5px 15px;
-    border: 1px solid ;
+    border: 1px solid;
     margin-top: 3px;
     border-radius: 3px;
 }
+
 .bet-info {
     position: absolute;
-    background: rgba(255,255,255, 0.061);
+    background: rgba(255, 255, 255, 0.061);
     top: -55px;
     left: -2px;
     padding: 5px 8px;
-    border: 1px solid rgba(255,255,255, 0.051);
+    border: 1px solid rgba(255, 255, 255, 0.051);
     border-radius: 2px;
     text-align: center;
 }
+
 .win-state.won {
     background: green;
 }
 
 
-.win-state.lost {
-}
+.win-state.lost {}
+
 .autopicks-left {
     max-width: 90px;
 }
+
 .btn-place-surecoin-bet {
     padding: 10px 15px;
     background: #FFB200 !important;
@@ -321,20 +341,20 @@
 .bets-timer-empty-holder {
     height: 23px;
 }
+
 .btn-place-surecoin-bet:hover {
     opacity: .7;
     transition: all ease-in-out 0.3s;
 }
 
-.time-left-text {
-    
-}
+.time-left-text {}
 
 .btn-place-surecoin-bet.betplaced {
     background: red !important;
     color: #ffffff !important;
     border-color: #ff4d4d !important;
 }
+
 .casino-service-sure-coin .pickBtn {
     padding: 10px 15px;
 }
@@ -343,22 +363,23 @@
     position: absolute;
     right: 10px;
     z-index: 99;
-    border: 1px solid rgba(255, 255,255, 0.0612);
-    color: rgba(255,255,255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.0612);
+    color: rgba(255, 255, 255, 0.7);
     padding: 5px;
     border-radius: 3px;
     line-height: 30px;
-    background: rgba(255,255,255,0.031);
+    background: rgba(255, 255, 255, 0.031);
     font-size: 1.3rem;
     top: 3px;
 }
-.coin-taking-bets{
-	position: absolute;
-	bottom: 10px;
-	border: 1px solid #fff;
-	color: #fff;
-	padding: 12px;
-	border-radius: 10px;
+
+.coin-taking-bets {
+    position: absolute;
+    bottom: 10px;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 12px;
+    border-radius: 10px;
     line-height: 23px;
     min-width: 25%;
 }
@@ -370,25 +391,28 @@
     font-size: 10px;
     line-height: 1.7;
 }
+
 .director-message {
     bottom: 15%;
     font-size: 18px;
     left: 50%;
     position: absolute;
     text-transform: uppercase;
-    transform: translate(-50%,60%);
+    transform: translate(-50%, 60%);
     width: 100%;
     text-align: center;
 }
+
 .no-picked-disabled {
-    background: rgba(255,255,255) !important;
+    background: rgba(255, 255, 255) !important;
     border: none !important;
     color: #444 !important;
     opacity: 1 !important;
 }
+
 button:disabled,
-button[disabled]{
-  cursor: not-allowed;
+button[disabled] {
+    cursor: not-allowed;
 }
 
 .autopick-hint {
@@ -398,6 +422,7 @@ button[disabled]{
     font-weight: 500;
     text-transform: uppercase;
 }
+
 .notify-win {
     max-width: 250px;
     margin: 0px auto;
@@ -411,7 +436,9 @@ button[disabled]{
     -moz-transition: all ease-in-out 500ms;
     -webkit-transition: all ease-in-out 500ms;
 }
-.notify-win.won, .notify-win.lost {
+
+.notify-win.won,
+.notify-win.lost {
     height: 48px;
     border: 1px solid #277614;
     padding: 5px 10px;
@@ -433,41 +460,47 @@ button[disabled]{
     line-height: 1.1;
     font-size: 12px;
     margin-left: 10px;
-   
+
 }
+
 .notify-win.won {
     background-color: #00800099;
 }
+
 .notify-win.won .won-amount {
     background: #28a909;
-     border: 1px solid #8cfb71;
+    border: 1px solid #8cfb71;
 }
 
 .notify-win.lost .won-amount {
     background: rgb(247, 27, 27) !important;
-    border:rgb(246, 47, 47)
+    border: rgb(246, 47, 47)
 }
+
 @keyframes growText {
     from {
-      width: 13px;
+        width: 13px;
     }
+
     to {
-      font-size: 25px;
+        font-size: 25px;
     }
-  }
+}
+
 .won-expanding {
     z-index: 999;
     font-weight: 700;
     font-size: 16px;
     /* animation: growText 3s infinite alternate; 3 seconds, alternating direction */
-  }
-.won-expanding-text {
-    
 }
+
+.won-expanding-text {}
+
 .notify-win.lost {
     background-color: #c3080899;
 
 }
+
 .notify-win-container {
     z-index: 9999;
     position: absolute;
@@ -478,6 +511,7 @@ button[disabled]{
     top: -50px;
     z-index: 999999;
 }
+
 @media screen and (max-width: 648px) {
     .surecoin-body {
         width: 98%;
@@ -485,13 +519,13 @@ button[disabled]{
         margin-right: auto;
         /* margin-top: 5%; */
     }
+
     .rotating-img {
         width: 150px;
         padding-bottom: 0 !important;
     }
-    .surecoin-logo-img {
 
-    }
+    .surecoin-logo-img {}
 
     .director-message {
         position: absolute;
@@ -510,7 +544,7 @@ button[disabled]{
         margin-right: 4px;
     }
 
-    
+
 
     .user-amount-input {
         max-width: 100px !important;
@@ -523,13 +557,16 @@ button[disabled]{
         margin-top: 5px;
         width: 100%;
     }
+
     .casino-service-sure-coin {
         padding: 10px 1px;
     }
+
     .css-rehya9-MuiSwitch-root {
         width: 70px !important;
         height: 40px !important;
     }
+
     .coin-quick-stats {
         right: 0px;
     }
@@ -540,12 +577,13 @@ button[disabled]{
     }
 
 }
+
 .coin-count-down {
-	position: absolute;
-	color: yellow;
-	padding: 10px;
-	font-weight: 500;
-	opacity: 0.9;
+    position: absolute;
+    color: yellow;
+    padding: 10px;
+    font-weight: 500;
+    opacity: 0.9;
 }
 
 /* Styles for the Jackpot Modal */
@@ -554,34 +592,34 @@ button[disabled]{
     top: 65%;
     left: 0%;
     transform: translate(0%, -50%);
-    background-color: rgba(255, 255, 255, 0.1); 
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     padding: 1.5rem;
     border-radius: 12px;
     text-align: center;
     z-index: 1000;
     /* width: 90%; */
-    max-width: 200px; 
+    max-width: 200px;
 }
 
 .surecoin-jackpot-modal h2 {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #e70654;
+    color: #a71f66;
     margin-bottom: 1rem;
 }
 
 .surecoin-jackpot-modal h4 {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #e70654;
+    color: #a71f66;
     text-transform: uppercase;
 }
 
 
 .surecoin-jackpot-modal p {
     font-size: 1.2rem;
-    color: #ebecf2; 
+    color: #ebecf2;
     line-height: 1.5;
 }
 
@@ -592,8 +630,8 @@ button[disabled]{
 /* Responsive Jackpot Popup Styles */
 @media (max-width: 600px) {
     .surecoin-jackpot-modal {
-        top: 50%; 
-        max-width: 100px; 
+        top: 50%;
+        max-width: 100px;
         padding: 1rem;
     }
 
@@ -611,6 +649,7 @@ button[disabled]{
     .modal-message-desktop {
         display: none;
     }
+
     .modal-message-mobile {
         display: block;
     }

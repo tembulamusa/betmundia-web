@@ -50,25 +50,25 @@ const JumpRopeControls = ({
           className="jumprope-bet-input"
           min="5"
         />
-        <CiCirclePlus 
-          className="icon" 
-          onClick={() => handleBetIncrement(5)} 
+        <CiCirclePlus
+          className="icon"
+          onClick={() => handleBetIncrement(5)}
           disabled={!bettingActive}
         />
       </div>
-      
-      <button 
-        onClick={placeBet} 
+
+      <button
+        onClick={placeBet}
         className={`jumprope-btn ${bettingActive ? "" : "disabled"}`}
         disabled={!bettingActive}
       >
         {bettingActive ? "Place Bet" : "Betting Closed"}
       </button>
-      
+
       <button className="bet-display-btn" disabled>
         Your Bet: ${betAmount || 0}
       </button>
-      
+
       <button className="custom-instructions-btn" onClick={handleDialogOpen}>
         <CiCircleMore className="icon" />
         How to Play
@@ -99,7 +99,7 @@ const JumpRopeControls = ({
               color: theme.palette.grey[500],
             }}
           >
-            <CiCircleRemove className="icon"/>
+            <CiCircleRemove className="icon" />
           </IconButton>
         </DialogTitle>
         <DialogContent>
@@ -113,7 +113,7 @@ const JumpRopeControls = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose} sx={{ color: "#e70654" }}>
+          <Button onClick={handleDialogClose} sx={{ color: "#a71f66 " }}>
             Close
           </Button>
         </DialogActions>

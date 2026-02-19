@@ -24,7 +24,7 @@
   align-items: center;
   font-size: 2rem;
   font-weight: bold;
-  color: #e70654;
+  color: #a71f66;
   padding: 10px 15px;
   background-color: rgba(37, 37, 71, 0.8);
   border-radius: 8px;
@@ -58,7 +58,7 @@
   background-color: rgba(30, 30, 56, 0.8);
   padding: 10px 15px;
   border-radius: 8px;
-  /* border: 2px solid #e70654; */
+  /* border: 2px solid #a71f66 ; */
 }
 
 .current-multiplier h2 {
@@ -83,7 +83,7 @@
 .result-message {
   text-align: center;
   font-size: 1.1rem;
-  color: #e70654;
+  color: #a71f66;
   min-height: 20px;
   padding: 10px;
 }
@@ -121,7 +121,7 @@
 }
 
 .jumprope-bet-input:focus {
-  border-color: #e70654;
+  border-color: #a71f66;
   outline: none;
 }
 
@@ -133,7 +133,7 @@
 }
 
 .icon:hover {
-  color: #e70654;
+  color: #a71f66;
 }
 
 .icon:disabled {
@@ -150,13 +150,13 @@
   cursor: pointer;
   color: #fff;
   text-shadow: 1px 1px 2px #000;
-  background: linear-gradient(135deg, #e70654, #410219);
+  background: linear-gradient(135deg, #a71f66, #410219);
   transition: all 0.3s ease-in-out;
   min-width: 180px;
 }
 
 .jumprope-btn:hover {
-  background: linear-gradient(135deg, #410219, #e70654);
+  background: linear-gradient(135deg, #410219, #a71f66);
   transform: scale(1.05);
 }
 
@@ -214,14 +214,14 @@
   background: rgba(0, 0, 0, 0.3);
   font-size: 14px;
   min-width: 120px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .stats-header {
   font-weight: bold;
   margin-bottom: 4px;
   font-size: 15px;
-  color: #e70654;
+  color: #a71f66;
 }
 
 .stats-divider {
@@ -268,7 +268,7 @@
 }
 
 .time-left .counter {
-  color: #e70654;
+  color: #a71f66;
   font-weight: bold;
 }
 
@@ -282,7 +282,7 @@
 .progress-bar-fill {
   height: 100%;
   border-radius: 3px;
-  background-color: #e70654;
+  background-color: #a71f66;
   transition: width 0.1s linear;
 }
 

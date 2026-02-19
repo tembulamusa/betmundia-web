@@ -101,7 +101,7 @@ const SkipRopeControls = ({
               color: theme.palette.grey[500],
             }}
           >
-            <CiCircleRemove className="icon"/>
+            <CiCircleRemove className="icon" />
           </IconButton>
         </DialogTitle>
         <DialogContent>
@@ -116,7 +116,7 @@ const SkipRopeControls = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose} sx={{ color: "#e70654" }}>
+          <Button onClick={handleDialogClose} sx={{ color: "#a71f66 " }}>
             Close
           </Button>
         </DialogActions>

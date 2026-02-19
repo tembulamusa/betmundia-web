@@ -580,7 +580,7 @@ const BetslipSubmitForm = (props) => {
                                                 <tr className="in-blue-highlight secondary-text">
                                                     <td className='py-3 px-3'>Bonus</td>
                                                     <td className='text-right py-3 px-3'>KES.
-                                                        <span id="tax"> {formatNumber(bonus)}</span>
+                                                        <span id="tax"> {formatNumber(bonus || 0)}</span>
                                                     </td>
                                                 </tr>
                                                 {/* <tr className="bet-win-tr hide-on-affix opacity-70">

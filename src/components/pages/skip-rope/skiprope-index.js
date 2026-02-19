@@ -135,12 +135,12 @@ const SkipRopeIndex = () => {
       <div className="skiprope-container">
         <div className="skiprope-title">
           <h1 className="">Skip a Rope</h1>
-          <div className="cursor-pointer text-3xl text-[#e70654]" onClick={toggleMute}>
+          <div className="cursor-pointer text-3xl text-[#a71f66 ]" onClick={toggleMute}>
             {userMuted ? <BiSolidVolumeMute /> : <FaVolumeHigh />}
           </div>
         </div>
-   
-        
+
+
         <div className="skiprope-stage">
           {showResting && <img src={NotSkipping} alt="Resting" />}
           {showSkipping && <img src={Skipping} alt="Skipping" />}

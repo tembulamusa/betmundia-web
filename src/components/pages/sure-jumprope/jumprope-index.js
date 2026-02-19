@@ -49,14 +49,14 @@ const JumpRopeIndex = () => {
 
   // Game cycle constants
   const ROUND_DURATION = 13000; // 13 seconds
-  const BETTING_DURATION = 8000; 
+  const BETTING_DURATION = 8000;
 
   // Update history when multiplier changes
   useEffect(() => {
     if (gameActive) {
       setMultiplierHistory(prev => {
-        const newHistory = [...prev, { 
-          time: prev.length, 
+        const newHistory = [...prev, {
+          time: prev.length,
           multiplier: Math.max(1.0, currentMultiplier) // Ensure never below 1.0
         }];
         return newHistory.slice(-100);
@@ -157,9 +157,9 @@ const JumpRopeIndex = () => {
     multiplierInterval.current = setInterval(() => {
       const now = Date.now();
       const progress = Math.min(1, (now - startTime) / ROUND_DURATION);
-    
+
       const easedProgress = easeInOutQuad(progress);
-    
+
       if (betAmount > 0 && userWins) {
         // Smooth growth with minimum 1.0
         const current = Math.max(1.0, 1 + (targetMultiplier - 1) * easedProgress);
@@ -173,7 +173,7 @@ const JumpRopeIndex = () => {
         const current = 1 + (randomPeak - 1) * easeInOutQuad(progress);
         setCurrentMultiplier(current);
       }
-    
+
       if (now >= endTime) {
         endGameRound();
       }
@@ -262,7 +262,7 @@ const JumpRopeIndex = () => {
       <div className="jumprope-container">
         <div className="jumprope-title">
           <h1 className="">Jump Rope</h1>
-          <div className="cursor-pointer text-3xl text-[#e70654]" onClick={toggleMute}>
+          <div className="cursor-pointer text-3xl text-[#a71f66 ]" onClick={toggleMute}>
             {userMuted ? <BiSolidVolumeMute /> : <FaVolumeHigh />}
           </div>
         </div>
@@ -304,7 +304,7 @@ const JumpRopeIndex = () => {
                   <Line
                     type="monotone"
                     dataKey="multiplier"
-                    stroke="#e70654"
+                    stroke="#a71f66 "
                     strokeWidth={2}
                     dot={false}
                     isAnimationActive={false}
