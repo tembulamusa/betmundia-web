@@ -134,7 +134,7 @@ const Casino = (props) => {
             <CasinoCarousel />
             <CasinoJackpots />
 
-            <div className="casino-mobile-categories">
+            <div className="casino-mobile-categories md:hidden">
                 <MobileCategoriesMenu />
             </div>
 
