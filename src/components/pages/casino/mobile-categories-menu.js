@@ -58,26 +58,35 @@ const MobileCategoriesMenu = (props) => {
     const CasinoCategories = (props) => {
         return (
             <>
-                <div className="casino-list-block menu-card rounded-lg  capitalize">
+                <div className="flex overflow-x-auto space-x-4 big-icon-scrollbar-hide">
                     {/* <h1 className="my-2 mt-2 text-2xl font-[400] casino-class-header">Categories</h1> */}
-                    <ul className="casino-sidebar-items">
+                    <ul className="flex space-x-4 big-icon-list list-group list-group-horizontal">
                         <li key={"all-" + 24}
-                            className={`cursor-pointer menu-item capitalize`}
+                            className={`cursor-pointer menu-item capitalize mx-2 my-2`}
                             onClick={() => filterGames("all", "")}>
-                            <img src={getSportImageIcon('home')} className="casino-icon inline-block" alt="" />{"All games"}
+                            <div className="big-icon-icon">
+                                <img src={getSportImageIcon('home')} className="mx-auto" alt="" />
+                            </div>
+                            <div className="big-icon-name">All games</div>
                         </li>
                         <li key={"popular-" + 53}
-                            className={`cursor-pointer menu-item capitalize`}
+                            className={`cursor-pointer menu-item capitalize my-2`}
                             onClick={() => filterGames("popular", "popular")}>
-                            <img src={getSportImageIcon('popular')} className="casino-icon inline-block" alt="" />{"Popular"}
+                            <div className="big-icon-icon">
+                                <img src={getSportImageIcon('popular')} className="mx-auto" alt="" />
+                            </div>
+                            <div className="big-icon-name">Popular</div>
                         </li>
 
                         {categories?.map((category, idx) => (
                             <>
                                 <li to={`/casino?category=${category?.name?.toLowerCase()}&&id=${category?.id}`} key={"categories-" + idx}
                                     onClick={() => filterGames('category', category)}
-                                    className={`${state?.casinogamesfilter?.category?.id == category?.id && 'active'} cursor-pointer menu-item block py-2 boder-b border-gray-100`}>
-                                    <img src={getSportImageIcon(category.name)} className="casino-icon  inline-block" alt="" />{category?.name}
+                                    className={`${state?.casinogamesfilter?.category?.id == category?.id && 'active'} cursor-pointer text-center capitalize mx-2 my-2`}>
+                                    <div className="big-icon-icon">
+                                        <img src={getSportImageIcon(category.name)} className="mx-auto" alt="" />
+                                    </div>
+                                    <div className="big-icon-name">{category?.name}</div>
                                 </li>
                             </>
                         ))}

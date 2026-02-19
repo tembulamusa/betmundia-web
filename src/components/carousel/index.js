@@ -60,7 +60,7 @@ const CarouselLoader = (props) => {
                     effects="blur"
                 />
             </Carousel.Item>
-            <Carousel.Item >
+            {/* <Carousel.Item >
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
@@ -126,7 +126,7 @@ const CarouselLoader = (props) => {
                         effects="blur"
                     />
                 </Link>
-            </Carousel.Item>
+            </Carousel.Item> */}
 
             {/* <Carousel.Item >
                 <Link to={"/jackpot"}>
@@ -141,7 +141,7 @@ const CarouselLoader = (props) => {
                 </Link>
             </Carousel.Item> */}
 
-            <Carousel.Item >
+            {/* <Carousel.Item >
                 <Link to={"/app"}>
                     <img
                         className="d-block w-100"
@@ -152,7 +152,7 @@ const CarouselLoader = (props) => {
                         effects="blur"
                     />
                 </Link>
-            </Carousel.Item>
+            </Carousel.Item> */}
 
         </Carousel>
 
