@@ -2959,7 +2959,9 @@ nav>li>a:focus,
 }
 
 .bet-option .row .warn {
-    color: #a12000;
+    color: #ee0000;
+    text-shadow: none;
+    font-size: 80%;
 }
 
 .bet-option form {

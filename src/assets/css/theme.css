@@ -1,8 +1,8 @@
 /*
 Using formula solid
-$primary: #DE0752;
+$primary: #a71f66 ;
 $home: #578A18;
-$away: #DE0752;
+$away: #a71f66 ;
 $cl: #FFFFFF;
 $base: #0F172A;
 */
@@ -42,8 +42,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-lose {
   background-color: transparent;
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-active {
@@ -66,8 +66,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-primary {
   background-color: transparent;
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-home-1 {
@@ -78,8 +78,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-away-1 {
   background-color: transparent;
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-home-2 {
@@ -90,7 +90,7 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-away-2 {
   background-color: transparent;
-  color: #DE0752;
+  color: #a71f66;
   border-color: #ec6f9b;
 }
 
@@ -102,7 +102,7 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-away-3 {
   background-color: transparent;
-  color: #DE0752;
+  color: #a71f66;
   border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -203,19 +203,19 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-primary-1 {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
 
 .sr-bb .srt-primary-1-is-active {
-  background-color: #e12063;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
 
 .sr-bb .srt-primary-1-is-hoverable:hover {
-  background-color: #e12063;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
@@ -233,7 +233,7 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-primary-3 {
-  background-color: #e12063;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
@@ -251,7 +251,7 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-primary-5-is-hoverable:hover {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
@@ -263,25 +263,25 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-primary-7 {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
 
 .sr-bb .srt-primary-8 {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
 
 .sr-bb .srt-primary-8-is-active-1 {
-  background-color: #e12063;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
 
 .sr-bb .srt-primary-8-is-active-2 {
-  background-color: #e12063;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: #0F172A;
 }
@@ -299,13 +299,13 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-primary-11 {
-  background-color: #e12063;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
 
 .sr-bb .srt-primary-12 {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: #ffffff;
 }
@@ -318,8 +318,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-primary-1 {
   background-color: transparent;
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-primary-2 {
@@ -330,8 +330,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-primary-3 {
   background-color: transparent;
-  color: #e12063;
-  border-color: #e12063;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-primary-4 {
@@ -354,14 +354,14 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-primary-7 {
   background-color: transparent;
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-primary-8 {
   background-color: transparent;
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-primary-9 {
@@ -378,8 +378,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-primary-11 {
   background-color: transparent;
-  color: #e12063;
-  border-color: #e12063;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-primary-13 {
@@ -468,8 +468,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-is-active-primary {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-active-home-1 {
@@ -480,8 +480,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-is-active-away-1 {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-active-home-2 {
@@ -492,7 +492,7 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-is-active-away-2 {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #DE0752;
+  color: #a71f66;
   border-color: #ec6f9b;
 }
 
@@ -504,7 +504,7 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-is-active-away-3 {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #DE0752;
+  color: #a71f66;
   border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -534,8 +534,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-is-active-primary-1 {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-active-primary-2 {
@@ -546,8 +546,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-is-active-primary-3 {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #e12063;
-  border-color: #e12063;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-active-primary-4 {
@@ -570,20 +570,20 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-is-active-primary-7 {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-hoverable-primary-7:hover {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-active-primary-8 {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #DE0752;
-  border-color: #DE0752;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-active-primary-9 {
@@ -600,8 +600,8 @@ $base: #0F172A;
 
 .sr-bb .srt-base-1-is-active-primary-11 {
   background-color: rgba(222, 7, 82, 0.12);
-  color: #e12063;
-  border-color: #e12063;
+  color: #a71f66;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-base-1-is-active-neutral-1 {
@@ -689,9 +689,9 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-away-1 {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
-  border-color: #DE0752;
+  border-color: #a71f66;
 }
 
 .sr-bb .srt-home-2 {
@@ -701,7 +701,7 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-away-2 {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: #ec6f9b;
 }
@@ -713,7 +713,7 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-away-3 {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: #0F172A;
 }
@@ -863,7 +863,7 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-lose {
-  background-color: #DE0752;
+  background-color: #a71f66;
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.16);
 }
@@ -1381,11 +1381,11 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-fill-change-decrease {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-change-decrease {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-text {
@@ -1501,11 +1501,11 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-fill-primary-1 {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-primary-1 {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-primary-2 {
@@ -1517,11 +1517,11 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-fill-primary-3 {
-  fill: #e12063;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-primary-3 {
-  stroke: #e12063;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-primary-4 {
@@ -1549,35 +1549,35 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-fill-primary-7 {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-primary-7 {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-primary-8 {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-primary-8 {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-primary-8-is-active-1 {
-  fill: #e12063;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-primary-8-is-active-1 {
-  stroke: #e12063;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-primary-8-is-active-2 {
-  fill: #e12063;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-primary-8-is-active-2 {
-  stroke: #e12063;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-primary-9 {
@@ -1597,19 +1597,19 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-fill-primary-11 {
-  fill: #e12063;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-primary-11 {
-  stroke: #e12063;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-primary-12 {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-primary-12 {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-home-1 {
@@ -1653,27 +1653,27 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-fill-away-1 {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-away-1 {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-away-2 {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-away-2 {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-away-3 {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-away-3 {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-fill-away-4 {
@@ -1813,11 +1813,11 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-fill-lose {
-  fill: #DE0752;
+  fill: #a71f66;
 }
 
 .sr-bb .srt-stroke-lose {
-  stroke: #DE0752;
+  stroke: #a71f66;
 }
 
 .sr-bb .srt-stop-base-1 {
@@ -1825,7 +1825,7 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-stop-primary-1 {
-  stop-color: #DE0752;
+  stop-color: #a71f66;
 }
 
 .sr-bb .srt-stop-primary-2 {
@@ -1833,7 +1833,7 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-stop-primary-3 {
-  stop-color: #e12063;
+  stop-color: #a71f66;
 }
 
 .sr-bb .srt-stop-primary-4 {
@@ -1849,11 +1849,11 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-stop-primary-7 {
-  stop-color: #DE0752;
+  stop-color: #a71f66;
 }
 
 .sr-bb .srt-stop-primary-8 {
-  stop-color: #DE0752;
+  stop-color: #a71f66;
 }
 
 .sr-bb .srt-stop-primary-9 {
@@ -1865,11 +1865,11 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-stop-primary-11 {
-  stop-color: #e12063;
+  stop-color: #a71f66;
 }
 
 .sr-bb .srt-stop-primary-12 {
-  stop-color: #DE0752;
+  stop-color: #a71f66;
 }
 
 .sr-bb .srt-stop-home-1 {
@@ -1877,7 +1877,7 @@ $base: #0F172A;
 }
 
 .sr-bb .srt-stop-away-1 {
-  stop-color: #DE0752;
+  stop-color: #a71f66;
 }
 
 .sr-bb .srt-fill-neutral-14 {

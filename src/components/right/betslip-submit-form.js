@@ -490,17 +490,24 @@ const BetslipSubmitForm = (props) => {
 
             const onFieldChanged = (ev) => {
                 let field = ev.target.name;
-                let value = ev.target.type == 'checkbox'
-                    ? ev.target.checked
-                    : ev.target.value;
-                if (field == 'bet_amount') {
-                    value = value.replace(/[^\d]/g, '');
-                    setFieldValue(field, value);
-                    setStake(value);
+                let value =
+                    ev.target.type === "checkbox"
+                        ? ev.target.checked
+                        : ev.target.value;
+
+                if (field === "bet_amount") {
+                    // Allow only digits
+                    if (/^\d*$/.test(value)) {
+                        value = value === "" ? "" : parseInt(value, 10);
+
+                        setFieldValue(field, value);
+                        setStake(value);
+                    }
                 } else {
                     setFieldValue(field, value);
                 }
-            }
+            };
+
 
             return (
                 <>
@@ -538,15 +545,22 @@ const BetslipSubmitForm = (props) => {
                                                 <div id="betting">
                                                     {jackpot ?
                                                         jackpotData?.bet_amount :
-                                                        (<input type="number"
+                                                        (<input
+                                                            type="number"
                                                             className="bet-select"
                                                             name="bet_amount"
-                                                            id="bet_amount"
                                                             min={1}
                                                             max={20000}
+                                                            step={1}
                                                             value={stake}
-                                                            onChange={(e) => onFieldChanged(e)}
-                                                        />)}
+                                                            onKeyDown={(e) => {
+                                                                if (["e", "E", "-", "."].includes(e.key)) {
+                                                                    e.preventDefault();
+                                                                }
+                                                            }}
+                                                            onChange={onFieldChanged}
+                                                        />
+                                                        )}
                                                 </div>
                                             </td>
                                         </tr>
@@ -583,16 +597,7 @@ const BetslipSubmitForm = (props) => {
                                                         <span id="tax"> {formatNumber(bonus || 0)}</span>
                                                     </td>
                                                 </tr>
-                                                {/* <tr className="bet-win-tr hide-on-affix opacity-70">
-                                                    <td className='px-3'> Win</td>
-                                                    <td className='text-right px-3'>KES. <span id="tax">{formatNumber(possibleWin)}</span></td>
-                                                </tr> */}
-                                                {/* 
-                                                <tr className="bet-win-tr hide-on-affix opacity-70">
-                                                    <td className='px-3'> Withholding (20%)</td> 
-                                                    <td className='text-right px-3'>KES. <span id="tax">{formatNumber(withholdingTax)}</span></td>
-                                                </tr>
-                                                */}
+
                                             </>
                                         )}
                                         <tr className="bet-win-tr hide-on-affix">
