@@ -9,16 +9,16 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 const MiniGames = () => {
     const [state, dispatch] = useContext(Context);
     const [searchTerm, setSearchTerm] = useState('');
-    const [isFocused, setIsFocused] = useState(false); 
+    const [isFocused, setIsFocused] = useState(false);
     const navigate = useNavigate();
 
-    const fetchTopCasino = async() => {
+    const fetchTopCasino = async () => {
         let endpoint = "top-games-list";
-        await makeRequest({url: endpoint, method: "GET", api_version:"casinoGames"}).then(([status, result]) => {
+        await makeRequest({ url: endpoint, method: "GET", api_version: "casinoGames" }).then(([status, result]) => {
             if (status === 200) {
                 const first12Games = result[0]?.gameList?.slice(0, 24) || [];
                 setLocalStorage("minicasinogames", first12Games);
-                dispatch({type:"SET", key: "minicasinogames", payload: first12Games});             
+                dispatch({ type: "SET", key: "minicasinogames", payload: first12Games });
             }
         });
     }
@@ -29,7 +29,7 @@ const MiniGames = () => {
         if (!getMiniCasino) {
             fetchTopCasino();
         } else {
-            dispatch({type: "SET", key:"minicasinogames", payload: getMiniCasino});
+            dispatch({ type: "SET", key: "minicasinogames", payload: getMiniCasino });
         }
     }, []);
 
@@ -37,8 +37,8 @@ const MiniGames = () => {
         let sport_image;
         try {
             sport_image = imgUrl;
-            if(sport_image.trim() === "") {
-                sport_image = require(`../../assets/img/casino/default.png`);  
+            if (sport_image.trim() === "") {
+                sport_image = require(`../../assets/img/casino/default.png`);
             }
         } catch (error) {
             sport_image = require(`../../assets/img/casino/default.png`);
@@ -46,12 +46,12 @@ const MiniGames = () => {
         return sport_image;
     }
 
-    const launchGame = async (game, moneyType=1) => {
+    const launchGame = async (game, moneyType = 1) => {
         if (game?.aggregator?.toLowerCase() === "suregames") {
             navigate(`/${game?.game_id.toLowerCase()}`)
             return
         }
-        
+
         let endpoint = `${game?.aggregator ? game?.aggregator : game?.provider_name}/casino/game-url/${isMobile ? "mobile" : "desktop"}/${moneyType}/${game.game_id}`;
 
         if (game?.aggregator && game?.aggregator?.toLowerCase() === "intouchvas") {
@@ -61,7 +61,7 @@ const MiniGames = () => {
             dispatch({ type: "SET", key: "showloginmodal", payload: true });
             return false
         }
-        
+
         await makeRequest({ url: endpoint, method: "GET", api_version: 'CasinoGameLaunch' }).then(([status, result]) => {
             if (status === 200 && result?.tea_pot == null) {
                 let launchUrl = result?.game_url || result?.gameUrl;
@@ -77,18 +77,18 @@ const MiniGames = () => {
     ) || [];
 
     return (
-        <div className="mt-4 p-4 bg-dark-bg-secondary border border-gray-200 rounded-md" style={{backgroundColor: '#0f0f1f', borderColor: 'rgba(255, 255, 255, 0.15)'}}>
-            <div className="pb-4" style={{backgroundColor: '#0f0f1f'}}>
+        <div className="mt-4 p-4 rounded-md" style={{ backgroundColor: 'rgba(255,255,255, 0.1)' }}>
+            <div className="pb-4" style={{}}>
                 <h3 className="text-white mb-2">Mini Games</h3>
                 <input
                     type="text"
                     placeholder="Search games..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    onFocus={() => setIsFocused(true)} 
-                    onBlur={() => setIsFocused(false)} 
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
                     className={`w-full p-2 mb-4 border ${isFocused ? 'bg-dark-bg-tertiary' : 'bg-transparent'} border-gray-200 rounded-md text-white`}
-                    style={{backgroundColor: isFocused ? '#151525' : 'transparent', borderColor: 'rgba(255, 255, 255, 0.15)', color: '#ffffff'}}
+                    style={{ backgroundColor: isFocused ? '#151525' : 'transparent', borderColor: 'rgba(255, 255, 255, 0.15)', color: '#ffffff' }}
                 />
             </div>
             <div className="mt-4 pt-4 grid grid-cols-4 gap-4">
@@ -97,7 +97,7 @@ const MiniGames = () => {
                         key={game.game_id}
                         className="relative flex items-center justify-center w-full h-0 pb-[100%] bg-cover bg-center rounded-md cursor-pointer transition-transform transform hover:scale-105"
                     >
-                        <LazyLoadImage 
+                        <LazyLoadImage
                             src={getCasinoImageIcon(game.image_url)}
                             className="absolute w-full h-full object-cover rounded-md"
                             onClick={() => launchGame(game, 1)}

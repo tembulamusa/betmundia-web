@@ -15,7 +15,7 @@ module.exports = {
         'custom-red': 'rgba(231, 6, 84, 1)',
         'custom-orange': 'rgba(255, 178, 0, 1)',
         'dark-bg': '#0a0a15',
-        'dark-bg-secondary': '#0f0f1f',
+        'dark-bg-secondary': 'rgba(255,255,255, 0.1)',
         'dark-bg-tertiary': '#151525',
         'pink-primary': '#E70654',
         'green-action': '#19BC54',

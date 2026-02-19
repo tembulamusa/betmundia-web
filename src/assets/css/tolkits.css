@@ -40,7 +40,7 @@
 }
 
 .pro-sidebar>.pro-sidebar-inner {
-    background-color: #0f0f1f !important;
+    background-color: rgba(0, 12, 36, 1) !important;
 }
 
 .pro-sidebar .pro-menu .pro-menu-item.pro-sub-menu .pro-inner-list-item {
@@ -755,7 +755,7 @@ li a,
     /* width: 98%; */
     margin: auto;
     border-radius: 5px;
-    background: #0f0f1f !important;
+    /* background: rgba(0, 12, 36, 1) !important; */
     color: #ffffff;
 }
 
@@ -2032,7 +2032,7 @@ events-header {
 .top-nav {
     top: -2px;
     padding-top: 0px;
-    background: #0f0f1f !important;
+    background: rgba(0, 12, 36, 1) !important;
     background-position: center center;
     padding-bottom: 0px;
     background-size: cover;
@@ -2040,7 +2040,7 @@ events-header {
 }
 
 .sticky-top {
-    background: #0f0f1f !important;
+    /* background: rgba(0, 12, 36, 1)!important; */
 }
 
 /* On screens that are 992px or less, set the background color to blue */

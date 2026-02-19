@@ -170,7 +170,7 @@ const MainTabs = (props) => {
     }
 
     return (
-        <div className='bg-dark-bg-secondary mb-3 block relative' style={{ backgroundColor: '#151525' }}>
+        <div className='bg-dark-bg-secondary mb-3 block relative' style={{ zIndex: 1 }}>
             <div className="border-b border-gray-200 !uppercase font-bold main-tabs reduced-mobile-text px-2 md:flex">
                 {/* <div className='col-4 col-md-4 col-sm-4 hidden md:flex !mr-0 pr-0'>
                     <div className="filter-group-icon mb-0" key="1">

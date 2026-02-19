@@ -142,7 +142,7 @@ const MatchHeaderRow = (props) => {
 
 
     return (
-        first_match && <Container className={`${live && 'live'} full-mobile sticky-top`} style={{ position: "sticky" }}>
+        first_match && <Container className={`${live && 'live'} full-mobile sticky-top`} style={{ position: "sticky", paddingLeft: "0", paddingRight: "0" }}>
             <div className={`${jackpot && 'jackpot-zero-top'} top-matches d-flex position-sticky sticky-top `}
                 style={{ opacity: "1", top: "100px", height: "" }}>
 
@@ -1303,7 +1303,7 @@ export const MarketList = (props) => {
                 // matchwithmarkets !== null && <MatchDetailFilter />
             }
 
-            <div className="web-element bg-[rgba(255,255,255,0.02)]">
+            <div className="web-element">
                 {/* {(!matchwithmarkets || Object.entries(matchwithmarkets?.odds || {}).length == 0 || matchwithmarkets == null) && <EventUnavailable />} */}
 
                 {/* filter here */}
@@ -1449,7 +1449,7 @@ const MatchList = (props) => {
                 subTypes={subTypes}
             />
 
-            <Container className="web-element bg-[rgba(255,255,255,0.02)]">
+            <Container className="web-element" style={{ paddingLeft: "0", paddingRight: "0" }}>
                 {matches &&
                     Object.entries(matches).map(([key, match]) => (
                         match?.match_status?.toLowerCase() !== "ended" &&

@@ -544,14 +544,14 @@ li.bet-option {}
 .shimmer-wrapper *,
 [class*="shimmer"],
 [class*="Shimmer"] {
-  background-color: #0f0f1f !important;
-  background: #0f0f1f !important;
+  background-color: rgba(0, 12, 36, 1) !important;
+  background: rgba(0, 12, 36, 1) !important;
 }
 
 .shimmer,
 .shimmer-wrapper .shimmer {
-  background: linear-gradient(90deg, #0f0f1f 0%, #151525 50%, #0f0f1f 100%) !important;
-  background-color: #0f0f1f !important;
+  background: linear-gradient(90deg, rgba(0, 12, 36, 1)0%, #151525 50%, rgba(0, 12, 36, 1)100%) !important;
+  background-color: rgba(0, 12, 36, 1) !important;
 }
 
 .shimmer::after,
@@ -564,8 +564,8 @@ li.bet-option {}
 [class*="Loading"],
 .loading-overlay,
 .spinner-background {
-  background-color: #0f0f1f !important;
-  background: #0f0f1f !important;
+  background-color: rgba(0, 12, 36, 1) !important;
+  background: rgba(0, 12, 36, 1) !important;
 }
 
 .colored-circle {

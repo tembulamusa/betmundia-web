@@ -12,9 +12,9 @@ import Live from '../../assets/img/banner/carousel/live.png';
 import Casino from '../../assets/img/banner/carousel/casino.png';
 import Jackpot from '../../assets/img/banner/carousel/jackpot.jpg';
 import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg';
-import KaribuBonus from '../../assets/img/banner/carousel/karibu-bonus.png';
-import DepositBonus from '../../assets/img/banner/carousel/deposit-bonus.png';
-import Freebet from '../../assets/img/banner/carousel/free-bets.png';
+import KaribuBonus from '../../assets/img/banner/carousel/Karibu-Bonus.jpeg';
+import DepositBonus from '../../assets/img/banner/carousel/Deposit-Bonus.jpeg';
+import Aviator from '../../assets/img/banner/carousel/aviator.jpeg';
 import { Link } from 'react-router-dom';
 
 
@@ -54,9 +54,9 @@ const CarouselLoader = (props) => {
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={Freebet}
+                    src={Aviator}
                     onLoad={onImageLoaded}
-                    alt="free-bets"
+                    alt="aviator"
                     effects="blur"
                 />
             </Carousel.Item>
