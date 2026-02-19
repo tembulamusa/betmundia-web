@@ -218,7 +218,7 @@ const Header = (props) => {
 
                         <div className="col-md-7 col-sm-6" id="navbar-collapse-main">
                             {/* {user ? <ProfileMenu user={user}/> : <HeaderLogin setUser={setUser}/>} */}
-                            <div className="flex">
+                            <div className="flex justify-end">
                                 <HeaderNav />
                                 {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
                             </div>

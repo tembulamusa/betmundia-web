@@ -501,12 +501,13 @@ const OddButton = (props) => {
             {detail &&
                 (<>
                     <span
-                        className="label label-inverse">
+                        className="label mkt-detail-label label-inverse"
+                        style={{ color: "#fff" }}>
                         {match.odd_key} {(!match?.odd_key.includes(match?.special_bet_value.replace(/^[+-]/, '')))
                             && `(${match?.special_bet_value.slice(match?.special_bet_value.lastIndexOf(":") + 1)})`}
                     </span>
                     <span
-                        className="label label-inverse odd-value">
+                        className="label label-inverse odd-value" style={{ fontWeight: "bold" }}>
                         {parseFloat(match?.odd_value).toFixed(2)}
                     </span>
                 </>)}
@@ -540,7 +541,7 @@ const teamScore = (allscore, is_home_team) => {
 }
 
 const MarketRow = (props) => {
-    const { markets, match, market_id, width, live, producers, marketDetail, betstopMessage, setBetstopMessage } = props;
+    const { markets, match, market_id, rowItems, live, producers, marketDetail, betstopMessage, setBetstopMessage } = props;
     const [mutableMkts, setMutableMkts] = useState(
         [...markets.sort((a, b) => a?.special_bet_value?.localeCompare(b?.special_bet_value) || a.outcome_id.localeCompare(b.outcome_id) || a.odd_key.localeCompare(b.odd_key))]
     );
@@ -707,39 +708,33 @@ const MarketRow = (props) => {
                         }
                         <span className='col-9'>{marketDetail.name}</span>
                     </Row>
-
-                    {mutableMkts && mutableMkts?.map((mkt_odds) => {
-                        // const cleanedOddValue = (() => {
-                        //     console.log("marketOdd", mkt_odds);
-                        //     let val = marketOdd?.odd_value;
-
-                        //     if (val == null) return val;
-
-                        //     // force string
-                        //     val = String(val);
-
-                        //     val = val.replace("java.math.BigDecimal,", "");
-
-                        //     return mkt_odds;
-                        // })();
-                        return (<>
-                            {
-                                (["active", "suspended", "handedover"].includes(mkt_odds?.market_status?.toLowerCase()))
-                                && <Col className="match-detail" style={{ width: width, float: "left" }}>
-                                    {/* <div>{mkt_odds.market_status}</div> */}
-                                    <MktOddsButton
-                                        match={match}
-                                        mktodds={mkt_odds}
-                                        producerId={producerId}
-                                        live={live}
-                                        pdown={pdown}
-                                    />
-                                </Col>
+                    <div className={`grid grid-cols-${rowItems} gap-x-3`}>
+                        {
+                            mutableMkts &&
+                            mutableMkts?.map((mkt_odds) => {
+                                return (<>
+                                    {
+                                        (["active", "suspended", "handedover"].includes(mkt_odds?.market_status?.toLowerCase()))
+                                        &&
+                                        <div className="match-detail" style={{}}>
+                                            {/* <div>{mkt_odds.market_status}</div> */}
+                                            <MktOddsButton
+                                                match={match}
+                                                mktodds={mkt_odds}
+                                                producerId={producerId}
+                                                live={live}
+                                                pdown={pdown}
+                                            />
+                                        </div>
+                                    }
+                                </>)
                             }
-                        </>)
-                    })
-                    }
-                </div>}
+                            )
+                        }
+                    </div>
+
+                </div>
+            }
         </>
     )
 }
@@ -1317,7 +1312,7 @@ export const MarketList = (props) => {
                             markets={markets?.outcomes?.sort((a, b) =>
                                 a?.special_bet_value - b?.special_bet_value || a?.outcome_id - b?.outcome_id
                             )}
-                            width={markets.outcomes.length == 3 ? "33.333%" : "50%"}
+                            rowItems={markets.outcomes.length == 3 ? 3 : 2}
                             match={matchwithmarkets}
                             marketDetail={markets}
                             key={mkt_id}

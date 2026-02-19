@@ -962,7 +962,7 @@ input.std-input::placeholder {
   /* margin-bottom: 30px; */
   position: relative;
   color: #ffffff;
-  background: #0f0f1f;
+  /* background: #0f0f1f; */
 }
 
 /* Right sidebar elements - Dark theme */
@@ -976,6 +976,10 @@ input.std-input::placeholder {
   color: #ffffff;
   padding-left: 12px;
   padding-right: 7px;
+}
+
+.mkt-detail-label {
+  color: #ffffff !important;
 }
 
 .qv.rc.alu {
@@ -1768,8 +1772,8 @@ h1.std-title {
 
 .user-profile-icon {
   background: #a71f66;
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   padding: 4px;
   border-radius: 100%;
 }
@@ -2322,4 +2326,8 @@ button.locked-button:hover {
   width: 100% !important;
   min-width: 432px !important;
   position: absolute;
+}
+
+.search-btn {
+  font-size: 20px;
 }

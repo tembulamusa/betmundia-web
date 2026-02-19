@@ -778,12 +778,13 @@ li a,
 }
 
 .matches .top-matches .match-detail button.home-team {
-    background: #2a2a3e !important;
+    background: rgba(255, 255, 255, 0.15) !important;
     color: #FFC428 !important;
 }
 
-.matches .top-matches .match-detail button.home-team.picked {
-    background: #3a3a4e !important;
+.matches .top-matches .match-detail button.home-team label:hover,
+.matches .top-matches .match-detail button.home-team:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
     color: #FFC428 !important;
 }
 
@@ -866,7 +867,7 @@ li a,
 }
 
 .matches .top-matches.header {
-    background: #0f0f1f;
+    background: rgba(0, 0, 0, 0.15) !important;
     color: #ffffff !important;
     font-weight: bold;
     padding: 10px;
@@ -927,7 +928,7 @@ li a,
     /* min-height: 35px; */
     /* height: auto; */
     /* margin-right: ; */
-    padding-right: 10px;
+    /* padding-right: 10px; */
 }
 
 .top-matches div:last-child {
