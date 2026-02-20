@@ -382,7 +382,7 @@ const BetslipSubmitForm = (props) => {
             setNetWin(nw > Float(5000000) ? Float(5000000) : nw);
             setPossibleWin(Float(raw_possible_win, 2));
             setWithholdingTax(Float(wint, 2));
-            setBonus(Float(raw_possible_win * (dbWinMatrix[strConstruct] / 100), 2));
+            setBonus(Float(raw_possible_win * (dbWinMatrix[strConstruct] / 100), 2) || 0);
             dispatch({ type: "SET", key: "totalodds", payload: Float(odds) })
             dispatch({ type: "SET", key: "slipnetwin", payload: Float(nw, 2) })
         } else {
