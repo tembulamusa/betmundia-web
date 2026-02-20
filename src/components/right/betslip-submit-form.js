@@ -258,7 +258,7 @@ const BetslipSubmitForm = (props) => {
             profile_id: getFromLocalStorage("user")?.profile_id || state?.user?.profile_id,
             account: 1,
             msisdn: getFromLocalStorage("user")?.msisdn || state?.user?.msisdn,
-            accept_all_odds_change: values.accept_all_odds_change == true ? 1 : 0,
+            accept_all_odds_change: 0,//values.accept_all_odds_change == true ? 1 : 0,
             bet_type: getFromLocalStorage("liveCount") > 0 ? "1" : jackpot ? "9" : "3" // update for live
         };
         let endpoint = '/user/place-bet';
@@ -318,7 +318,7 @@ const BetslipSubmitForm = (props) => {
                                 amtDiff = 5.00
                             }
                             dispatch({ type: "SET", key: "promptdepositrequest", payload: { show: true, payableAmt: amtDiff, message: { status: 400, message: response.result } } })
-                        } else if (qmessage.status == 403) {
+                        } else if (response?.status == 403) {
                             removeItem("user");
                             dispatch({ type: "SET", key: "showloginmodal", payload: true })
 
@@ -525,7 +525,7 @@ const BetslipSubmitForm = (props) => {
                                             </td>
                                         </tr>}
 
-                                        <tr id="odd-change-text" className='opacity-60'>
+                                        {/* <tr id="odd-change-text" className='opacity-60'>
                                             <td colSpan="2">
                                                 <label className="checkbox">
 
@@ -538,7 +538,7 @@ const BetslipSubmitForm = (props) => {
                                                     /> Accept any odds change
                                                 </label>
                                             </td>
-                                        </tr>
+                                        </tr> */}
                                         <tr>
                                             <td className='opacity-70 py-2'>AMOUNT(ksh)</td>
                                             <td className='py-2 text-right pr-2'>
