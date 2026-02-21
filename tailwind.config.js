@@ -21,6 +21,7 @@ module.exports = {
         'green-action': '#19BC54',
         'dark-blue': '#0f1a3f',
         'dark-blue-alt': '#0a0f2a',
+        'light-bg-secondary': 'rgba(255, 255, 255, 0.1)',
         gray: {
           200: 'rgba(255, 255, 255, 0.15)', // Override gray-200 for dark theme
         }
