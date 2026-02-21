@@ -66,6 +66,9 @@ const MiniGames = () => {
             if (status === 200 && result?.tea_pot == null) {
                 let launchUrl = result?.game_url || result?.gameUrl;
                 dispatch({ type: "SET", key: "casinolaunch", payload: { game: game, url: launchUrl } });
+                if (game?.aggregator?.toLowerCase() === "bitville") {
+                    dispatch({ type: "SET", key: "bitvilleGame", payload: result });
+                }
                 setLocalStorage("casinolaunch", { game: game, url: launchUrl })
                 navigate(`/casino-game/${game?.provider_name.split(' ').join('-').toLowerCase()}/${game?.game_name.split(' ').join('-').toLowerCase()}`)
             }

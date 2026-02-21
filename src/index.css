@@ -33,7 +33,7 @@ code {
 }
 
 .bg-primary {
-  background: #151525 !important;
+  background: rgba(255, 255, 255, 0.083) !important;
   color: #ffffff;
 }
 

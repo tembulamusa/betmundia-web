@@ -1312,7 +1312,7 @@ export const MarketList = (props) => {
                             markets={markets?.outcomes?.sort((a, b) =>
                                 a?.special_bet_value - b?.special_bet_value || a?.outcome_id - b?.outcome_id
                             )}
-                            rowItems={markets.outcomes.length == 3 ? 3 : 2}
+                            rowItems={markets?.outcomes?.length == 3 ? 3 : 2}
                             match={matchwithmarkets}
                             marketDetail={markets}
                             key={mkt_id}

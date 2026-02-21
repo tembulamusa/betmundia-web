@@ -346,7 +346,7 @@ const ProSidebar = (props) => {
             {
                 (!excludeSidebar.includes(location.pathname) && location.pathname.includes("casino")) &&
 
-                <div className={`d-none d-md-block col-md-2`}>
+                <div className={`d-none d-md-block col-md-2 bg-[rgba(255,255,255,0.02)]`}>
                     <div>
                         {location.pathname == "/signup" && "signup"}
                         <CasinoSidebar categories={state?.casinogames?.gameTypes} providers={state?.casinogames?.providers} />
