@@ -69,7 +69,7 @@ const CasinoLaunchedGame = (props) => {
         if (provider.toLowerCase() === "aviatorllc") {
             endpoint = `Bitville/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/14914`;
         }
-        if (provider.toLowerCase() === "spribe") {
+        if (gameName.toLowerCase() === "aviator") {
             endpoint = `Bitville/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/1370`;
         }
         if (gameName.toLowerCase() === "jetx") {
@@ -101,11 +101,9 @@ const CasinoLaunchedGame = (props) => {
 
     useEffect(() => {
         dispatch({ type: "SET", key: "iscasinopage", payload: true });
-
         if (surePopular) {
             // New way: Handle advertised games
             const gameId = findGameId(provider, gameName);
-
             if (gameId) {
                 fetchGameUrl(provider, gameId);
             } else {
@@ -118,9 +116,9 @@ const CasinoLaunchedGame = (props) => {
                 let game = state?.casinolaunch || getFromLocalStorage("casinolaunch");
                 dispatch({ type: "SET", key: "casinolaunch", payload: game });
                 const parsedUrl = game?.url || game?.game?.token || game?.gameUrl || game?.game?.game_url;
-                if (parsedUrl || game?.game?.aggregator?.toLowerCase() == "bitville") {
-                    if (game?.aggregator?.toLowerCase() == "bitville"
-                        || game?.game?.aggregator?.toLowerCase() == "bitville"
+                if (parsedUrl || game?.game?.aggregator?.toLowerCase() === "bitville") {
+                    if (game?.aggregator?.toLowerCase() === "bitville"
+                        || game?.game?.aggregator?.toLowerCase() === "bitville"
                     ) {
                         setBitvilleGame(true);
                     }

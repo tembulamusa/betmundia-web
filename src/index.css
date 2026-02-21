@@ -213,7 +213,7 @@ input[type="password"].form-control {
 }
 
 .ps-sidebar-container {
-  background: rgba(0, 12, 36, 1) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
   color: #ffffff !important;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   margin-top: 0px;
@@ -233,7 +233,7 @@ input[type="password"].form-control {
   min-width: auto !important;
   height: 100%;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.41);
-  background: #0f0f1f;
+  background: rgba(0, 12, 36, 1) !important;
 }
 
 /* Additional specificity to ensure border color is applied - override any library styles */
@@ -2314,7 +2314,7 @@ button.locked-button:hover {
 }
 
 .ps-menuitem-root {
-  margin-bottom: 4px;
+  margin-bottom: 0;
 }
 
 #jackpot-tabs-tabpane-results {

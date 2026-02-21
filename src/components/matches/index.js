@@ -1080,7 +1080,7 @@ const MatchRow = (props) => {
                     </div>
 
                     {(live) &&
-                        <div className="text-[#FFB200] font-bold">
+                        <div className="text-[#FFB200] font-bold mx-3" key="25">
                             <br />
                             {teamScore((updatedMatchScore || match?.score), true)}
                             <br />

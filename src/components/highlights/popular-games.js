@@ -71,7 +71,12 @@ const PopularGames = (props) => {
                 let launchUrl = result?.game_url || result?.gameUrl;
                 dispatch({ type: "SET", key: "casinolaunch", payload: { game: game, url: launchUrl } });
                 setLocalStorage("casinolaunch", { game: game, url: launchUrl })
-                navigate(`/casino-game/${game?.provider_name.split(' ').join('-').toLowerCase()}/${game?.game_name.split(' ').join('-').toLowerCase()}`)
+                if (game?.aggregator?.toLowerCase() === "bitville") {
+                    dispatch({ type: "SET", key: "bitvilleGame", payload: result });
+                }
+                setTimeout(() => {
+                    navigate(`/casino-game/${game?.provider_name.split(' ').join('-').toLowerCase()}/${game?.game_name.split(' ').join('-').toLowerCase()}`)
+                }, 100)
             } else {
                 setAlertMessage({ status: 400, message: "Unable to launch Game" })
                 return false
