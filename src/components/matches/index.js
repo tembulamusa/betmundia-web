@@ -308,7 +308,7 @@ const SideBets = (props) => {
     return (
         <div
             className={`side mt-2 !pl-2 !ml-3 ${picked} align-self-center more-markets-container m-lg-2`}>
-            <Link to={`/match/${match?.parent_match_id}`} className=''>+{match?.sidebets}</Link>
+            <Link to={`/match/${match?.match_id}`} className=''>+{match?.sidebets}</Link>
             <div
                 onClick={() => openLiveStats(match?.parent_match_id)}
                 className='ml-3 mt-1 text-white font-bold opacity-70 hover:opacity-100 cursor-pointer'>
