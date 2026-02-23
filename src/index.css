@@ -1375,6 +1375,12 @@ img.highlights-content-img {
   object-position: center;
 }
 
+.side a {
+  color: rgba(255, 215, 0) !important;
+  font-weight: 500;
+  font-size: 11px;
+}
+
 .popular-game:hover {
   opacity: 0.7;
   transition: all ease-in-out 0.5s;

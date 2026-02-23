@@ -303,8 +303,6 @@ const SideBets = (props) => {
     const [picked,] = useState();
 
     const openLiveStats = (parent_match_id) => {
-        // https://statshub.sportradar.com/betmundialsmts/en/sport/1
-        // window.open(`https://s5dev.sir.sportradar.com/d9d6a9c373db18dfdf63352e1c1d9321/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
         window.open(`https://statshub.sportradar.com/betmundialsmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
     }
     return (
