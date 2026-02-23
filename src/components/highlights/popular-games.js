@@ -84,7 +84,7 @@ const PopularGames = (props) => {
         });
     }
     return (
-        <div className="popular-games marquee-card !mr-0 !pl-3">
+        <div className="popular-games marquee-card !mr-0">
             {
                 state?.toppopularcasino &&
                 state?.toppopularcasino[0]?.gameList?.map((game, idx) => (

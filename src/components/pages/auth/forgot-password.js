@@ -2,21 +2,33 @@
 // This component is also in charge of verifying phone number/account.
 // We use the same thing to forgot password and 
 
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import makeRequest from "../../utils/fetch-request";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Notify from '../../utils/Notify';
 import Alert from '../../utils/alert';
+import { Context } from "../../../context/store";
+
 
 const ResetPassword = (props) => {
     const [message, setMessage] = useState(null);
     const [otp_sent, setOtpSent] = useState(false);
     const [msisdn, setMsisdn] = useState('');
     const navigate = useNavigate();
+    const [state, dispatch] = useContext(Context);
     const [searchParams] = useSearchParams();
     const forgotType = searchParams.get("forgot-type");
 
+    useEffect(() => {
+        dispatch({ type: "DEL", key: "showloginmodal" });
+    }, [])
+
+    useEffect(() => {
+        if (state?.user) {
+            navigate("/");
+        }
+    }, [state?.user])
     const initialValues = {
         msisdn: '',
     };

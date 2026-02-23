@@ -784,18 +784,16 @@ li a,
 
 .matches .top-matches .match-detail button.home-team label:hover,
 .matches .top-matches .match-detail button.home-team:hover {
-    background: rgba(255, 255, 255, 0.3) !important;
+    background: #a71f66 !important;
     color: #FFC428 !important;
 }
 
 .matches .top-matches .match-detail button.home-team label:hover,
 .matches .top-matches .match-detail button.home-team:hover {
-    background: #3a3a4e !important;
     color: #FFC428 !important;
 }
 
 .match-detail button .label:hover {
-    background: #0f1a3f !important;
     color: #fff !important;
 }
 
@@ -966,17 +964,16 @@ li a,
 }
 
 .top-matches .side {
-    padding: 2px 8px 2px 5px;
+    padding: 4px 4px 0px 0px !important;
     outline-style: none;
     outline: none;
     text-align: center;
     float: right;
-    font-size: 12px;
-    height: 30px;
-    line-height: 25px;
+    font-size: 14px;
+    /* height: 33px; */
+    line-height: 15px;
     border-radius: 2px;
     font-weight: bold;
-
 }
 
 button {}
@@ -1992,6 +1989,7 @@ events-header {
     -moz-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.25);
     -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.25);
     color: #ffffff;
+    background: rgba(255, 255, 255, 0.04);
 }
 
 .events-header .form-control {
@@ -2168,6 +2166,10 @@ events-header {
     color: #797979;
     font-size: 12px;
     margin: 0px;
+}
+
+.match-list .top-matches {
+    padding-right: 30px;
 }
 
 .mobi #search-event {
@@ -16052,12 +16054,14 @@ li a.live-game:hover {
         float: right;
         font-size: 10px;
         font-weight: 700;
-        height: 30px;
-        line-height: 25px;
+        /* height: 30px; */
+        line-height: 6px;
         outline-style: none;
         outline: none;
-        padding: 2px 0px 2px 0px;
+        padding: 4px 0px 0px 0px !important;
         text-align: center;
+        margin-left: 0 !important;
+        right: 2px;
     }
 
     .carousel-item {

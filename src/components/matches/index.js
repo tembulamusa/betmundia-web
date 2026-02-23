@@ -303,16 +303,18 @@ const SideBets = (props) => {
     const [picked,] = useState();
 
     const openLiveStats = (parent_match_id) => {
-
-        window.open(`https://s5dev.sir.sportradar.com/betmundialmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
+        // https://statshub.sportradar.com/betmundialsmts/en/sport/1
+        // window.open(`https://s5dev.sir.sportradar.com/d9d6a9c373db18dfdf63352e1c1d9321/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
+        window.open(`https://statshub.sportradar.com/betmundialsmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
     }
     return (
         <div
-            className={` ${picked} align-self-center more-markets-container m-lg-2`}>
+            className={`side mt-2 !pl-2 !ml-3 ${picked} align-self-center more-markets-container m-lg-2`}>
+            <Link to={`/match/${match?.parent_match_id}`} className=''>+{match?.sidebets}</Link>
             <div
                 onClick={() => openLiveStats(match?.parent_match_id)}
-                className='side !pl-2 !ml-3 text-white font-bold opacity-70 hover:opacity-100 cursor-pointer'>
-                <IoIosStats size={20} />
+                className='ml-3 mt-1 text-white font-bold opacity-70 hover:opacity-100 cursor-pointer'>
+                <IoIosStats size={18} />
             </div>
         </div>
     )
@@ -1444,7 +1446,7 @@ const MatchList = (props) => {
                 subTypes={subTypes}
             />
 
-            <Container className="web-element" style={{ paddingLeft: "0", paddingRight: "0" }}>
+            <Container className="web-element match-list" style={{ paddingLeft: "0", paddingRight: "0" }}>
                 {matches &&
                     Object.entries(matches).map(([key, match]) => (
                         match?.match_status?.toLowerCase() !== "ended" &&

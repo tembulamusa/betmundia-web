@@ -265,7 +265,7 @@ aside[class*="ps-sidebar-root"],
 .ps-menu-button:hover,
 .ps-menu-button:active,
 .ps-menu-button:focus {
-  background-color: #151525 !important;
+  background-color: #a71f66 !important;
   outline: none !important;
   border: none !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -291,7 +291,7 @@ aside[class*="ps-sidebar-root"],
   padding: 0;
   width: 100%;
   border-right: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 12, 36) !important;
+  background: rgba(255, 255, 255, 0.031) !important;
   margin: 0px auto 0;
 }
 
@@ -510,13 +510,17 @@ aside[class*="ps-sidebar-root"],
     padding-top: 10px;
     padding-bottom: 3px;
     margin-bottom: 0px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 12px;
+    padding-right: 18px;
     position: relative;
     font-weight: normal;
     color: #ffffff;
     font-size: 12px;
     margin: 0px;
+  }
+
+  .match-list .top-matches {
+    padding-right: 24px;
   }
 
   .match-detail-container {
@@ -1257,7 +1261,7 @@ li.bet-option {
   /* width: 98%; */
   max-height: 9.75em;
   /* margin-right: 8px; */
-  padding: 5px;
+  /* padding: 5px; */
   /* padding: 0 !important; */
   font-weight: 400;
   display: inline-block;
@@ -1360,6 +1364,7 @@ img.highlights-content-img {
   height: 100%;
   display: inline-block;
   /* margin-right: 8px; */
+  padding: 8px 8px;
   padding-right: 0px;
   border-radius: 10px;
   transition: all ease-in-out 0.5s;
@@ -1367,7 +1372,6 @@ img.highlights-content-img {
   -webkit-transition: all ease-in-out 0.5s;
   margin-bottom: 0 !important;
   object-fit: cover;
-  /* Ensure the image fits without stretching */
   object-position: center;
 }
 
@@ -1403,7 +1407,7 @@ img.highlights-content-img {
   flex-wrap: nowrap;
   /* font-size: 11px; */
   overflow: auto;
-  padding: 5px;
+  /* padding: 5px; */
   scrollbar-width: none;
 }
 
@@ -1875,7 +1879,7 @@ svg.big-offcanvas-icon {
   border-radius: 5px;
   box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-  background: #151525 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
   color: #ffffff;
 }
 
@@ -2057,12 +2061,12 @@ button.no-bet-btn:hover,
 button.locked-button,
 .locked-button,
 button.locked-button:hover {
-  background-color: #454545 !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
   min-width: 56px;
   min-height: 48px;
   text-align: center;
-  opacity: 0.4;
-  color: #666666 !important;
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.2) !important;
   border: 1px solid #474747;
 }
 
@@ -2227,7 +2231,7 @@ button.locked-button:hover {
 
 .live-sidebar .ps-menu-root .active,
 .live-sidebar .ps-menu-button:focus {
-  background: #0f1a3f !important;
+  background: #a71f66 !important;
 }
 
 .ps-menu-root .active a .topl {

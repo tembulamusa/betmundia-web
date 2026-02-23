@@ -172,7 +172,9 @@ const CasinoLaunchedGame = (props) => {
 
     const fullScreen = (mode) => {
         if (mode === "view-full") {
-            let iframe = document.getElementById("myIframe");
+            let iframe = document.getElementById("myIframe")
+                ||
+                document.getElementById("bv-loader")?.getElementsByTagName("iframe")[0];
             if (iframe.requestFullscreen) {
                 iframe.requestFullscreen();
             } else if (iframe.mozRequestFullScreen) { // Firefox
