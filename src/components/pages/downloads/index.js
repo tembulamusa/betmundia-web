@@ -299,7 +299,7 @@ export default function MatchesList() {
                                     </div>
                                 </> :
 
-                                <NoEvents message={"An Error occurred. Conatct Customer Care on 0724599488"} />
+                                <NoEvents message={"An Error occurred. Conatct Customer Care on 0140444142"} />
                         }
                     </Tab>
                     <Tab eventKey="jackpot" title="Jackpot" className={'background-primary shadow p-5'}

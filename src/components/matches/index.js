@@ -165,7 +165,7 @@ const MatchHeaderRow = (props) => {
                         </h3> */}
                     </div>
                 </div>
-                <div className={`${jackpot ? "is-jackpot-buttons" : ""} col ${sportName?.toLowerCase() == "soccer" ? 'd-flex flex-row justify-content-between' : "single-market-container"}`}>
+                <div className={`${jackpot ? "is-jackpot-buttons" : ""} col matches-row ${sportName?.toLowerCase() == "soccer" ? 'd-flex flex-row justify-content-between' : "single-market-container"}`}>
                     {
                         // <div className={``} key="d3">
                         <div className={`${sportName?.toLowerCase() == "soccer" ? 'd-flex flex-row' : "single-market-content"} d-flex flex-column text-center ${sportName?.toLowerCase() == "soccer" ? 'd-flex flex-row' : "!pr-0"}`}>
@@ -312,7 +312,7 @@ const SideBets = (props) => {
             <div
                 onClick={() => openLiveStats(match?.parent_match_id)}
                 className='ml-3 mt-1 text-white font-bold opacity-70 hover:opacity-100 cursor-pointer'>
-                <IoIosStats size={18} />
+                <IoIosStats size={20} />
             </div>
         </div>
     )
@@ -1088,7 +1088,7 @@ const MatchRow = (props) => {
                         </div>
                     }
 
-                    <div className={`${jackpot && "is-jackpot"} ${live && 'live-game'} col block ${match?.sport_name?.toLowerCase() == "soccer" ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
+                    <div className={`${jackpot && "is-jackpot"} ${live && 'live-game'} matches-row col block ${match?.sport_name?.toLowerCase() == "soccer" ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
                         {/* Mobile only datetime */}
 
                         <div className="md:hidden block">
@@ -1448,7 +1448,6 @@ const MatchList = (props) => {
                 {matches &&
                     Object.entries(matches).map(([key, match]) => (
                         match?.match_status?.toLowerCase() !== "ended" &&
-
                         <MatchRow
                             initialMatch={match}
                             key={match?.parent_match_id}

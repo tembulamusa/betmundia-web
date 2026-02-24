@@ -38,7 +38,7 @@ code {
 }
 
 .paybillnumbers {
-  /* background: #1c75bc4d!important; */
+  background: rgba(255, 255, 255, 0.07) !important;
   /* background-position: -20% 20%; */
   /* background-size: 100%; */
   box-shadow: 0 0 6px 0 #00000080;
@@ -377,6 +377,15 @@ aside[class*="ps-sidebar-root"],
   scrollbar-color: transparent transparent;
 }
 
+.match-list .matches-row,
+.sticky-top .matches-row {
+  padding-right: 3%;
+}
+
+.sticky-top .matches-row {
+  padding-right: 5%;
+}
+
 @media screen and (max-width:768px) {
   .mobile-custom-scrollbar {
     scrollbar-width: none !important;
@@ -522,6 +531,8 @@ aside[class*="ps-sidebar-root"],
   .match-list .top-matches {
     padding-right: 24px;
   }
+
+
 
   .match-detail-container {
     width: 42% !important;
@@ -1364,7 +1375,7 @@ img.highlights-content-img {
   height: 100%;
   display: inline-block;
   /* margin-right: 8px; */
-  padding: 8px 8px;
+  padding: 0px 8px;
   padding-right: 0px;
   border-radius: 10px;
   transition: all ease-in-out 0.5s;
@@ -1377,8 +1388,8 @@ img.highlights-content-img {
 
 .side a {
   color: rgba(255, 215, 0) !important;
-  font-weight: 500;
-  font-size: 11px;
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .popular-game:hover {

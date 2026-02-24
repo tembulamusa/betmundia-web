@@ -964,7 +964,7 @@ li a,
 }
 
 .top-matches .side {
-    padding: 4px 4px 0px 0px !important;
+    padding: 4px 16px 0px 0px !important;
     outline-style: none;
     outline: none;
     text-align: center;
@@ -2698,8 +2698,9 @@ footer a {
     border-bottom: 0px solid rgba(255, 255, 255, 0.25);
     font-family: arial;
     font-size: 15px;
-    background: #111834 !important;
+    background: rgba(255, 255, 255, 0.07) !important;
     padding: 30px;
+    margin-top: 10px;
 }
 
 .footer-custom ul {
@@ -15769,13 +15770,13 @@ li a.live-game:hover {
 .overflow-ellipsis {}
 
 .match-detail-container {
-    width: 22% !important;
+    width: 20% !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-right: 5%;
-    /*max-width: 20% !important;*/
-    /*margin-right: 2% !important;*/
+    margin-right: 3%;
+    /* max-width: 20% !important; */
+    /* margin-right: 2% !important; */
 }
 
 .odd-button {
