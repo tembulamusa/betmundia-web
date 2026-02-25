@@ -473,7 +473,7 @@ aside[class*="ps-sidebar-root"],
   }
 
   .carousel-item {
-    height: 140px;
+    /* height: 140px; */
   }
 
   .canvas-links li a {
@@ -1371,19 +1371,17 @@ img.highlights-content-img {
 }
 
 .popular-game {
-  width: 160px;
-  height: 100%;
-  display: inline-block;
-  /* margin-right: 8px; */
-  padding: 0px 8px;
-  padding-right: 0px;
   border-radius: 10px;
-  transition: all ease-in-out 0.5s;
-  -moz-transition: all ease-in-out 0.5s;
-  -webkit-transition: all ease-in-out 0.5s;
+  display: inline-block;
+  height: 100%;
   margin-bottom: 0 !important;
   object-fit: cover;
   object-position: center;
+  padding: 2px 2px 8px 2px;
+  transition: all .5s ease-in-out;
+  -moz-transition: all .5s ease-in-out;
+  -webkit-transition: all .5s ease-in-out;
+  width: 160px;
 }
 
 .side a {
@@ -1569,8 +1567,8 @@ img.highlights-content-img {
 .std-boxed-form-page {
   max-width: 500px;
   margin: 10px auto 0 !important;
-  padding: 30px 40px !important;
-  background: rgba(0, 12, 36, 1) !important;
+  padding: 20px 24px !important;
+  /* background: rgba(0, 12, 36, 1) !important; */
   /* text-align: center; */
   /* box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px 0px; */
   /* border: 1px solid #f5f5f5; */
@@ -1914,7 +1912,7 @@ label {
 }
 
 .signup-container {
-  background: #0f0f1f;
+  /* background: #0f0f1f; */
   color: #ffffff;
   min-height: 100vh;
 }
@@ -2186,10 +2184,11 @@ button.locked-button:hover {
   }
 
   .popular-game {
-    max-width: 83px;
     display: inline-block;
-    padding-right: 0;
+    max-width: 83px;
     padding-left: 2px;
+    padding-right: 0;
+    margin-right: 4px;
   }
 
   .no-sports-wide-width {
@@ -2197,7 +2196,7 @@ button.locked-button:hover {
   }
 
   .highlights-board {
-    padding: 5px 0px;
+    padding: 5px 0 0;
   }
 
   .won-gif-container {

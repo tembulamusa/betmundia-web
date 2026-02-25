@@ -99,7 +99,9 @@ const Signup = (props) => {
             </div>
         )
     }
-
+    useEffect(() => {
+        dispatch({ type: "DEL", key: "showloginmodal" });
+    }, [])
     const MySignupForm = (props) => {
 
         const { errors, values, setFieldValue, submitForm } = props;
@@ -108,7 +110,6 @@ const Signup = (props) => {
         const [searchParams] = useSearchParams();
         const { promoCode } = useParams();
         const promoCodeRef = useRef(null);
-
 
         useEffect(() => {
             if (getFromLocalStorage("user")) {
