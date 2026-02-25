@@ -182,7 +182,7 @@ const MatchHeaderRow = (props) => {
                     }
                     {(!jackpot && sportName?.toLowerCase() == "soccer" && first_match) && (
                         extraMarketDisplays?.map((extra_market) => (
-                            <div className={`d-flex flex-column ${extra_market?.id == 18 ? "pr-0" : ""}`} key={extra_market.name}>
+                            <div className={`hidden md:flex md:flex-col ${extra_market?.id == 18 ? "pr-0" : ""}`} key={extra_market.name}>
                                 <span className={'small text-center text-uppercase bold'}>
                                     {extra_market?.name}
                                 </span>
@@ -304,7 +304,6 @@ const SideBets = (props) => {
 
     const openLiveStats = (parent_match_id) => {
         window.open(`https://s5.sir.sportradar.com/betmundialsmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
-        // window.open(`https://statshub.sportradar.com/betmundialsmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
     }
     return (
         <div

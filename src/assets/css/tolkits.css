@@ -16053,16 +16053,16 @@ li a.live-game:hover {
     .top-matches .side {
         border-radius: 2px;
         float: right;
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 700;
         /* height: 30px; */
         line-height: 6px;
         outline-style: none;
         outline: none;
-        padding: 4px 0px 0px 0px !important;
+        padding: 4px 4px 1px 0px !important;
         text-align: center;
         margin-left: 0 !important;
-        right: 2px;
+        right: 3px;
     }
 
     .carousel-item {
