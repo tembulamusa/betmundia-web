@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../../context/store";
 import { getFromLocalStorage, removeItem, setLocalStorage } from "../../utils/local-storage";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+// import FontAwesomeIcon from "react-fontawesome";
+// import { faFire } from "@fortawesome/free-solid-svg-icons";
 
 const CasinoSidebar = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -69,7 +71,7 @@ const CasinoSidebar = (props) => {
                         <li key={"popular-" + 53}
                             className={`cursor-pointer menu-item capitalize`}
                             onClick={() => filterGames("popular", "popular")}>
-                            <img src={getSportImageIcon('popular')} className="casino-icon inline-block" alt="" />{"Popular"}
+                            <img src={getSportImageIcon('hot')} className="casino-icon inline-block" alt="" />{"Hot"}
                         </li>
 
                         {categories?.map((category, idx) => (

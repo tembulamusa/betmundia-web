@@ -35,21 +35,15 @@ const Exclude = () => {
         }).then(([status, response]) => {
 
             if ([200, 201].includes(status)) {
-                if (response?.status === 200) {
-                    Notify({
-                        status: 200,
-                        message: "Self exclusion activated successfully"
-                    });
-                    setMessage(null);
-                    setTimeout(() => {
-                        navigate("/logout"); // Redirect to homepage or any other page after successful exclusion
-                    }, 3000);
-                } else {
-                    setMessage({
-                        status: 400,
-                        message: response?.message || "Unable to activate exclusion"
-                    });
-                }
+                Notify({
+                    status: 200,
+                    message: "Self exclusion activated successfully"
+                });
+                setMessage(null);
+                setTimeout(() => {
+                    navigate("/logout"); // Redirect to homepage or any other page after successful exclusion
+                }, 3000);
+
             } else {
                 setMessage({
                     status: status,
