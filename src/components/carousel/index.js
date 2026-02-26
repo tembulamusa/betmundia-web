@@ -15,6 +15,9 @@ import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg'
 import KaribuBonus from '../../assets/img/banner/carousel/Karibu-Bonus.jpeg';
 import DepositBonus from '../../assets/img/banner/carousel/Deposit-Bonus.jpeg';
 import Aviator from '../../assets/img/banner/carousel/aviator.jpeg';
+import Fazi1 from '../../assets/img/banner/carousel/fazi1.png';
+import Fazi2 from '../../assets/img/banner/carousel/fazi2.png';
+import Fazi3 from '../../assets/img/banner/carousel/fazi3.png';
 import { Link } from 'react-router-dom';
 
 
@@ -54,22 +57,33 @@ const CarouselLoader = (props) => {
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
+                    src={Fazi1}
+                    onLoad={onImageLoaded}
+                    alt="fazi1"
+                    effects="blur"
+                />
+            </Carousel.Item>
+            <Carousel.Item >
+                <img
+                    className="d-block w-100"
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
                     src={Aviator}
                     onLoad={onImageLoaded}
                     alt="aviator"
                     effects="blur"
                 />
             </Carousel.Item>
-            {/* <Carousel.Item >
+            <Carousel.Item >
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={MundialLeague}
+                    src={Fazi2}
                     onLoad={onImageLoaded}
-                    alt="betmundial"
+                    alt="fazi2"
                     effects="blur"
                 />
             </Carousel.Item>
+            {/*
             <Carousel.Item >
                 <img
                     className="d-block w-100"
