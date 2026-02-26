@@ -82,7 +82,7 @@ const Footer = (props) => {
                 <div className="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                     <h5>LEGAL</h5>
                     <ul>
-                        <li className="text-danger">
+                        <li className="">
                             18 year and above<br />
                             You MUST be 18 years of age or older to register or play at Betmundial. Gambling may have adverse effects if not done with moderation. When the fun stops, STOP!
                         </li>
