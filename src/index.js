@@ -67,6 +67,7 @@ import { PromoTracker } from "./promo-tracker";
 import PromoWins from "./components/pages/promo-wins";
 import './index.css';
 import LiveCasino from "./components/pages/casino/LiveCasino";
+import CrashTerms from "./components/pages/terms-and-conditions/crash-terms";
 
 const container = document.getElementById("app");
 
@@ -134,6 +135,7 @@ const App = () => {
                                     <Route exact path="/livescore" element={<LiveScore />} />
                                     <Route exact path="/promotions" element={<Promotions />} />
                                     <Route exact path="/promotions-new" element={<PromotionsNew />} />
+                                    <Route exact path="/crash-terms" element={<CrashTerms />} />
                                     <Route exact path="/deposit"
                                         element={<ProtectedRoute><Deposit /></ProtectedRoute>} />
                                     <Route exact path="/withdraw"

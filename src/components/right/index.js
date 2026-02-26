@@ -53,7 +53,7 @@ const CustomerCareSection = () => (
       <h2>Customer Care</h2>
       <p>Betmundial is the place to be all day long for 24/7 customer support.</p>
       <div className='text-3xl py-3'>0140444142</div>
-      <p>customercare@betmundial.com</p>
+      <p>support@betmundial.com</p>
     </div>
   </section>
 );

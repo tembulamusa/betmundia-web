@@ -59,6 +59,9 @@ const Footer = (props) => {
                             <a href="/terms-and-conditions">Terms and Conditions</a>
                         </li>
                         <li className="">
+                            <a href="/crash-terms">Crash Terms</a>
+                        </li>
+                        <li className="">
                             <a href="/responsible-gambling">Responsible Gambling</a>
                         </li>
                         <li className="">
@@ -70,6 +73,7 @@ const Footer = (props) => {
                         <li className="">
                             <a href="/how-to-play">How To Play</a>
                         </li>
+
                         <li className="">
                             <a href="/faqs">Frequently asked questions</a>
                         </li>
