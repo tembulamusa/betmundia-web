@@ -68,13 +68,13 @@ const CasinoGame = (props) => {
         try {
             sport_image = imgUrl;
             if (sport_image.trim() == "") {
-                sport_image = require(`../../../assets/img/casino/default.png`);
+                sport_image = require(`../../../assets/img/casino/casino-default-thumbnail.jpeg`);
             }
             if (game?.provider_name.toLowerCase() == "aviatrix") {
                 sport_image = require("../../../assets/img/casino/aviatrix/aviatrix.jpg")
             }
         } catch (error) {
-            sport_image = require(`../../../assets/img/casino/default.png`);
+            sport_image = require(`../../../assets/img/casino/casino-default-thumbnail.jpeg`);
         }
         return sport_image
     }

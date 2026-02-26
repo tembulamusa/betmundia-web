@@ -14,12 +14,12 @@ const Footer = (props) => {
                     <h5 className='text-2x uppercase font-bld'>betmundial</h5>
                     <ul>
                         <li className="text-white">
-                            BOX 2772 - 00606, NAIROBI
+                            83 Ndoto Road, James Gichuru Road, Lavington, Nairobi, Kenya
                         </li>
                         <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <a target='_blank' href="mailto:info@BetMundialbiz.com" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <a target='_blank' href="mailto:support@betmundial.com" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <FaEnvelope className="icon" />
-                                <span>info@BetMundialbiz.com</span>
+                                <span>support@betmundial.com</span>
                             </a>
                         </li>
                         <li className="footer-icon" style={{ display: 'flex', justifyContent: 'flex-start', gap: '15px' }}>
@@ -35,7 +35,7 @@ const Footer = (props) => {
                         </li>
                         <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <a
-                                href="https://wa.me/254724599488"
+                                href="https://wa.me/254140444142"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ display: 'flex', alignItems: 'center', gap: '15px' }}
@@ -45,9 +45,9 @@ const Footer = (props) => {
                             </a>
                         </li>
                         <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <a target='_blank' href='tel:+254724599488' className='flex'>
+                            <a target='_blank' href='tel:+254140444142' className='flex'>
                                 <FaPhoneAlt className="icon inline-block mr-3" />
-                                <span className='text-3xl'>0724 599 488</span>
+                                <span className='text-3xl'>254140444142</span>
                             </a>
                         </li>
                     </ul>
@@ -83,7 +83,8 @@ const Footer = (props) => {
                     <h5>LEGAL</h5>
                     <ul>
                         <li className="text-danger">
-                            You must be 18 Years+ to use this website.
+                            18 year and above<br />
+                            You MUST be 18 years of age or older to register or play at Betmundial. Gambling may have adverse effects if not done with moderation. When the fun stops, STOP!
                         </li>
                         <li className="">
                             <a href="/dispute-resolution">Dispute Resolution</a>
@@ -102,8 +103,7 @@ const Footer = (props) => {
                     <h5>LICENSING</h5>
                     <hr />
                     <p>
-                        betmundial is a Trademark of BetMundial Limited. BetMundial Limited is authorized and regulated by Betting Control and Licencing Board of Kenya (BCLB) under the betting, lotteries and gaming Act, Cap 131 under Licence No. BK-0001303, PG-0001211
-                    </p>
+                        AIB Petals Limited is licensed by the Gambling Regulatory Authority of Kenya (GRAK- formerly BCLB) under the Betting, Lotteries and gaming Act, 1966 (now repealed by the Gambling Control Act, 2025) and any regulations made thereunder under License Numbers: Book Maker’s -  0001303 and Public Gaming 0001211                    </p>
                 </div>
             </div>
             <div className="container" id="navbar-collapse-main">

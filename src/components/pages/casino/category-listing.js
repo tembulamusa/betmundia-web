@@ -3,14 +3,14 @@ import CasinoGame from "./casino-game";
 import { useNavigate, useParams } from "react-router-dom";
 
 const GameCategoryListing = (props) => {
-    const { filterType, gameType, categoryType } = useParams(); 
+    const { filterType, gameType, categoryType } = useParams();
     const navigate = useNavigate();
     const { gamestype, games, gamesprovider } = props;
 
     const isShowingAll = window.location.pathname.endsWith("/all");
 
     const fetchAllCategoryGames = (gameType) => {
-     
+
         if (filterType === "providers") {
             navigate(`/casino/providers/${gameType}/all`);
         } else if (filterType === "providercategory") {
