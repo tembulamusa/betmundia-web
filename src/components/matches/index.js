@@ -708,7 +708,8 @@ const MarketRow = (props) => {
                         }
                         <span className='col-9'>{marketDetail.name}</span>
                     </Row>
-                    <div className={`grid grid-cols-${rowItems} gap-x-3`}>
+                    <div className={`grid ${rowItems === 3 ? "grid-cols-3" : "grid-cols-2"
+                        } gap-x-3`}>
                         {
                             mutableMkts &&
                             mutableMkts?.map((mkt_odds) => {
