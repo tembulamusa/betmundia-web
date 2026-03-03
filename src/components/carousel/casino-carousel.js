@@ -9,9 +9,11 @@ import Ten from "../../assets/img/casino/carousel/10.jpg";
 import Fifteen from "../../assets/img/casino/carousel/15.png";
 import Sixteen from "../../assets/img/casino/carousel/16.jpg";
 import MundiaLeague from "../../assets/img/casino/carousel/mundial-league.jpg";
+import LiveCasino from "../../assets/img/casino/carousel/live-casino.jpeg";
 
 const banners = [
-    { src: MundiaLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
+    // { src: MundiaLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
+    { src: LiveCasino, link: "/casino-game/unicraft/mundial-league", requiresAuth: false },
     // { src: Sixteen, link: null, requiresAuth: false }, 
 ];
 
