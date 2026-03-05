@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { Context } from "../../context/store";
-import DefaultImg from "../../assets/img/casino/icons/default.svg";
+import DefaultImg from "../../assets/img/colorsvgicons/soccer.svg";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 
 
@@ -149,7 +149,7 @@ const BigIconMenu = () => {
             if (iconGroup == "casino") {
                 sport_image = require(`../../assets/img/casino/icons/${sport_name}`)
             } else {
-                sport_image = require(`../../assets/img/colorsvgicons/${sport_name}`);
+                sport_image = require(`../../assets/img/colorsvgicons/${sport_name || 'soccer.svg'}`);
             }
         } catch (error) {
             sport_image = DefaultImg;
