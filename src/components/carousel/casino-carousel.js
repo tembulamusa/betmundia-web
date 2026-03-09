@@ -9,7 +9,7 @@ import Ten from "../../assets/img/casino/carousel/10.jpg";
 import Fifteen from "../../assets/img/casino/carousel/15.png";
 import Sixteen from "../../assets/img/casino/carousel/16.jpg";
 import MundiaLeague from "../../assets/img/casino/carousel/mundial-league.jpg";
-import LiveCasino from "../../assets/img/casino/carousel/live-casino.jpeg";
+import LiveCasino from "../../assets/img/casino/carousel/casino-live.jpeg";
 import CasinoOffers from "../../assets/img/casino/carousel/casino-offers.jpeg";
 import CasinoLive from "../../assets/img/casino/carousel/live-casino.jpeg";
 
