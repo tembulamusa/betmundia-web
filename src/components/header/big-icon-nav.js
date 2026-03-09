@@ -105,36 +105,38 @@ const BigIconMenu = () => {
             <>
                 {casinoProviders?.map((provider, idx) => {
                     const isLigiSure = provider?.name === 'Eurovirtuals';
+                    const providerNameLower = provider?.name?.toLowerCase();
+
+                    // Skip Aviatrix and Pragmatic
+                    if (providerNameLower === "aviatrix" || providerNameLower === "pragmatic") return null;
 
                     return (
-                        provider?.name.toLowerCase() !== "aviatrix" && (
-                            <li
-                                key={idx}
-                                className={`cursor-pointer ${loc?.pathname?.includes(provider?.name) ? "active" : ''} big-icon-item text-center capitalize relative`}
-                                onClick={() => filterGames("provider", provider)}
-                            >
-                                <span title={provider?.name} className="relative inline-block">
-                                    <div className="big-icon-icon">
-                                        <img
-                                            className="mx-auto"
-                                            src={getSportImageIcon(`${provider?.name?.toLowerCase()}.svg`, "casino")}
-                                            alt={provider?.name}
-                                        />
-                                    </div>
-                                    <div className="big-icon-name">
-                                        {isLigiSure ? 'Ligi Sure' : provider.name}
-                                    </div>
-                                    {isLigiSure && (
-                                        <span
-                                            className="new-alert-badge absolute top-0 right-0 bg-custom-red text-white text-xs px-1 rounded"
-                                            style={{ transform: 'translate(50%, -50%)' }}
-                                        >
-                                            New
-                                        </span>
-                                    )}
-                                </span>
-                            </li>
-                        )
+                        <li
+                            key={idx}
+                            className={`cursor-pointer ${loc?.pathname?.includes(provider?.name) ? "active" : ''} big-icon-item text-center capitalize relative`}
+                            onClick={() => filterGames("provider", provider)}
+                        >
+                            <span title={provider?.name} className="relative inline-block">
+                                <div className="big-icon-icon">
+                                    <img
+                                        className="mx-auto"
+                                        src={getSportImageIcon(`${providerNameLower}.svg`, "casino")}
+                                        alt={provider?.name}
+                                    />
+                                </div>
+                                <div className="big-icon-name">
+                                    {isLigiSure ? 'Ligi Sure' : provider.name}
+                                </div>
+                                {isLigiSure && (
+                                    <span
+                                        className="new-alert-badge absolute top-0 right-0 bg-custom-red text-white text-xs px-1 rounded"
+                                        style={{ transform: 'translate(50%, -50%)' }}
+                                    >
+                                        New
+                                    </span>
+                                )}
+                            </span>
+                        </li>
                     );
                 })}
             </>

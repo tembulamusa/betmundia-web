@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { getFromLocalStorage, setLocalStorage } from "../../utils/local-storage";
 import Notify from "../../utils/Notify";
 import Alert from "../../utils/alert";
+import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
 
 const CasinoGame = (props) => {
     const { game } = props;
@@ -16,6 +19,12 @@ const CasinoGame = (props) => {
     const [fetching, setFetching] = useState(false);
     const user = getFromLocalStorage("user")
     const navigate = useNavigate();
+    const location = useLocation();
+    const { filterType, filterName } = useParams();
+
+    const shouldShowGame =
+
+        (filterType?.toLowerCase() === "providers" && filterName?.toLowerCase() === "pragmatic");
 
     const launchGame = async (game, moneyType = 1) => {
         if (game?.aggregator?.toLowerCase() == "suregames") {
@@ -82,54 +91,59 @@ const CasinoGame = (props) => {
     return (
         <>
 
-            <div
-                style={{}}
-                className="game-image-wrapper"
-                key={game.game_id}>
-                <LazyLoadImage
-                    alt={game.game_url}
-                    id={game?.game_id}
-                    src={getCasinoImageIcon(game.image_url)}
-                    className={'virtual-game-image'} />
+            {shouldShowGame &&
+                <>
+                    <div
+                        style={{}}
+                        className="game-image-wrapper"
+                        key={game.game_id}>
+                        <LazyLoadImage
+                            alt={game.game_url}
+                            id={game?.game_id}
+                            src={getCasinoImageIcon(game.image_url)}
+                            className={'virtual-game-image'} />
 
-                {alertMessage && <div className="game-launch-issue"><Alert message={alertMessage} /></div>}
+                        {alertMessage && <div className="game-launch-issue"><Alert message={alertMessage} /></div>}
 
-                {
+                        {
 
-                    game?.game_type?.toLowerCase() == "live games"
-                    &&
-                    <div className="pragmatic">
-                        <div id={`betlimit-${game?.['game_id']}`} className="prag-bet-limits">
-                            Kshs.10 - Kshs.20000
-                        </div>
-                        <div id={`table-${game['game_id']}`} className="table-prag">
-                            <div className="prag-bet-table" title="Table Closed">
-                                <img src={require("../../../assets/img/lock-red.png")} alt="C" width={18} style={{ margin: "auto" }} />
+                            game?.game_type?.toLowerCase() == "live games"
+                            &&
+                            <div className="pragmatic">
+                                <div id={`betlimit-${game?.['game_id']}`} className="prag-bet-limits">
+                                    Kshs.10 - Kshs.20000
+                                </div>
+                                <div id={`table-${game['game_id']}`} className="table-prag">
+                                    <div className="prag-bet-table" title="Table Closed">
+                                        <img src={require("../../../assets/img/lock-red.png")} alt="C" width={18} style={{ margin: "auto" }} />
+                                    </div>
+                                </div>
+                                <div id={`seated-players-${game['game_id']}`} class="prag-bet-players">
+                                    <img src={require("../../../assets/img/casino/pragmatic/user.svg")} alt="" /> <span
+                                        id={`seated-player-num-${game['game_id']}`}></span>
+                                </div>
+                                <div id={`result-${game['game_id']}`} class="prag-bet-result-holder flex">
+                                </div>
                             </div>
-                        </div>
-                        <div id={`seated-players-${game['game_id']}`} class="prag-bet-players">
-                            <img src={require("../../../assets/img/casino/pragmatic/user.svg")} alt="" /> <span
-                                id={`seated-player-num-${game['game_id']}`}></span>
-                        </div>
-                        <div id={`result-${game['game_id']}`} class="prag-bet-result-holder flex">
-                        </div>
+                        }
                     </div>
-                }
-            </div>
-            <p className={'py-2 font-[500] text-elipsis text-white casino-game-title-text'}>{game?.game_name}</p>
-            <div className="game-buttons">
-                <Button className="casino-play-btn red-bg casino-cta"
-                    onClick={() => launchGame(game, 1)}>
-                    Play
-                </Button>
+                    <p className={'py-2 font-[500] text-elipsis text-white casino-game-title-text'}>{game?.game_name}</p>
+                    <div className="game-buttons">
+                        <Button className="casino-play-btn red-bg casino-cta"
+                            onClick={() => launchGame(game, 1)}>
+                            Play
+                        </Button>
 
-                {game?.aggregator?.toLowerCase() != "suregames" &&
-                    <Button className="casino-demo-btn casino-cta"
-                        onClick={() => launchGame(game, 0)}>
-                        Demo
-                    </Button>
-                }
-            </div>
+                        {game?.aggregator?.toLowerCase() != "suregames" &&
+                            <Button className="casino-demo-btn casino-cta"
+                                onClick={() => launchGame(game, 0)}>
+                                Demo
+                            </Button>
+                        }
+                    </div>
+
+                </>
+            }
         </>
     )
 }
