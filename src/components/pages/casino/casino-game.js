@@ -24,7 +24,7 @@ const CasinoGame = (props) => {
 
     const shouldShowGame =
 
-        (filterType?.toLowerCase() === "providers" && filterName?.toLowerCase() === "pragmatic");
+        (filterType?.toLowerCase() === "providers" && filterName);
 
     const launchGame = async (game, moneyType = 1) => {
         if (game?.aggregator?.toLowerCase() == "suregames") {
