@@ -7,16 +7,16 @@ import { Link } from 'react-router-dom';
 
 import AviatorImg from '../assets/img/popups/aviator.jpeg';
 import AviatrixImg from '../assets/img/popups/aviatrix.jpeg';
-import JetXImg from '../assets/img/popups/jetx.jpg';
-import VirtualLeagueImg from '../assets/img/popups/mundial-league.jpeg';
-import SpacemanImg from '../assets/img/popups/spaceman.jpeg';
+import JetXImg from '../assets/img/popups/jetx.jpeg';
+import DepositBonus from '../assets/img/popups/deposit_bonus.jpeg';
+import DailyJackpot from '../assets/img/popups/daily_jackpot.jpeg';
 
 const images = [
     { src: AviatorImg, link: "/casino-game/aviator/aviator" },
     { src: AviatrixImg, link: "/casino-game/aviatrix/aviatrix/sure-popular" },
     { src: JetXImg, link: "/casino-game/smartsoft/jetx/sure-popular" },
-    { src: VirtualLeagueImg, link: "/casino-game/eurovirtuals/virtual-league" },
-    { src: SpacemanImg, link: "/casino-game/pragmatic/spaceman/sure-popular" },
+    { src: DepositBonus, link: "/deposit" },
+    { src: DailyJackpot, link: "/jackpots" },
 ];
 
 
