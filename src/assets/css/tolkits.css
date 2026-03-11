@@ -15294,7 +15294,6 @@ img.zoom-img {
     }
 
     .matches .top-matches .match-detail button {
-
         margin-right: 0px;
         /* border-radius: 0px !important; */
         text-align: left;
@@ -15303,6 +15302,7 @@ img.zoom-img {
         margin-bottom: 4px;
         min-height: 40px;
         text-align: center;
+        height: auto;
     }
 
 
@@ -16090,4 +16090,17 @@ li a.live-game:hover {
     .move-up {
         margin-top: -10px
     }
+}
+
+.text-side {
+    display: inline-block;
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+}
+
+.odd-side {
+    width: 20%;
 }
