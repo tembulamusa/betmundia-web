@@ -501,13 +501,13 @@ const OddButton = (props) => {
             {detail &&
                 (<>
                     <span
-                        className="label mkt-detail-label label-inverse"
+                        className="label mkt-detail-label label-inverse text-side"
                         style={{ color: "#fff" }}>
                         {match.odd_key} {(!match?.odd_key.includes(match?.special_bet_value.replace(/^[+-]/, '')))
                             && `(${match?.special_bet_value.slice(match?.special_bet_value.lastIndexOf(":") + 1)})`}
                     </span>
                     <span
-                        className="label label-inverse odd-value" style={{ fontWeight: "bold" }}>
+                        className="label label-inverse odd-value odd-side" style={{ fontWeight: "bold" }}>
                         {parseFloat(match?.odd_value).toFixed(2)}
                     </span>
                 </>)}

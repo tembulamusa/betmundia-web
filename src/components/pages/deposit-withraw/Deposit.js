@@ -157,7 +157,7 @@ const Deposit = (props) => {
                         <div className="col"> 2. Select Lipa na mpesa</div>
                     </div>
                     <div className="row">
-                        <div className="col"> 3. Enter Paybill number: <span className='text-2x font-bold'>444142/</span></div>
+                        <div className="col"> 3. Enter Paybill number: <span className='text-2x font-bold'>444142</span></div>
                     </div>
                     <div className="row">
                         <div className="col"> 4. Account Number:
