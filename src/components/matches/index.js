@@ -328,7 +328,6 @@ const OddButton = (props) => {
     const [state, dispatch] = useContext(Context);
     const ref = useRef();
     const [betslip_key, setBetslipKey] = useState('betslip');
-
     const updateBeslipKey = useCallback(() => {
         if (jackpot) {
             setBetslipKey("jackpotbetslip");
