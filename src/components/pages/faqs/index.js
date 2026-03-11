@@ -157,7 +157,7 @@ const FAQs = () => {
                             <p>To deposit via M-PESA menu on your phone:</p>
                             <ol>
                                 <li>Select Lipa na M-PESA Then Pay Bill.</li>
-                                <li>Enter 444142/ as the Business Number and your betmundial registered number as the Account Number</li>
+                                <li>Enter 444142 as the Business Number and your betmundial registered number as the Account Number</li>
                                 <li>Enter your amount and M-PESA PIN and send.</li>
                             </ol>
                         </AccordionItemPanel>
