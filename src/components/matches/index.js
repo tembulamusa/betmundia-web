@@ -1357,14 +1357,14 @@ export const JackpotMatchList = (props) => {
     return (
         <div className="matches is-jackpot-matches full-width mt-3">
             <MatchHeaderRow three_way={true} jackpot={true} first_match={matches ? matches?.matches[0] : {}} />
-            <Container className="web-element">
+            <div className="web-element">
                 {(matches && Object.entries(matches?.matches) || [])?.map(([key, match]) => (
                     <>
                         <MatchRow initialMatch={match} jackpot key={key} jackpotstatus={matches?.status} />
                     </>
                 ))
                 }
-            </Container>
+            </div>
             {!matches &&
                 <div className="top-matches row">
                     No events found.
