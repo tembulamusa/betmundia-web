@@ -327,14 +327,19 @@ const BetslipSubmitForm = (props) => {
                         }
                     }
                 } else {
-                    let qmessage = {
-                        status: status,
-                        message: response?.message || response?.error?.message || "Error attempting to place bet"
-                    };
-                    if (qmessage.status == 500) {
-                        qmessage.message = "Error attempting to place bet"
+                    if (status == 403) {
+                        dispatch({ type: "SET", key: "showloginmodal", payload: true })
+                    } else {
+                        let qmessage = {
+                            status: status,
+                            message: response?.message || response?.error?.message || "Error attempting to place bet"
+                        };
+                        if (qmessage.status == 500) {
+                            qmessage.message = "Error attempting to place bet"
+                        }
+                        setMessage(qmessage);
                     }
-                    setMessage(qmessage);
+
                 }
                 setSubmitting(false);
             })
