@@ -118,8 +118,8 @@ const TermsAndConditions = (props) => {
                         <h5>Limits</h5>
                         <ul>
                             <li>Minimum bet: KES 1</li>
-                            <li>Maximum single bet winnings: KES 5,000,000</li>
-                            <li>Maximum daily winnings: KES 15,000,000</li>
+                            <li>Maximum single bet winnings: KES 1,000,000</li>
+                            <li>Maximum daily winnings: KES 1,000,000</li>
                         </ul>
 
                     </AccordionItemPanel>
