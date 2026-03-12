@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import { JackpotMatchList, JackpotResultsList, JackpotHeader } from './matches/index';
 import makeRequest from "./utils/fetch-request";
-import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.png';
+import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.jpeg';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Container from "react-bootstrap/Container";
