@@ -15923,7 +15923,7 @@ li a.live-game:hover {
 }
 
 .tab-content {
-    background-color: rgb(21, 21, 37) !important;
+    /* background-color: rgb(21, 21, 37) !important; */
     color: #ffffff;
 }
 

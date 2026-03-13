@@ -106,9 +106,7 @@ const BigIconMenu = () => {
                 {casinoProviders?.map((provider, idx) => {
                     const isLigiSure = provider?.name === 'Eurovirtuals';
                     const providerNameLower = provider?.name?.toLowerCase();
-
-                    // Skip Aviatrix and Pragmatic
-                    if (providerNameLower === "aviatrix" || ["pragmatic", "bitville", "spribe", "oaks", "aviatorllc", "kagaming", "onlyplay", "splitthepot"]?.includes(providerNameLower)) return null;
+                    if (providerNameLower === "aviatrix" || ["bitville", "spribe", "oaks", "aviatorllc", "kagaming", "onlyplay", "splitthepot"]?.includes(providerNameLower)) return null;
 
                     return (
                         <li
