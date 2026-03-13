@@ -22,9 +22,8 @@ const CasinoGame = (props) => {
     const location = useLocation();
     const { filterType, filterName } = useParams();
 
-    const shouldShowGame =
-
-        (filterType?.toLowerCase() === "providers" && filterName !== null);
+    // const shouldShowGame =
+    // filterType?.toLowerCase() === "providers" && filterName !== null;
 
     const launchGame = async (game, moneyType = 1) => {
         if (game?.aggregator?.toLowerCase() == "suregames") {
