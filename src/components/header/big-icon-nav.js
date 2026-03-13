@@ -23,8 +23,8 @@ const BigIconMenu = () => {
         // {name: "home", icon:"home.svg", link:"/", parentTo:null},
         { name: "live", icon: "livescore.svg", link: "/live", parentTo: null },
         { name: "jackpot", icon: "jackpot.svg", link: "/jackpot", parentTo: null },
-        { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null },
-        { name: "jet x", icon: "jetx.svg", link: "/casino-game/smartsoft/jetx", parentTo: null },
+        // { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null },
+        // { name: "jet x", icon: "jetx.svg", link: "/casino-game/smartsoft/jetx", parentTo: null },
         // {name: "surecoin", icon:"surecoin.svg", link:"/surecoin", parentTo:null},
         // {name: "surebox", icon:"virtuals.svg", link:"/surebox", parentTo:null},
         //These next 3 Links did not exist before we removed SPORTS
