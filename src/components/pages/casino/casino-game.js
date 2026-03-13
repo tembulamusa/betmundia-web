@@ -22,9 +22,11 @@ const CasinoGame = (props) => {
     const location = useLocation();
     const { filterType, filterName } = useParams();
 
-    const excludeProviders = ["aviatrix", "bitville", "spribe", "oaks", "aviatorllc", "kagaming", "onlyplay", "splitthepot"];
-    const shouldShowGame = true; // filterType?.toLowerCase() === "categories" && excludeProviders.includes(filterName?.toLowerCase()) ? false :
-    // filterType?.toLowerCase() === "providers" && excludeProviders.includes(filterName?.toLowerCase()) ? false;
+    const onlyInclude = ["aviatrix", "bitville", "spribe", "oaks", "aviatorllc", "kagaming", "onlyplay", "splitthepot"];
+    const inProduction = ['pragmatic'];
+    const shouldShowGame = (filterType?.toLowerCase() === "categories" && onlyInclude.includes(filterName?.toLowerCase())
+        || inProduction.includes(game?.provider_name?.toLowerCase())
+    ) ? true : false;
 
     const launchGame = async (game, moneyType = 1) => {
         if (game?.aggregator?.toLowerCase() == "suregames") {
