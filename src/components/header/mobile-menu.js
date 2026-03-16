@@ -35,9 +35,9 @@ function MobileMenu(props) {
   const UserBalance = () => (
     <div className="bx">
       <div className="bx-1">BALANCE</div>
-      <div className="bx-2 secondary-text">KSh. {user?.balance}</div>
+      <div className="bx-2 secondary-text">KSh. {formatToFloat(user?.balance) || 0}</div>
       <div className="bx-3">
-        <div className="bx-3-1">Bonus: <span>KSh. {user?.bonus || user?.bonus_balance}</span></div>
+        <div className="bx-3-1">Bonus: <span>KSh. {formatToFloat(user?.bonus) || formatToFloat(user?.bonus_balance)}</span></div>
       </div>
     </div>
   );
