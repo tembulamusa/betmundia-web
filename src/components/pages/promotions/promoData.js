@@ -113,12 +113,60 @@ export const promoData = [
   //   `
   // },
   {
-    title: "Deposit Promo",
+    title: "DAILY 20% FIRST DEPOSIT BONUS (Deposit Upewe)",
     image: MshipiBonusImg,
     description: `
-      Claim a 20% bonus on your 1st daily deposit. 
-      Maximum bonus: KES 1500. 
-      Play tickets or slot offers with the bonus.
+      DAILY 20% FIRST DEPOSIT BONUS (Deposit Upewe)
+
+      A daily deposit incentive; retention product.
+
+      Objective
+      To reward and incentivize players to keep playing with Betmundial as well as collect as much deposits as possible per day. 
+
+      Promotion Mechanics
+      Deposit KES.50 to 1000 get 20% as bonus
+      Deposit 500 and above get ksh.100 free (bonus). i.e. it is capped at Ksh.1000. Any amount above 1000 bonus issued will be Ksh.200.
+
+      Example.
+
+      Deposit Amount	%	Bonus
+      1000	20%	200
+      500	20%	100
+      250	20%	50
+      150	20%	30
+      100	20%	20
+      50	20%	10
+
+      Mechanics
+      Paybill  - Business No. 444142
+      -	Account No. Your mobile
+      -	Amount from 50 upwards.
+
+      Terms and Conditions
+      1.	Promotion is capped at KES.1000 max
+      2.	Any deposit amounts exceeding 1000 will only get KES.100
+      3.	The bonus is only to be issued ONCE, per player per day.
+      4.	The bonus is ONLY to be issued on one transaction of KES 50 and above.
+      5.	Bonus rules apply.
+
+      BONUS/PROMOTION RULES
+      Issues ONLY ONCE on successful registration.
+      Bonus expiry to be discussed.
+      Maximum games per slip on bonus related bets is 4
+      Minimum odds per game on bonus-related bets is 1.8
+      Minimum total odds per bonus bet is 8.0
+      The maximum pay out from bonus bets - KES.1,000 per betslip.
+
+      SET AMOUNTS/LIMITS
+      (a) Minimum Bet Amount: The minimum betting amount for a single/multi bet is KES.10
+      (b) Maximum Bet Amount: The maximum bet for a single/multi bet is KES.20,000
+      (c) Maximum Single Bet Winning: The Single bet winning amount is limited to KES.500,000
+      (d) Maximum Multi bet Winning: The Multi bet winning amount is limited to KES.500,000
+      (e) Maximum Aggregate Winning (maximum payout): The Maximum winnings amount per customer per day is limited to KES.500,000
+      (f) Minimum withdrawal amount is KES.100
+      (g) Maximum withdrawal amount per transaction is KES.20,000
+      (h) Maximum withdrawal per person per day KES.20,000
+
     `,
     details: `
       - Minimum deposit: KES 30.
