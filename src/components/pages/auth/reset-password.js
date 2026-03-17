@@ -33,10 +33,8 @@ const ResetPassword = (props) => {
     const hasAutoSubmitted = useRef(false);
 
     const initialResetFormValues = {
-        id: '',
-        code: '',
+        verification_code: '',
         password: '',
-        repeat_password: ''
     };
 
     const handleSubmit = (mobileValue) => {
@@ -45,9 +43,9 @@ const ResetPassword = (props) => {
             toast.error('Please enter a mobile number.');
             return;
         }
-        const endpoint = '/code';
+        const endpoint = '/auth/verification-code';
         const data = { mobile: num };
-        makeRequest({ url: endpoint, method: 'POST', data }).then(([status, response]) => {
+        makeRequest({ url: endpoint, method: 'POST', data, api_version: 2 }).then(([status, response]) => {
             const ok = status === 200 || status === 201;
             setSuccess(ok);
             const msg = response?.success?.message || response?.error?.message || response?.message || (ok ? 'Code sent to your phone.' : 'Failed to send code.');
@@ -71,16 +69,16 @@ const ResetPassword = (props) => {
     const handleResendCode = () => {
         if (resending || !mobile) return;
         setResending(true);
-        const endpoint = '/code';
-        makeRequest({ url: endpoint, method: 'POST', data: { mobile } }).then(([status, response]) => {
+        const endpoint = '/auth/verification-code';
+        makeRequest({ url: endpoint, method: 'POST', data: { msisdn: mobile }, api_version: 2 }).then(([status, response]) => {
             const ok = status === 200 || status === 201;
             const msg = response?.success?.message || response?.error?.message || (ok ? 'Code sent again.' : 'Failed to resend code.');
             setMessage(msg);
             setSuccess(ok);
-            if (ok) {
+            if (response?.status == 200 || response?.status == 201) {
                 toast.success(msg);
             } else {
-                toast.error(msg);
+                toast.error(response?.result || response?.error || 'Failed to resend code. Please try again.');
             }
         }).catch(() => {
             const errMsg = 'Failed to resend code. Please try again.';
@@ -96,8 +94,8 @@ const ResetPassword = (props) => {
         const storedMobile = getMobileFromStorage();
         setMobile(storedMobile);
         if (storedMobile && !hasAutoSubmitted.current) {
-            hasAutoSubmitted.current = true;
-            handleSubmit(storedMobile);
+            // hasAutoSubmitted.current = true;
+            // handleSubmit(storedMobile);
         }
         return () => {
             setSuccess(false);
@@ -108,28 +106,47 @@ const ResetPassword = (props) => {
         };
     }, []);
 
-    const handleSubmitPasswordReset = values => {
-        values.mobile = mobile;
-        values.id = resetID;
-        const endpoint = '/v1/reset-password';
-        makeRequest({ url: endpoint, method: 'POST', data: values }).then(([status, response]) => {
-            const ok = status === 200 || status === 201;
-            const msg = response?.error?.message || response?.success?.message || response?.message || (ok ? 'Password reset successfully.' : 'Something went wrong.');
-            setSuccess(ok);
-            setMessage(msg);
-            if (ok) {
-                toast.success(msg);
-                setTimeout(() => {
-                    window.location.href = "/";
-                }, 2000);
-            } else {
-                toast.error(msg);
-            }
-        }).catch(() => {
-            setSuccess(false);
-            setMessage('Failed to reset password. Please try again.');
-            toast.error('Failed to reset password. Please try again.');
-        });
+    const handleSubmitPasswordReset = (values) => {
+        const payload = {
+            msisdn: mobile,
+            verification_code: values.code,
+            password: values.password,
+        };
+
+        const endpoint = '/auth/reset-password';
+
+        makeRequest({
+            url: endpoint,
+            method: 'POST',
+            data: payload,
+            api_version: 2
+        })
+            .then(([status, response]) => {
+                const ok = status === 200 || status === 201;
+
+                const msg =
+                    response?.error?.message ||
+                    response?.success?.message ||
+                    response?.message ||
+                    (ok ? 'Password reset successfully.' : 'Something went wrong.');
+
+                setSuccess(ok);
+                setMessage(msg);
+
+                if (ok) {
+                    toast.success(msg);
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 2000);
+                } else {
+                    toast.error(msg);
+                }
+            })
+            .catch(() => {
+                setSuccess(false);
+                setMessage('Failed to reset password. Please try again.');
+                toast.error('Failed to reset password. Please try again.');
+            });
     };
 
     const validatePasswordReset = password_reset_values => {
@@ -208,15 +225,15 @@ const ResetPassword = (props) => {
                                     onKeyPress={ev => handleKeyPress(ev, submitForm)}
                                 />
                                 {errors.code && <div className='text-danger small mt-1'>{errors.code}</div>}
-                                <p className="small text-muted mt-1 mb-0">
+                                <p className="small mt-1 mb-0">
                                     Didn&apos;t receive the code?{' '}
                                     <button
                                         type="button"
-                                        className="btn btn-link p-0 align-baseline small text-primary text-decoration-underline"
+                                        className="btn btn-link p-0 align-baseline small text-[#a71f66] font-bold text-decoration-underline"
                                         onClick={handleResendCode}
                                         disabled={resending}
                                     >
-                                        {resending ? 'Sending…' : 'Resend code'}
+                                        {resending ? 'Sending…' : 'Request OTP code'}
                                     </button>
                                 </p>
                             </div>
@@ -294,11 +311,12 @@ const ResetPassword = (props) => {
             <div className='col-md-12 bg-primary p-4 text-center'>
                 Change Password
             </div>
-
-            <div className="row">
-                <div className="col-md-12 p-5 d-flex flex-column align-items-center">
-                    <Alert />
-                    <PasswordResetForm />
+            <div className="std-medium-width-block bg-white">
+                <div className="row">
+                    <div className="col-md-12 p-5 d-flex flex-column align-items-center">
+                        <Alert />
+                        <PasswordResetForm />
+                    </div>
                 </div>
             </div>
         </>
