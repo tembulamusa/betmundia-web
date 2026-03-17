@@ -12,6 +12,7 @@ import { IoListCircleOutline } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 
 import ComingSoon from "../pages/comingsoon/ComingSoon";
+import { formatToFloat } from "../utils/formatters";
 
 function MobileMenu(props) {
 
@@ -34,14 +35,14 @@ function MobileMenu(props) {
       <div className="bx-1">BALANCE</div>
 
       <div className="bx-2 secondary-text">
-        KSh. {parseFloat(user?.balance || 0)}
+        KSh. {formatToFloat(user?.balance || 0)}
       </div>
 
       <div className="bx-3">
         <div className="bx-3-1">
           Bonus:
           <span>
-            KSh. {parseFloat(user?.bonus || user?.bonus_balance || 0)}
+            KSh. {formatToFloat(user?.bonus || user?.bonus_balance || 0)}
           </span>
         </div>
       </div>
@@ -105,7 +106,6 @@ function MobileMenu(props) {
               Close
             </button>
 
-            {/* CENTER USER */}
             <div className="text-center">
               <FaRegUser className="mr-2 inline-block" />
               {user?.msisdn}
