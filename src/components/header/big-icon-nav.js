@@ -106,8 +106,6 @@ const BigIconMenu = () => {
                 {casinoProviders?.map((provider, idx) => {
                     const isLigiSure = provider?.name === 'Eurovirtuals';
                     const providerNameLower = provider?.name?.toLowerCase();
-                    if (["bitville", "3 oaks", "spribe", "oaks", "aviatorllc", "kagaming", "onlyplay", "splitthepot"]?.includes(providerNameLower)) return null;
-
                     return (
                         <li
                             key={idx}
