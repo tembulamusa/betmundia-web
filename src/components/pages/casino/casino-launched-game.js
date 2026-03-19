@@ -159,7 +159,6 @@ const CasinoLaunchedGame = (props) => {
             bvComponent.setParam("game", state?.bitvilleGame?.game);
             bvComponent.setParam("demoMode", state?.bitvilleGame?.demo);
             bvComponent.setParam("demoOverlay", state?.bitvilleGame?.demo_overlay);
-
             bvComponent.createComponent();
         };
 
