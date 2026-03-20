@@ -4,19 +4,32 @@ import hundredPercentDepositBonus from "../../../assets/img/banner/products/Depo
 import earlyBirdDailyDepositBonus from "../../../assets/img/banner/products/Deposit-Bonus.png";
 import cashbackBonus from "../../../assets/img/banner/products/CashBack.png";
 import freebetBonus from "../../../assets/img/banner/products/freebet.png";
-
+import depositBonus from "../../../assets/img/banner/products/depositBonus.jpeg";
 export const promoData = [
   {
     title: "Karibu Bonus",
     image: karibuBonus,
     description: `
-      Karibu to the exciting Betmundial registration bonus of 100
+      JOIN GET KES.100 FREE
     `,
     details: `
       
     `,
     termsAndConditions: `
-      - Valid for new customers only. 
+      - Term and conditions and Bonus rules.
+      1.⁠ ⁠Bonus amount are only applicable to SPORTS (NOT CASINO/CRASH)
+      2.You should select 3 matches ONLY for your bonus bet slip
+      e.g. Manchester City vs Arsenal
+      Bayern vs Bremen
+      Manchester United vs Chelsea
+      3.⁠ ⁠Each selection should carry a minimum of 1.80 odds.
+     e.g. 1.Arsenal – 1.89
+            2.Bayern – 2.01
+            1.Manchester United – 2.39
+             TOTAL odds 9.03
+      4.⁠ ⁠The total odds for this bet slip should NOT exceed off of 10.00
+      5. Maximum bonus bet amount is KES.100 per bet slip
+      Bonus expires after 24 hours. 
     `
   },
   {
@@ -107,69 +120,50 @@ export const promoData = [
   //   `
   // },
   {
-    title: "DAILY 100% FIRST DEPOSIT BONUS (Deposit Upewe)",
-    image: MshipiBonusImg,
+    title: "GET 100% DEPOSIT BONUS",
+    image: depositBonus,
     description: `
-      DAILY 100% FIRST DEPOSIT BONUS (Deposit Upewe)
+      Double Your Deposit & Bet with Confidence.
 
-      A daily deposit incentive; retention product.
+      How to get your bonus
+Register on the Betmundial website or sms JOIN code 29280.
+Make a deposit of at least 10 KES. Via Paybill 444142
+The bonus will be credited to your account automatically once you make a deposit.
+System to automatically match 100% with a bonus on the deposited amount.
+The bonus to be credited on your bonus wallet
 
-      Objective
-      To reward and incentivize players to keep playing with Betmundial as well as collect as much deposits as possible per day. 
-
-      Promotion Mechanics
-    
-      Example.
-
-      Deposit Amount	%	Bonus
-      1000	100%	1000
-      500	100%	500
-      250	100%	250
-      150	100%	150
-      100	100%	100
-      50	100%	50
-
-      Mechanics
-      Paybill  - Business No. 444142
-      -	Account No. Your mobile
-      -	Amount from 50 upwards.
-
-      Terms and Conditions
-      1.	Promotion is capped at KES.1000 max
-      2.	Any deposit amounts exceeding 1000 will only get KES.1000
-      3.	The bonus is only to be issued ONCE, per player per day.
-      5.	Bonus rules apply.
-
-      BONUS/PROMOTION RULES
-      Issues ONLY ONCE on successful registration.
-      Bonus expiry to be discussed.
-      Maximum games per slip on bonus related bets is 4
-      Minimum odds per game on bonus-related bets is 1.8
-      Minimum total odds per bonus bet is 8.0
-      The maximum pay out from bonus bets - KES.1,000 per betslip.
-
-      SET AMOUNTS/LIMITS
-      (a) Minimum Bet Amount: The minimum betting amount for a single/multi bet is KES.10
-      (b) Maximum Bet Amount: The maximum bet for a single/multi bet is KES.20,000
-      (c) Maximum Single Bet Winning: The Single bet winning amount is limited to KES.500,000
-      (d) Maximum Multi bet Winning: The Multi bet winning amount is limited to KES.500,000
-      (e) Maximum Aggregate Winning (maximum payout): The Maximum winnings amount per customer per day is limited to KES.500,000
-      (f) Minimum withdrawal amount is KES.100
-      (g) Maximum withdrawal amount per transaction is KES.20,000
-      (h) Maximum withdrawal per person per day KES.20,000
 
     `,
     details: `
-      - Minimum deposit: KES 30.
-      - Maximum bonus: KES 1500.
-      - Valid only for first daily deposit.
-      - Excludes Turbo Cash, System, and bonus money tickets.
-      - Bonus paid by 11am the next day.
+      
+    Terms and Conditions
+    KES. 10 to KES.1000
+    Thus, 1st deposit amount of KES. 9 and below, DOES NOT qualify
+    Thus 1st deposits of KES.10 up to KES. 1000 are matched with a bonus of 100%
+    Thus KES. 1001 and above only get 100% of KES. 1000 which is the cut off amount
+
+    Example
+    Deposit of KES.9 = 0 Bonus
+    Deposit of KES.10 = 10 Bonus
+    Deposit of KES.500 = 500 Bonus
+    Deposit of KES.1000 = 1000 Bonus
+    Deposit of KES.1500 = 1000 Bonus
     `,
     termsAndConditions: `
-      - One active bonus per account.
-      - The bonus must be used before making another deposit.
-      - Organizers reserve the right to exclude users violating rules.
+Term and conditions and Bonus rules.
+1.⁠ ⁠Bonus amount are only applicable to SPORTS (NOT CASINO/CRASH)
+2.⁠ ⁠You should select 3 matches ONLY for your bonus bet slip
+e.g. Manchester City vs Arsenal
+      Bayern vs Bremen
+      Manchester United vs Chelsea
+3.⁠ ⁠Each selection should carry a minimum of 1.80 odds.
+     e.g. 1.Arsenal – 1.89
+            2.Bayern – 2.01
+            1.Manchester United – 2.39
+             TOTAL odds 9.03
+4.⁠ ⁠The total odds for this bet slip should NOT exceed off of 10.00
+5. Maximum bonus bet amount is KES.100 per bet slip
+Bonus expires after 24 hours.
     `
   },
   // {
