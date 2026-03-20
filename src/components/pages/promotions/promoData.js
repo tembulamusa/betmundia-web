@@ -1,10 +1,11 @@
-import karibuBonus from "../../../assets/img/banner/products/Welcome-Bonus.png";
-import MshipiBonusImg from "../../../assets/img/banner/products/Mshipi-Bonus.png";
+import MshipiBonusImg from "../../../assets/img/banner/products/mshipiBonus.jpeg";
 import hundredPercentDepositBonus from "../../../assets/img/banner/products/Deposit-Bonus.png";
 import earlyBirdDailyDepositBonus from "../../../assets/img/banner/products/Deposit-Bonus.png";
 import cashbackBonus from "../../../assets/img/banner/products/CashBack.png";
 import freebetBonus from "../../../assets/img/banner/products/freebet.png";
 import depositBonus from "../../../assets/img/banner/products/depositBonus.jpeg";
+import karibuBonus from "../../../assets/img/banner/products/karibuBonus.jpeg";
+
 export const promoData = [
   {
     title: "Karibu Bonus",
@@ -34,7 +35,7 @@ export const promoData = [
   },
   {
     title: "Multibet Bonus",
-    image: cashbackBonus,
+    image: MshipiBonusImg,
     description: `
       Get bigger bonus for multi-bets!
     `,
