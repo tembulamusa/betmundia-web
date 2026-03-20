@@ -34,21 +34,47 @@ export const promoData = [
     `
   },
   {
-    title: "Multibet Bonus",
+    title: "Mshipi Bonus",
     image: MshipiBonusImg,
     description: `
-      Get bigger bonus for multi-bets!
+      Add your selections to your bet slip from ANY sport and ANY market with minimum odds of 1.3 and watch you bonus increase.
     `,
     details: `
-      get up to 100x your stake on multi-bets . The higher your odds, the greater your your bonus!
+      The more selections you add the bigger bonus you will receive up to a maximum of 20 selections which will see a massive 50% bonus added to your regular odds.
     `,
     termsAndConditions: `
-      - 3 games, 1.5%.
-      - 4 games, 2.5%.
-      - 5 games, 10%.
-      - 6 games, 20%.
-      - 7+ games, 50%.
-      Only odds with 1.50 or higher qualify towards the bonus.
+      - Term and conditions and Bonus rules.
+      - The bonus is calculated as a percentage of the total odds of the bet slip, based on the number of selections added:
+      - a minimum odds of 1.3 is required for each selection to qualify for the bonus.
+      -minimum of 3 selections are required to activate the bonus.
+        sgr_bonus_percent_3: 1.5
+        sgr_bonus_percent_4: 4
+        sgr_bonus_percent_5: 5
+        sgr_bonus_percent_6: 6
+        sgr_bonus_percent_7: 7
+        sgr_bonus_percent_8: 8
+        sgr_bonus_percent_9: 9
+        sgr_bonus_percent_10: 10
+        sgr_bonus_percent_11: 14
+        sgr_bonus_percent_12: 15
+        sgr_bonus_percent_13: 16
+        sgr_bonus_percent_14: 22
+        sgr_bonus_percent_15: 26
+        sgr_bonus_percent_16: 30
+        sgr_bonus_percent_17: 34
+        sgr_bonus_percent_18: 38
+        sgr_bonus_percent_19: 46
+        sgr_bonus_percent_20: 50
+        sgr_bonus_percent_21: 54
+        sgr_bonus_percent_22: 58
+        sgr_bonus_percent_23: 62
+        sgr_bonus_percent_24: 66
+        sgr_bonus_percent_25: 70
+        sgr_bonus_percent_26: 80
+        sgr_bonus_percent_27: 85
+        sgr_bonus_percent_28: 95
+        sgr_bonus_percent_29: 98
+        sgr_bonus_percent_30: 100
     `
   },
   // {
@@ -85,25 +111,37 @@ export const promoData = [
   //     - The bonus is only valid for sports events.
   //   `
   // },
-  // {
-  //   title: "Money Back",
-  //   image: cashbackBonus,
-  //   description: `
-  //     Get up to 100x your stake back on multi-bets if one match loses. The higher your odds, the greater your potential refund!
-  //   `,
-  //   details: `
-  //     - 1x Cash Back: Winning odds 24+.
-  //     - 2x Cash Back: Winning odds 104+.
-  //     - 10x Cash Back: Winning odds 304+.
-  //     - 20x Cash Back: Winning odds 804+.
-  //     - 50x Cash Back: Winning odds 2004+.
-  //   `,
-  //   termsAndConditions: `
-  //     - Valid only for multi-bets with at least 1 match from the pre-match offer.
-  //     - The promotion does not apply to single bets.
-  //     - Online customers only.
-  //   `
-  // },
+  {
+    title: "100% CASH STAKE BACK",
+    image: cashbackBonus,
+    description: `
+      HOW IT WORKS
+      The Cash Stake Back is applicable to customers who place cash multi-bets with a minimum of six (6) selections in each bet slip on sportsbook events (pre-match and/or live).
+      For a cash multi-bet to be eligible for the Cash Stake Back, at least any six (6) selections must each have minimum odds of 1.25.
+      For example, if your bet slip has the following selections 1.50; 1.02; 3.90; 1.42; 1.20;1.35; 1.38; 1.19; 1.85; 1.73; 1.22; 1.19 and one selection lose irrespective of the odds, you will be entitled to 100% of your stake back.
+      Only sports book cash bets placed on Betmundial channels are eligible for the Cash Stake Back. The Cash Stake Back shall be deposited into the winning customer(s) Mundial Wallet and may be withdrawn at the customer’s discretion.
+      The maximum amount of the Cash Stake Back is KES.500.
+      This offer cannot be used with any other promotional offer where qualifying conditions for both offers are met.
+    `,
+    details: `
+      
+    `,
+    termsAndConditions: `
+      TERMS AND CONDITIONS OF USE
+      Customers are not limited to the number of bets they may place in order to be eligible for the Cash Stake Back.
+      Cancelled bets and cashed-out bets will not be eligible for the Cash Stake Back.
+      Where there is a dispute regarding the award of the Cash Stake Back, the adjudication and decision of THE GRA shall be final.
+      Where the system erroneously generates bonuses or winnings in excess of the allowed maximum limit, any amount above this limit will be regarded as void and not validly due and payable.
+      Betmundial reserves the right to void any winnings, at its sole discretion, and taking all remedial action in instances including:
+      System or software malfunction or error; or
+      Suspicion that there are Prohibited Activities being undertaken.
+      In case of the occurrence of any Prohibited Acts, Betmundial may take such action as it deems necessary in the circumstances, including but not limited to voiding any winnings or transactions, suspending an account, limiting withdrawals, and/or blocking an IP address(es).
+      Betmundial does not guarantee the availability of the Cash Stake Back on all devices and channels or its availability all the time.
+      The Cash Stake Back terms may be amended from time to time by Betmundial at its sole discretion and without notice.
+      This bonus is provided “as is”, without warranties of any kind, either express or implied, including without limitation, warranties of title, non-infringement, non-interference, accuracy of data, accuracy of translation, availability, timing, merchantability, fitness for a particular purpose, other than those warranties which are implied by and incapable of exclusion, restriction, or modification under the laws applicable to Betmumdial and the General Terms and Conditions and Privacy Policy.
+      The Cash Stake Back is subject to the General Terms and Conditions available here. Where there are any inconsistencies between the Cash Stake Back terms and the Betmundial General Terms and Conditions, the latter shall prevail.
+    `
+  },
   // {
   //   title: "Quiz Bet",
   //   image: hundredPercentDepositBonus,
