@@ -10,39 +10,33 @@ export const promoData = [
     title: "Karibu Bonus",
     image: karibuBonus,
     description: `
-      Karibu to the exciting Betmundial registration bonus of 100%!
+      Karibu to the exciting Betmundial registration bonus of 100
     `,
     details: `
-      - Deposit KES 49: Receive KES 4 as a bonus.
-      - Deposit KES 50-98: Receive KES 6 as a bonus.
-      - Deposit KES 99: Receive KES 8 as a bonus, up to twice a day.
-      - Deposit KES 100 or more: Receive KES 12 as a bonus once a day.
+      
     `,
     termsAndConditions: `
-      - The bonus can only be used on bets with minimum odds of 4.99.
-      - Only applicable to sportsbook events.
-      - Winnings from the bonus will be added to your Betmundial wallet.
-      - Bonus availability is not guaranteed on all devices.
+      - Valid for new customers only. 
     `
   },
-  // {
-  //   title: "Multibet Refund Bonus",
-  //   image: cashbackBonus,
-  //   description: `
-  //     Get more chances to win with the Multibet Refund Bonus. Place multi-bets and get a refund if one match loses!
-  //   `,
-  //   details: `
-  //     - 3 Games, 1 Loss: Get 20% back.
-  //     - 8-20 Games, 1 Loss: Get 100% back.
-  //     - More Than 20 Games, 1 Loss: Get 300% back.
-  //     - More Than 15 Games, 2 Losses: Get 50% back.
-  //   `,
-  //   termsAndConditions: `
-  //     - Maximum refund per bet is Ksh. 5,000.
-  //     - Free bets are non-withdrawable and expire in 48 hours.
-  //     - Free bets cannot be used in conjunction with other promotions.
-  //   `
-  // },
+  {
+    title: "Multibet Bonus",
+    image: cashbackBonus,
+    description: `
+      Get bigger bonus for multi-bets!
+    `,
+    details: `
+      get up to 100x your stake on multi-bets . The higher your odds, the greater your your bonus!
+    `,
+    termsAndConditions: `
+      - 3 games, 1.5%.
+      - 4 games, 2.5%.
+      - 5 games, 10%.
+      - 6 games, 20%.
+      - 7+ games, 50%.
+      Only odds with 1.50 or higher qualify towards the bonus.
+    `
+  },
   // {
   //   title: "Bet bila Bundles",
   //   image: MshipiBonusImg,

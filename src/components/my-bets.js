@@ -72,6 +72,11 @@ const MyBets = (props) => {
             if ([200, 201].includes(status)) {
                 setUserBets(result?.data || result)
             } else {
+                if (result?.status == 403) {
+                    setMessage({ status: 400, message: "Unauthorized. Please login again." })
+                } else {
+                    dispatch({ type: "SET", key: "showloginmodal", payload: true });
+                }
                 setMessage({ status: status, message: "Unable to process" })
             }
             setIsLoading(false);
