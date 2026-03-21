@@ -14,7 +14,7 @@ const Alert = (props) => {
     }
     return (<>{message?.status &&
         <div role="alert"
-            className={`fade alert alert-${c} show alert-dismissible text-white`}>
+            className={`fade alert alert-${c} show alert-dismissible`}>
             {message?.message}
             <span aria-hidden="true" style={x_style} onClick={() => setMessage(null)}>&times;</span>
         </div>}

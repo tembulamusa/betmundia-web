@@ -24,15 +24,15 @@ const CheckMpesaDepositStatus = (props) => {
             makeRequest({ url: endpoint, data: { mpesa_receipt_code: values.mpesa_code }, method: 'POST', api_version: 3 }).then(([status, response]) => {
 
                 if (status == 200) {
-                    if (response.success == true) {
+                    if (response?.success == true) {
                         setTimeout(() => {
                             dispatch({ type: "SET", key: "toggleuserbalance", payload: !state?.toggleuserbalance })
                             dispatch({ type: "SET", key: "showcheckmpesadepositstatus", payload: false })
                         }, 30000)
-                        setMessage({ status: 200, message: "Request has been received. You'll receive an SMS Notification shortly. In case of delay, you could try again by copy pasting the mpesa message." });
+                        setMessage({ status: 200, message: response?.message || "Request has been received. You'll receive an SMS Notification shortly. In case of delay, you could try again by copy pasting the mpesa message." });
                     }
                 } else {
-                    setMessage({ status: 400, message: "Could not process. Please contact customer care. on 0140444142" });
+                    setMessage({ status: 400, message: response?.message || "Could not process. Please contact customer care. on 0140444142" });
                 }
                 setIsSubmitting(false);
             })
@@ -49,7 +49,6 @@ const CheckMpesaDepositStatus = (props) => {
                     <div className="pt-0">
                         <div className="row form-block">
                             <div className='text-center'>
-
 
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '30px' }}>
                                     <p>

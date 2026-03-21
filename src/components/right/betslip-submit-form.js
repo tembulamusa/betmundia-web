@@ -308,7 +308,7 @@ const BetslipSubmitForm = (props) => {
                                 ||
                                 "Error attempting to place bet"
                         };
-                        if (response.status == 402) {
+                        if (response?.status == 403 || response?.status == 402) {
                             // remove the betslip
                             dispatch({ type: "SET", key: "showmobileslip", payload: false })
                             // set the modal for request payment
@@ -328,6 +328,7 @@ const BetslipSubmitForm = (props) => {
                     }
                 } else {
                     if (status == 403) {
+                        dispatch({ type: "DEL", key: "showloginmodal" })
                         dispatch({ type: "SET", key: "showloginmodal", payload: true })
                     } else {
                         let qmessage = {
