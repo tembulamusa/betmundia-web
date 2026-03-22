@@ -10,7 +10,7 @@ import '../../../assets/css/accordion.react.css';
 import StdTable from '../../utils/std-table';
 import { Link } from 'react-router-dom';
 import { GoAlertFill } from "react-icons/go";
-import { getFromLocalStorage } from '../../utils/local-storage';
+import { getFromLocalStorage, removeItem } from '../../utils/local-storage';
 
 
 const Deposit = (props) => {
@@ -55,10 +55,16 @@ const Deposit = (props) => {
                     }, 7000);
                     const removePoll = setTimeout(() => { clearInterval(pollBalID) }, 60000)
                 } else {
-                    setMessage({ status: 400, message: "STK not Available. Click to deposit directly" })
-                    Notify({ status: 400, message: "Error making a deposit. Seek customer care support" })
+                    if (response?.status == 403 || response?.status == 401 || status == 401) {
+                        dispatch({ type: "DEL", key: "user" });
+                        removeItem("user");
+                        dispatch({ type: "SET", key: "showloginmodal", payload: true });
+                    } else {
+                        setMessage({ status: 400, message: response?.message || response?.error || "STK not Available. Click to deposit directly" })
+                        Notify({ status: 400, message: response?.message || response?.error || "STK not Available. Click to deposit directly" })
+                    }
+                    setIsLoading(false)
                 }
-                setIsLoading(false)
             })
     }
 
