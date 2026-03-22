@@ -4,7 +4,7 @@ import makeRequest from "../../utils/fetch-request";
 import { Formik, Form } from 'formik';
 import { Context } from '../../../context/store';
 import { getBetslip } from '../../utils/betslip'
-import { getFromLocalStorage } from '../../utils/local-storage';
+import { getFromLocalStorage, removeItem } from '../../utils/local-storage';
 
 const Withdrawal = (props) => {
     //todo get the phone number from logged in user ....
@@ -28,6 +28,12 @@ const Withdrawal = (props) => {
             if (status == 200 || status == 201) {
                 setMessage({ status: 200, message: "withdrawal request sent successfully." })
                 dispatch({ type: "SET", key: "toggleuserbalance", payload: state?.toggleuserbalance ? !state?.toggleuserbalance : true })
+            } else if (status == 403 || status == 401) {
+                dispatch({ type: "DEL", key: "user" });
+                removeItem("user");
+                dispatch({ type: "SET", key: "showloginmodal", payload: true });
+            } else {
+                setMessage({ status: 400, message: response?.message || response?.error || "Error sending withdrawal request" })
             }
             setMessage({ ...response, status: status, message: response?.message || response?.data?.message || "Error sending withdrawal request" });
         })

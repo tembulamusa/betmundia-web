@@ -16,6 +16,7 @@ import { TbForbid2, TbForbid2Filled } from "react-icons/tb";
 import { Modal } from "react-bootstrap";
 import { Tooltip } from "@mui/material";
 import { IoLogoVimeo } from "react-icons/io";
+import { removeItem } from "./utils/local-storage";
 
 
 const Styles = {
@@ -73,6 +74,9 @@ const MyBets = (props) => {
                 setUserBets(result?.data || result)
             } else {
                 if (result?.status == 403) {
+                    dispatch({ type: "DEL", key: "user" });
+                    removeItem("user");
+                    dispatch({ type: "SET", key: "showloginmodal", payload: true });
                     setMessage({ status: 400, message: "Unauthorized. Please login again." })
                 } else {
                     dispatch({ type: "SET", key: "showloginmodal", payload: true });

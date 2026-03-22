@@ -24,7 +24,7 @@ import HeaderNav from './header-nav';
 const ProfileMenu = React.lazy(() => import('./profile-menu'));
 const HeaderLogin = React.lazy(() => import('./top-login'));
 
-const INACTIVITY_MS = 60 * 60 * 1000; // 1 hour
+const INACTIVITY_MS = 60 * 20 * 1000; // 1 hour
 
 const Header = (props) => {
     const [user, setUser] = useState(getFromLocalStorage("user"));
@@ -49,13 +49,6 @@ const Header = (props) => {
             pauseOnHover
         />
     };
-
-    useEffect(() => {
-        if (user) {
-            const expirationTime = Date.now() + 1000 * 60 * 60 * 3;
-            setLocalStorage("user", { ...user, expirationTime }, expirationTime);
-        }
-    }, [user]);
 
 
     useEffect(() => {
@@ -94,7 +87,25 @@ const Header = (props) => {
         }
     }, user ? 3000 : null);
 
-
+    useInterval(async () => {
+        const checkIfExpired = () => {
+            try {
+                const user = getFromLocalStorage("user");
+                if (!user) {
+                    setUser(null);
+                    dispatch({ type: "DEL", key: "user" });
+                    if (state?.showloginmodal == false) {
+                        dispatch({ type: "SET", key: "showloginmodal", payload: true });
+                    }
+                }
+                return false;
+            } catch (err) {
+                console.error("Expiry check failed:", err);
+                return false;
+            }
+        };
+        checkIfExpired();
+    }, (1000 * 60 * 60))
 
     const handleTokenRefresh = () => {
         if (!user) {
