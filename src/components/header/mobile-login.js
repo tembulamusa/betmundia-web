@@ -46,7 +46,6 @@ const BodyLogin = (props) => {
         if ([200, 201, 204].includes(message.status)) {
             //setLocalStorage('user', message.user, 1000 * 60 * 60 * 24 * 30);
             setLocalStorage('user', message?.user, 1000 * 60 * 60);
-            alert(message.message || "Login successful");
             if (state?.showloginmodal == true) {
                 setUser(message.user);
             }
