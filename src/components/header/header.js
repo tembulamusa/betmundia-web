@@ -114,9 +114,11 @@ const Header = (props) => {
         let endpoint = "/auth/token/refresh";
         let values = { refresh_token: user?.refresh_token }
         makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
+            alert(JSON.stringify(response));
             if (status == 200 || status == 201 || status == 204) {
                 if (response.status == 200 || response.status == 201) {
                     setUser(response?.data);
+                    setLocalStorage('user', response?.data, 1000 * 60 * 60);
                 } else {
                     removeItem("user");
                     setUser(null);
@@ -135,7 +137,7 @@ const Header = (props) => {
         if (user) {
             handleTokenRefresh();
         };
-    }, user ? 5 * 60 * 1000 : null);
+    }, user ? 30 * 60 * 1000 : null);
 
     // Inactivity logout: remove user from localStorage after 1 hour with no activity
     useEffect(() => {
