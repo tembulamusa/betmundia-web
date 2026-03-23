@@ -117,6 +117,7 @@ const Header = (props) => {
             if (status == 200 || status == 201 || status == 204) {
                 if (response.status == 200 || response.status == 201) {
                     setUser(response?.data);
+                    setLocalStorage('user', response?.data, 1000 * 60 * 60);
                 } else {
                     removeItem("user");
                     setUser(null);
@@ -135,7 +136,7 @@ const Header = (props) => {
         if (user) {
             handleTokenRefresh();
         };
-    }, user ? 5 * 60 * 1000 : null);
+    }, user ? 30 * 60 * 1000 : null);
 
     // Inactivity logout: remove user from localStorage after 1 hour with no activity
     useEffect(() => {

@@ -85,7 +85,6 @@ const MyBets = (props) => {
             }
             setIsLoading(false);
         });
-
         return () => abortController.abort();
     };
 
@@ -400,7 +399,7 @@ const MyBets = (props) => {
                 <td className="hidden md:table-cell">{slip?.market_name}</td>
                 <td className="">{slip?.bet_pick}{slip?.special_bet_value && `(${slip?.special_bet_value})`}</td>
                 <td className="">{slip?.result !== null ? slip.result : "n/a"}
-                    <span className="md:hidden">{gameBetStatus(slip.status)}</span>
+                    <span className="md:hidden">{gameBetStatus(slip.status)} {slip?.status}</span>
                 </td>
                 {/* <td className="">{ slip.ft_result}</td> */}
                 <td className="hidden md:table-cell">{gameBetStatus(slip.status)}</td>
