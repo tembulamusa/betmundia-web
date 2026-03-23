@@ -5,6 +5,7 @@ const BodyLogin = React.lazy(() => import('../header/mobile-login'));
 
 const Login = (props) => {
     const [state, dispatch] = useContext(Context);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         dispatch({ type: "SET", key: "fullpagewidth", payload: true });
@@ -12,6 +13,14 @@ const Login = (props) => {
             dispatch({ type: "DEL", key: "fullpagewidth" });
         };
     }, []);
+
+    useEffect(() => {
+        if (user) {
+            window.location.href = "/";
+        }
+
+    }, [user]);
+
 
     return (
         <div className="" style={{ background: '#0f0f1f', minHeight: '100vh', color: '#ffffff' }}>
@@ -25,7 +34,7 @@ const Login = (props) => {
                                 Login
                             </h4>
                         </div>
-                        <BodyLogin />
+                        <BodyLogin setUser={setUser} />
                     </div>
                 </div>
             </div>

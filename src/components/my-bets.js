@@ -111,7 +111,7 @@ const MyBets = (props) => {
     }
     const BetItem = (props) => {
         const { bet } = props;
-        const [betStatus, setBetStatus] = useState(bet.status_desc);
+        const [betStatus, setBetStatus] = useState(bet?.status?.toLowerCase());
         const [canCancel, setCanCancel] = useState(bet.cancellable == 1);
         const [isOpen, setIsOpen] = useState(false);
         const [currentBetDetail, setCurrentBetDetail] = useState(null)
@@ -273,9 +273,9 @@ const MyBets = (props) => {
                         <div className="col text-cente">{bet?.total_odd}</div>
                         <div className="col text-cente">{bet?.bet_amount}</div>
                         <div className="col">{bet?.possible_win}</div>
-                        {/* <div className="col">{ statusMarkup(bet) }</div> */}
+                        {/* <div className="col">{statusMarkup(bet)}</div> */}
                         <div className="col">
-                            {statusMarkup(bet)}
+                            <span className="flex lowercase ">{statusMarkup(bet)} <span className="capitalize text-[12px]">{betStatus}</span></span>
                             {bet?.cancelable ? <span><CancelBetMarkup txt="Cancel Bet" /></span> : ""}
                             {bet?.sharable == 1 && <span>{shareMarkup(bet)}</span>}
                         </div>
@@ -421,7 +421,8 @@ const MyBets = (props) => {
             <>
                 <BetItemHeader />
                 {
-                    (userBets || []).length > 0 ?
+                    (userBets || []).length > 0
+                        ?
                         <Accordion
                             className="accordion"
                             id="mybets-accordion"
@@ -440,7 +441,8 @@ const MyBets = (props) => {
                                     </div>
                                 </>
                             ))}
-                        </Accordion> :
+                        </Accordion>
+                        :
                         <div className="px-3"><NoEvents message="You have not yet placed any bets yet" /></div>
                 }
 
