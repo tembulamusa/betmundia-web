@@ -55,8 +55,6 @@ const BodyLogin = (props) => {
                 const queryParams = new URLSearchParams(location.search);
                 const next = queryParams.get('next') || '/';
                 window.location.href = next;
-
-
             }
 
         }
