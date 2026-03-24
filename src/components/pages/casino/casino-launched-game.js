@@ -116,6 +116,7 @@ const CasinoLaunchedGame = (props) => {
                 let game = state?.casinolaunch || getFromLocalStorage("casinolaunch");
                 dispatch({ type: "SET", key: "casinolaunch", payload: game });
                 const parsedUrl = game?.url || game?.game?.token || game?.gameUrl || game?.game?.game_url;
+
                 if (parsedUrl || game?.game?.aggregator?.toLowerCase() === "bitville") {
                     if (game?.aggregator?.toLowerCase() === "bitville"
                         || game?.game?.aggregator?.toLowerCase() === "bitville"
@@ -137,9 +138,38 @@ const CasinoLaunchedGame = (props) => {
         };
     }, [provider, gameName, surePopular, state?.casinofilters?.games]);
 
+    const requestTokenSuccess = async () => {
+        let game = state?.casinolaunch || getFromLocalStorage("casinolaunch");
+        game = game?.game ? game.game : game;
+        let endpoint = `${game?.aggregator ? game?.aggregator : game?.provider_name}/casino/game-url/${isMobile ? "mobile" : "desktop"}/1/${game.game_id}`;
+        await makeRequest({ url: endpoint, method: "GET", api_version: 'CasinoGameLaunch' }).then(([status, result]) => {
+            // alert("Requesting new token, please wait..." + JSON.stringify(result));
+            if (status == 200 && result?.tea_pot == null) {
+                let launchUrl = result?.game_url || result?.gameUrl;
+                dispatch({ type: "SET", key: "casinolaunch", payload: { game: game, url: launchUrl } });
+                setLocalStorage("casinolaunch", { game: game, url: launchUrl })
+                if (game?.aggregator?.toLowerCase() == "bitville") {
+                    dispatch({ type: "SET", key: "bitvilleGame", payload: result });
+                }
+                return true;
+            } else {
+                return false
+            }
+        });
+        return false;
+
+    }
     useEffect(() => {
         if (!bitvilleGame) return;
-        if (!state?.bitvilleGame?.token) {
+        let urlRequestAttemps = state?.bitvilleGame?.token ? 1 : 0;
+        if (urlRequestAttemps === 0) {
+            const requestUrl = requestTokenSuccess();
+            alert("Requesting new token, please wait..." + JSON.stringify(requestUrl));
+            if (requestUrl) {
+                urlRequestAttemps = 1;
+            }
+        }
+        if (urlRequestAttemps !== 1) {
             handleSessionExpired();
             return
         };

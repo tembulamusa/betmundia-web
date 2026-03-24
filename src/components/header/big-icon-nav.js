@@ -32,6 +32,7 @@ const BigIconMenu = () => {
         // {name: "numbers", icon:"numbers.svg", link:"/numbers", parentTo:null},
         { name: "mundial league", icon: "mundial-league.svg", link: "casino-game/unicraft/mundial-league", parentTo: null },
         { name: "casino", icon: "casino.svg", link: "/casino", parentTo: null },
+        { name: "Crash", icon: "crash.svg", link: "/casino/categories/Crash", parentTo: null },
         { name: "sports", icon: "sports.svg", link: '/sports', parentTo: "sportscategories" },
         // {name: "virtuals", icon:"virtuals.svg", link:"/virtuals", parentTo:null},
         { name: "promotions", icon: "promos.svg", link: "/promotions", parentTo: null },
