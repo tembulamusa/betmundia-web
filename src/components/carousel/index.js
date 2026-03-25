@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-
+import { useNavigate } from "react-router-dom";
 // import banner5 from '../../assets/img/banner/products/Daily-JackPot.png'
 import Breakfast from '../../assets/img/banner/carousel/breakfast.jpg';
 import App from '../../assets/img/banner/carousel/app.jpeg';
@@ -23,15 +23,23 @@ import { Link } from 'react-router-dom';
 
 const CarouselLoader = (props) => {
     const [imageLoaded, setImageLoaded] = useState(false);
+    const navigate = useNavigate();
+
     const onImageLoaded = () => {
         setImageLoaded(true);
+    }
+    const linkBanner = (link) => {
+        if (link) {
+            navigate(link);
+        }
+        return null;
     }
 
     return (
         <Carousel
             // controls={false}
             indicators={false}
-            className='banner-imgs'>
+            className='banner-imgs cursor-pointer'>
 
             <Carousel.Item >
                 <img
@@ -40,6 +48,7 @@ const CarouselLoader = (props) => {
                     src={KaribuBonus}
                     onLoad={onImageLoaded}
                     alt="karibu-bonus"
+                    onClick={() => linkBanner("/promotions#karibu-bonus")}
                     effects="blur"
                 />
             </Carousel.Item>
@@ -50,10 +59,11 @@ const CarouselLoader = (props) => {
                     src={DepositBonus}
                     onLoad={onImageLoaded}
                     alt="deposit-bonus"
+                    onClick={() => linkBanner("/promotions#deposit-bonus")}
                     effects="blur"
                 />
             </Carousel.Item>
-            <Carousel.Item >
+            {/* <Carousel.Item >
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
@@ -62,7 +72,7 @@ const CarouselLoader = (props) => {
                     alt="fazi1"
                     effects="blur"
                 />
-            </Carousel.Item>
+            </Carousel.Item> */}
             <Carousel.Item >
                 <img
                     className="d-block w-100"
@@ -71,9 +81,10 @@ const CarouselLoader = (props) => {
                     onLoad={onImageLoaded}
                     alt="aviator"
                     effects="blur"
+                    onClick={() => linkBanner("/casino-game/spribe/aviator")}
                 />
             </Carousel.Item>
-            <Carousel.Item >
+            {/* <Carousel.Item >
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
@@ -82,7 +93,7 @@ const CarouselLoader = (props) => {
                     alt="fazi2"
                     effects="blur"
                 />
-            </Carousel.Item>
+            </Carousel.Item> */}
             {/*
             <Carousel.Item >
                 <img
