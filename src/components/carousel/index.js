@@ -42,7 +42,17 @@ const CarouselLoader = (props) => {
             // controls={false}
             indicators={false}
             className='banner-imgs cursor-pointer'>
-
+            <Carousel.Item >
+                <img
+                    className="d-block w-100"
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
+                    src={MundialLeague}
+                    onLoad={onImageLoaded}
+                    alt="mundial-league"
+                    onClick={() => linkBanner("/casino-game/unicraft/mundial-league")}
+                    effects="blur"
+                />
+            </Carousel.Item>
             <Carousel.Item >
                 <img
                     className="d-block w-100"
@@ -98,16 +108,7 @@ const CarouselLoader = (props) => {
                 />
             </Carousel.Item>
             {/*
-            <Carousel.Item >
-                <img
-                    className="d-block w-100"
-                    style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={MultiBet}
-                    onLoad={onImageLoaded}
-                    alt="multibet"
-                    effects="blur"
-                />
-            </Carousel.Item>
+            
             <Carousel.Item >
                 <img
                     className="d-block w-100"
