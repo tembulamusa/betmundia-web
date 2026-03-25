@@ -39,7 +39,7 @@ const CarouselLoader = (props) => {
         <Carousel
             // controls={false}
             indicators={false}
-            className='banner-imgs'>
+            className='banner-imgs cursor-pointer'>
 
             <Carousel.Item >
                 <img
