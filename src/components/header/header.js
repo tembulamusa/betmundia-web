@@ -139,44 +139,44 @@ const Header = (props) => {
     }, user ? 30 * 60 * 1000 : null);
 
     // Inactivity logout: remove user from localStorage after 1 hour with no activity
-    useEffect(() => {
-        if (!user) return;
+    // useEffect(() => {
+    //     if (!user) return;
 
-        const clearInactivityTimer = () => {
-            if (inactivityTimerRef.current) {
-                clearTimeout(inactivityTimerRef.current);
-                inactivityTimerRef.current = null;
-            }
-        };
+    //     const clearInactivityTimer = () => {
+    //         if (inactivityTimerRef.current) {
+    //             clearTimeout(inactivityTimerRef.current);
+    //             inactivityTimerRef.current = null;
+    //         }
+    //     };
 
-        const logoutDueToInactivity = () => {
-            clearInactivityTimer();
-            removeItem("user");
-            setUser(null);
-            dispatch({ type: "DEL", key: "user" });
-            dispatch({ type: "SET", key: "showloginmodal", payload: true });
-            dispatch({ type: "SET", key: "sessionMessage", payload: "You have been logged out due to inactivity." });
-        };
+    //     const logoutDueToInactivity = () => {
+    //         clearInactivityTimer();
+    //         removeItem("user");
+    //         setUser(null);
+    //         dispatch({ type: "DEL", key: "user" });
+    //         dispatch({ type: "SET", key: "showloginmodal", payload: true });
+    //         dispatch({ type: "SET", key: "sessionMessage", payload: "You have been logged out due to inactivity." });
+    //     };
 
-        const resetInactivityTimer = () => {
-            clearInactivityTimer();
-            inactivityTimerRef.current = setTimeout(logoutDueToInactivity, INACTIVITY_MS);
-        };
+    //     const resetInactivityTimer = () => {
+    //         clearInactivityTimer();
+    //         inactivityTimerRef.current = setTimeout(logoutDueToInactivity, INACTIVITY_MS);
+    //     };
 
-        const activityEvents = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"];
-        activityEvents.forEach((event) => {
-            window.addEventListener(event, resetInactivityTimer);
-        });
+    //     const activityEvents = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"];
+    //     activityEvents.forEach((event) => {
+    //         window.addEventListener(event, resetInactivityTimer);
+    //     });
 
-        resetInactivityTimer();
+    //     resetInactivityTimer();
 
-        return () => {
-            clearInactivityTimer();
-            activityEvents.forEach((event) => {
-                window.removeEventListener(event, resetInactivityTimer);
-            });
-        };
-    }, [user]);
+    //     return () => {
+    //         clearInactivityTimer();
+    //         activityEvents.forEach((event) => {
+    //             window.removeEventListener(event, resetInactivityTimer);
+    //         });
+    //     };
+    // }, [user]);
 
     useEffect(() => {
         if (user) {

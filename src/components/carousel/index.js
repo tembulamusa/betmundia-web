@@ -15,6 +15,7 @@ import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg'
 import KaribuBonus from '../../assets/img/banner/carousel/Karibu-Bonus.jpeg';
 import DepositBonus from '../../assets/img/banner/carousel/Deposit-Bonus.jpeg';
 import Aviator from '../../assets/img/banner/carousel/aviator.jpeg';
+import Aviatrix from '../../assets/img/banner/carousel/aviatrix.jpeg';
 import Fazi1 from '../../assets/img/banner/carousel/fazi1.png';
 import Fazi2 from '../../assets/img/banner/carousel/fazi2.png';
 import Fazi3 from '../../assets/img/banner/carousel/fazi3.png';
@@ -63,16 +64,17 @@ const CarouselLoader = (props) => {
                     effects="blur"
                 />
             </Carousel.Item>
-            {/* <Carousel.Item >
+            <Carousel.Item >
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={Fazi1}
+                    src={Aviatrix}
                     onLoad={onImageLoaded}
-                    alt="fazi1"
+                    alt="aviatrix"
+                    onClick={() => linkBanner("/casino-game/spribe/aviatrix")}
                     effects="blur"
                 />
-            </Carousel.Item> */}
+            </Carousel.Item>
             <Carousel.Item >
                 <img
                     className="d-block w-100"
