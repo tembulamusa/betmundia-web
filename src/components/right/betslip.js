@@ -442,7 +442,7 @@ const BetSlip = (props) => {
             }
             {hasBetslip && <>
 
-                <div className="flow betslip-slips" style={{ maxHeight: "50vh", overflowY: "auto", overflowX: "hidden", paddingRight: "8px" }}>
+                <div className="flow betslip-slips" style={{ maxHeight: "29vh", overflowY: "auto", overflowX: "hidden", paddingRight: "8px" }}>
                     <ul style={{ paddingRight: "8px", paddingLeft: "8px" }}>
                         {Object.entries(betslipsData ?? {}).map(([match_id, slip]) => (<SlipEntry match_id={match_id} initialSlip={slip} />))
                         }
