@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-
+import { useNavigate } from "react-router-dom";
 // import banner5 from '../../assets/img/banner/products/Daily-JackPot.png'
 import Breakfast from '../../assets/img/banner/carousel/breakfast.jpg';
 import App from '../../assets/img/banner/carousel/app.jpeg';
@@ -15,6 +15,8 @@ import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg'
 import KaribuBonus from '../../assets/img/banner/carousel/Karibu-Bonus.jpeg';
 import DepositBonus from '../../assets/img/banner/carousel/Deposit-Bonus.jpeg';
 import Aviator from '../../assets/img/banner/carousel/aviator.jpeg';
+import Aviatrix from '../../assets/img/banner/carousel/aviatrix.jpeg';
+import Jetx from '../../assets/img/banner/carousel/jetx.jpeg';
 import Fazi1 from '../../assets/img/banner/carousel/fazi1.png';
 import Fazi2 from '../../assets/img/banner/carousel/fazi2.png';
 import Fazi3 from '../../assets/img/banner/carousel/fazi3.png';
@@ -23,16 +25,34 @@ import { Link } from 'react-router-dom';
 
 const CarouselLoader = (props) => {
     const [imageLoaded, setImageLoaded] = useState(false);
+    const navigate = useNavigate();
+
     const onImageLoaded = () => {
         setImageLoaded(true);
+    }
+    const linkBanner = (link) => {
+        if (link) {
+            navigate(link);
+        }
+        return null;
     }
 
     return (
         <Carousel
             // controls={false}
             indicators={false}
-            className='banner-imgs'>
-
+            className='banner-imgs cursor-pointer'>
+            <Carousel.Item >
+                <img
+                    className="d-block w-100"
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
+                    src={MundialLeague}
+                    onLoad={onImageLoaded}
+                    alt="mundial-league"
+                    onClick={() => linkBanner("/casino-game/unicraft/mundial-league")}
+                    effects="blur"
+                />
+            </Carousel.Item>
             <Carousel.Item >
                 <img
                     className="d-block w-100"
@@ -40,6 +60,7 @@ const CarouselLoader = (props) => {
                     src={KaribuBonus}
                     onLoad={onImageLoaded}
                     alt="karibu-bonus"
+                    onClick={() => linkBanner("/promotions#karibu-bonus")}
                     effects="blur"
                 />
             </Carousel.Item>
@@ -50,6 +71,7 @@ const CarouselLoader = (props) => {
                     src={DepositBonus}
                     onLoad={onImageLoaded}
                     alt="deposit-bonus"
+                    onClick={() => linkBanner("/promotions#deposit-bonus")}
                     effects="blur"
                 />
             </Carousel.Item>
@@ -57,9 +79,10 @@ const CarouselLoader = (props) => {
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={Fazi1}
+                    src={Aviatrix}
                     onLoad={onImageLoaded}
-                    alt="fazi1"
+                    alt="aviatrix"
+                    onClick={() => linkBanner("/casino-game/spribe/aviatrix")}
                     effects="blur"
                 />
             </Carousel.Item>
@@ -71,29 +94,21 @@ const CarouselLoader = (props) => {
                     onLoad={onImageLoaded}
                     alt="aviator"
                     effects="blur"
+                    onClick={() => linkBanner("/casino-game/spribe/aviator")}
                 />
             </Carousel.Item>
             <Carousel.Item >
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={Fazi2}
+                    src={Jetx}
                     onLoad={onImageLoaded}
-                    alt="fazi2"
+                    alt="jetx"
                     effects="blur"
                 />
             </Carousel.Item>
             {/*
-            <Carousel.Item >
-                <img
-                    className="d-block w-100"
-                    style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={MultiBet}
-                    onLoad={onImageLoaded}
-                    alt="multibet"
-                    effects="blur"
-                />
-            </Carousel.Item>
+            
             <Carousel.Item >
                 <img
                     className="d-block w-100"

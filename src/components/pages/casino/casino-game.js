@@ -23,7 +23,7 @@ const CasinoGame = (props) => {
     const { filterType, filterName } = useParams();
 
     const onlyInclude = ["expanse", "elbet", "onlyplay"];
-    const inProduction = ['pragmatic', 'aviatrix', "bitville", "spribe", "3 oaks", "aviatorllc", "kagaming", "splitthepot"];
+    const inProduction = ['pragmatic', 'aviatrix', "bitville", "spribe", "3 oaks", "aviatorllc", "kagaming", "splitthepot", "smartsoft"];
     const shouldShowGame = (filterType?.toLowerCase() === "categories" && onlyInclude.includes(filterName?.toLowerCase())
         || inProduction.includes(game?.provider_name?.toLowerCase())
     ) ? true : false;
@@ -74,7 +74,6 @@ const CasinoGame = (props) => {
 
 
     const getCasinoImageIcon = (imgUrl) => {
-
         let sport_image;
         try {
             sport_image = imgUrl;
@@ -100,9 +99,9 @@ const CasinoGame = (props) => {
                         className="game-image-wrapper"
                         key={game.game_id}>
                         <LazyLoadImage
-                            alt={game.game_url}
+                            alt={game?.game_url}
                             id={game?.game_id}
-                            src={getCasinoImageIcon(game.image_url)}
+                            src={getCasinoImageIcon(game?.image_url)}
                             className={'virtual-game-image'} />
 
                         {alertMessage && <div className="game-launch-issue"><Alert message={alertMessage} /></div>}
