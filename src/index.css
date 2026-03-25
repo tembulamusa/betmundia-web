@@ -2386,3 +2386,19 @@ button.locked-button:hover {
 .light-bg-secondary {
   background: rgba(255, 255, 255, 0.1) !important;
 }
+
+.big-icon-bubble {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background: #ff3b3b;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  z-index: 10;
+  text-transform: uppercase;
+}
