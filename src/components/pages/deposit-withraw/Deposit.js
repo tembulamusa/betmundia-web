@@ -238,7 +238,7 @@ const Deposit = (props) => {
                                 >
                                     <Accordion.Item eventKey={0}>
                                         <Accordion.Header className='capitalize'>
-                                            <span className='capitalize'>Deposit via paybill number (444142/)</span>
+                                            <span className='capitalize'>Deposit via paybill number (444142)</span>
                                         </Accordion.Header>
                                         <Accordion.Body>
                                             <PaymentInstructions />
