@@ -8,13 +8,13 @@ import Nine from "../../assets/img/casino/carousel/9.jpg";
 import Ten from "../../assets/img/casino/carousel/10.jpg";
 import Fifteen from "../../assets/img/casino/carousel/15.png";
 import Sixteen from "../../assets/img/casino/carousel/16.jpg";
-import MundiaLeague from "../../assets/img/casino/carousel/mundial-league.jpg";
+import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg';
 import LiveCasino from "../../assets/img/casino/carousel/casino-live.jpeg";
 import CasinoOffers from "../../assets/img/casino/carousel/casino-offers.jpeg";
 import CasinoLive from "../../assets/img/casino/carousel/live-casino.jpeg";
 
 const banners = [
-    { src: MundiaLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
+    { src: MundialLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
     { src: LiveCasino, link: "/casino-game/unicraft/mundial-league", requiresAuth: false },
     { src: CasinoOffers, link: null, requiresAuth: false },
     { src: CasinoLive, link: null, requiresAuth: false },
