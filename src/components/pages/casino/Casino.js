@@ -151,6 +151,9 @@ const Casino = (props) => {
             });
 
             setLocalStorage("casinogamesfilter", updatedFilter);
+        } else if (!filterType) {
+            dispatch({ type: "DEL", key: "casinogamesfilter" });
+            setLocalStorage("casinogamesfilter", null);
         }
     }, [filterType, filterName]);
     return (

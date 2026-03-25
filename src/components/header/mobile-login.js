@@ -89,9 +89,9 @@ const BodyLogin = (props) => {
                 } else {
                     if (response?.result == "User account not verified") {
                         dispatch({ type: "SET", key: "regmsisdn", payload: values.msisdn })
-                        setAlertVerifyMessage({ status: 400, message: response.result })
+                        setAlertVerifyMessage({ status: 400, message: response?.result || "Account not verified" })
                     } else {
-                        setGeneralErrorMessage({ status: 400, message: response.result })
+                        setGeneralErrorMessage({ status: 400, message: response?.result || "An error occurred. Check details" })
                     }
                 }
             } else {
