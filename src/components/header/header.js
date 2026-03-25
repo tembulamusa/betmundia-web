@@ -127,7 +127,11 @@ const Header = (props) => {
 
                 }
             } else {
-
+                removeItem("user");
+                setUser(null);
+                dispatch({ type: "DEL", key: "user" });
+                dispatch({ type: "SET", key: "showloginmodal", payload: true });
+                dispatch({ type: "SET", key: "sessionMessage", payload: "User Session Expired. Please Login Again" })
             }
         })
     }
@@ -137,6 +141,21 @@ const Header = (props) => {
             handleTokenRefresh();
         };
     }, user ? 30 * 60 * 1000 : null);
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "visible" && user) {
+                console.log("[HEADER] Tab active → refreshing token");
+                handleTokenRefresh();
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [user]);
 
     // Inactivity logout: remove user from localStorage after 1 hour with no activity
     // useEffect(() => {

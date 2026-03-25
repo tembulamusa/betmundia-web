@@ -1350,29 +1350,62 @@ export const JackpotHeader = (props) => {
 }
 
 
-
 export const JackpotMatchList = (props) => {
-    const { matches } = props;
+    const { matches, setJackpotData } = props;
+
+    useEffect(() => {
+        if (!matches?.matches) return;
+
+        const checkStartedMatches = () => {
+            const now = new Date();
+
+            const hasStarted = Object.values(matches.matches).some((match) => {
+                const startTime = new Date(match?.start_time || match?.startTime);
+                return startTime < now;
+            });
+
+            if (hasStarted) {
+                console.log("[JACKPOT] A match has started → resetting jackpot");
+                setJackpotData(null);
+            }
+        };
+
+        // Run immediately once
+        checkStartedMatches();
+
+        // Then run every 5 minutes
+        const interval = setInterval(checkStartedMatches, 5 * 60 * 1000);
+
+        return () => clearInterval(interval);
+    }, [matches]);
 
     return (
         <div className="matches is-jackpot-matches full-width mt-3">
-            <MatchHeaderRow three_way={true} jackpot={true} first_match={matches ? matches?.matches[0] : {}} />
+            <MatchHeaderRow
+                three_way={true}
+                jackpot={true}
+                first_match={matches ? matches?.matches[0] : {}}
+            />
+
             <div className="web-element">
-                {(matches && Object.entries(matches?.matches) || [])?.map(([key, match]) => (
-                    <>
-                        <MatchRow initialMatch={match} jackpot key={key} jackpotstatus={matches?.status} />
-                    </>
-                ))
-                }
+                {(matches && Object.entries(matches?.matches) || []).map(([key, match]) => (
+                    <MatchRow
+                        initialMatch={match}
+                        jackpot
+                        key={key}
+                        jackpotstatus={matches?.status}
+                    />
+                ))}
             </div>
-            {!matches &&
+
+            {!matches && (
                 <div className="top-matches row">
                     No events found.
                 </div>
-            }
+            )}
         </div>
-    )
-}
+    );
+};
 
 const JackpotResultsHeader = (props) => {
     const { metadata } = props;

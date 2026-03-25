@@ -74,7 +74,9 @@ const CasinoGame = (props) => {
 
 
     const getCasinoImageIcon = (imgUrl) => {
-
+        if (game?.game_name?.toLowerCase() == "high flyer") {
+            alert(imgUrl);
+        }
         let sport_image;
         try {
             sport_image = imgUrl;
@@ -100,9 +102,9 @@ const CasinoGame = (props) => {
                         className="game-image-wrapper"
                         key={game.game_id}>
                         <LazyLoadImage
-                            alt={game.game_url}
+                            alt={game?.game_url}
                             id={game?.game_id}
-                            src={getCasinoImageIcon(game.image_url)}
+                            src={getCasinoImageIcon(game?.image_url)}
                             className={'virtual-game-image'} />
 
                         {alertMessage && <div className="game-launch-issue"><Alert message={alertMessage} /></div>}

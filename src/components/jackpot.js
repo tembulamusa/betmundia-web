@@ -26,8 +26,26 @@ const Jackpot = (props) => {
         const [m_status, result] = await makeRequest({ url: matchEndpoint, method: "GET", api_version: 2 });
 
         if (m_status == 200) {
-            setJackpotData(result?.data);
-            dispatch({ type: "SET", key: "jackpotdata", payload: result?.data });
+            const checkStartedMatches = () => {
+                const now = new Date();
+
+                const hasStarted = Object.values(result?.data?.matches).some((match) => {
+                    const startTime = new Date(match?.start_time || match?.startTime);
+                    return startTime < now;
+                });
+
+                if (hasStarted) {
+                    setJackpotData(null);
+                } else {
+                    setJackpotData(result?.data);
+                    dispatch({ type: "SET", key: "jackpotdata", payload: result?.data });
+
+                }
+            };
+
+            // Run immediately once
+            checkStartedMatches();
+
         }
 
         let jackpotbetslip = getJackpotBetslip();
@@ -140,7 +158,7 @@ const Jackpot = (props) => {
 
                     {/* If games are available, then show games */}
                     {(jackpotData?.matches?.length > 0 && jackpotData?.total_games) ? (
-                        <JackpotMatchList matches={jackpotData} />
+                        <JackpotMatchList setJackpotData={setJackpotData} matches={jackpotData} />
                     ) : (
                         <div className={'col-md-12 text-center background-primary mt-2 p-5 no-events-div'}>
                             There are no jackpots at the moment.
