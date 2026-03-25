@@ -23,16 +23,16 @@ const BigIconMenu = () => {
         // {name: "home", icon:"home.svg", link:"/", parentTo:null},
         { name: "live", icon: "livescore.svg", link: "/live", parentTo: null },
         { name: "jackpot", icon: "jackpot.svg", link: "/jackpot", parentTo: null },
-        { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null },
+        { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null, bubble: "new" },
         // { name: "jet x", icon: "jetx.svg", link: "/casino-game/smartsoft/jetx", parentTo: null },
         // {name: "surecoin", icon:"surecoin.svg", link:"/surecoin", parentTo:null},
         // {name: "surebox", icon:"virtuals.svg", link:"/surebox", parentTo:null},
         //These next 3 Links did not exist before we removed SPORTS
         // {name: "aviatrix", icon:"aviatrix.svg", link:"/aviatrix", parentTo:null},
         // {name: "numbers", icon:"numbers.svg", link:"/numbers", parentTo:null},
-        { name: "mundial league", icon: "mundial-league.svg", link: "casino-game/unicraft/mundial-league", parentTo: null },
+        { name: "mundial league", icon: "mundial-league.svg", link: "casino-game/unicraft/mundial-league", parentTo: null, bubble: "new" },
         { name: "casino", icon: "casino.svg", link: "/casino", parentTo: null },
-        { name: "Crash", icon: "crash.svg", link: "/casino/categories/Crash", parentTo: null },
+        { name: "Crash", icon: "crash.svg", link: "/casino/categories/Crash", parentTo: null, bubble: "new" },
         { name: "sports", icon: "sports.svg", link: '/sports', parentTo: "sportscategories" },
         // {name: "virtuals", icon:"virtuals.svg", link:"/virtuals", parentTo:null},
         { name: "promotions", icon: "promos.svg", link: "/promotions", parentTo: null },
@@ -222,15 +222,49 @@ const BigIconMenu = () => {
                     </li>
                     {(linkItems || []).map((item, idx) => {
                         return (
-                            <li key={idx} className={`${pathname == item.link ? "active" : ''} big-icon-item text-center capitalize`}>
-                                {item?.name.toLowerCase() === "livescore" ? <a href={item.link} title={item.name} target="_blank" rel="noopener noreferrer">
-                                    <div className="big-icon-icon"><img className="mx-auto" src={getSportImageIcon(item.icon)} alt={item.name} /></div>
-                                    <div className="big-icon-name">{item.name}</div>
-                                </a> :
-                                    <Link to={item.link} title={item.name}>
-                                        <div className="big-icon-icon"><img className="mx-auto" src={getSportImageIcon(item.icon)} alt={item.name} /></div>
+                            <li
+                                key={idx}
+                                className={`${pathname == item.link ? "active" : ''} big-icon-item text-center capitalize relative`}
+                            >
+                                {item?.name.toLowerCase() === "livescore" ? (
+                                    <a href={item.link} title={item.name} target="_blank" rel="noopener noreferrer">
+                                        <div className="big-icon-icon relative">
+                                            <img
+                                                className="mx-auto"
+                                                src={getSportImageIcon(item.icon)}
+                                                alt={item.name}
+                                            />
+
+                                            {/* 🔥 Bubble */}
+                                            {item?.bubble && (
+                                                <span className="big-icon-bubble">
+                                                    {item.bubble}
+                                                </span>
+                                            )}
+                                        </div>
+
                                         <div className="big-icon-name">{item.name}</div>
-                                    </Link>}
+                                    </a>
+                                ) : (
+                                    <Link to={item.link} title={item.name}>
+                                        <div className="big-icon-icon relative">
+                                            <img
+                                                className="mx-auto"
+                                                src={getSportImageIcon(item.icon)}
+                                                alt={item.name}
+                                            />
+
+                                            {/* 🔥 Bubble */}
+                                            {item?.bubble && (
+                                                <span className="big-icon-bubble">
+                                                    {item.bubble}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div className="big-icon-name">{item.name}</div>
+                                    </Link>
+                                )}
                             </li>
                         )
                     }

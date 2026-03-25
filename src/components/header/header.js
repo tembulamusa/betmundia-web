@@ -80,7 +80,6 @@ const Header = (props) => {
 
     useInterval(async () => {
         if (user?.balance) {
-
             if (!socket.connected) {
                 updateUserOnHistory()
             }
@@ -124,7 +123,6 @@ const Header = (props) => {
                     dispatch({ type: "DEL", key: "user" });
                     dispatch({ type: "SET", key: "showloginmodal", payload: true });
                     dispatch({ type: "SET", key: "sessionMessage", payload: "User Session Expired. Please Login Again" })
-
                 }
             } else {
                 removeItem("user");

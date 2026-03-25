@@ -74,9 +74,6 @@ const CasinoGame = (props) => {
 
 
     const getCasinoImageIcon = (imgUrl) => {
-        if (game?.game_name?.toLowerCase() == "high flyer") {
-            alert(imgUrl);
-        }
         let sport_image;
         try {
             sport_image = imgUrl;

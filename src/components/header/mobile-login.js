@@ -78,6 +78,14 @@ const BodyLogin = (props) => {
             if (status == 200 || status == 201 || status == 204) {
                 if (response.status == 200 || response.status == 201) {
                     setMessage({ user: response?.data, status: 200 });
+                    // add to the chat window
+                    if (window.MessengerConfig) {
+                        window.MessengerConfig.user = {
+                            name: response?.data?.first_name || response?.data?.username || response?.data?.profile_id,
+                            phone: response?.data?.msisdn,
+                            email: "" /* no email provided in response */
+                        };
+                    }
                 } else {
                     if (response?.result == "User account not verified") {
                         dispatch({ type: "SET", key: "regmsisdn", payload: values.msisdn })
