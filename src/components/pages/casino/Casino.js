@@ -128,7 +128,31 @@ const Casino = (props) => {
         };
     }, []);
 
+    useEffect(() => {
+        if (
+            filterType === "categories" &&
+            filterName?.toLowerCase() === "crash"
+        ) {
+            const crashCategory = {
+                id: 36,
+                name: "Crash"
+            };
 
+            const updatedFilter = {
+                ...state?.casinogamesfilter,
+                category: crashCategory,
+                page: 1
+            };
+
+            dispatch({
+                type: "SET",
+                key: "casinogamesfilter",
+                payload: updatedFilter
+            });
+
+            setLocalStorage("casinogamesfilter", updatedFilter);
+        }
+    }, [filterType, filterName]);
     return (
         <>
             <CasinoCarousel />

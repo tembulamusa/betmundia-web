@@ -14,7 +14,7 @@ import CasinoOffers from "../../assets/img/casino/carousel/casino-offers.jpeg";
 import CasinoLive from "../../assets/img/casino/carousel/live-casino.jpeg";
 
 const banners = [
-    // { src: MundiaLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
+    { src: MundiaLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
     { src: LiveCasino, link: "/casino-game/unicraft/mundial-league", requiresAuth: false },
     { src: CasinoOffers, link: null, requiresAuth: false },
     { src: CasinoLive, link: null, requiresAuth: false },
