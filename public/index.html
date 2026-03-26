@@ -5,16 +5,18 @@
   <meta charset="utf-8" />
 
   <!-- Google Tag Manager -->
-  <script>(function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start': new Date().getTime(), event: 'gtm.js'
-      });
+  <script>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
       var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
       j.async = true;
       j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
       f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-MQXFR5QP');</script>
+    })(window, document, 'script', 'dataLayer', 'GTM-MQXFR5QP');
+  </script>
 
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -83,32 +85,30 @@
     }
   </script>
 
+  <!-- ✅ TAB CLOSE / REFRESH ALERT -->
   <script>
-    let isInternalNavigation = false;
+    let userInteracted = false;
 
-    // Detect clicks on links inside your site
-    document.addEventListener("click", function (e) {
-      const link = e.target.closest("a");
+    // REQUIRED: browser only allows alert after interaction
+    const markInteraction = () => {
+      userInteracted = true;
+    };
 
-      if (link && link.href.includes(window.location.origin)) {
-        isInternalNavigation = true;
-      }
-    });
+    window.addEventListener("click", markInteraction);
+    window.addEventListener("mousemove", markInteraction);
+    window.addEventListener("keydown", markInteraction);
+    window.addEventListener("scroll", markInteraction);
 
-    // Detect SPA navigation (React Router etc.)
-    window.addEventListener("popstate", function () {
-      isInternalNavigation = true;
-    });
-
-    // Leave prompt
+    // beforeunload = tab close / refresh / leave site
     window.addEventListener("beforeunload", function (e) {
-      if (!isInternalNavigation) {
-        e.preventDefault();
-        e.returnValue = "";
-      }
+      if (!userInteracted) return;
+
+      e.preventDefault();
+      e.returnValue = ""; // Required for Chrome
     });
   </script>
 
+  <!-- Vortex Script -->
   <script>
     window.VortexConfig = {
       token: "vtx_1b0685f3-c50"
