@@ -131,16 +131,14 @@ const Casino = (props) => {
     useEffect(() => {
         if (
             filterType === "categories" &&
-            filterName?.toLowerCase() === "crash"
-        ) {
-            const crashCategory = {
-                id: 36,
-                name: "Crash"
-            };
-
+            filterName) {
+            let category = { id: 36, name: filterName };
+            if (filterName.toLowerCase() == "livegames") {
+                category = { id: 16, name: filterName };
+            }
             const updatedFilter = {
                 ...state?.casinogamesfilter,
-                category: crashCategory,
+                category: category,
                 page: 1
             };
 
