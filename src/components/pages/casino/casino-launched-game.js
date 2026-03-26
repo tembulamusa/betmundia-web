@@ -18,7 +18,7 @@ const CasinoLaunchedGame = (props) => {
     const { provider, gameName } = useParams();
     const [bitvilleGame, setBitvilleGame] = useState(false);
     const surePopular = window.location.pathname.includes("sure-popular");
-    const directLaunch = ['mundial-league', 'aviator', 'jetx']
+    const directLaunch = ['mundial-league', 'aviator', 'jetx', 'aviatrix']
 
     const handleSessionExpired = () => {
         removeItem("user");
@@ -74,6 +74,9 @@ const CasinoLaunchedGame = (props) => {
         }
         if (gameName.toLowerCase() === "jetx") {
             endpoint = `SmartSoft/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/13`;
+        }
+        if (gameName.toLowerCase() === "aviatrix") {
+            endpoint = `Aviatrix/casino/game-url/${isMobile ? "mobile" : "desktop"}/${1}/nft-aviatrix`;
         }
         await makeRequest({ url: endpoint, method: "GET", api_version: "CasinoGameLaunch" }).then(
             ([status, result]) => {

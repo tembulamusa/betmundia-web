@@ -139,7 +139,7 @@ const Header = (props) => {
         if (user) {
             setLocalStorage("user", user, 1000 * 60 * 60);
         }
-    }, [user])
+    }, [user]);
     useEffect(() => {
         if (user) {
             if (socket.connected) {

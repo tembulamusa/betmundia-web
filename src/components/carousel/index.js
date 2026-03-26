@@ -82,7 +82,7 @@ const CarouselLoader = (props) => {
                     src={Aviatrix}
                     onLoad={onImageLoaded}
                     alt="aviatrix"
-                    onClick={() => linkBanner("/casino-game/spribe/aviatrix")}
+                    onClick={() => linkBanner("/casino-game/aviatrix/aviatrix")}
                     effects="blur"
                 />
             </Carousel.Item>
@@ -104,6 +104,7 @@ const CarouselLoader = (props) => {
                     src={Jetx}
                     onLoad={onImageLoaded}
                     alt="jetx"
+                    onClick={() => linkBanner("/casino-game/smartsoft/jetx")}
                     effects="blur"
                 />
             </Carousel.Item>
