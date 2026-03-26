@@ -65,10 +65,7 @@ const Header = (props) => {
             if (_status == 200) {
                 let u = { ...user, ...response?.data, bonus_balace: response?.data?.bonus };
                 let prevUser = user;
-                setLocalStorage('user', u);
-                if (!state?.iscoinrotating) {
-                    setUser(u);
-                }
+                setUser(u);
                 // check if still on deposit page and if has next url and navigate
                 if (parseInt(prevUser?.balance) < parseInt(response?.data?.balance)) {
                     nextNavigate();
@@ -84,7 +81,7 @@ const Header = (props) => {
                 updateUserOnHistory()
             }
         }
-    }, user ? 3000 : null);
+    }, user ? 1000 * 60 : null);
 
     useInterval(async () => {
         const checkIfExpired = () => {
@@ -116,7 +113,6 @@ const Header = (props) => {
             if (status == 200 || status == 201 || status == 204) {
                 if (response.status == 200 || response.status == 201) {
                     setUser(response?.data);
-                    setLocalStorage('user', response?.data, 1000 * 60 * 60);
                 } else {
                     removeItem("user");
                     setUser(null);
@@ -139,62 +135,11 @@ const Header = (props) => {
             handleTokenRefresh();
         };
     }, user ? 30 * 60 * 1000 : null);
-
     useEffect(() => {
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === "visible" && user) {
-                console.log("[HEADER] Tab active → refreshing token");
-                handleTokenRefresh();
-            }
-        };
-
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-
-        return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-        };
-    }, [user]);
-
-    // Inactivity logout: remove user from localStorage after 1 hour with no activity
-    // useEffect(() => {
-    //     if (!user) return;
-
-    //     const clearInactivityTimer = () => {
-    //         if (inactivityTimerRef.current) {
-    //             clearTimeout(inactivityTimerRef.current);
-    //             inactivityTimerRef.current = null;
-    //         }
-    //     };
-
-    //     const logoutDueToInactivity = () => {
-    //         clearInactivityTimer();
-    //         removeItem("user");
-    //         setUser(null);
-    //         dispatch({ type: "DEL", key: "user" });
-    //         dispatch({ type: "SET", key: "showloginmodal", payload: true });
-    //         dispatch({ type: "SET", key: "sessionMessage", payload: "You have been logged out due to inactivity." });
-    //     };
-
-    //     const resetInactivityTimer = () => {
-    //         clearInactivityTimer();
-    //         inactivityTimerRef.current = setTimeout(logoutDueToInactivity, INACTIVITY_MS);
-    //     };
-
-    //     const activityEvents = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"];
-    //     activityEvents.forEach((event) => {
-    //         window.addEventListener(event, resetInactivityTimer);
-    //     });
-
-    //     resetInactivityTimer();
-
-    //     return () => {
-    //         clearInactivityTimer();
-    //         activityEvents.forEach((event) => {
-    //             window.removeEventListener(event, resetInactivityTimer);
-    //         });
-    //     };
-    // }, [user]);
-
+        if (user) {
+            setLocalStorage("user", user, 1000 * 60 * 60);
+        }
+    }, [user])
     useEffect(() => {
         if (user) {
             if (socket.connected) {
