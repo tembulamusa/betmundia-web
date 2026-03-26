@@ -18,7 +18,7 @@ const DisputeResolution = () => {
             <div className='col-md-12 bg-primary p-4 text-center profound-text'>
                 <h4 className="inline-block"> Dispute Resolution </h4>
             </div>
-            <div className="col-md-12 mt-2 py-5 px-4">
+            <div className="col-md-12 mt-2">
                 <Accordion allowZeroExpanded>
                     <AccordionItem>
                         <AccordionItemHeading>

@@ -85,11 +85,11 @@
     }
   </script>
 
-  <!-- ✅ TAB CLOSE / REFRESH ALERT -->
   <script>
     let userInteracted = false;
+    let isInternalNavigation = false;
 
-    // REQUIRED: browser only allows alert after interaction
+    // ✅ Track user interaction (required)
     const markInteraction = () => {
       userInteracted = true;
     };
@@ -99,12 +99,34 @@
     window.addEventListener("keydown", markInteraction);
     window.addEventListener("scroll", markInteraction);
 
-    // beforeunload = tab close / refresh / leave site
+    // ✅ Detect internal navigation (same domain links)
+    document.addEventListener("click", function (e) {
+      const link = e.target.closest("a");
+
+      if (!link) return;
+
+      const url = new URL(link.href, window.location.origin);
+
+      // If same origin → internal navigation
+      if (url.origin === window.location.origin) {
+        isInternalNavigation = true;
+      }
+    });
+
+    // ✅ Detect SPA navigation (React Router)
+    window.addEventListener("popstate", function () {
+      isInternalNavigation = true;
+    });
+
+    // ✅ Main unload handler
     window.addEventListener("beforeunload", function (e) {
       if (!userInteracted) return;
 
+      // ❌ Skip alert for internal navigation
+      if (isInternalNavigation) return;
+
       e.preventDefault();
-      e.returnValue = ""; // Required for Chrome
+      e.returnValue = "";
     });
   </script>
 
