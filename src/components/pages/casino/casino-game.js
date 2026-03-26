@@ -10,7 +10,8 @@ import Notify from "../../utils/Notify";
 import Alert from "../../utils/alert";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
+import defaultImage from "../../../assets/img/casino/casino-default-thumbnail.jpeg";
+import aviatrixImage from "../../../assets/img/casino/aviatrix/aviatrix.jpg";
 
 const CasinoGame = (props) => {
     const { game } = props;
@@ -74,21 +75,19 @@ const CasinoGame = (props) => {
 
 
     const getCasinoImageIcon = (imgUrl) => {
-        let sport_image;
-        try {
-            sport_image = imgUrl;
-            if (sport_image.trim() == "") {
-                sport_image = require(`../../../assets/img/casino/casino-default-thumbnail.jpeg`);
-            }
-            if (game?.provider_name.toLowerCase() == "aviatrix") {
-                sport_image = require("../../../assets/img/casino/aviatrix/aviatrix.jpg")
-            }
-        } catch (error) {
-            sport_image = require(`../../../assets/img/casino/casino-default-thumbnail.jpeg`);
+        if (game?.provider_name?.toLowerCase() === "aviatrix") {
+            return aviatrixImage;
         }
-        return sport_image
-    }
 
+        if (!imgUrl || imgUrl.trim() === "") {
+            return defaultImage;
+        }
+
+        return imgUrl;
+    };
+    const imageSrc = React.useMemo(() => {
+        return getCasinoImageIcon(game?.image_url);
+    }, [game?.image_url, game?.provider_name]);
     return (
         <>
 
@@ -100,9 +99,9 @@ const CasinoGame = (props) => {
                         key={game.game_id}>
                         <LazyLoadImage
                             alt={game?.game_url}
-                            id={game?.game_id}
-                            src={getCasinoImageIcon(game?.image_url)}
-                            className={'virtual-game-image'} />
+                            src={imageSrc}
+                            className="casino-game-image virtual-game-image"
+                        />
 
                         {alertMessage && <div className="game-launch-issue"><Alert message={alertMessage} /></div>}
 
