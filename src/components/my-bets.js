@@ -79,7 +79,7 @@ const MyBets = () => {
     };
 
     return (
-        <div className="p-3 my-bets">
+        <div className="my-bets">
 
             {/* TITLE */}
             <div className="bg-primary text-white p-3 text-center mb-3">
