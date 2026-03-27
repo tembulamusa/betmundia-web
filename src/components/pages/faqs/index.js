@@ -40,7 +40,7 @@ const FAQs = () => {
                             </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
-                            <p>You can contact our customer support team via email at customercare@betmundial.com or call our helpline at +254724599488. Our team is available 24/7 to assist you with any queries or issues you may have.</p>
+                            <p>You can contact our customer support team via email at customercare@betmundial.com or call our helpline at +254140444142. Our team is available 24/7 to assist you with any queries or issues you may have.</p>
                         </AccordionItemPanel>
                     </AccordionItem>
 
@@ -53,7 +53,7 @@ const FAQs = () => {
                         </AccordionItemHeading>
                         <AccordionItemPanel>
                             <p>There are two ways to register with betmundial: via SMS and using our online platform.</p>
-                            <p><b>SMS Registration:</b> Send an SMS "JOIN" to 29488. You will receive a confirmation message from 29488 confirming that you are registered.</p>
+                            <p><b>SMS Registration:</b> Send an SMS "JOIN" to 29280. You will receive a confirmation message from 29280 confirming that you are registered.</p>
                             <p><b>Online Registration:</b> Go to www.betmundial.com and click on the Register button on the top right corner of the page. Fill the required fields (including phone number and creating a unique password), read and accept the terms and conditions, and confirm that you are over 18 years old.</p>
                         </AccordionItemPanel>
                     </AccordionItem>
@@ -87,7 +87,7 @@ const FAQs = () => {
                             <p>To check your Bet outcomes:</p>
                             <p><b>On our betmundial Website:</b> Click on 'Bet History'.</p>
                             <p><b>On betmundial App:</b> Tap on the 'My Bets' icon to view your bet history.</p>
-                            <p><b>On SMS:</b> Send R#Bet ID to 29488, for example, R#CTMSYA to 29488.</p>
+                            <p><b>On SMS:</b> Send R#Bet ID to 29280, for example, R#CTMSYA to 29280.</p>
                         </AccordionItemPanel>
                     </AccordionItem>
 
@@ -103,8 +103,8 @@ const FAQs = () => {
                         <AccordionItemPanel>
                             <p>To place a bet via SMS:</p>
                             <ol>
-                                <li>Send an SMS “JOIN” to 29488 to register.</li>
-                                <li>To place a bet, SMS your prediction to 29488.</li>
+                                <li>Send an SMS “JOIN” to 29280 to register.</li>
+                                <li>To place a bet, SMS your prediction to 29280.</li>
                                 <li>The minimum stake is 1 Kshs and the maximum stake is 500,000 Kshs.</li>
                                 <li>Example for a single bet: 1234#2#5000, where 1234 is the Game ID, 2 is the prediction, and 5000 KSH is the bet amount.</li>
                                 <li>Example for a multi-bet: 1234#2#5678#1#9101#X#5000.</li>
@@ -172,7 +172,7 @@ const FAQs = () => {
                         </AccordionItemHeading>
                         <AccordionItemPanel>
                             <ol>
-                                <li>Send an SMS 'W#Amount' to 29488 using the phone number associated with your account.</li>
+                                <li>Send an SMS 'W#Amount' to 29280 using the phone number associated with your account.</li>
                             </ol>
                         </AccordionItemPanel>
                     </AccordionItem>
@@ -196,7 +196,7 @@ const FAQs = () => {
                                 <li>Select <strong>‘Request Withdrawal’</strong>.</li>
                             </ol>
                             <p style={{ fontWeight: 'bold', color: '#d9534f', marginTop: '1em' }}>
-                                Note: Withdrawals are processed instantly. The minimum withdrawal amount is <strong>50 Kshs</strong>. Additional carrier fees may apply. The maximum withdrawal amount per day is <strong>300,000 Kshs</strong>.
+                                Note: Withdrawals are processed instantly. The minimum withdrawal amount is <strong>50 Kshs</strong>. Additional carrier fees may apply. The maximum withdrawal amount per day is <strong>70,000 Kshs</strong>.
                             </p>
                         </AccordionItemPanel>
                     </AccordionItem>

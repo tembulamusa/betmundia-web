@@ -133,8 +133,8 @@ const Withdrawal = (props) => {
                 <h2 className='text-2x font-[500]'>Withdraw Via SMS</h2>
                 <div className="container">
                     <div className="row">
-                        <div className="col"> To withdraw via SMS, send <span className='font-bold'>w#amount</span> or <span className='font-bold'>withdraw#amount</span> to <span className='font-bold'>29488</span> </div>
-                        <div className='mt-2'>eg send SMS <span className='font-bold'>w#500</span> to <span className='font-bold'>29488</span></div>
+                        <div className="col"> To withdraw via SMS, send <span className='font-bold'>w#amount</span> or <span className='font-bold'>withdraw#amount</span> to <span className='font-bold'>29280</span> </div>
+                        <div className='mt-2'>eg send SMS <span className='font-bold'>w#500</span> to <span className='font-bold'>29280</span></div>
                     </div>
 
                 </div>
