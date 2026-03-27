@@ -2411,3 +2411,26 @@ button.locked-button:hover {
   z-index: 999999;
   background: rgba(0, 12, 36, 1) !important;
 }
+
+.table>:not(caption)>*>* {
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.table>:not(caption)>*>* {
+  box-shadow: none !important;
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.my-bets,
+.my-bets .accordion-body,
+.my-bets tr,
+.my-bets td {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.my-bets .accordion-body {
+  padding: 0;
+}

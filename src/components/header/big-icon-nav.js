@@ -30,7 +30,7 @@ const BigIconMenu = () => {
         //These next 3 Links did not exist before we removed SPORTS
         // {name: "aviatrix", icon:"aviatrix.svg", link:"/aviatrix", parentTo:null},
         // {name: "numbers", icon:"numbers.svg", link:"/numbers", parentTo:null},
-        { name: "mundial league", icon: "mundial-league.svg", link: "casino-game/unicraft/mundial-league", parentTo: null, bubble: "new" },
+        { name: "mundial league", icon: "mundial-league.svg", link: "/casino-game/unicraft/mundial-league", parentTo: null, bubble: "new" },
         { name: "casino", icon: "casino.svg", link: "/casino", parentTo: null },
         { name: "Crash", icon: "crash.svg", link: "/casino/categories/Crash", parentTo: null, bubble: "new" },
         // { name: "sports", icon: "sports.svg", link: '/sports', parentTo: "sportscategories" },
@@ -261,7 +261,6 @@ const BigIconMenu = () => {
                                                 </span>
                                             )}
                                         </div>
-
                                         <div className="big-icon-name">{item.name}</div>
                                     </Link>
                                 )}

@@ -16104,3 +16104,17 @@ li a.live-game:hover {
 .odd-side {
     width: 20%;
 }
+
+.my-bets,
+.my-bets .accordion-body,
+.my-bets tr,
+.my-bets td {
+    background: transparent;
+}
+
+.table>:not(caption)>*>* {
+    box-shadow: none !important;
+    background: transparent;
+}
+
+.my-bets .accordion-button {}

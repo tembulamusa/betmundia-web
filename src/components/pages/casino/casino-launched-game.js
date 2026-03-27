@@ -7,6 +7,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { isMobile } from "react-device-detect";
 import makeRequest from "../../utils/fetch-request";
 import { MdFullscreen } from "react-icons/md";
+import { useLocation } from "react-router-dom";
 
 
 const CasinoLaunchedGame = (props) => {
@@ -18,7 +19,9 @@ const CasinoLaunchedGame = (props) => {
     const { provider, gameName } = useParams();
     const [bitvilleGame, setBitvilleGame] = useState(false);
     const surePopular = window.location.pathname.includes("sure-popular");
-    const directLaunch = ['mundial-league', 'aviator', 'jetx', 'aviatrix']
+    const directLaunch = ['mundial-league', 'aviator', 'jetx', 'aviatrix'];
+    const location = useLocation();
+
 
     const handleSessionExpired = () => {
         removeItem("user");
@@ -113,7 +116,7 @@ const CasinoLaunchedGame = (props) => {
                 navigate("/casino");
             }
         } else {
-            if (directLaunch.includes(gameName.toLowerCase())) {
+            if (directLaunch?.includes(gameName.toLowerCase())) {
                 launchOldWay();
             } else {
                 let game = state?.casinolaunch || getFromLocalStorage("casinolaunch");
@@ -139,7 +142,7 @@ const CasinoLaunchedGame = (props) => {
             dispatch({ type: "DEL", key: "fullcasinoscreen" });
             dispatch({ type: "DEL", key: "casinolaunch" });
         };
-    }, [provider, gameName, surePopular, state?.casinofilters?.games]);
+    }, [provider, gameName, surePopular, state?.casinofilters?.games, location.pathname]);
 
     const requestTokenSuccess = async () => {
         let game = state?.casinolaunch || getFromLocalStorage("casinolaunch");
@@ -277,6 +280,7 @@ const CasinoLaunchedGame = (props) => {
                         <>
                             <iframe
                                 id="myIframe"
+                                key={provider + gameName}
                                 allow="autoplay; clipboard-write, fullscreen; encrypted-media; picture-in-picture; web-share"
                                 title={state?.casinolaunch?.game?.game?.game_name + state?.casinolaunch?.game?.game?.id}
                                 width="100%"
