@@ -87,6 +87,37 @@ const MyBets = () => {
             </div>
 
             {/* ALERT */}
+            {/* HEADER (DESKTOP) */}
+            <div
+                className="d-none d-md-grid mb-2 px-2"
+                style={{
+                    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+                    fontWeight: "600",
+                    fontSize: "13px",
+                    color: "#ccc"
+                }}
+            >
+                <div>Date</div>
+                <div>Bet ID</div>
+                <div>Games</div>
+                <div>Total Odds</div>
+                <div>Stake</div>
+                <div>Status</div>
+            </div>
+
+            {/* HEADER (MOBILE) */}
+            <div
+                className="d-md-none mb-2 px-2"
+                style={{
+                    fontWeight: "600",
+                    fontSize: "13px",
+                    color: "#ccc"
+                }}
+            >
+                Bets Summary
+            </div>
+
+
             {message && (
                 <div className={`alert alert-${message.status === 200 ? "success" : "danger"}`}>
                     {message.message}
