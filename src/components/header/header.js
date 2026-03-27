@@ -134,10 +134,10 @@ const Header = (props) => {
         if (user) {
             handleTokenRefresh();
         };
-    }, user ? 30 * 60 * 1000 : null);
+    }, user ? 60 * 60 * 1000 * 7 : null);
     useEffect(() => {
         if (user) {
-            setLocalStorage("user", user, 1000 * 60 * 60);
+            setLocalStorage("user", user, 1000 * 60 * 60 * 24 * 7);
         }
     }, [user]);
     useEffect(() => {
