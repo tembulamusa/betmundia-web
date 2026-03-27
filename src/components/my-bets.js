@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Context } from '../context/store';
 import makeRequest from './utils/fetch-request';
 import Accordion from 'react-bootstrap/Accordion';
@@ -15,8 +15,9 @@ const MyBets = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState(null);
     const [activeKey, setActiveKey] = useState(null);
+    const [filter, setFilter] = useState("all");
 
-    // ✅ FETCH DATA
+    // FETCH
     const fetchData = async () => {
         if (isLoading) return;
 
@@ -49,7 +50,18 @@ const MyBets = () => {
         fetchData();
     }, []);
 
-    // ✅ STATUS ICON
+    // FILTER
+    const filteredBets = useMemo(() => {
+        if (filter === "all") return userBets;
+
+        if (filter === "casino") return userBets.filter(b => b?.is_casino);
+        if (filter === "jackpot") return userBets.filter(b => b?.jackpot_bet_id);
+        if (filter === "sports") return userBets.filter(b => !b?.is_casino && !b?.jackpot_bet_id);
+
+        return userBets;
+    }, [userBets, filter]);
+
+    // STATUS ICON
     const statusIcon = (status) => {
         let Icon = FaCircle;
         let color = "#00A8FA";
@@ -81,15 +93,32 @@ const MyBets = () => {
     return (
         <div className="my-bets">
 
-            {/* TITLE */}
-            <div className="bg-primary text-white p-3 text-center mb-3">
-                <h4>My Bets</h4>
+            {/* ✅ STYLED HEADER */}
+            <div
+                className="flex justify-between items-center mx-3 my-3 px-3 py-2 rounded-md"
+                style={{ background: "rgba(255,255,255,0.1)" }}
+            >
+                <h6 className="text-white m-0">My Bets</h6>
+
+                <select
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                    className="px-4 py-2 rounded-md text-white w-[160px] md:w-[200px] outline-none bg-rgba(0,0,0,0.15)"
+                    style={{
+                        background: "rgba(0,0,0,0.5)",   // lighter than black
+                        border: "1px solid rgba(255,255,255,0.15)", // very thin subtle border
+                        backdropFilter: "blur(4px)"
+                    }}
+                >
+                    <option value="sports" className="">Sports</option>
+                    <option value="casino">Casino</option>
+                    <option value="jackpot">Jackpot</option>
+                </select>
             </div>
 
-            {/* ALERT */}
-            {/* HEADER (DESKTOP) */}
+            {/* DESKTOP HEADER */}
             <div
-                className="d-none d-md-grid mb-2 px-2"
+                className="d-none d-md-grid mb-2 px-3"
                 style={{
                     gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
                     fontWeight: "600",
@@ -105,39 +134,25 @@ const MyBets = () => {
                 <div>Status</div>
             </div>
 
-            {/* HEADER (MOBILE) */}
-            <div
-                className="d-md-none mb-2 px-2"
-                style={{
-                    fontWeight: "600",
-                    fontSize: "13px",
-                    color: "#ccc"
-                }}
-            >
-                Bets Summary
-            </div>
-
-
+            {/* ALERT */}
             {message && (
-                <div className={`alert alert-${message.status === 200 ? "success" : "danger"}`}>
+                <div className={`alert alert-${message.status === 200 ? "success" : "danger"} mx-3`}>
                     {message.message}
                 </div>
             )}
 
             {/* EMPTY */}
-            {(!userBets || userBets.length === 0) && (
-                <NoEvents message="You have not yet placed any bets yet" />
+            {filteredBets.length === 0 && (
+                <div className="px-3">
+                    <NoEvents message="No bets found" />
+                </div>
             )}
 
             {/* ACCORDION */}
-            <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)}>
+            <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mx-3">
+                {filteredBets.map((bet) => (
+                    <Accordion.Item eventKey={String(bet.bet_id)} key={bet.bet_id}>
 
-                {userBets.map((bet) => (
-                    <Accordion.Item
-                        eventKey={String(bet.bet_id)}
-                        key={bet.bet_id}
-                    >
-                        {/* HEADER */}
                         <Accordion.Header>
                             <div style={{ width: "100%" }}>
                                 <div style={{
@@ -150,7 +165,7 @@ const MyBets = () => {
                                     <div>{bet?.total_games}</div>
                                     <div>{bet?.total_odd}</div>
                                     <div>{bet?.bet_amount}</div>
-                                    <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                                    <div style={{ display: "flex", gap: "5px" }}>
                                         {statusIcon(bet?.status)}
                                         <span>{bet?.status}</span>
                                     </div>
@@ -158,15 +173,7 @@ const MyBets = () => {
                             </div>
                         </Accordion.Header>
 
-                        {/* BODY */}
-                        <Accordion.Body
-                            style={{
-                                background: "transparent",
-                                color: "#000",
-                                display: "block",
-                                visibility: "visible"
-                            }}
-                        >
+                        <Accordion.Body>
                             <div style={{ overflowX: "auto" }}>
                                 <table className="table table-bordered mb-0">
                                     <thead>
@@ -201,7 +208,6 @@ const MyBets = () => {
 
                     </Accordion.Item>
                 ))}
-
             </Accordion>
 
         </div>
