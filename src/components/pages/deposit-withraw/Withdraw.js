@@ -204,8 +204,11 @@ const Withdrawal = () => {
 
     return (
         <>
-            <div className='text-center p-3 border-bottom'>
-                <h4>Withdraw Funds (Mobile Money)</h4>
+            <div className='p-4 text-center border-b bg-primary'>
+                <h4 className="!uppercase">
+                    Withdraw Funds (Mobile Money)
+                </h4>
+
             </div>
 
             <div className="std-medium-width-block">
