@@ -44,7 +44,6 @@ const BodyLogin = (props) => {
             toastId: 673738 /* this is hack to prevent multiple toasts */
         }
         if ([200, 201, 204].includes(message.status)) {
-            //setLocalStorage('user', message.user, 1000 * 60 * 60 * 24 * 30);
             setLocalStorage('user', message?.user, 1000 * 60 * 60 * 24 * 7);
             setUser(message.user);
             // toast.success(`🚀 ${message.message || "Login successful"}`, options);

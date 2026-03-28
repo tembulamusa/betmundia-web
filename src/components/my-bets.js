@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from '../context/store';
 import makeRequest from './utils/fetch-request';
 import Accordion from 'react-bootstrap/Accordion';
@@ -12,18 +12,15 @@ import NoEvents from "./utils/no-events";
 const MyBets = () => {
     const [state, dispatch] = useContext(Context);
     const [userBets, setUserBets] = useState([]);
+    const [casinoBets, setCasinoBets] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState(null);
     const [activeKey, setActiveKey] = useState(null);
-    const [filter, setFilter] = useState("all");
+    const [betsFilter, setBetsFilter] = useState("sports");
 
-    // FETCH
-    const fetchData = async () => {
-        if (isLoading) return;
-
+    // ✅ FETCH SPORTS
+    const fetchSports = async () => {
         setIsLoading(true);
-        setMessage(null);
-
         const [status, result] = await makeRequest({
             url: "/user/bets?size=20&page=1",
             method: "GET",
@@ -38,30 +35,36 @@ const MyBets = () => {
                 removeItem("user");
                 dispatch({ type: "SET", key: "showloginmodal", payload: true });
                 setMessage({ status: 400, message: "Unauthorized. Please login again." });
-            } else {
-                setMessage({ status, message: "Unable to process" });
             }
         }
-
         setIsLoading(false);
     };
 
+    // ✅ FETCH CASINO
+    const fetchCasino = async () => {
+        setIsLoading(true);
+        const [status, result] = await makeRequest({
+            url: "bets",
+            method: "GET",
+            api_version: 'casinoGames'
+        });
+        alert(JSON.stringify(result));
+        if ([200, 201].includes(status)) {
+            setCasinoBets(result?.data || result);
+        }
+        setIsLoading(false);
+    };
+
+    // ✅ HANDLE FILTER CHANGE
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (betsFilter === "casino") {
+            fetchCasino();
+        } else {
+            fetchSports();
+        }
+    }, [betsFilter]);
 
-    // FILTER
-    const filteredBets = useMemo(() => {
-        if (filter === "all") return userBets;
-
-        if (filter === "casino") return userBets.filter(b => b?.is_casino);
-        if (filter === "jackpot") return userBets.filter(b => b?.jackpot_bet_id);
-        if (filter === "sports") return userBets.filter(b => !b?.is_casino && !b?.jackpot_bet_id);
-
-        return userBets;
-    }, [userBets, filter]);
-
-    // STATUS ICON
+    // ✅ STATUS ICON
     const statusIcon = (status) => {
         let Icon = FaCircle;
         let color = "#00A8FA";
@@ -93,7 +96,7 @@ const MyBets = () => {
     return (
         <div className="my-bets">
 
-            {/* ✅ STYLED HEADER */}
+            {/* HEADER */}
             <div
                 className="flex justify-between items-center mx-3 my-3 px-3 py-2 rounded-md"
                 style={{ background: "rgba(255,255,255,0.1)" }}
@@ -101,61 +104,42 @@ const MyBets = () => {
                 <h6 className="text-white m-0">My Bets</h6>
 
                 <select
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    className="px-4 py-2 rounded-md text-white w-[160px] md:w-[200px] outline-none bg-rgba(0,0,0,0.15)"
+                    value={betsFilter}
+                    onChange={(e) => setBetsFilter(e.target.value)}
+                    className="px-4 py-2 rounded-md text-white w-[200px] outline-none"
                     style={{
-                        background: "rgba(0,0,0,0.5)",   // lighter than black
-                        border: "1px solid rgba(255,255,255,0.15)", // very thin subtle border
-                        backdropFilter: "blur(4px)"
+                        background: "rgba(0,0,0,0.4)",
+                        border: "1px solid rgba(255,255,255,0.15)"
                     }}
                 >
-                    <option value="sports" className="">Sports</option>
+                    <option value="sports">Sports</option>
                     <option value="casino">Casino</option>
                     <option value="jackpot">Jackpot</option>
                 </select>
             </div>
 
-            {/* DESKTOP HEADER */}
-            <div
-                className="d-none d-md-grid mb-2 px-3"
-                style={{
-                    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
-                    fontWeight: "600",
-                    fontSize: "13px",
-                    color: "#ccc"
-                }}
-            >
-                <div>Date</div>
-                <div>Bet ID</div>
-                <div>Games</div>
-                <div>Total Odds</div>
-                <div>Stake</div>
-                <div>Status</div>
-            </div>
-
             {/* ALERT */}
             {message && (
-                <div className={`alert alert-${message.status === 200 ? "success" : "danger"} mx-3`}>
+                <div className={`alert alert-danger mx-3`}>
                     {message.message}
                 </div>
             )}
 
             {/* EMPTY */}
-            {filteredBets.length === 0 && (
-                <div className="px-3">
-                    <NoEvents message="No bets found" />
-                </div>
+            {betsFilter === "sports" && userBets.length === 0 && (
+                <NoEvents message="No sports bets yet" />
             )}
 
-            {/* ACCORDION */}
-            <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mx-3">
-                {filteredBets.map((bet) => (
-                    <Accordion.Item eventKey={String(bet.bet_id)} key={bet.bet_id}>
+            {/* ================= SPORTS ================= */}
+            {betsFilter === "sports" && (
+                <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mx-3">
 
-                        <Accordion.Header>
-                            <div style={{ width: "100%" }}>
+                    {userBets.map((bet) => (
+                        <Accordion.Item key={bet.bet_id} eventKey={String(bet.bet_id)}>
+
+                            <Accordion.Header>
                                 <div style={{
+                                    width: "100%",
                                     display: "grid",
                                     gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
                                     gap: "10px"
@@ -170,11 +154,9 @@ const MyBets = () => {
                                         <span>{bet?.status}</span>
                                     </div>
                                 </div>
-                            </div>
-                        </Accordion.Header>
+                            </Accordion.Header>
 
-                        <Accordion.Body>
-                            <div style={{ overflowX: "auto" }}>
+                            <Accordion.Body>
                                 <table className="table table-bordered mb-0">
                                     <thead>
                                         <tr>
@@ -186,7 +168,6 @@ const MyBets = () => {
                                             <th>Result</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         {(bet?.betslip || []).map((slip) => (
                                             <tr key={slip.game_id}>
@@ -194,21 +175,56 @@ const MyBets = () => {
                                                 <td>{slip?.home_team} - {slip?.away_team}</td>
                                                 <td>{slip?.odd_value}</td>
                                                 <td>{slip?.market_name}</td>
-                                                <td>
-                                                    {slip?.bet_pick}
-                                                    {slip?.special_bet_value && ` (${slip.special_bet_value})`}
-                                                </td>
+                                                <td>{slip?.bet_pick}</td>
                                                 <td>{slip?.result || "n/a"}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
-                            </div>
-                        </Accordion.Body>
+                            </Accordion.Body>
 
-                    </Accordion.Item>
-                ))}
-            </Accordion>
+                        </Accordion.Item>
+                    ))}
+                </Accordion>
+            )}
+
+            {/* ================= CASINO ================= */}
+            {betsFilter === "casino" && (
+                <div className="mx-3">
+                    <table className="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Game</th>
+                                <th>Stake</th>
+                                <th>Winning</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {casinoBets.map((bet) => (
+                                <tr key={bet.id}>
+                                    <td>{bet?.created}</td>
+                                    <td>{bet?.game_name}</td>
+                                    <td>{bet?.bet_amount}</td>
+                                    <td>{bet?.winning_amount || "n/a"}</td>
+                                    <td style={{ display: "flex", gap: "5px" }}>
+                                        {statusIcon(bet?.status)}
+                                        <span>{bet?.status}</span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {/* ================= JACKPOT ================= */}
+            {betsFilter === "jackpot" && (
+                <div className="mx-3 text-white">
+                    Jackpot bets coming soon...
+                </div>
+            )}
 
         </div>
     );
