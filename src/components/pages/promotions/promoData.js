@@ -23,7 +23,7 @@ export const promoData = [
       e.g. Manchester City vs Arsenal
       Bayern vs Bremen
       Manchester United vs Chelsea
-      3.⁠ ⁠Each selection should carry a minimum of 1.80 odds on 1 x 2 markets.
+      3.⁠ ⁠Each selection should carry a minimum of 1.80 odds on 1 x 2 markets on soccer games.
      e.g. 1.Arsenal – 1.89
             2.Bayern – 2.01
             1.Manchester United – 2.39
