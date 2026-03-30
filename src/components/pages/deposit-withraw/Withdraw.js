@@ -20,10 +20,22 @@ const Withdrawal = () => {
     };
 
     // ✅ SUBMIT
-    const handleSubmit = values => {
-        let endpoint = 'v2/withdrawals/new';
-
+    const handleSubmit = (values) => {
         const amount = Math.floor(Number(values.amount) || 0);
+        const balance = Number(user?.balance || 0);
+
+        // ✅ VALIDATION BEFORE REQUEST
+        if (amount > 70000) {
+            setMessage({ status: 400, message: "Maximum withdrawal is 70,000" });
+            return;
+        }
+
+        if (amount > balance) {
+            setMessage({ status: 400, message: "Insufficient balance" });
+            return;
+        }
+
+        let endpoint = 'v2/withdrawals/new';
 
         let data = {
             msisdn: user?.msisdn,
@@ -71,17 +83,21 @@ const Withdrawal = () => {
     };
 
     // ✅ VALIDATION
-    const validate = values => {
+    const validate = (values) => {
         let errors = {};
 
         if (!values.msisdn || !values.msisdn.match(/(254|0)?[71]\d{8}/)) {
             errors.msisdn = 'Please enter a valid phone number';
         }
 
-        const amount = Math.floor(Number(values.amount) || 0);
+        const amount = Number(values.amount);
 
         if (!amount || amount <= 0) {
             errors.amount = "Please enter a valid amount";
+        } else if (amount > 70000) {
+            errors.amount = "Maximum withdrawal is 70,000";
+        } else if (amount > Number(user?.balance || 0)) {
+            errors.amount = "Insufficient balance";
         }
 
         return errors;
@@ -134,14 +150,11 @@ const Withdrawal = () => {
                             className="text-dark deposit-input form-control input-field"
                             name="amount"
                             type="number"
-                            step="1"
-                            min="50"
+                            min="0"
                             value={values.amount}
                             placeholder='Enter Amount'
                         />
                         {errors?.amount && <div className='text-danger'>{errors.amount}</div>}
-
-
                     </div>
                 </div>
 
@@ -164,11 +177,6 @@ const Withdrawal = () => {
                 <li>Click withdraw.</li>
                 <li>Confirm on your phone.</li>
             </ol>
-
-            {/* ✅ TAX INFO (SECOND PLACEMENT) */}
-            <div className="alert alert-warning mt-3">
-                Note: All withdrawals are subject to a 5% withholding tax as per regulations.
-            </div>
         </>
     );
 
@@ -178,8 +186,11 @@ const Withdrawal = () => {
             let field = ev.target.name;
             let value = ev.target.value;
 
+            // ✅ FIX: allow natural typing (no forced Math.floor here)
             if (field === "amount") {
-                value = Math.floor(Number(value) || 0);
+                if (value.startsWith("0") && value.length > 1) {
+                    value = value.replace(/^0+/, ""); // remove leading zeros
+                }
             }
 
             setFieldValue(field, value);
@@ -208,7 +219,6 @@ const Withdrawal = () => {
                 <h4 className="!uppercase">
                     Withdraw Funds (Mobile Money)
                 </h4>
-
             </div>
 
             <div className="std-medium-width-block">
@@ -225,5 +235,4 @@ const Withdrawal = () => {
         </>
     );
 };
-
 export default Withdrawal;
