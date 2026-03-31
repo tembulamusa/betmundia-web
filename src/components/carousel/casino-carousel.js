@@ -12,12 +12,16 @@ import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg'
 import LiveCasino from "../../assets/img/casino/carousel/casino-live.jpeg";
 import CasinoOffers from "../../assets/img/casino/carousel/casino-offers.jpeg";
 import CasinoLive from "../../assets/img/casino/carousel/live-casino.jpeg";
+import Highflyer from "../../assets/img/casino/carousel/highflyer.jpeg";
+import KukuMaziwa from "../../assets/img/casino/carousel/kuku_maziwa.jpeg";
 
 const banners = [
     { src: MundialLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
     { src: LiveCasino, link: "/casino/categories/livegames", requiresAuth: false },
     { src: CasinoOffers, link: null, requiresAuth: false },
     { src: CasinoLive, link: "/casino/categories/livegames", requiresAuth: false },
+    { src: Highflyer, link: "/casino/providers/pragmatic", requiresAuth: false },
+    { src: KukuMaziwa, link: "/casino/providers/spribe", requiresAuth: false },
     // { src: Sixteen, link: null, requiresAuth: false }, 
 ];
 
