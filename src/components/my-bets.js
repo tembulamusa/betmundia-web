@@ -26,7 +26,6 @@ const MyBets = () => {
             method: "GET",
             api_version: 2
         });
-
         if ([200, 201].includes(status)) {
             setUserBets(result?.data || result);
         } else {
@@ -48,7 +47,6 @@ const MyBets = () => {
             method: "GET",
             api_version: 'casinoGames'
         });
-        alert(JSON.stringify(result));
         if ([200, 201].includes(status)) {
             setCasinoBets(result?.data || result);
         }
@@ -132,60 +130,88 @@ const MyBets = () => {
 
             {/* ================= SPORTS ================= */}
             {betsFilter === "sports" && (
-                <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mx-3">
+                <>
+                    <div className="mx-3">
 
-                    {userBets.map((bet) => (
-                        <Accordion.Item key={bet.bet_id} eventKey={String(bet.bet_id)}>
+                        {/* ✅ HEADER ROW */}
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr 1fr 0.7fr 0.7fr 1fr 1fr 1fr",
+                                gap: "5px",
+                                padding: "10px",
+                                background: "rgba(255,255,255,0.1)",
+                                color: "#fff",
+                                fontWeight: "bold",
+                                borderRadius: "0px",
+                                marginBottom: "0px"
+                            }}
+                        >
+                            <div>Date</div>
+                            <div>Bet ID</div>
+                            <div>Games</div>
+                            <div>Odds</div>
+                            <div>Amount</div> {/* ✅ ADDED */}
+                            <div>Payout</div>
+                            <div>Status</div>
+                        </div>
+                    </div>
+                    <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mx-3">
 
-                            <Accordion.Header>
-                                <div style={{
-                                    width: "100%",
-                                    display: "grid",
-                                    gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
-                                    gap: "10px"
-                                }}>
-                                    <div>{bet?.created}</div>
-                                    <div>{bet?.bet_id}</div>
-                                    <div>{bet?.total_games}</div>
-                                    <div>{bet?.total_odd}</div>
-                                    <div>{bet?.bet_amount}</div>
-                                    <div style={{ display: "flex", gap: "5px" }}>
-                                        {statusIcon(bet?.status)}
-                                        <span>{bet?.status}</span>
+                        {userBets.map((bet) => (
+                            <Accordion.Item key={bet.bet_id} eventKey={String(bet.bet_id)}>
+
+                                <Accordion.Header>
+                                    <div style={{
+                                        width: "100%",
+                                        display: "grid",
+                                        gridTemplateColumns: "1fr 1fr 0.7fr 0.7fr 1fr 1fr 1fr",
+                                        gap: "5px"
+                                    }}>
+                                        <div>{bet?.created}</div>
+                                        <div>{bet?.bet_id}</div>
+                                        <div>{bet?.total_games}</div>
+                                        <div>{bet?.total_odd}</div>
+                                        <div>{bet?.bet_amount}</div>
+                                        <div>{bet?.possible_win}</div>
+                                        <div style={{ display: "flex", gap: "5px" }}>
+                                            {statusIcon(bet?.status)}
+                                            <span>{bet?.status}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </Accordion.Header>
+                                </Accordion.Header>
 
-                            <Accordion.Body>
-                                <table className="table table-bordered mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Start Time</th>
-                                            <th>Game</th>
-                                            <th>Odds</th>
-                                            <th>Market</th>
-                                            <th>Pick</th>
-                                            <th>Result</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {(bet?.betslip || []).map((slip) => (
-                                            <tr key={slip.game_id}>
-                                                <td>{slip?.start_time}</td>
-                                                <td>{slip?.home_team} - {slip?.away_team}</td>
-                                                <td>{slip?.odd_value}</td>
-                                                <td>{slip?.market_name}</td>
-                                                <td>{slip?.bet_pick}</td>
-                                                <td>{slip?.result || "n/a"}</td>
+                                <Accordion.Body>
+                                    <table className="table table-bordered mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Start Time</th>
+                                                <th>Game</th>
+                                                <th>Odds</th>
+                                                <th>Market</th>
+                                                <th>Pick</th>
+                                                <th>Result</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </Accordion.Body>
+                                        </thead>
+                                        <tbody>
+                                            {(bet?.betslip || []).map((slip) => (
+                                                <tr key={slip.game_id}>
+                                                    <td>{slip?.start_time}</td>
+                                                    <td>{slip?.home_team} - {slip?.away_team}</td>
+                                                    <td>{slip?.odd_value}</td>
+                                                    <td>{slip?.market_name}</td>
+                                                    <td>{slip?.bet_pick}</td>
+                                                    <td>{slip?.result || "n/a"}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </Accordion.Body>
 
-                        </Accordion.Item>
-                    ))}
-                </Accordion>
+                            </Accordion.Item>
+                        ))}
+                    </Accordion>
+                </>
             )}
 
             {/* ================= CASINO ================= */}

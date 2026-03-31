@@ -1850,6 +1850,7 @@ svg.big-offcanvas-icon {
   color: rgba(255, 255, 255, 0.8);
   background-color: rgba(255, 255, 255, 0.05);
   border: var(--bs-accordion-border-width) solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 4px;
 }
 
 .accordion-button:not(.collapsed) {

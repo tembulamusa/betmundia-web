@@ -17,20 +17,20 @@ export const promoData = [
       
     `,
     termsAndConditions: `
-      - Term and conditions and Bonus rules.
-      1.⁠ ⁠Bonus amount are only applicable to SPORTS (NOT CASINO/CRASH)
-      2.You should select 3 matches ONLY for your bonus bet slip
-      e.g. Manchester City vs Arsenal
-      Bayern vs Bremen
-      Manchester United vs Chelsea
-      3.⁠ ⁠Each selection should carry a minimum of 2.5 odds on 1 x 2 markets on soccer games.
-     e.g. 1.Arsenal – 2.5
-            2.Bayern – 2.01
-            1.Manchester United – 2.39
-             TOTAL odds 9.03
-      4.⁠ ⁠The total odds for this bet slip should NOT exceed off of 10.00
-      5. Maximum bonus bet amount is KES.100 per bet slip
-      Bonus expires after 24 hours. 
+Term and conditions and Bonus rules.
+1.⁠ ⁠Bonus amount are only applicable to SPORTS (NOT CASINO/CRASH)
+2.⁠ ⁠You should select 3 matches ONLY for your bonus bet slip
+e.g. Manchester City vs Arsenal
+Bayern vs Bremen
+Manchester United vs Chelsea
+3.⁠ ⁠Each selection should carry a minimum of 2.50 odds.
+e.g. 1.Arsenal – 2.50
+2.Bayern – 2.51
+1.Manchester United – 2.59
+TOTAL odds 16.23
+4.⁠ ⁠The total odds for this bet slip should NOT exceed off of 20.00
+5. Maximum bonus bet amount is KES.100 per bet slip
+Bonus expires after 24 hours.
     `
   },
   {
