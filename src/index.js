@@ -133,8 +133,8 @@ const App = () => {
                                     <Route exact path="/skip-rope" element={<SkipRopeIndex />} />
                                     <Route exact path="/jump-rope" element={<JumpRopeIndex />} />
                                     <Route exact path="/livescore" element={<LiveScore />} />
-                                    <Route exact path="/promotions" element={<Promotions />} />
-                                    <Route exact path="/promotions-new" element={<PromotionsNew />} />
+                                    {/* <Route exact path="/promotions" element={<Promotions />} /> */}
+                                    {/* <Route exact path="/promotions-new" element={<PromotionsNew />} /> */}
                                     <Route exact path="/crash-terms" element={<CrashTerms />} />
                                     <Route exact path="/deposit"
                                         element={<ProtectedRoute><Deposit /></ProtectedRoute>} />
