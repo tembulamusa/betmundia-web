@@ -7,32 +7,32 @@ import depositBonus from "../../../assets/img/banner/products/depositBonus.jpeg"
 import karibuBonus from "../../../assets/img/banner/products/karibuBonus.jpeg";
 
 export const promoData = [
-  {
-    title: "Karibu Bonus",
-    image: karibuBonus,
-    description: `
-      JOIN GET KES.100 FREE
-    `,
-    details: `
-      
-    `,
-    termsAndConditions: `
-Term and conditions and Bonus rules.
-1.⁠ ⁠Bonus amount are only applicable to SPORTS (NOT CASINO/CRASH)
-2.⁠ ⁠You should select 3 matches ONLY for your bonus bet slip
-e.g. Manchester City vs Arsenal
-Bayern vs Bremen
-Manchester United vs Chelsea
-3.⁠ ⁠Each selection should carry a minimum of 2.50 odds.
-e.g. 1.Arsenal – 2.50
-2.Bayern – 2.51
-1.Manchester United – 2.59
-TOTAL odds 16.23
-4.⁠ ⁠The total odds for this bet slip should NOT exceed off of 20.00
-5. Maximum bonus bet amount is KES.100 per bet slip
-Bonus expires after 24 hours.
-    `
-  },
+  //   {
+  //     title: "Karibu Bonus",
+  //     image: karibuBonus,
+  //     description: `
+  //       JOIN GET KES.100 FREE
+  //     `,
+  //     details: `
+
+  //     `,
+  //     termsAndConditions: `
+  // Term and conditions and Bonus rules.
+  // 1.⁠ ⁠Bonus amount are only applicable to SPORTS (NOT CASINO/CRASH)
+  // 2.⁠ ⁠You should select 3 matches ONLY for your bonus bet slip
+  // e.g. Manchester City vs Arsenal
+  // Bayern vs Bremen
+  // Manchester United vs Chelsea
+  // 3.⁠ ⁠Each selection should carry a minimum of 2.50 odds.
+  // e.g. 1.Arsenal – 2.50
+  // 2.Bayern – 2.51
+  // 1.Manchester United – 2.59
+  // TOTAL odds 16.23
+  // 4.⁠ ⁠The total odds for this bet slip should NOT exceed off of 20.00
+  // 5. Maximum bonus bet amount is KES.100 per bet slip
+  // Bonus expires after 24 hours.
+  //     `
+  //   },
   {
     title: "Mshipi Bonus",
     image: MshipiBonusImg,

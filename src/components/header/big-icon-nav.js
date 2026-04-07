@@ -35,7 +35,7 @@ const BigIconMenu = () => {
         { name: "Crash", icon: "crash.svg", link: "/casino/categories/Crash", parentTo: null, bubble: "new" },
         // { name: "sports", icon: "sports.svg", link: '/sports', parentTo: "sportscategories" },
         // {name: "virtuals", icon:"virtuals.svg", link:"/virtuals", parentTo:null},
-        // { name: "promotions", icon: "promos.svg", link: "/promotions", parentTo: null },
+        { name: "promotions", icon: "promos.svg", link: "/promotions", parentTo: null },
         { name: "livescore", icon: "livescore.svg", link: "https://statshub.sportradar.com/betmundialsmts/en/sport/1", parentTo: null },
         // {name: "basketball", icon:"basketball.svg", link:"/#basketball", parentTo:null},
         // {name: "cricket", icon:"cricket.svg", link:"/#cricket", parentTo:null},
