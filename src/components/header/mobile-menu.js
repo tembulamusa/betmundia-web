@@ -159,11 +159,11 @@ function MobileMenu(props) {
               <IoListCircleOutline className="mr-3 inline-block" />
               My bets
             </Link>
-
+            {/* 
             <Link to="/promotions" className="cd-l">
               <FaGifts className="mr-3 inline-block" />
               Promotions
-            </Link>
+            </Link> */}
 
             <Link to="/exclude" className="cd-l">
               <MdCancel className="mr-3 inline-block" />
