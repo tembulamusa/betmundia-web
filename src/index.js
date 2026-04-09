@@ -94,7 +94,6 @@ const App = () => {
                             {!(state?.casinolaunch || state?.fullpagewidth || state?.surecoinlaunched) && <Sidebar />}
                             <div className={`${(state?.casinolaunch || state?.fullpagewidth || state?.surecoinlaunched) ? "" : `${state?.nosports ? "col-md-10 mx-auto y-scrollable-window" : "col-md-7 home mx-auto"}`}`}>
                                 <Routes>
-
                                     <Route exact path="/casino" element={<Casino />} />
                                     <Route exact path="/live-casino" element={<LiveCasino />} />
                                     <Route exact path="/casino1" element={<CasinoHome />} />
