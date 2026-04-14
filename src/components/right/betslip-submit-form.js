@@ -385,7 +385,7 @@ const BetslipSubmitForm = (props) => {
             let computeExAmt = stake - Float(stake_after_tax, 2);
             setStakeAfterTax(Float(stake_after_tax, 2));
             setExciseTax(Math.round(computeExAmt * (10 ** 2)) / (10 ** 2));
-            setNetWin(nw > Float(5000000) ? Float(5000000) : nw);
+            setNetWin(nw > Float(500000) ? Float(500000) : nw);
             setPossibleWin(Float(raw_possible_win, 2));
             setWithholdingTax(Float(wint, 2));
             setBonus(Float(raw_possible_win * (dbWinMatrix[strConstruct] / 100), 2) || 0);
