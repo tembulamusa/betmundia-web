@@ -15,7 +15,7 @@ const MobileApp = () => {
                 </h4>
             </div>
 
-            <div className='std-medium-width-block '>
+            <div className='std-medium-width-block mb-0 pb-0 !pr-0'>
 
                 <div className="block">
                     <div className="w-full justify-center items-center">
@@ -34,7 +34,7 @@ const MobileApp = () => {
                         </div>
 
                         <div className="flex gap-2 w-full items-center mt-4 text-white justify-center">
-                            <ul className="block my-4 flex-1">
+                            <ul className="block my-4 mb-0 flex-1 w-1/2">
 
                                 <li className="flex items-center my-2">
                                     <FiCheckCircle className="text-custom-red mr-2" />
@@ -62,7 +62,7 @@ const MobileApp = () => {
                                 </li>
                             </ul>
 
-                            <div className="d-block w-100 mt-4">
+                            <div className="d-block w-1/2 mt-4">
                                 <img className="hero" src={AppBanner} alt="App Banner" />
                             </div>
                         </div>
