@@ -5,33 +5,31 @@ import PlayStore from '../../../assets/img/general-website/google-play-badge.png
 import AppStore from '../../../assets/img/general-website/appstore_badge.svg';
 import AppBanner from '../../../assets/img/banner/App.png';
 
-const Header = React.lazy(() => import('../../header/header'));
-const SideBar = React.lazy(() => import('../../sidebar/awesome/Sidebar'));
-const Footer = React.lazy(() => import('../../footer/footer'));
-const Right = React.lazy(() => import('../../right/index'));
-
 const MobileApp = () => {
+
     return (
         <>
-            <div className='col-md-12 primary-bg p-4 text-center'>
+            <div className='col-md-12 bg-[rgba(255,255,255,0.1)] !mb-6 mx-auto p-4 text-center'>
                 <h4 className=' inline-block'>
                     betmundial APP
                 </h4>
             </div>
 
-            <div className='std-medium-width-block'>
+            <div className='std-medium-width-block '>
 
                 <div className="block">
                     <div className="w-full justify-center items-center">
 
-                        <h3>Download Today and Enjoy bonuses of Upto 500 !</h3>
+                        <h3>Download Today and Enjoy bonuses</h3>
 
-                        <div className="flex gap-2 items-center mt-2">
-                            <a href="#" target="_blank" className="btn img">
-                                <img src={PlayStore} alt="Google Play Store" className="w-38 h-16" />
+                        <div className="flex gap-2 w-full items-center mt-4 text-white justify-center">
+                            <a href="#" target="_blank" className="btn img w-1/2 mt-2">
+                                <img src={PlayStore} alt="Google Play Store" className="w-full" />
+                                <div className="text-3xl text-white  mt-3">Android</div>
                             </a>
-                            <a href="#" target="_blank" className="btn img">
-                                <img src={AppStore} alt="Apple App Store" className="w-38 h-16" />
+                            <a href="#" target="_blank" className="btn img w-1/2 mt-2">
+                                <img src={AppStore} alt="Apple App Store" className="w-full" />
+                                <div className="text-3xl text-white  mt-3">Iphone</div>
                             </a>
                         </div>
 
@@ -41,10 +39,10 @@ const MobileApp = () => {
                                 <FiCheckCircle className="text-custom-red mr-2" />
                                 Stream LIVE games
                             </li>
-                            <li className="flex items-center my-2">
+                            {/* <li className="flex items-center my-2">
                                 <FiCheckCircle className="text-custom-red mr-2" />
                                 Play 4 virtual leagues
-                            </li>
+                            </li> */}
                             <li className="flex items-center my-2">
                                 <FiCheckCircle className="text-custom-red mr-2" />
                                 Lighter and faster
@@ -53,10 +51,10 @@ const MobileApp = () => {
                                 <FiCheckCircle className="text-custom-red mr-2" />
                                 Share betslip
                             </li>
-                            <li className="flex items-center my-2">
+                            {/* <li className="flex items-center my-2">
                                 <FiCheckCircle className="text-custom-red mr-2" />
                                 Light &amp; dark mode
-                            </li>
+                            </li> */}
                             <li className="flex items-center my-2">
                                 <FiCheckCircle className="text-custom-red mr-2" />
                                 Instant notifications

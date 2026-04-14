@@ -309,7 +309,7 @@ const Right = (props) => {
       {!state?.nosports && <>
         <div className="col-md-3 betslip-container sticky-top">
           <>
-            <section id="betslip" className="betslip-v2">
+            <section id="betslip" className="betslip-v2 mt-3">
               <div className="bg-[rgba(255,255,255,0.1)]">
                 <div className="betslip-header bg-secondary uppercase">
                   {state?.isjackpot ? 'jackpot' : 'Betslip'} {state?.isjackpot && (<span>{Object.keys(state?.jackpotbetslip || {}).length} / {(state?.jackpotdata?.matches || [])?.length}</span>)}

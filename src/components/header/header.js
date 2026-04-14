@@ -17,9 +17,10 @@ import BigIconNav from './big-icon-nav';
 import CheckMpesaDepositStatus from '../webmodals/check-mpesa-deposit-status';
 import DepositModal from '../webmodals/deposit-modal';
 import useInterval from "../../hooks/set-interval.hook";
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import socket from '../utils/socket-connect';
 import HeaderNav from './header-nav';
+
 
 const ProfileMenu = React.lazy(() => import('./profile-menu'));
 const HeaderLogin = React.lazy(() => import('./top-login'));
@@ -180,8 +181,22 @@ const Header = (props) => {
     return (
         <>
             <Navbar expand="md" className="mb-0 ck pc os app-navbar top-nav" fixed="top" variant="dark" style={{ flexWrap: "wrap" }}>
-                {/* <MobileDownloadBanner /> */}
-                <div className='main-header-top w-full p-0'><div className='light-blue md:hidden text-white py-1 w-full px-3'><MobileLoggedInBals /></div>
+                <div className="flex items-center md:!hidden w-full gap-2 bg-yellow-400 px-2 py-2">                    <div className="flex-1 text-black text-[10px] font-[500]">
+                    Download the App and Enjoy bonuses of Upto 500!
+                </div>
+
+                    <Link
+                        to="/app"
+                        className="
+                        bg-pink-700 px-3 py-2 
+                        rounded-md text-[10px] 
+                        font-bold flex 
+                        items-center justify-center"
+                    >
+                        Download Now
+                    </Link>
+                </div>
+                <div className='main-header-top w-full px-2 py-2  md:!p-0'>
                     <Container fluid className={'d-flex justify-content-between mobile-change'}>
 
                         <div className="e col-md-5 col-sm-6 logo align-self-start  items-center pl-0" title="betmundial">
@@ -202,7 +217,7 @@ const Header = (props) => {
                 </div>
 
                 <div className={`block w-full ${state?.hideBigIconNav && 'hidden'}`}><BigIconNav /></div>
-            </Navbar>
+            </Navbar >
 
             {/* mobile bottom menu */}
 
