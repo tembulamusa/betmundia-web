@@ -68,24 +68,27 @@ const Index = (props) => {
         endpoint += "&tab=" + tab;
 
         if (state?.filtercompetition && controlText !== "fetchAll") {
-            endpoint = (controlText == "filtered") && `/sports/competitions/matches/${state?.filtercompetition?.competition_id}`;
+            endpoint = (controlText == "filtered") &&
+                `/sports/matches/pre-match-sport/${filtersport?.sport_id || allSportId || 79}/${state?.filtercompetition?.competition_id}/${filtersport?.default_market}`
+                + "?page=" + pageNo + `&size=${limitSize}`;
+
 
             // if (state?.filtercompetition?.competition_id == 0){
-            //     endpoint = "/sports/competitions/matches?page=" + (page || 1) + "&sport_id = " + (state?.filtersport?.sport_id||sportid || 79) + `&limit=${limit || 200}`;
+            //     endpoint = "/sports/competitions/matches?page=" + (page || 1) + "&sport_id = " + (state?.filtersport?.sport_id||sportid || 79) + `& limit=${ limit || 200 } `;
             // }
         }
         let data = null;
         if (search_term && search_term.length >= 3) {
             method = "POST";
             data = { search: search_term, sport_id: filtersport?.sport_id || allSportId || 79 };
-            endpoint = `/sports/matches/search`;
+            endpoint = `/ sports / matches / search`;
         }
         // else {
         //     if(state?.filtercompetition ) {
-        //         endpoint = `/v1/sports/competition/matches?id=${state?.filtercompetition?.competition_id}`;
+        //         endpoint = `/ v1 / sports / competition / matches ? id = ${ state?.filtercompetition?.competition_id } `;
 
         //         if (state?.filtercompetition?.competition_id == 0){
-        //             endpoint = "/v1/matches?page=" + (page || 1) + "&sport_id = " + (state?.filtersport?.sport_id||sportid || 79) + `&limit=${limit || 200}`;
+        //             endpoint = "/v1/matches?page=" + (page || 1) + "&sport_id = " + (state?.filtersport?.sport_id||sportid || 79) + `& limit=${ limit || 200 } `;
         //         }
         //     }
         // } 
@@ -99,11 +102,7 @@ const Index = (props) => {
 
         makeRequest({ url: endpoint, method: method, data: data, api_version: 2, }).then(([status, result]) => {
             setFetchingCount(fetchcount);
-
             if ([200, 201].includes(status)) {
-
-                console.log("Fetched matches", result);
-
                 setMatches(result?.data?.items || result) //(matches?.length > 0 && page > 1) ? [...matches, ...result?.data?.items] : result?.data?.items || result)
                 setFetching(false);
                 setProducers(result?.producer_statuses);
