@@ -63,22 +63,21 @@ const ProSidebar = (props) => {
         let endpoint2 = "/sports";
         let cached_competitions = getFromLocalStorage('categories');
 
-        // if (cached_competitions || cached_competitions?.length < 1) {
-        const [competition_result] = await Promise.all([
-            makeRequest({ url: endpoint2, method: "get", api_version: 2 }),
-        ]);
-        let [c_status, c_result] = competition_result;
-        if (c_status == 200) {
-            setCompetitions(c_result?.data);
-            setLocalStorage('categories', c_result?.data, 3 * 60 * 60 * 1000);
-            dispatch({ type: "SET", key: "categories", payload: c_result });
+        if (cached_competitions || cached_competitions?.length < 1) {
+            const [competition_result] = await Promise.all([
+                makeRequest({ url: endpoint2, method: "get", api_version: 2 }),
+            ]);
+            let [c_status, c_result] = competition_result;
+            if (c_status == 200) {
+                setCompetitions(c_result?.data);
+                setLocalStorage('categories', c_result?.data, 3 * 60 * 60 * 1000);
+                dispatch({ type: "SET", key: "categories", payload: c_result });
+            }
         }
-        // }
-
-        // else {
-        //     setCompetitions(cached_competitions);
-        //     dispatch({ type: "SET", key: "categories", payload: cached_competitions });
-        // }
+        else {
+            setCompetitions(cached_competitions);
+            dispatch({ type: "SET", key: "categories", payload: cached_competitions });
+        }
 
         setFocusSportId(location.pathname !== "/" ? getFromLocalStorage("filtersport")?.sport_id : 79);
     };
