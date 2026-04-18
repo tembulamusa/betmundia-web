@@ -297,7 +297,7 @@ aside[class*="ps-sidebar-root"],
 
 .ps-submenu-content .ps-menu-button {
   margin-bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.2) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
 }
 
 .pc .navbar-nav>li>a {

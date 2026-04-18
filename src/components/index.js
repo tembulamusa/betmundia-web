@@ -73,9 +73,9 @@ const Index = (props) => {
                 + "?page=" + pageNo + `&size=${limitSize}`;
 
 
-            // if (state?.filtercompetition?.competition_id == 0){
-            //     endpoint = "/sports/competitions/matches?page=" + (page || 1) + "&sport_id = " + (state?.filtersport?.sport_id||sportid || 79) + `& limit=${ limit || 200 } `;
-            // }
+            if (filtersport?.sport_name?.toLowerCase() === "soccer" || !filtersport) {
+                endpoint = (controlText == "filtered") && `/sports/competitions/matches/${state?.filtercompetition?.competition_id}`;
+            }
         }
         let data = null;
         if (search_term && search_term.length >= 3) {

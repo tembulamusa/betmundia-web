@@ -62,8 +62,7 @@ const ProSidebar = (props) => {
         // get all categories
         let endpoint2 = "/sports";
         let cached_competitions = getFromLocalStorage('categories');
-
-        if (cached_competitions || cached_competitions?.length < 1) {
+        if (!cached_competitions || cached_competitions?.length < 1) {
             const [competition_result] = await Promise.all([
                 makeRequest({ url: endpoint2, method: "get", api_version: 2 }),
             ]);
