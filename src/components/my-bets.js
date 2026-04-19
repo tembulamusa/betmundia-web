@@ -176,7 +176,13 @@ const MyBets = () => {
                                         <div>{bet?.possible_win}</div>
                                         <div style={{ display: "flex", gap: "5px" }}>
                                             {statusIcon(bet?.status)}
-                                            <span>{bet?.status}</span>
+                                            <span>
+                                                {
+                                                    bet?.status?.toLowerCase() == "not approved"
+                                                        ?
+                                                        "Pending" : bet?.status
+                                                }
+                                            </span>
                                         </div>
                                     </div>
                                 </Accordion.Header>
