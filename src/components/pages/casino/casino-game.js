@@ -53,6 +53,8 @@ const CasinoGame = (props) => {
                 setLocalStorage("casinolaunch", { game: game, url: launchUrl })
                 if (game?.aggregator?.toLowerCase() == "bitville") {
                     dispatch({ type: "SET", key: "bitvilleGame", payload: result });
+                    setLocalStorage("casinolaunch", { game: result })
+
                 }
                 navigate(`/casino-game/${game?.provider_name.split(' ').join('-').toLowerCase()}/${game?.game_name.split(' ').join('-').toLowerCase()}`)
             } else {

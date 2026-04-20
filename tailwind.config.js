@@ -11,6 +11,15 @@ module.exports = {
   theme: {
 
     extend: {
+      keyframes: {
+        blink: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
+        },
+      },
+      animation: {
+        blink: 'blink 1.5s infinite',
+      },
       colors: {
         'custom-red': 'rgba(231, 6, 84, 1)',
         'custom-orange': 'rgba(255, 178, 0, 1)',

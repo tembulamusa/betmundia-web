@@ -95,6 +95,7 @@ const FreeBet = (props) => {
     }, [freebet]);
 
     const fetchFreeBet = () => {
+        console.log("Fetching free bet details...");
         if (isLoading) return;
         setIsLoading(true);
         setMessage(null);
@@ -105,7 +106,9 @@ const FreeBet = (props) => {
                     setFreebet(result?.data || result);
                 };
             }
+            console.log("Fetched free bet details, check console for details::: " + JSON.stringify(result));
         });
+
     };
 
     useEffect(() => {
@@ -154,7 +157,7 @@ const FreeBet = (props) => {
         <>
             {alert &&
                 <div className="highlights">
-                    <div className="marquee-card free-bet relative">
+                    <div className="marquee-card free-bet relative" style={{ background: "transparent" }}>
                         <Alert message={alert} />
                     </div>
                 </div>
@@ -164,12 +167,20 @@ const FreeBet = (props) => {
 
                 freebet &&
                 <div className="highlights">
-                    <div className="marquee-card free-bet relative">
+                    <div className="marquee-card free-bet relative" style={{
+                        background: "rgba(255, 255, 255, 0.1)",
+                        marginBottom: "8px",
+                        marginRight: "4px",
+                        border: "1px solid rgba(255, 255, 255, 0.2)",
+                        marginTop: "4px",
+                        paddingLeft: "5px",
+                        color: "#fff"
+                    }}>
                         <div className="card-top-sub-heading">
                             <div className="row">
                                 <div className="col-8">
                                     <GiSoccerBall className="inline-block text-3xl mr-2" />
-                                    <span className="font-[500] freebet-highlight highlight-color blink-e uppercase">Free Bet</span>
+                                    <span className="font-[500] freebet-highlight highlight-color blink-e animate-blink uppercase">Free Bet</span>
                                 </div>
 
                             </div>
@@ -235,12 +246,12 @@ const FreeBet = (props) => {
                                 <button onClick={() => placeFreebet()}
                                     disabled={submitting}
                                     className="disabled:opacity-90 font-bold text-xl btn place-free-bet !bg-[#469866] rounded-md text-white"
-                                >{submitting ? "wait..." : "Bet Now"}</button>
+                                >{submitting ? "wait..." : "Place Bet"}</button>
                             </div>}
 
                     </div>
 
-                </div>
+                </div >
 
             }
         </>

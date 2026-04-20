@@ -7,7 +7,7 @@ const HighlightsBoard = (props) => {
         <>
             <div className="flex popular-highlight-games">
                 <div className=""><FreeBet /></div>
-                <div className="highlights"><PopularGames /></div>              
+                <div className="highlights"><PopularGames /></div>
             </div>
         </>
     )

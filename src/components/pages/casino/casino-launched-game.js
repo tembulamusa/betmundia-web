@@ -97,6 +97,7 @@ const CasinoLaunchedGame = (props) => {
                 } else {
                     navigate("/casino");
                 }
+                // alert("Launching game, please wait..." + JSON.stringify(result));
             }
         );
         dispatch({ type: "SET", key: "casinolaunch", payload: { game: '', url: '' } });
@@ -108,7 +109,6 @@ const CasinoLaunchedGame = (props) => {
     useEffect(() => {
         dispatch({ type: "SET", key: "iscasinopage", payload: true });
         if (surePopular) {
-            // New way: Handle advertised games
             const gameId = findGameId(provider, gameName);
             if (gameId) {
                 fetchGameUrl(provider, gameId);
@@ -122,12 +122,14 @@ const CasinoLaunchedGame = (props) => {
                 let game = state?.casinolaunch || getFromLocalStorage("casinolaunch");
                 dispatch({ type: "SET", key: "casinolaunch", payload: game });
                 const parsedUrl = game?.url || game?.game?.token || game?.gameUrl || game?.game?.game_url;
-
                 if (parsedUrl || game?.game?.aggregator?.toLowerCase() === "bitville") {
                     if (game?.aggregator?.toLowerCase() === "bitville"
                         || game?.game?.aggregator?.toLowerCase() === "bitville"
                     ) {
                         setBitvilleGame(true);
+                        if (!state?.bitvilleGame) {
+                            dispatch({ type: "SET", key: "bitvilleGame", payload: game?.game ? game.game : game });
+                        }
                     }
                     setNoStateGame(parsedUrl);
                 } else {
