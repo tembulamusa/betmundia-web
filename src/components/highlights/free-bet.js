@@ -167,14 +167,15 @@ const FreeBet = (props) => {
 
                 freebet &&
                 <div className="highlights">
-                    <div className="marquee-card free-bet relative" style={{
+                    <div className="marquee-card free-bet relative blink-e animate-shadow-pulse" style={{
                         background: "rgba(255, 255, 255, 0.1)",
                         marginBottom: "8px",
                         marginRight: "4px",
-                        border: "1px solid rgba(255, 255, 255, 0.2)",
+                        border: "1px solid rgb(167 31 102 / 46%)",
                         marginTop: "4px",
                         paddingLeft: "5px",
-                        color: "#fff"
+                        color: "#fff",
+                        // boxShadow: "0 0 10px 1px #a71f66"
                     }}>
                         <div className="card-top-sub-heading">
                             <div className="row">

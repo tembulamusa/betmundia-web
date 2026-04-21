@@ -16,9 +16,14 @@ module.exports = {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0' },
         },
+        shadowPulse: {
+          '0%, 100%': { boxShadow: '0 0 10px 1px #a71f66' },
+          '50%': { boxShadow: '0 0 10px 2px #a71f66' },
+        },
       },
       animation: {
         blink: 'blink 1.5s infinite',
+        'shadow-pulse': 'shadowPulse 1.5s ease-in-out infinite',
       },
       colors: {
         'custom-red': 'rgba(231, 6, 84, 1)',

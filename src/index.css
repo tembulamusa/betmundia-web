@@ -1742,9 +1742,12 @@ h1.std-title {
     padding-right: 5px;
   }
 
-
   .marquee-card.free-bet {
-    width: 240px;
+    width: 100%;
+    /* min-width: 100%; */
+    width: 97vw !important;
+    margin-left: 6px !important;
+    margin-right: auto !important;
   }
 
   .exclude-center {
