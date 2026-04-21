@@ -53,7 +53,6 @@ const CarouselLoader = (props) => {
                     effects="blur"
                 />
             </Carousel.Item>
-            {/*
             <Carousel.Item >
                 <img
                     className="d-block w-100"
@@ -75,7 +74,7 @@ const CarouselLoader = (props) => {
                     onClick={() => linkBanner("/promotions#deposit-bonus")}
                     effects="blur"
                 />
-            </Carousel.Item> */}
+            </Carousel.Item>
             <Carousel.Item >
                 <img
                     className="d-block w-100"
