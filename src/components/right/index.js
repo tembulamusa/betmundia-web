@@ -207,11 +207,11 @@ const Right = (props) => {
     "sgr_bonus_percent_15": "15.5",
   });
 
-  useEffect(() => {
-    if (state?.sgrBonusMatrix) {
-      setDbWinMatrix(state?.sgrBonusMatrix);
-    }
-  }, [state?.sgrBonusMatrix]);
+  // useEffect(() => {
+  //   if (state?.sgrBonusMatrix) {
+  //     setDbWinMatrix(state?.sgrBonusMatrix);
+  //   }
+  // }, [state?.sgrBonusMatrix]);
   const showShareModalDialog = () => {
     const loggedInUser = getFromLocalStorage("user") ?? null;
     if (!loggedInUser) {
@@ -221,21 +221,21 @@ const Right = (props) => {
     }
   };
 
-  // const getDbWinMatrix = () => {
-  //   let endpoint = "/sports/config/sgr";
+  const getDbWinMatrix = () => {
+    let endpoint = "/sports/config/sgr";
 
-  //   makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([status, result]) => {
-  //     if (status == 200) {
-  //       if (result.status == 200) {
-  //         setDbWinMatrix(result?.data);
-  //       }
-  //     }
-  //   });
+    makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([status, result]) => {
+      if (status == 200) {
+        if (result.status == 200) {
+          setDbWinMatrix(result?.data);
+        }
+      }
+    });
 
-  // }
-  // useEffect(() => {
-  //   getDbWinMatrix();
-  // }, []);
+  }
+  useEffect(() => {
+    getDbWinMatrix();
+  }, []);
   useEffect(() => {
     if (dbWinMatrix) {
       dispatch({ type: "SET", key: "bonusCentages", dbWinMatrix });
@@ -260,20 +260,26 @@ const Right = (props) => {
     // let centage = total_games == max_games ? "100" : (dbWinMatrix[strConstruct] || "0")
 
     if (!(strConstruct in dbWinMatrix)) {
-      setBongeBonusMessage("Select 3 games or more above 1.30 to get a bonus")
+      setBongeBonusMessage("Select 4 games or more above 1.30 to get a bonus")
     }
 
     let bonusAdvice = "";
     if (total_games == 1) {
-      bonusAdvice = "Add 2 more games " + odd_limit + " to win a bonus of 3% from 3 games";
+      bonusAdvice = "Add 3 more games " + odd_limit + " to win a bonus of " + dbWinMatrix["sgr_bonus_percent_4"] + "% from 4 games";
       dispatch({ type: "DEL", key: "centageBonus" });
 
     } else if (total_games == 2) {
-      bonusAdvice = "Add 1 more game of odds " + odd_limit + " to win a bonus of 3% on 3 games";
+      bonusAdvice = "Add 2 more game of odds " + odd_limit + " to win a bonus of " + dbWinMatrix["sgr_bonus_percent_4"] + "% on 4 games";
       dispatch({ type: "DEL", key: "centageBonus" });
 
-    } else {
-      if (total_games > 2 && total_games <= max_games) {
+    }
+    else if (total_games == 3) {
+      bonusAdvice = "Add 1 more game of odds " + odd_limit + " to win a bonus of " + dbWinMatrix["sgr_bonus_percent_4"] + "% on 4 games";
+      dispatch({ type: "DEL", key: "centageBonus" });
+
+    }
+    else {
+      if (total_games > 3 && total_games <= max_games) {
         var next_centage = dbWinMatrix[`sgr_bonus_percent_${total_games + 1}`]
         bonusAdvice = "Congratulations, You have won a bonus of "
           + dbWinMatrix[strConstruct] + "% on " + total_games + " games of " + odd_limit + " odds"
