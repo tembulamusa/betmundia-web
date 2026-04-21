@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { GiSoccerBall } from "react-icons/gi";
 import HomeTeamDefaultFlag from "../../assets/team-jersies/home-default.png"
 import AwayTeamDefaultFlag from "../../assets/team-jersies/away-default.png"
-import { getFromLocalStorage } from "../utils/local-storage";
+import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 
 const FreeBet = (props) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -47,9 +47,18 @@ const FreeBet = (props) => {
             if (['200', '201'].includes(result?.status)) {
                 setAlert({ status: 200, message: result?.data?.message });
                 setFreebet(null);
+                let updatedUser = { ...getFromLocalStorage("user") };
+                updatedUser.has_freebet = 0;
+                setLocalStorage("user", updatedUser);
                 setTimeout(() => {
                     setAlert(null)
                 }, 5000)
+            } else {
+                setAlert(
+                    { status: result?.status || 400, message: result?.data?.message || result?.message || result?.error || "Unable to place free bet" });
+                setTimeout(() => {
+                    setAlert(null)
+                }, 3000)
             }
         });
     }
@@ -101,6 +110,7 @@ const FreeBet = (props) => {
         setMessage(null);
         let endpoint = "/user/freebet";
         makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([status, result]) => {
+            console.log("Checking if user has free bet..." + JSON.stringify(result));
             if (['200', '201'].includes(result?.status)) {
                 if (result.data != null) {
                     setFreebet(result?.data || result);
@@ -181,7 +191,7 @@ const FreeBet = (props) => {
                             <div className="row">
                                 <div className="col-8">
                                     <GiSoccerBall className="inline-block text-3xl mr-2" />
-                                    <span className="font-[500] freebet-highlight highlight-color blink-e animate-blink uppercase">Free Bet</span>
+                                    <span className="font-[500] freebet-highlight highlight-color blink-e animate-blink uppercase " style={{ color: "rgba(255, 215, 0)" }}>Free Bet</span>
                                 </div>
 
                             </div>
@@ -251,7 +261,6 @@ const FreeBet = (props) => {
                             </div>}
 
                     </div>
-
                 </div >
 
             }
