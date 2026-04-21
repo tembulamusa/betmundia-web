@@ -3,36 +3,29 @@ import hundredPercentDepositBonus from "../../../assets/img/banner/products/Depo
 import earlyBirdDailyDepositBonus from "../../../assets/img/banner/products/Deposit-Bonus.png";
 import cashbackBonus from "../../../assets/img/banner/products/cashbackBonus.jpeg";
 import freebetBonus from "../../../assets/img/banner/products/freebet.png";
-import depositBonus from "../../../assets/img/banner/products/depositBonus.jpeg";
-import karibuBonus from "../../../assets/img/banner/products/karibuBonus.jpeg";
+import depositBonus from "../../../assets/img/banner/products/depositBonus.png";
+import karibuBonus from "../../../assets/img/banner/products/KaribuBonus.png";
 
 export const promoData = [
-  //   {
-  //     title: "Karibu Bonus",
-  //     image: karibuBonus,
-  //     description: `
-  //       JOIN GET KES.100 FREE
-  //     `,
-  //     details: `
+  {
+    title: "Karibu Bonus",
+    image: karibuBonus,
+    description: `
+        JOIN GET FREE Bonus
+      `,
+    details: `
 
-  //     `,
-  //     termsAndConditions: `
-  // Term and conditions and Bonus rules.
-  // 1.⁠ ⁠Bonus amount are only applicable to SPORTS (NOT CASINO/CRASH)
-  // 2.⁠ ⁠You should select 3 matches ONLY for your bonus bet slip
-  // e.g. Manchester City vs Arsenal
-  // Bayern vs Bremen
-  // Manchester United vs Chelsea
-  // 3.⁠ ⁠Each selection should carry a minimum of 2.50 odds.
-  // e.g. 1.Arsenal – 2.50
-  // 2.Bayern – 2.51
-  // 1.Manchester United – 2.59
-  // TOTAL odds 16.23
-  // 4.⁠ ⁠The total odds for this bet slip should NOT exceed off of 20.00
-  // 5. Maximum bonus bet amount is KES.100 per bet slip
-  // Bonus expires after 24 hours.
-  //     `
-  //   },
+      `,
+    termsAndConditions: `
+  Karibu BONUS TERMS
+1.	GET UP TO KES.200 FREE
+2.	FIXED STAKE – KES.30
+3.	Pre-selected SOCCER match by Betmundial
+4.	Applicable Market = 1x2
+5.	To WITHDRAW WINNINGS, ONE MUST DEPOSIT AND PLAY WITH 50kes and above on Sports.
+6. The free bet EXPIRES AFTER 24 HOURS.
+      `
+  },
   {
     title: "Mshipi Bonus",
     image: MshipiBonusImg,
@@ -159,49 +152,38 @@ export const promoData = [
   //   `
   // },
   {
-    title: "GET 100% DEPOSIT BONUS",
+    title: "GET 25% DEPOSIT BONUS",
     image: depositBonus,
     description: `
-      Double Your Deposit & Bet with Confidence.
-
-      How to get your bonus
-Register on the Betmundial website or sms JOIN code 29280.
-Make a deposit of at least 10 KES. Via Paybill 444142
-The bonus will be credited to your account automatically once you make a deposit.
-System to automatically match 100% with a bonus on the deposited amount.
-The bonus to be credited on your bonus wallet
-
-
+1.	Issued only ONCE a day after a successful deposit up to KES. 10,000. Deposit. E.g. KES.1000 GET KES.250 FREE
+2.	Bonus Bets are only applicable to SPORTS (NOT CASINO/CRASH)
+3.	You should select 3 matches ONLY for your bonus bet slip
     `,
     details: `
       
-    Terms and Conditions
-    KES. 10 to KES.1000
-    Thus, 1st deposit amount of KES. 9 and below, DOES NOT qualify
-    Thus 1st deposits of KES.10 up to KES. 1000 are matched with a bonus of 100%
-    Thus KES. 1001 and above only get 100% of KES. 1000 which is the cut off amount
-
-    Example
-    Deposit of KES.9 = 0 Bonus
-    Deposit of KES.10 = 10 Bonus
-    Deposit of KES.500 = 500 Bonus
-    Deposit of KES.1000 = 1000 Bonus
-    Deposit of KES.1500 = 1000 Bonus
-    `,
-    termsAndConditions: `
+    TERMS AND CONDITIONS: 25% DEPOSIT BONUS (1st deposit of the day)
 Term and conditions and Bonus rules.
-1.⁠ ⁠Bonus amount are only applicable to SPORTS (NOT CASINO/CRASH)
-2.⁠ ⁠You should select 3 matches ONLY for your bonus bet slip
+1.	Issued only ONCE a day after a successful deposit up to KES. 10,000. Deposit. E.g. KES.1000 GET KES.250 FREE
+2.	Bonus Bets are only applicable to SPORTS (NOT CASINO/CRASH)
+3.	You should select 3 matches ONLY for your bonus bet slip
 e.g. Manchester City vs Arsenal
-      Bayern vs Bremen
-      Manchester United vs Chelsea
-3.⁠ ⁠Each selection should carry a minimum of 2.50 odds.
-e.g. 1.Arsenal – 2.50
-2.Bayern – 2.51
-1.Manchester United – 2.59
-TOTAL odds 16.23
-5. Maximum bonus bet amount is KES.100 per bet slip
-Bonus expires after 24 hours.
+Bayern vs Bremen
+Manchester United vs Chelsea
+4. Each selection should carry a minimum of 1.9 – 2.0 odds. On IX2 Market ONLY
+e.g. 
+selection 1.(Arsenal – 1.91) 
+selection 2.(Bayern – 2.00)
+selection 3.Manchester United – 1.95
+TOTAL odds 7.449
+5.	The total odds for this bet slip should NOT exceed off of 8.00 (REPETITIVE / DUPLICATE BETS ARE NOT ALLOWED)
+
+6.	Bonus balance and cash balance are used proportionally for bets with Bonuses and winnings based on the real money to bonus money 50:50 ratio on your account.
+
+For example, if you have KES.100 in cash balance and KES.50 in bonus balance on your account, the ratio of you Bonus bet should be KES.50 Cash + KES.50 Bonus to make a TOTAL Stake of KES.100.
+
+So in this example, if you place a bet of KES.50, your bet will consist of KES.25 real money and KES.25 bonus balance. Your winnings will be paid out to you in real money and able to withdraw
+7.	Bonus EXPIRES AFTER 24 HOURS.
+
     `
   },
   // {
