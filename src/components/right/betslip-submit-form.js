@@ -31,7 +31,7 @@ const Float = (equation, precision = 4) => {
 
 const BetslipSubmitForm = (props) => {
 
-    const { jackpot, jackpotData, bonusBet } = props;
+    const { jackpot, jackpotData, bonusBet, dbWinMatrix } = props;
     const [message, setMessage] = useState(null);
     const [state, dispatch] = useContext(Context);
     const [stake, setStake] = useState(state?.mobilefooteramount || jackpotData?.bet_amount || 100);
@@ -45,68 +45,36 @@ const BetslipSubmitForm = (props) => {
     const [ipInfo, setIpInfo] = useState({});
     const [totalGames, setTotalGames] = useState(0);
     const [totalOdds, setTotalOdds] = useState(1);
-    const [dbWinMatrix, setDbWinMatrix] = useState({
-        "sgr_bonus_percent_29": "98",
-        "sgr_bonus_percent_27": "85",
-        "sgr_bonus_percent_28": "95",
-        "sgr_bonus_percent_9": "9",
-        "sgr_bonus_percent_10": "10",
-        "sgr_bonus_max_games": "20",
-        "sgr_bonus_percent_11": "14",
-        "sgr_bonus_percent_30": "100",
-        "sgr_bonus_percent_7": "7",
-        "sgr_bonus_percent_8": "8",
-        "sgr_bonus_percent_5": "5",
-        "sgr_bonus_percent_14": "22",
-        "sgr_bonus_percent_6": "6",
-        "sgr_bonus_percent_15": "26",
-        "sgr_bonus_percent_3": "1.5",
-        "sgr_bonus_percent_12": "15",
-        "sgr_bonus_percent_4": "4",
-        "sgr_bonus_percent_13": "16",
-        "sgr_bonus_percent_18": "38",
-        "sgr_bonus_percent_19": "46",
-        "sgr_bonus_percent_16": "30",
-        "sgr_bonus_enabled": "1",
-        "sgr_bonus_percent_17": "34",
-        "sgr_bonus_percent_21": "54",
-        "sgr_bonus_percent_22": "58",
-        "sgr_bonus_percent_20": "50",
-        "sgr_bonus_min_odds": "1.30",
-        "sgr_bonus_percent_25": "70",
-        "sgr_bonus_percent_26": "80",
-        "sgr_bonus_percent_23": "62",
-        "sgr_bonus_percent_24": "66"
-    });
 
-    const setbonusMatrix = () => {
-        let winMatrix = getFromLocalStorage("sgrBonusMatrix");
-        if (winMatrix) {
-            setDbWinMatrix(winMatrix);
-            dispatch({ type: "SET", key: "sgrBonusMatrix", payload: winMatrix })
 
-        } else {
-            makeRequest({ url: '/sports/config/sgr', method: 'GET', api_version: 2 })
-                .then(([status, response]) => {
-                    if (status === 200) {
-                        setLocalStorage("sgrBonusMatrix", response?.data, 24 * 60 * 60 * 1000);
-                        setDbWinMatrix(response?.data);
-                        dispatch({ type: "SET", key: "sgrBonusMatrix", payload: response?.data })
+    // const setbonusMatrix = () => {
+    //     let winMatrix = getFromLocalStorage("sgrBonusMatrix");
+    //     if (winMatrix) {
+    //         setDbWinMatrix(winMatrix);
+    //         dispatch({ type: "SET", key: "sgrBonusMatrix", payload: winMatrix })
 
-                    } else {
-                        console.error("Failed to fetch SGR Bonus Matrix:", response);
-                    }
-                })
-        }
-    };
+    //     } else {
+    //         makeRequest({ url: '/sports/config/sgr', method: 'GET', api_version: 2 })
+    //             .then(([status, response]) => {
+    //                 if (status === 200) {
+    //                     setLocalStorage("sgrBonusMatrix", response?.data, 24 * 60 * 60 * 1000);
+    //                     setDbWinMatrix(response?.data);
+    //                     dispatch({ type: "SET", key: "sgrBonusMatrix", payload: response?.data })
+
+    //                 } else {
+    //                     console.error("Failed to fetch SGR Bonus Matrix:", response);
+    //                 }
+    //             })
+    //     }
+    // };
     useEffect(() => {
         fetch("https://api64.ipify.org?format=json")
             .then((response) => response.json())
             .then((data) => setIpInfo(data.ip))
             .catch((error) => setIpInfo({ city: "Error fetching IP" }));
 
-        setbonusMatrix();
     }, []);
+
 
 
 
@@ -359,7 +327,6 @@ const BetslipSubmitForm = (props) => {
             }
             let strConstruct = `sgr_bonus_percent_${total_games}`
             let centageInt = (parseInt(dbWinMatrix[strConstruct]) / 100) || 0;
-
 
             setTotalGames(Object.keys(state?.[betslipkey] || {}).length);
 

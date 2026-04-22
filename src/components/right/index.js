@@ -189,22 +189,6 @@ const Right = (props) => {
   const [bongeBonusMessage, setBongeBonusMessage] = useState('Select 3 or more games to win big bonus');
   const [bonusCentage, setBonusCentage] = useState(3);
   const [dbWinMatrix, setDbWinMatrix] = useState({
-    "sgr_bonus_enabled": "1",
-    "sgr_bonus_max_games": "15",
-    "sgr_bonus_min_odds": "1.4",
-    "sgr_bonus_percent_3": "1.5",
-    "sgr_bonus_percent_4": "2.5",
-    "sgr_bonus_percent_5": "3.5",
-    "sgr_bonus_percent_6": "4.5",
-    "sgr_bonus_percent_7": "5.5",
-    "sgr_bonus_percent_8": "6.5",
-    "sgr_bonus_percent_9": "7.5",
-    "sgr_bonus_percent_10": "8.5",
-    "sgr_bonus_percent_11": "9.5",
-    "sgr_bonus_percent_12": "11.5",
-    "sgr_bonus_percent_13": "12.5",
-    "sgr_bonus_percent_14": "14.5",
-    "sgr_bonus_percent_15": "15.5",
   });
 
   // useEffect(() => {
@@ -274,7 +258,7 @@ const Right = (props) => {
 
     }
     else if (total_games == 3) {
-      bonusAdvice = "Add 1 more game of odds " + odd_limit + " to win a bonus of " + dbWinMatrix["sgr_bonus_percent_4"] + "% on 4 games";
+      bonusAdvice = "Add  more game of odds " + odd_limit + " to win a bonus of " + dbWinMatrix["sgr_bonus_percent_4"] + "% on 4 games";
       dispatch({ type: "DEL", key: "centageBonus" });
 
     }
@@ -333,7 +317,7 @@ const Right = (props) => {
                   )}
                 </div>
                 {Object.keys(state?.betslip || {}).length > 0 && <BongeBetMarkupMessage />}
-                <BetSlip jackpot={state?.isjackpot} betslipValidationData={betslipValidationData} jackpotData={jackpotData} />
+                <BetSlip jackpot={state?.isjackpot} betslipValidationData={betslipValidationData} jackpotData={jackpotData} dbWinMatrix={dbWinMatrix} />
               </div>
             </section>
             <PaybillNumbersSection />

@@ -87,7 +87,7 @@ const FreeBet = (props) => {
                 {
                     account: 1,
                     accept_all_odds_change: 1,
-                    amount: freebet?.amount ?? 20,
+                    amount: freebet?.amount ?? 30,
                     app_name: "desktop",
                     bet_string: "string",
                     bet_total_odds: 1,
