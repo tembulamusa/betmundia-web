@@ -104,21 +104,37 @@ const FreeBet = (props) => {
     }, [freebet]);
 
     const fetchFreeBet = () => {
-        console.log("Fetching free bet details...");
         if (isLoading) return;
+
         setIsLoading(true);
         setMessage(null);
-        let endpoint = "/user/freebet";
-        makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([status, result]) => {
-            console.log("Checking if user has free bet..." + JSON.stringify(result));
-            if (['200', '201'].includes(result?.status)) {
-                if (result.data != null) {
-                    setFreebet(result?.data || result);
-                };
-            }
-            console.log("Fetched free bet details, check console for details::: " + JSON.stringify(result));
-        });
 
+        let endpoint = "/user/freebet";
+
+        makeRequest({ url: endpoint, method: "GET", api_version: 2 })
+            .then(([status, result]) => {
+
+                if (['200', '201'].includes(result?.status)) {
+
+                    if (result.data != null) {
+
+                        let data = result.data;
+
+                        // ✅ SORT outcomes
+                        const outcomes = data?.odds?.["1x2"]?.outcomes;
+
+                        if (Array.isArray(outcomes)) {
+                            data.odds["1x2"].outcomes = outcomes.sort(
+                                (a, b) => Number(a.outcome_id) - Number(b.outcome_id)
+                            );
+                        }
+
+                        setFreebet(data);
+                    }
+                }
+
+
+            });
     };
 
     useEffect(() => {
