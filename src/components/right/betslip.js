@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useContext, useCallback, useRef } from 'react';
 import BetslipSubmitForm from './betslip-submit-form';
 import { Context } from '../../context/store';
 import {
@@ -14,7 +14,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import CompanyInfo from "./company-info";
 import makeRequest from '../utils/fetch-request';
 import { getFromLocalStorage, setLocalStorage } from '../utils/local-storage';
-import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import Notify from "../utils/Notify";
 import Alert from '../utils/alert';
@@ -26,10 +25,9 @@ const clean_rep = (str) => {
 }
 
 const BetSlip = (props) => {
-    const { jackpot, betslipValidationData, jackpotData, dbWinMatrix } = props;
+    const { jackpot, betslipValidationData, jackpotData, dbWinMatrix, sharedCode } = props;
     const [is_jackpot, setIsJackpot] = useState(jackpot);
     const [localJPData, setLocalJPData] = useState(jackpotData);
-    const { code } = useParams();
     const [state, dispatch] = useContext(Context);
     const [betslipKey, setBetslipKey] = useState(
         () => state?.jackpotbetslip ? "jackpotbestslip" : "bestslip"
@@ -37,6 +35,15 @@ const BetSlip = (props) => {
     const [betslipsData, setBetslipsData] = useState({});
     const [hasBetslip, setHasBetslip] = useState(false);
     const [socketSlipChange, setSocketSlipChange] = useState(false);
+    const sharedCodeAutoLoadedRef = useRef(false);
+    const previousSharedCodeRef = useRef(sharedCode);
+
+    useEffect(() => {
+        if (previousSharedCodeRef.current !== sharedCode) {
+            previousSharedCodeRef.current = sharedCode;
+            sharedCodeAutoLoadedRef.current = false;
+        }
+    }, [sharedCode]);
 
     //initial betslip loading
 
@@ -128,9 +135,10 @@ const BetSlip = (props) => {
 
 
     const LoadSharedBetslip = (props) => {
+        const { sharedCode } = props;
         const [sharedBetLoading, setSharedBetLoading] = useState(false);
         const [sharedBetError, setSharedBetError] = useState(null);
-        const [inputShareCode, setInputShareCode] = useState('');
+        const [inputShareCode, setInputShareCode] = useState(sharedCode || '');
 
         useEffect(() => {
             if (sharedBetError != null) {
@@ -186,11 +194,12 @@ const BetSlip = (props) => {
         };
 
         useEffect(() => {
-            if (props.code) {
-                setInputShareCode(props.code);   // 👈 fill input
-                fetchSharedBetslip(props.code);  // 👈 auto submit
+            if (sharedCode && !sharedCodeAutoLoadedRef?.current) {
+                sharedCodeAutoLoadedRef.current = true;
+                setInputShareCode(sharedCode);
+                fetchSharedBetslip(sharedCode);
             }
-        }, [fetchSharedBetslip, props.code]);
+        }, [fetchSharedBetslip, sharedCode]);
 
         return (
             <div className='px-2 py-1'>
@@ -435,7 +444,7 @@ const BetSlip = (props) => {
                     {state?.betslipKey}
                     {!state?.isjackpot &&
 
-                        <LoadSharedBetslip />
+                    <LoadSharedBetslip sharedCode={sharedCode} />
 
                     }
                 </li>

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useMemo } from 'react';
 import BetSlip from './betslip';
 import { FiX } from 'react-icons/fi';
 import { Context } from '../../context/store';
@@ -11,6 +11,7 @@ import { Modal } from 'react-bootstrap';
 import makeRequest from '../utils/fetch-request';
 import { removeItem, setLocalStorage, getFromLocalStorage } from '../utils/local-storage';
 import { type } from '@testing-library/user-event/dist/cjs/utility/index.js';
+import { useLocation } from 'react-router-dom';
 
 const AlertMessage = (props) => {
   return (
@@ -185,11 +186,16 @@ const LoadedBetslip = ({ betslipValidationData, jackpotData, dbWinMatrix }) => {
 
 const Right = (props) => {
   const { betslipValidationData, jackpotData } = props;
+  const location = useLocation();
   const [state, dispatch] = useContext(Context);
   const [bongeBonusMessage, setBongeBonusMessage] = useState('Select 3 or more games to win big bonus');
   const [bonusCentage, setBonusCentage] = useState(3);
   const [dbWinMatrix, setDbWinMatrix] = useState({
   });
+  const sharedSlipCode = useMemo(() => {
+    const match = location?.pathname?.match(/^\/betslip\/share\/([^/]+)\/?$/);
+    return match ? decodeURIComponent(match[1]) : '';
+  }, [location?.pathname]);
 
   // useEffect(() => {
   //   if (state?.sgrBonusMatrix) {
@@ -317,7 +323,7 @@ const Right = (props) => {
                   )}
                 </div>
                 {Object.keys(state?.betslip || {}).length > 0 && <BongeBetMarkupMessage />}
-                <BetSlip jackpot={state?.isjackpot} betslipValidationData={betslipValidationData} jackpotData={jackpotData} dbWinMatrix={dbWinMatrix} />
+                <BetSlip jackpot={state?.isjackpot} betslipValidationData={betslipValidationData} jackpotData={jackpotData} dbWinMatrix={dbWinMatrix} sharedCode={sharedSlipCode} />
               </div>
             </section>
             <PaybillNumbersSection />
