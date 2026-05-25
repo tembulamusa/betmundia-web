@@ -143,6 +143,7 @@ const CasinoLaunchedGame = (props) => {
             dispatch({ type: "DEL", key: "iscasinopage" });
             dispatch({ type: "DEL", key: "fullcasinoscreen" });
             dispatch({ type: "DEL", key: "casinolaunch" });
+            dispatch({ type: "DEL", key: "bitvilleGame" });
         };
     }, [provider, gameName, surePopular, state?.casinofilters?.games, location.pathname]);
 

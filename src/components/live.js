@@ -151,11 +151,6 @@ const Live = (props) => {
         if (!state?.selectedLivesport && currentLive) {
             dispatch({ type: "SET", key: "selectedLivesport", payload: currentLive });
         }
-        socket.connect();
-
-        return () => {
-            socket.disconnect();
-        }
     }, []);
 
 

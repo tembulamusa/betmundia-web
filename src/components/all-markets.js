@@ -47,11 +47,7 @@ const MatchAllMarkets = (props) => {
 
 
     useEffect(() => {
-        socket.connect();
         fetchPagedData()
-        return () => {
-            socket.disconnect();
-        }
     }, []);
 
 

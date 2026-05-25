@@ -162,11 +162,6 @@ const Header = (props) => {
     }
 
     useEffect(() => {
-        try {
-            socket.connect();
-        } catch (err) {
-
-        }
         if (location.pathname == "/casino-game/eurovirtuals/virtual-league") {
             dispatch({ type: "SET", key: "hideBigIconNav", payload: true })
             removeItem("casinolaunch");

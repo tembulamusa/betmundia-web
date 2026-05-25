@@ -143,12 +143,6 @@ const Index = (props) => {
         }
     }, 1000 * 60);
 
-    useEffect(() => {
-        socket.connect();
-        return () => {
-            socket.disconnect();
-        }
-    }, [])
     document.addEventListener('scrollEnd', (event) => {
         if (!fetching) {
             setFetching(true);
