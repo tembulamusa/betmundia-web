@@ -2035,6 +2035,15 @@ label {
   /* Makes the icon appear white */
 }
 
+.big-icon-item a,
+.big-icon-item a:focus,
+.big-icon-item a:focus-visible,
+.big-icon-item a:active {
+  outline: none !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
 
 .big-icon-scrollbar-hide {
   -ms-overflow-style: none;
