@@ -144,6 +144,11 @@ const CasinoLaunchedGame = (props) => {
             dispatch({ type: "DEL", key: "fullcasinoscreen" });
             dispatch({ type: "DEL", key: "casinolaunch" });
             dispatch({ type: "DEL", key: "bitvilleGame" });
+            removeItem("casinolaunch");
+            removeItem("bitvilleGame");
+            setBitvilleGame(false);
+            setNoStateGame(null);
+
         };
     }, [provider, gameName, surePopular, state?.casinofilters?.games, location.pathname]);
 
@@ -173,7 +178,6 @@ const CasinoLaunchedGame = (props) => {
         let urlRequestAttemps = state?.bitvilleGame?.token ? 1 : 0;
         if (urlRequestAttemps === 0) {
             const requestUrl = requestTokenSuccess();
-            alert("Requesting new token, please wait..." + JSON.stringify(requestUrl));
             if (requestUrl) {
                 urlRequestAttemps = 1;
             }
