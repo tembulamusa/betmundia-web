@@ -1,23 +1,28 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Formik, Form } from 'formik';
+import React, { useContext, useEffect, useRef, useState, useCallback } from 'react';
+import { Formik } from 'formik';
 import makeRequest from "../../utils/fetch-request";
 import { Context } from '../../../context/store';
 import { useNavigate } from 'react-router-dom';
 import Notify from '../../utils/Notify';
 import Alert from '../../utils/alert';
 
-const VerifyAccount = (props) => {
+const VerifyAccount = () => {
     const [message, setMessage] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const verifyRef = useRef();
-    const [disabledResend, setDisabledResend] = useState(false);
-    const [state, _] = useContext(Context);
+    const [state, dispatch] = useContext(Context);
     const navigate = useNavigate();
 
     const initialValues = {
         msisdn: state?.regmsisdn,
         code: ''
     }
+    useEffect(() => {
+        dispatch({ type: "SET", key: "fullpagewidth", payload: true });
+        return () => {
+            dispatch({ type: "DEL", key: "fullpagewidth" });
+        };
+    }, []);
 
     const handleSubmit = values => {
         let endpoint = '/auth/verify';
@@ -48,14 +53,14 @@ const VerifyAccount = (props) => {
         return errors;
     }
 
-    const sendOTP = () => {
+    const sendOTP = useCallback(() => {
         let endpoint = '/auth/verification-code';
         let values = {
             msisdn: state?.regmsisdn
         }
         makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
             if ([200, 201].includes(status)) {
-                if (response?.status == 200) {
+                if (response?.status === 200) {
                     Notify({ status: 200, message: "Verification code sent to phone" });
                 } else {
                     setMessage({ status: 400, message: "Error fetching code" });
@@ -64,23 +69,15 @@ const VerifyAccount = (props) => {
                 setMessage({ status: status, message: "Error fetching code" });
             }
         });
-    }
+    }, [state?.regmsisdn]);
 
-    useEffect(() => { sendOTP() }, []);
+    useEffect(() => { sendOTP() }, [sendOTP]);
 
     const handleKeyPress = (event, handleSubmit) => {
-        if (event.key == 'Enter') {
+        if (event.key === 'Enter') {
             event.preventDefault();
             handleSubmit();
         }
-    }
-
-    const FormTitle = () => {
-        return (
-            <div className='col-md-12 primary-bg p-4 text-center'>
-                <h4 className="inline-block">Verify Account</h4>
-            </div>
-        );
     }
 
     const MyVerifyAccountForm = (props) => {
@@ -94,33 +91,46 @@ const VerifyAccount = (props) => {
 
         return (
             <form onReset={props.handleReset} onSubmit={handleSubmit}>
-                <div className="pt-0 px-2">
-                    <div className="row">
-                        <div className='col-md-12 col-sm-12'>{message && <Alert message={message} />}</div>
-                        <div className="col-md-12">
-                            <label>msisdn Number</label>
-                            <div className="row">
-                                <div className="col-12">
-                                    <input
-                                        value={state?.regmsisdn}
-                                        className="block px-3 py-3 w-full rounded-2xl std-input form-control"
-                                        id="msisdn"
-                                        name="msisdn"
-                                        type="text"
-                                        placeholder='Phone number'
-                                        disabled={true}
-                                        onChange={ev => onFieldChanged(ev)}
-                                    />
-                                </div>
+                <div className="pt-0">
+                    <div className="row form-block">
+                        <div className='text-center'>
+                            <h1 className='std-title' style={{ color: '#ffffff' }}>Verify your account</h1>
+                            <p className='text-xl' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                                Enter the one-time code we sent to your phone to finish creating your account.
+                            </p>
+                        </div>
+
+                        <div className='col-md-12 col-sm-12 mt-4'>
+                            {message && <Alert message={message} />}
+                        </div>
+
+                        <div className="form-group row d-flex justify-content-center mt-5">
+                            <div className="col-md-12">
+                                <label style={{ color: '#ffffff' }}>Mobile Number</label>
+                                <input
+                                    value={state?.regmsisdn || ''}
+                                    className="form-control block px-3 py-3 w-full rounded-2xl std-input"
+                                    id="msisdn"
+                                    name="msisdn"
+                                    type="text"
+                                    placeholder='Phone number'
+                                    disabled={true}
+                                    onChange={ev => onFieldChanged(ev)}
+                                />
                             </div>
                         </div>
 
-                        <div className="mt-5">
-                            <div className="">
-                                <label>Code (OTP) -<span className='alert alert-warning py-1 font-[500] italic font-small'>Has been sent to your phone</span></label>
+                        <div className="form-group row d-flex justify-content-center mt-5">
+                            <div className="col-md-12">
+                                <label style={{ color: '#ffffff' }}>
+                                    Code (OTP){' '}
+                                    <span className='alert alert-warning py-1 font-[500] italic font-small'>
+                                        Has been sent to your phone
+                                    </span>
+                                </label>
                                 <input
                                     value={values.code}
-                                    className="block px-3 py-3 w-full rounded-2xl st-input form-control"
+                                    className="form-control block px-3 py-3 w-full rounded-2xl std-input"
                                     id="code"
                                     name="code"
                                     type="text"
@@ -130,20 +140,29 @@ const VerifyAccount = (props) => {
                                 />
                                 {errors.code && <div className='text-danger'> {errors.code} </div>}
                             </div>
+                        </div>
 
-                            <div className="my-2">
-                                <span className=''>Didn't receive code? </span>
-                                <button onClick={() => sendOTP()} type={"button"}
-                                    className='btn text-white ml-2 btn-sm !bg-green-500 hover:opacity-70' disabled={disabledResend}>Click Resend Code
+                        <div className="form-group row d-flex justify-content-left mt-4">
+                            <div className="col-12">
+                                <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Didn't receive code?</span>
+                                <button
+                                    onClick={() => sendOTP()}
+                                    type={"button"}
+                                    className='btn text-white ml-2 btn-sm !bg-green-500 hover:opacity-70'
+                                >
+                                    Click Resend Code
                                 </button>
                             </div>
                         </div>
+
                         <div className="form-group row d-flex justify-content-left mb-4">
                             <div className="col-12">
-                                <button type="submit"
+                                <button
+                                    type="submit"
                                     disabled={isLoading}
-                                    className={`btn btn-lg btn-primary mt-5 col-md-12 deposit-withdraw-button`}>
-                                    {isLoading == false ? "Verify Account" : "verifying..."}
+                                    className={`btn btn-lg btn-primary mt-5 col-md-12 deposit-withdraw-button font-bold`}
+                                >
+                                    {isLoading === false ? "Verify Account" : "verifying..."}
                                 </button>
                             </div>
                         </div>
@@ -169,11 +188,12 @@ const VerifyAccount = (props) => {
 
     return (
         <>
-            <FormTitle />
-            <div className='std-medium-width-block'>
-                <div className="col-md-12 mt-2 p-2">
-                    {message && <Alert />}
-                    <div className="pb-0" data-backdrop="static">
+            <div className='signup-container' style={{ paddingTop: '20px' }}>
+                <div className='std-medium-width-block'>
+                    <div className="col-md-12 mt-2 p-2 std-boxed-form-page" data-backdrop="static">
+                        <div className='text-center mb-4'>
+
+                        </div>
                         <VerifyAccountForm />
                     </div>
                 </div>

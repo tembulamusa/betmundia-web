@@ -54,7 +54,7 @@ const Signup = (props) => {
                 Notify({ status: 200, message: "Registration successful. Please login to your account" })
                 setTimeout(() => {
                 }, 3000);
-                navigate("/login");
+                navigate("/verify-account");
             } else {
                 Notify({ status: 400, message: "Error Making registration" })
                 setIsLoading(false);
