@@ -60,7 +60,7 @@ const VerifyAccount = () => {
         }
         makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
             if ([200, 201].includes(status)) {
-                if (response?.status === 200) {
+                if (response?.status == 200) {
                     Notify({ status: 200, message: "Verification code sent to phone" });
                 } else {
                     setMessage({ status: 400, message: "Error fetching code" });
