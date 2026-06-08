@@ -1,10 +1,12 @@
-import MshipiBonusImg from "../../../assets/img/banner/products/mshipiBonus.jpeg";
+import MshipiBonusImg from "../../../assets/img/banner/products/Mshipi-Bonus.png";
 import hundredPercentDepositBonus from "../../../assets/img/banner/products/Deposit-Bonus.png";
 import earlyBirdDailyDepositBonus from "../../../assets/img/banner/products/Deposit-Bonus.png";
 import cashbackBonus from "../../../assets/img/banner/products/cashbackBonus.jpeg";
 import freebetBonus from "../../../assets/img/banner/products/freebet.png";
 import depositBonus from "../../../assets/img/banner/products/depositBonus.png";
 import karibuBonus from "../../../assets/img/banner/products/KaribuBonus.png";
+import AviatorRainsImg from "../../../assets/img/banner/products/AviatorRainsImg.png";
+import AviatrixTournImg from "../../../assets/img/banner/products/AviatrixTournamentImg.png";
 
 export const promoData = [
   {
@@ -26,6 +28,64 @@ export const promoData = [
 6. The free bet EXPIRES AFTER 24 HOURS.
       `
   },
+  {
+    title: "Aviator Rains",
+    image: AviatorRainsImg,
+    description: `
+        Get Free Rains Bonus
+      `,
+    details: `
+
+      `,
+    termsAndConditions: `
+  Aviator Rains TERMS
+1. Promotion
+The BET MUNDIAL Aviator Rains Promotion rewards eligible Aviator players with free bets ('Rain FreeBets') dropped at random intervals throughout the day. Players who meet the eligibility criteria and successfully claim a Rain within the stipulated time will receive a FreeBet to use on Aviator.
+2. Promotion Period
+The promotion runs from the announced start date until further notice. BET MUNDIAL reserves the right to amend, suspend, or terminate the promotion at any time without prior notice.
+3. Eligibility
+Players must be 18+, have a minimum balance of KES 50, and place at least KES 50 Aviator wager to qualify. Must comply with all BET MUNDIAL Terms & Conditions.
+4. Campaign Settings
+FreeBet Value: KES 20
+FreeBets per Rain: 30
+Rain Events per Day: 14
+Minimum Player Balance: KES 50
+Minimum Wager Amount: KES 50
+5. Claim Process
+Players must claim FreeBet within 10 minutes of Rain release. First-come, first-served. Unclaimed FreeBets expire.
+6. FreeBet Validity
+Each FreeBet is valid for 30 minutes after crediting.
+7. Wager Rules
+FreeBet must be used within 10 minutes. Minimum wager is KES 50. Aviator only.
+8. Restrictions
+Non-transferable. One account per player. Abuse or multiple accounts leads to disqualification.
+9. Fraud & Abuse
+BET MUNDIAL may suspend or cancel accounts involved in fraud or abuse.
+10. General Terms
+BET MUNDIAL may change or terminate promotion at any time. Decisions are final.
+11. Responsible Gaming
+Only 18+. Play responsibly.
+      `
+  },
+  //   {
+  //     title: "Aviatrix Tournament",
+  //     image: AviatrixTournImg,
+  //     description: `
+  //         JOIN GET FREE Bonus
+  //       `,
+  //     details: `
+
+  //       `,
+  //     termsAndConditions: `
+  //   Aviatrix Tournament TERMS
+  // 1.	GET UP TO KES.200 FREE
+  // 2.	FIXED STAKE – KES.30
+  // 3.	Pre-selected SOCCER match by Betmundial
+  // 4.	Applicable Market = 1x2
+  // 5.	To WITHDRAW WINNINGS, ONE MUST DEPOSIT AND PLAY WITH 50kes and above on Sports.
+  // 6. The free bet EXPIRES AFTER 24 HOURS.
+  //       `
+  //   },
   {
     title: "Mshipi Bonus",
     image: MshipiBonusImg,
