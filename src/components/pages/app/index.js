@@ -23,7 +23,7 @@ const MobileApp = () => {
                         <h3>Download Today and Enjoy bonuses</h3>
 
                         <div className="flex gap-2 w-full items-center mt-4 text-white justify-center">
-                            <a href="https://api.betmundial.com/v2/sports/app/apk/download?platform=android" target="_blank" className="btn img w-1/2 mt-2">
+                            <a href="https://play.google.com/store/apps/details?id=com.betmundial" target="_blank" className="btn img w-1/2 mt-2">
                                 <img src={PlayStore} alt="Google Play Store" className="w-full" />
                                 <div className="text-3xl text-white  mt-3">Android</div>
                             </a>
