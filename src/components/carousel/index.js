@@ -20,6 +20,8 @@ import Jetx from '../../assets/img/banner/carousel/jetx.jpeg';
 import Fazi1 from '../../assets/img/banner/carousel/fazi1.png';
 import Fazi2 from '../../assets/img/banner/carousel/fazi2.png';
 import Fazi3 from '../../assets/img/banner/carousel/fazi3.png';
+import Worldcup from '../../assets/img/banner/carousel/WorldcupBanner.png';
+import AviatorRains from '../../assets/img/banner/carousel/AviatorRains.png';
 import { Link } from 'react-router-dom';
 
 
@@ -46,6 +48,28 @@ const CarouselLoader = (props) => {
                 <img
                     className="d-block w-100"
                     style={{ display: imageLoaded ? 'block' : 'none' }}
+                    src={Worldcup}
+                    onLoad={onImageLoaded}
+                    alt="worldcup"
+                    onClick={() => linkBanner("/sports/competition/matches?id=18585")}
+                    effects="blur"
+                />
+            </Carousel.Item>
+            <Carousel.Item >
+                <img
+                    className="d-block w-100"
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
+                    src={AviatorRains}
+                    onLoad={onImageLoaded}
+                    alt="aviator-rains"
+                    onClick={() => linkBanner("/casino-game/spribe/aviator")}
+                    effects="blur"
+                />
+            </Carousel.Item>
+            <Carousel.Item >
+                <img
+                    className="d-block w-100"
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
                     src={MundialLeague}
                     onLoad={onImageLoaded}
                     alt="mundial-league"
@@ -53,6 +77,7 @@ const CarouselLoader = (props) => {
                     effects="blur"
                 />
             </Carousel.Item>
+
             <Carousel.Item >
                 <img
                     className="d-block w-100"

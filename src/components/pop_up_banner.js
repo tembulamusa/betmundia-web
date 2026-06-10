@@ -10,6 +10,7 @@ import AviatrixImg from '../assets/img/popups/aviatrix.jpeg';
 import JetXImg from '../assets/img/popups/jetx.jpeg';
 import DepositBonus from '../assets/img/popups/deposit_bonus.jpeg';
 import DailyJackpot from '../assets/img/popups/daily_jackpot.jpeg';
+import Worldcup from '../assets/img/popups/Worldcup.png';
 
 const images = [
     { src: AviatorImg, link: "/casino-game/aviator/aviator" },
