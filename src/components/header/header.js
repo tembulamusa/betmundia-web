@@ -176,7 +176,7 @@ const Header = (props) => {
     return (
         <>
             <Navbar expand="md" className="mb-0 ck pc os app-navbar top-nav" fixed="top" variant="dark" style={{ flexWrap: "wrap" }}>
-                <div className="flex items-center md:!hidden w-full gap-2 bg-yellow-400 px-2 py-2">                    <div className="flex-1 text-black text-[10px] font-[500]">
+                {/* <div className="flex items-center md:!hidden w-full gap-2 bg-yellow-400 px-2 py-2">                    <div className="flex-1 text-black text-[10px] font-[500]">
                     Download the App and Enjoy bonuses of Upto 500!
                 </div>
 
@@ -190,7 +190,7 @@ const Header = (props) => {
                     >
                         Download Now
                     </Link>
-                </div>
+                </div> */}
                 <div className='main-header-top w-full px-2 py-2  md:!p-0'>
                     <Container fluid className={'d-flex justify-content-between mobile-change'}>
 
