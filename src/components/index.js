@@ -99,7 +99,6 @@ const Index = (props) => {
             setThreeWay(true);
         }
 
-
         makeRequest({ url: endpoint, method: method, data: data, api_version: 2, }).then(([status, result]) => {
             setFetchingCount(fetchcount);
             if ([200, 201].includes(status)) {

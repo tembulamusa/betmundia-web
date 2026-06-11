@@ -197,6 +197,22 @@ const BigIconMenu = () => {
         }
     }, [state?.categories])
 
+    useEffect(() => {
+        const competitionId = 18585;
+        const isCompetitionMatchesPage =
+            loc?.pathname?.includes("/sports/competition/matches") &&
+            loc?.search?.includes(`id=${competitionId}`);
+
+        if (isCompetitionMatchesPage && state?.filtercompetition?.competition_id !== competitionId) {
+            dispatch({ type: "SET", key: "filtersport", payload: { sport_id: 79, sport_name: "soccer", default_market: 1 } });
+            dispatch({
+                type: "SET",
+                key: "filtercompetition",
+                payload: { competition_id: competitionId },
+            });
+        }
+    }, [loc?.pathname, loc?.search, state?.filtercompetition?.competition_id, dispatch]);
+
     const changeUserSelection = (category) => {
         dispatch({ type: "SET", key: "filtersport", payload: category });
         setLocalStorage("filtersport", category, 5 * 60 * 1000)
