@@ -35,7 +35,7 @@ const Footer = (props) => {
                         </li>
                         <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <a
-                                href="https://wa.me/254140444142"
+                                href="https://wa.me/254143444142"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ display: 'flex', alignItems: 'center', gap: '15px' }}
@@ -45,9 +45,9 @@ const Footer = (props) => {
                             </a>
                         </li>
                         <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <a target='_blank' href='tel:+254140444142' className='flex'>
+                            <a target='_blank' href='tel:+254143444142' className='flex'>
                                 <FaPhoneAlt className="icon inline-block mr-3" />
-                                <span className='text-3xl'>254140444142</span>
+                                <span className='text-3xl'>254143444142</span>
                             </a>
                         </li>
                     </ul>

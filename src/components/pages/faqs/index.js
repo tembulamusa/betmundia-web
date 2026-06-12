@@ -40,7 +40,7 @@ const FAQs = () => {
                             </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
-                            <p>You can contact our customer support team via email at customercare@betmundial.com or call our helpline at +254140444142. Our team is available 24/7 to assist you with any queries or issues you may have.</p>
+                            <p>You can contact our customer support team via email at customercare@betmundial.com or call our helpline at +254143444142. Our team is available 24/7 to assist you with any queries or issues you may have.</p>
                         </AccordionItemPanel>
                     </AccordionItem>
 

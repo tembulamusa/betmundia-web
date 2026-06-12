@@ -32,7 +32,7 @@ const CheckMpesaDepositStatus = (props) => {
                         setMessage({ status: 200, message: response?.message || "Request has been received. You'll receive an SMS Notification shortly. In case of delay, you could try again by copy pasting the mpesa message." });
                     }
                 } else {
-                    setMessage({ status: 400, message: response?.message || "Could not process. Please contact customer care. on 0140444142" });
+                    setMessage({ status: 400, message: response?.message || "Could not process. Please contact customer care. on 0143444142" });
                 }
                 setIsSubmitting(false);
             })

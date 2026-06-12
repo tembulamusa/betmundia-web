@@ -155,7 +155,7 @@ const CrashTerms = () => {
                         </AccordionItemHeading>
                         <AccordionItemPanel>
                             <p>
-                                Contact Customer Service at <a href="mailto:support@betmundial.com">support@betmundial.com</a> or +254140444142 for complaints. If dissatisfied with the internal resolution, complaints may be escalated to the Gambling Appeals Tribunal.
+                                Contact Customer Service at <a href="mailto:support@betmundial.com">support@betmundial.com</a> or +254143444142 for complaints. If dissatisfied with the internal resolution, complaints may be escalated to the Gambling Appeals Tribunal.
                             </p>
                         </AccordionItemPanel>
                     </AccordionItem>
