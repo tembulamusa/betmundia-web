@@ -9,25 +9,42 @@ import AviatorRainsImg from "../../../assets/img/banner/products/AviatorRainsImg
 import AviatrixTournImg from "../../../assets/img/banner/products/AviatrixTournamentImg.png";
 
 export const promoData = [
-  //   {
-  //     title: "Karibu Bonus",
-  //     image: karibuBonus,
-  //     description: `
-  //         JOIN GET FREE Bonus
-  //       `,
-  //     details: `
+    {
+      title: "Free Bet",
+      image: karibuBonus,
+      description: `
+          JOIN GET FREE Bonus
+        `,
+      details: `
 
-  //       `,
-  //     termsAndConditions: `
-  //   Karibu BONUS TERMS
-  // 1.	GET UP TO KES.200 FREE
-  // 2.	FIXED STAKE – KES.30
-  // 3.	Pre-selected SOCCER match by Betmundial
-  // 4.	Applicable Market = 1x2
-  // 5.	To WITHDRAW WINNINGS, ONE MUST DEPOSIT AND PLAY WITH 50kes and above on Sports.
-  // 6. The free bet EXPIRES AFTER 24 HOURS.
-  //       `
-  //   },
+        `,
+      termsAndConditions: `
+    BETMUNDIAL FREE BET PROMOTION – TERMS & CONDITIONS
+
+Promotion Details
+BetMundial is offering a KSh 30 Free Bet to newly registered customers subject to the following terms and conditions.
+Eligibility
+1.The promotion is open to newly registered BetMundial customers only.
+2.Each eligible customer will receive one (1) Free Bet of KSh 30 upon successful registration.
+3.Only one free bet per customer/account is permitted.
+Free Bet Usage
+4.The free bet can only be used on the preselected match/game specified by BetMundial.
+5.The free bet is valid only on the 1X2 market (Home Win, Draw, Away Win).
+6.The free bet stake is non-withdrawable and cannot be exchanged for cash.
+Winnings
+7.Any winnings generated from the free bet will be credited to the customer’s Bonus Wallet.
+8.Bonus Wallet funds are subject to BetMundial bonus terms and wagering requirements.
+Expiry
+9.The free bet is valid for 24 hours from the time it is credited.
+10.Any unused free bet will automatically expire after 24 hours and cannot be reinstated.
+General Terms
+11.BetMundial reserves the right to amend, suspend, or cancel this promotion at any time without prior notice.
+12.Any abuse of the promotion may result in disqualification and forfeiture of any associated rewards.
+13.By participating in this promotion, customers agree to these Terms & Conditions and all other BetMundial rules and policies.
+
+Bet Responsibly. 18+ Only.
+        `
+    },
   {
     title: "Aviator Rains",
     image: AviatorRainsImg,
