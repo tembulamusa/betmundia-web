@@ -9,16 +9,16 @@ import AviatorRainsImg from "../../../assets/img/banner/products/AviatorRainsImg
 import AviatrixTournImg from "../../../assets/img/banner/products/AviatrixTournamentImg.png";
 
 export const promoData = [
-    {
-      title: "Free Bet",
-      image: karibuBonus,
-      description: `
+  {
+    title: "Free Bet",
+    image: karibuBonus,
+    description: `
           JOIN GET FREE Bonus
         `,
-      details: `
+    details: `
 
         `,
-      termsAndConditions: `
+    termsAndConditions: `
     BETMUNDIAL FREE BET PROMOTION – TERMS & CONDITIONS
 
 Promotion Details
@@ -44,7 +44,7 @@ General Terms
 
 Bet Responsibly. 18+ Only.
         `
-    },
+  },
   {
     title: "Aviator Rains",
     image: AviatorRainsImg,
@@ -60,24 +60,18 @@ The BET MUNDIAL Aviator Rains Promotion rewards eligible Aviator players with fr
 2. Promotion Period
 The promotion runs from the announced start date until further notice. BET MUNDIAL reserves the right to amend, suspend, or terminate the promotion at any time without prior notice.
 3. Eligibility
-Players must be 18+, have a minimum balance of KES 50, and place at least KES 50 Aviator wager to qualify. Must comply with all BET MUNDIAL Terms & Conditions.
-4. Campaign Settings
-FreeBet Value: KES 20
-FreeBets per Rain: 20
-Rain Events per Day: 25
-Minimum Player Balance: KES 20
-Minimum Wager Amount: KES 50
-5. Claim Process
+Players must be 18+. Must comply with all BET MUNDIAL Terms & Conditions.
+4. Claim Process
 Players must claim FreeBet within 10 minutes of Rain release. First-come, first-served. Unclaimed FreeBets expire.
-6. FreeBet Validity
+5. FreeBet Validity
 Each FreeBet is valid for 30 minutes after crediting.
-7. Wager Rules
+6. Wager Rules
 FreeBet must be used within 10 minutes. Minimum wager is KES 50. Aviator only.
-8. Restrictions
+7. Restrictions
 Non-transferable. One account per player. Abuse or multiple accounts leads to disqualification.
-9. Fraud & Abuse
+8. Fraud & Abuse
 BET MUNDIAL may suspend or cancel accounts involved in fraud or abuse.
-10. General Terms
+9. General Terms
 BET MUNDIAL may change or terminate promotion at any time. Decisions are final.
 11. Responsible Gaming
 Only 18+. Play responsibly.
@@ -251,14 +245,13 @@ selection 1.(Arsenal – 1.91)
 selection 2.(Bayern – 2.31)
 selection 3.Manchester United – 2.5
 TOTAL odds 11.030
-5.	The total odds for this bet slip should NOT exceed off of 8.00 (REPETITIVE / DUPLICATE BETS ARE NOT ALLOWED)
 
-6.	Bonus balance and cash balance are used proportionally for bets with Bonuses and winnings based on the real money to bonus money 50:50 ratio on your account.
+5.	Bonus balance and cash balance are used proportionally for bets with Bonuses and winnings based on the real money to bonus money 50:50 ratio on your account.
 
 For example, if you have KES.100 in cash balance and KES.50 in bonus balance on your account, the ratio of you Bonus bet should be KES.50 Cash + KES.50 Bonus to make a TOTAL Stake of KES.100.
 
 So in this example, if you place a bet of KES.50, your bet will consist of KES.25 real money and KES.25 bonus balance. Your winnings will be paid out to you in real money and able to withdraw
-7.	Bonus EXPIRES AFTER 24 HOURS.
+6.	Bonus EXPIRES AFTER 24 HOURS.
 
     `,
     termsAndConditions: `TERMS AND CONDITIONS: 25% DEPOSIT BONUS (1st deposit of the day)
