@@ -8,9 +8,8 @@ import { Context } from '../../../context/store';
 import { getFromLocalStorage, setLocalStorage } from "../../utils/local-storage";
 import makeRequest from "../../utils/fetch-request";
 import { IoGameController } from "react-icons/io5";
-import { FaHotjar } from "react-icons/fa";
+import { FaHotjar, FaGamepad } from "react-icons/fa";
 import { RiLiveFill } from "react-icons/ri";
-import { SiNintendogamecube } from "react-icons/si";
 import { HiGiftTop } from "react-icons/hi2";
 import { BiSolidOffer } from "react-icons/bi";
 
@@ -96,7 +95,7 @@ const CasinoHome = () => {
                         onClick={() => scrollToSection('tables-section')}
                         className="tab-button bg-orange-200 text-black py-2 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-orange-600 hover:text-white"
                     >
-                        <SiNintendogamecube />
+                        <FaGamepad />
                         Tables
                     </button>
                     <button

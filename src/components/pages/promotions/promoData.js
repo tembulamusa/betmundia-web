@@ -33,7 +33,7 @@ Free Bet Usage
 6.The free bet stake is non-withdrawable and cannot be exchanged for cash.
 Winnings
 7.Any winnings generated from the free bet will be credited to the customer’s Bonus Wallet.
-8.Bonus Wallet funds are subject to BetMundial bonus terms and wagering requirements.
+8.To convert it to cash, deposit and place a sports bet of 100kes on odds 1.4 and above.
 Expiry
 9.The free bet is valid for 24 hours from the time it is credited.
 10.Any unused free bet will automatically expire after 24 hours and cannot be reinstated.
