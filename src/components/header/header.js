@@ -147,7 +147,7 @@ const Header = (props) => {
                 socket.emit('user.profile', user?.profile_id);
             }
             socket.on(`user#profile#${user?.profile_id}`, (data) => {
-                alert("Your account balance has been updated. Please refresh the page to see the latest balance." + JSON.stringify(data));
+                // alert("Your account balance has been updated. Please refresh the page to see the latest balance." + JSON.stringify(data));
                 setUser({ ...user, balance: data.balance, bonus_balance: data.bonus })
             });
         }

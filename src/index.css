@@ -331,9 +331,15 @@ aside[class*="ps-sidebar-root"],
   display: block;
   cursor: pointer;
   font-size: 14px;
-  line-height: 1.25rem;
-  color: rgb(90 102 120);
+  line-height: 1.35rem;
+  color: #ffffff;
   font-weight: 500;
+}
+
+.header-account .cd a,
+.header-account .cd div,
+.header-account .cd-l {
+  color: #ffffff;
 }
 
 .header-account .cd a,
@@ -1476,23 +1482,24 @@ img.highlights-content-img {
 }
 
 .header-account .bx-1 {
-  /* font-size: .75rem; */
+  font-size: 0.82rem;
   line-height: 1.5;
   font-weight: 500;
-  opacity: .7;
+  opacity: .8;
 }
 
 .header-account .bx-2 {
-  /* font-size: 1.125rem; */
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.4;
   font-weight: 500;
   margin: 5px 0;
 }
 
 .header-account .bx-3 {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
   display: flex;
-  opacity: .8;
+  opacity: .9;
+  font-size: 0.85rem;
 }
 
 .offcanvas-header {

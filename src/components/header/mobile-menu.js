@@ -37,15 +37,23 @@ function MobileMenu(props) {
       <div className="bx-2 secondary-text">
         KSh. {formatToFloat(user?.balance || 0)}
       </div>
-
+      <div className="bx-3 uppercase ">
+        <div className="bx-3-1">
+          Restricted Bal:
+          <div className="bx-2 secondary-text">
+            KSh. {formatToFloat(user?.restricted_balance || 0.00)}
+          </div>
+        </div>
+      </div>
       <div className="bx-3">
         <div className="bx-3-1">
           Bonus:
-          <span>
+          <div className="bx-2">
             KSh. {formatToFloat(user?.bonus || user?.bonus_balance || 0)}
-          </span>
+          </div>
         </div>
       </div>
+
     </div>
   );
 
