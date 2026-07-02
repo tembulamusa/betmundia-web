@@ -222,60 +222,19 @@ Only 18+. Play responsibly.
   //   `
   // },
   {
-    title: "GET 25% DEPOSIT BONUS",
+    title: "GET 50% DEPOSIT BONUS",
     image: depositBonus,
     description: `
-1.	Issued only ONCE a day after a successful deposit up to KES. 10,000. Deposit. E.g. KES.1000 GET KES.250 FREE
-2.	Bonus Bets are only applicable to SPORTS (NOT CASINO/CRASH)
-3.	You should select 3 matches ONLY for your bonus bet slip
+1.	TO USE BONUS? Select 3 Games on SPORTS, Min Odd 1.9, 1X2 Market. Stake will Automaticaly pick 50:50 bonus & Cash. E.g Stake of 200, 100 will be bonus,100 Cash
     `,
     details: `
       
-    TERMS AND CONDITIONS: 25% DEPOSIT BONUS (1st deposit of the day)
+    TERMS AND CONDITIONS: 50% DEPOSIT BONUS (1st deposit of the day)
 Term and conditions and Bonus rules.
-1.	Issued only ONCE a day after a successful deposit up to KES. 10,000. 
-2.	Bonus Bets are only applicable to SPORTS (NOT CASINO/CRASH)
-3.	You should select 3 matches ONLY for your bonus bet slip
-e.g. Manchester City vs Arsenal
-Bayern vs Bremen
-Manchester United vs Chelsea
-4. Each selection should carry a minimum of 1.9 – 2.5 odds. On IX2 Market ONLY
-e.g. 
-selection 1.(Arsenal – 1.91) 
-selection 2.(Bayern – 2.31)
-selection 3.Manchester United – 2.5
-TOTAL odds 11.030
-
-5.	Bonus balance and cash balance are used proportionally for bets with Bonuses and winnings based on the real money to bonus money 50:50 ratio on your account.
-
-For example, if you have KES.100 in cash balance and KES.50 in bonus balance on your account, the ratio of you Bonus bet should be KES.50 Cash + KES.50 Bonus to make a TOTAL Stake of KES.100.
-
-So in this example, if you place a bet of KES.50, your bet will consist of KES.25 real money and KES.25 bonus balance. Your winnings will be paid out to you in real money and able to withdraw
-6.	Bonus EXPIRES AFTER 24 HOURS.
+TO USE BONUS? Select 3 Games on SPORTS, Min Odd 1.9, 1X2 Market. Stake will Automaticaly pick 50:50 bonus & Cash. E.g Stake of 200, 100 will be bonus,100 Cash
 
     `,
-    termsAndConditions: `TERMS AND CONDITIONS: 25% DEPOSIT BONUS (1st deposit of the day)
-Term and conditions and Bonus rules.
-1.	Issued only ONCE a day after a successful deposit up to KES. 10,000. 
-2.	Bonus Bets are only applicable to SPORTS (NOT CASINO/CRASH)
-3.	You should select 3 matches ONLY for your bonus bet slip
-e.g. Manchester City vs Arsenal
-Bayern vs Bremen
-Manchester United vs Chelsea
-4. Each selection should carry a minimum of 1.9 – 2.5 odds. On IX2 Market ONLY
-e.g. 
-selection 1.(Arsenal – 1.91) 
-selection 2.(Bayern – 2.31)
-selection 3.Manchester United – 2.5
-TOTAL odds 11.030
-5.	The total odds for this bet slip should NOT exceed off of 8.00 (REPETITIVE / DUPLICATE BETS ARE NOT ALLOWED)
-
-6.	Bonus balance and cash balance are used proportionally for bets with Bonuses and winnings based on the real money to bonus money 50:50 ratio on your account.
-
-For example, if you have KES.100 in cash balance and KES.50 in bonus balance on your account, the ratio of you Bonus bet should be KES.50 Cash + KES.50 Bonus to make a TOTAL Stake of KES.100.
-
-So in this example, if you place a bet of KES.50, your bet will consist of KES.25 real money and KES.25 bonus balance. Your winnings will be paid out to you in real money and able to withdraw
-7.	Bonus EXPIRES AFTER 24 HOURS.
+    termsAndConditions: `TO USE BONUS? Select 3 Games on SPORTS, Min Odd 1.9, 1X2 Market. Stake will Automaticaly pick 50:50 bonus & Cash. E.g Stake of 200, 100 will be bonus,100 Cash
 `
   },
   // {
