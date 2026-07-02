@@ -1,7 +1,6 @@
 import { io } from "socket.io-client";
 
-const socket = io("https://wss.betmundial.com", {
-  path: "/socket.io",
+const socket = io("https://wss.betmundial.com/socket-io", {
   transports: ["websocket"],
   reconnection: true,
   upgrade: true,
