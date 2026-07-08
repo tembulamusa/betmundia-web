@@ -12,7 +12,6 @@ const socket = io("https://wss.betmundial.com/socket-io", {
 socket.on('connect', () => {
   console.log('[socket] connected', socket.id);
 });
-
 socket.on('disconnect', (reason) => {
   console.log('[socket] disconnected', reason);
 });
@@ -44,5 +43,12 @@ if (socket.io && typeof socket.io.on === 'function') {
     console.log('[socket] manager error', error?.message || error);
   });
 }
+
+setInterval(() => {
+  if (!socket.connected) {
+    console.log('[socket] periodic reconnect check: socket is disconnected, attempting reconnect');
+    socket.connect();
+  }
+}, 5 * 60 * 1000);
 
 export default socket;

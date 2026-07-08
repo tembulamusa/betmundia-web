@@ -1,9 +1,12 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Offcanvas from 'react-bootstrap/Offcanvas';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { FaHeart, FaTrophy } from 'react-icons/fa';
 import { Context } from "../../context/store";
 import DefaultImg from "../../assets/img/colorsvgicons/soccer.svg";
+import logo from "../../assets/img/logo.svg";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 
 
@@ -15,9 +18,22 @@ const BigIconMenu = () => {
     const [state, dispatch] = useContext(Context);
     const [categories, setCategories] = useState([]);
     const [casinoProviders, setCasinoProviders] = useState([]);
+    const [showBonanza, setShowBonanza] = useState(false);
+    const bonanzaParticipants = 20;
     const navigate = useNavigate();
     const loc = useLocation();
     const excludedProviderList = ["unicraft"];
+
+    const handleBonanzaOpen = () => setShowBonanza(true);
+    const handleBonanzaClose = () => setShowBonanza(false);
+
+    const bonanzaLeaderboard = [
+        { rank: 1, player: 'LuckyAce', points: 245680.75, wager: 125420, netWin: 18250, games: 1254 },
+        { rank: 2, player: 'SpinMaster88', points: 189450.20, wager: 98750, netWin: 12890, games: 982 },
+        { rank: 3, player: 'Royal777', points: 153320.10, wager: 75310, netWin: 9430, games: 745 },
+        { rank: 4, player: 'HighRoller', points: 120550.35, wager: 61250, netWin: 7650, games: 612 },
+        { rank: 5, player: 'QueenOfSlots', points: 98765.80, wager: 50120, netWin: 6230, games: 501 },
+    ];
 
     const linkItems = [
         { name: "world cup", icon: "world cup.svg", link: "/sports/competition/matches?id=18585", parentTo: null, bubble: "HOT" },
@@ -217,8 +233,142 @@ const BigIconMenu = () => {
         dispatch({ type: "SET", key: "filtersport", payload: category });
         setLocalStorage("filtersport", category, 5 * 60 * 1000)
     }
+    const prizePool = "KES 25,000,000";
+    const drawerUpdateInterval = "Updates every 5 seconds";
+
+    const BonanzaDrawer = () => (
+        <Offcanvas
+            placement="start"
+            show={showBonanza}
+            onHide={handleBonanzaClose}
+            className="bonanza-drawer"
+            style={{ zIndex: 11000, width: '560px', maxWidth: '100%' }}
+        >
+            <Offcanvas.Header closeButton className="bonanza-header-panel">
+                <div className="bonanza-header-top">
+                    <img src={logo} alt="Betmundial" className="bonanza-logo" />
+                    <div className="bonanza-badge">Bonanza</div>
+                </div>
+            </Offcanvas.Header>
+            <Offcanvas.Body className="bonanza-body">
+                <div className="bonanza-content">
+                    <div className="bonanza-hero">
+                        <div className="bonanza-hero-left">
+                            <div className="bonanza-hero-visual">
+                                <div className="bonanza-trophy">
+                                    <FaTrophy />
+                                </div>
+                            </div>
+                            <div className="bonanza-hero-copy">
+                                <div className="bonanza-hero-headline">
+                                    <h2 className="bonanza-title-main">CHAMPIONS</h2>
+                                    <div className="bonanza-subtitle">LEADERBOARD</div>
+                                </div>
+                                <p className="bonanza-hero-text">Compete. Play. Win Big!</p>
+                                <div className="bonanza-hero-meta">
+                                    <span>01 May 2025 00:00 – 31 May 2025 23:59 (EAT)</span>
+                                    <span>{drawerUpdateInterval}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bonanza-prize-card">
+                            <div className="bonanza-prize-label">Total Prize Pool</div>
+                            <div className="bonanza-prize-value">{prizePool}</div>
+                            <div className="bonanza-prize-caption">Prize details are updated live and shown in KES.</div>
+                            <button type="button" className="bonanza-prize-action">Prize details</button>
+                        </div>
+                    </div>
+
+                    <div className="bonanza-metrics">
+                        <div className="bonanza-metric-card">
+                            <div className="metric-label">Participants</div>
+                            <div className="metric-value">12,458</div>
+                        </div>
+                        <div className="bonanza-metric-card">
+                            <div className="metric-label">Your Rank</div>
+                            <div className="metric-value">24</div>
+                        </div>
+                        <div className="bonanza-metric-card">
+                            <div className="metric-label">Your Points</div>
+                            <div className="metric-value">8,350.45</div>
+                        </div>
+                        <div className="bonanza-metric-card">
+                            <div className="metric-label">Time Left</div>
+                            <div className="metric-value">12d 14h 32m 45s</div>
+                        </div>
+                    </div>
+
+                    <div className="bonanza-table-wrapper">
+                        <div className="bonanza-table">
+                            <div className="bonanza-row bonanza-row-head">
+                                <span>Rank</span>
+                                <span>Player</span>
+                                <span>Points</span>
+                                <span>Total Wager</span>
+                                <span>Net Win</span>
+                                <span>Games Played</span>
+                            </div>
+                            {bonanzaLeaderboard.map((row) => (
+                                <div key={row.rank} className="bonanza-row">
+                                    <span className="rank-badge">{row.rank}</span>
+                                    <span className="player-cell">
+                                        <span className="player-avatar">{row.player.charAt(0)}</span>
+                                        <span className="player-name">{row.player}</span>
+                                        {row.rank <= 3 && <span className="player-tag">VIP</span>}
+                                    </span>
+                                    <span>{row.points.toLocaleString()}</span>
+                                    <span>KES {row.wager.toLocaleString()}</span>
+                                    <span>KES {row.netWin.toLocaleString()}</span>
+                                    <span>{row.games}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bonanza-summary">
+                    <div className="summary-position-card">
+                        <div className="position-label">Your Position</div>
+                        <div className="position-value">24</div>
+                    </div>
+                    <div className="summary-player">
+                        <div className="summary-avatar">P</div>
+                        <div className="summary-details">
+                            <div className="summary-title">PlayerOne</div>
+                            <div className="summary-status"><span className="status-dot" />Active</div>
+                        </div>
+                    </div>
+                    <div className="summary-stat">
+                        <div className="summary-label">Your Points</div>
+                        <div className="summary-value">8,350.45</div>
+                    </div>
+                    <div className="summary-stat">
+                        <div className="summary-label">Total Wager (KES)</div>
+                        <div className="summary-value">KES 4,520.00</div>
+                    </div>
+                    <div className="summary-stat">
+                        <div className="summary-label">Net Win (KES)</div>
+                        <div className="summary-value net-win">KES 720.00</div>
+                    </div>
+                    <div className="summary-stat">
+                        <div className="summary-label">Games Played</div>
+                        <div className="summary-value">68</div>
+                    </div>
+                </div>
+            </Offcanvas.Body>
+        </Offcanvas>
+    );
+
     return (
         <div className="relative flex items-center big-icon-container">
+            {/* <div className="bonanza-trigger" onClick={handleBonanzaOpen} title="Bonanza">
+                <div className="bonanza-trigger-top">
+                    <span>Bonanza</span>
+                    <span className="bonanza-trigger-count">({bonanzaParticipants})</span>
+                </div>
+                <div className="bonanza-trigger-label">Leaderboards</div>
+            </div> */}
+
             {showLeftArrow && (
                 <div className="big-icon-arrows left cursor-pointer" onClick={scrollLeft}>
                     <MdOutlineKeyboardArrowLeft className="text-white" />
@@ -228,7 +378,7 @@ const BigIconMenu = () => {
             <div
                 ref={scrollContainerRef}
                 className="flex overflow-x-auto space-x-4 big-icon-scrollbar-hide"
-                style={{ maxWidth: '100%', backgroundColor: 'transparent' }}
+            // style={{ maxWidth: '100%', paddingLeft: '120px', backgroundColor: 'transparent' }}
             >
                 <ListGroup as="ul" horizontal className="flex space-x-4 big-icon-list">
                     <li key={"home-menu-item"} className={`${pathname === "/" || pathname === "/home" ? "active" : ''} big-icon-item text-center capitalize`}>
@@ -238,21 +388,35 @@ const BigIconMenu = () => {
                         </a>
                     </li>
                     {(linkItems || []).map((item, idx) => {
+                        const isActive = item.link && pathname === item.link;
+                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-center capitalize relative`;
+                        const iconContent = item.icon ? (
+                            <img className="mx-auto" src={getSportImageIcon(item.icon)} alt={item.name} />
+                        ) : (
+                            <FaHeart className="mx-auto text-white" style={{ fontSize: '24px' }} />
+                        );
+
+                        if (item?.action === "bonanza") {
+                            return (
+                                <li key={idx} className={`${itemClasses} bonanza-item`} onClick={handleBonanzaOpen} title="Bonanza" style={{ cursor: 'pointer' }}>
+                                    <div className="bonanza-item-icon">
+                                        <FaTrophy />
+                                    </div>
+                                    <div className="bonanza-item-content">
+                                        <div className="bonanza-item-title">Bonanza</div>
+                                        <div className="bonanza-item-subtitle">Leaderboard ({item.participants})</div>
+                                    </div>
+                                </li>
+                            );
+                        }
+
                         return (
-                            <li
-                                key={idx}
-                                className={`${pathname == item.link ? "active" : ''} big-icon-item text-center capitalize relative`}
-                            >
+                            <li key={idx} className={itemClasses}>
                                 {item?.name.toLowerCase() === "livescore" ? (
                                     <a href={item.link} title={item.name} target="_blank" rel="noopener noreferrer">
                                         <div className="big-icon-icon relative">
-                                            <img
-                                                className="mx-auto"
-                                                src={getSportImageIcon(item.icon)}
-                                                alt={item.name}
-                                            />
+                                            {iconContent}
 
-                                            {/* 🔥 Bubble */}
                                             {item?.bubble && (
                                                 <span className="big-icon-bubble">
                                                     {item.bubble}
@@ -265,13 +429,8 @@ const BigIconMenu = () => {
                                 ) : (
                                     <Link to={item.link} title={item.name}>
                                         <div className="big-icon-icon relative">
-                                            <img
-                                                className="mx-auto"
-                                                src={getSportImageIcon(item.icon)}
-                                                alt={item.name}
-                                            />
+                                            {iconContent}
 
-                                            {/* 🔥 Bubble */}
                                             {item?.bubble && (
                                                 <span className="big-icon-bubble">
                                                     {item.bubble}
@@ -282,9 +441,8 @@ const BigIconMenu = () => {
                                     </Link>
                                 )}
                             </li>
-                        )
-                    }
-                    )}
+                        );
+                    })}
 
                     {(!loc?.pathname?.includes("/casino") && categories || []).map((category, idx) => {
 
@@ -307,6 +465,8 @@ const BigIconMenu = () => {
                     <MdOutlineKeyboardArrowRight className="text-white" />
                 </div>
             )}
+
+            <BonanzaDrawer />
         </div>
     );
 };
