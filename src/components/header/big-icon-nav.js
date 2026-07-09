@@ -361,13 +361,13 @@ const BigIconMenu = () => {
 
     return (
         <div className="relative flex items-center big-icon-container">
-            {/* <div className="bonanza-trigger" onClick={handleBonanzaOpen} title="Bonanza">
+            <div className="bonanza-trigger" onClick={handleBonanzaOpen} title="Bonanza">
                 <div className="bonanza-trigger-top">
                     <span>Bonanza</span>
                     <span className="bonanza-trigger-count">({bonanzaParticipants})</span>
                 </div>
                 <div className="bonanza-trigger-label">Leaderboards</div>
-            </div> */}
+            </div>
 
             {showLeftArrow && (
                 <div className="big-icon-arrows left cursor-pointer" onClick={scrollLeft}>
@@ -378,7 +378,7 @@ const BigIconMenu = () => {
             <div
                 ref={scrollContainerRef}
                 className="flex overflow-x-auto space-x-4 big-icon-scrollbar-hide"
-            // style={{ maxWidth: '100%', paddingLeft: '120px', backgroundColor: 'transparent' }}
+                style={{ maxWidth: '100%', paddingLeft: '120px', backgroundColor: 'transparent' }}
             >
                 <ListGroup as="ul" horizontal className="flex space-x-4 big-icon-list">
                     <li key={"home-menu-item"} className={`${pathname === "/" || pathname === "/home" ? "active" : ''} big-icon-item text-center capitalize`}>
