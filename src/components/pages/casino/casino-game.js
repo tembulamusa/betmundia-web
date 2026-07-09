@@ -22,8 +22,8 @@ const CasinoGame = (props) => {
     const location = useLocation();
     const { filterType, filterName } = useParams();
 
-    const onlyInclude = ["expanse", "elbet", "onlyplay"];
-    const inProduction = ['pragmatic', 'aviatrix', "bitville", "spribe", "3 oaks", "aviatorllc", "kagaming", "splitthepot", "smartsoft"];
+    const onlyInclude = ["expanse", "elbet", "onlyplay", "galaxsys"];
+    const inProduction = ['pragmatic', 'aviatrix', "bitville", "spribe", "3 oaks", "aviatorllc", "kagaming", "splitthepot", "smartsoft", "galaxsys", "elbet", "expanse"];
     const shouldShowGame = (filterType?.toLowerCase() === "categories" && onlyInclude.includes(filterName?.toLowerCase())
         || inProduction.includes(game?.provider_name?.toLowerCase())
     ) ? true : false;
