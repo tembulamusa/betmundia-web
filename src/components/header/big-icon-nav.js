@@ -3,10 +3,25 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
-import { FaHeart, FaTrophy } from 'react-icons/fa';
+import {
+    FaHeart,
+    FaTrophy,
+    FaCrown,
+    FaCalendarAlt,
+    FaGift,
+    FaChevronRight,
+    FaChevronDown,
+    FaChevronUp,
+    FaUsers,
+    FaStar,
+    FaCoins,
+    FaChartLine,
+    FaInfoCircle,
+} from 'react-icons/fa';
 import { Context } from "../../context/store";
 import DefaultImg from "../../assets/img/colorsvgicons/soccer.svg";
 import logo from "../../assets/img/logo.svg";
+import bonanzaTrophyHero from "../../assets/img/bonanza-trophy-hero.svg";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 
 
@@ -26,14 +41,91 @@ const BigIconMenu = () => {
 
     const handleBonanzaOpen = () => setShowBonanza(true);
     const handleBonanzaClose = () => setShowBonanza(false);
+    const userRowRef = useRef(null);
 
-    const bonanzaLeaderboard = [
-        { rank: 1, player: 'LuckyAce', points: 245680.75, wager: 125420, netWin: 18250, games: 1254 },
-        { rank: 2, player: 'SpinMaster88', points: 189450.20, wager: 98750, netWin: 12890, games: 982 },
-        { rank: 3, player: 'Royal777', points: 153320.10, wager: 75310, netWin: 9430, games: 745 },
-        { rank: 4, player: 'HighRoller', points: 120550.35, wager: 61250, netWin: 7650, games: 612 },
-        { rank: 5, player: 'QueenOfSlots', points: 98765.80, wager: 50120, netWin: 6230, games: 501 },
+    const CURRENT_USER_RANK = 24;
+    const currentBonanzaUser = {
+        rank: CURRENT_USER_RANK,
+        player: 'PlayerOne',
+        points: 8350.45,
+        wager: 4520,
+        netWin: 720,
+        games: 68,
+        avatarHue: 350,
+        isCurrentUser: true,
+    };
+
+    const bonanzaTopPlayers = [
+        { rank: 1, player: 'LuckyAce', points: 245680.75, wager: 125420, netWin: 18250, games: 1254, avatarHue: 320 },
+        { rank: 2, player: 'SpinMaster88', points: 189450.20, wager: 98750, netWin: 12890, games: 982, avatarHue: 210 },
+        { rank: 3, player: 'Royal777', points: 153320.10, wager: 75310, netWin: 9430, games: 745, avatarHue: 45 },
+        { rank: 4, player: 'HighRoller', points: 120550.35, wager: 61250, netWin: 7650, games: 612, avatarHue: 160 },
+        { rank: 5, player: 'QueenOfSlots', points: 98765.80, wager: 50120, netWin: 6230, games: 501, avatarHue: 280 },
+        { rank: 6, player: 'BetKing99', points: 85420.15, wager: 44800, netWin: 5120, games: 448, avatarHue: 15 },
+        { rank: 7, player: 'DiamondPlay', points: 72100.60, wager: 38950, netWin: 4380, games: 390, avatarHue: 195 },
+        { rank: 8, player: 'MegaWinner', points: 65880.25, wager: 33200, netWin: 3950, games: 332, avatarHue: 120 },
     ];
+
+    const bonanzaFillerNames = [
+        'AceHunter', 'SlotNinja', 'WagerWolf', 'JackpotJoe', 'TurboSpin',
+        'NightKing', 'GoldRush', 'BetBaron', 'ChipChamp', 'RollMaster',
+        'CashCraze', 'WinStreak', 'LuckyLion', 'PrizePilot', 'VaultVIP',
+        'NeonBet', 'StormSpin', 'BlazeBet', 'CoinCrown', 'RoyalRush',
+        'SwiftStake', 'PrimePick', 'EliteEdge', 'FlashFortune', 'GrandGamer',
+        'TopTier', 'MaxBet', 'PowerPlay', 'SureShot', 'WildWin',
+        'StackStar', 'MintMove', 'PeakPunter', 'RapidRoll', 'SharpSpin',
+        'TurboTier', 'UltraBet', 'VividVault', 'ZenithZone',
+    ];
+
+    const buildBonanzaLeaderboard = () => {
+        const entries = [...bonanzaTopPlayers];
+
+        for (let rank = 9; rank < CURRENT_USER_RANK; rank += 1) {
+            const index = rank - 9;
+            const factor = 1 - (index * 0.035);
+            entries.push({
+                rank,
+                player: bonanzaFillerNames[index] || `Rival${rank}`,
+                points: Math.round((62000 * factor + index * 137) * 100) / 100,
+                wager: Math.round(34000 * factor - index * 420),
+                netWin: Math.round(3600 * factor - index * 55),
+                games: Math.round(320 * factor - index * 4),
+                avatarHue: (rank * 37) % 360,
+            });
+        }
+
+        entries.push(currentBonanzaUser);
+
+        for (let rank = CURRENT_USER_RANK + 1; rank <= 60; rank += 1) {
+            const index = rank - CURRENT_USER_RANK - 1;
+            const factor = 0.92 - (index * 0.018);
+            entries.push({
+                rank,
+                player: bonanzaFillerNames[index + 15] || `Challenger${rank}`,
+                points: Math.round((7800 * factor - index * 95) * 100) / 100,
+                wager: Math.round(4200 * factor - index * 48),
+                netWin: Math.round(680 * factor - index * 9),
+                games: Math.round(64 * factor - index * 0.8),
+                avatarHue: (rank * 29) % 360,
+            });
+        }
+
+        return entries;
+    };
+
+    const bonanzaLeaderboard = buildBonanzaLeaderboard();
+
+    const formatBonanzaNumber = (value) => Number(value).toLocaleString('en-US', {
+        minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+        maximumFractionDigits: 2,
+    });
+
+    const getRankTrophy = (rank) => {
+        if (rank === 1) return <FaTrophy className="bonanza-rank-trophy gold" aria-hidden="true" />;
+        if (rank === 2) return <FaTrophy className="bonanza-rank-trophy silver" aria-hidden="true" />;
+        if (rank === 3) return <FaTrophy className="bonanza-rank-trophy bronze" aria-hidden="true" />;
+        return <span className="bonanza-rank-number">{rank}</span>;
+    };
 
     const linkItems = [
         { name: "world cup", icon: "world cup.svg", link: "/sports/competition/matches?id=18585", parentTo: null, bubble: "HOT" },
@@ -197,6 +289,16 @@ const BigIconMenu = () => {
     }, []);
 
     useEffect(() => {
+        if (!showBonanza) return undefined;
+
+        const timer = setTimeout(() => {
+            userRowRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }, 280);
+
+        return () => clearTimeout(timer);
+    }, [showBonanza]);
+
+    useEffect(() => {
         const providers = state?.casinofilters?.providers || [];
 
         const filteredProviders = providers.filter(provider =>
@@ -242,118 +344,165 @@ const BigIconMenu = () => {
             show={showBonanza}
             onHide={handleBonanzaClose}
             className="bonanza-drawer"
-            style={{ zIndex: 11000, width: '560px', maxWidth: '100%' }}
+            style={{ zIndex: 11000 }}
         >
-            <Offcanvas.Header closeButton className="bonanza-header-panel">
-                <div className="bonanza-header-top">
-                    <img src={logo} alt="Betmundial" className="bonanza-logo" />
-                    <div className="bonanza-badge">Bonanza</div>
-                </div>
-            </Offcanvas.Header>
             <Offcanvas.Body className="bonanza-body">
-                <div className="bonanza-content">
-                    <div className="bonanza-hero">
-                        <div className="bonanza-hero-left">
-                            <div className="bonanza-hero-visual">
-                                <div className="bonanza-trophy">
-                                    <FaTrophy />
-                                </div>
+                <button type="button" className="bonanza-close" onClick={handleBonanzaClose} aria-label="Close">
+                    &times;
+                </button>
+
+                <div className="bonanza-shell">
+                    <section className="bonanza-header">
+                        <img src={logo} alt="Betmundial" className="bonanza-header-logo" />
+
+                        <div className="bonanza-header-body">
+                            <div className="bonanza-hero-trophy">
+                                <div className="bonanza-hero-trophy-glow" aria-hidden="true" />
+                                <img src={bonanzaTrophyHero} alt="" aria-hidden="true" />
                             </div>
-                            <div className="bonanza-hero-copy">
-                                <div className="bonanza-hero-headline">
-                                    <h2 className="bonanza-title-main">CHAMPIONS</h2>
-                                    <div className="bonanza-subtitle">LEADERBOARD</div>
-                                </div>
-                                <p className="bonanza-hero-text">Compete. Play. Win Big!</p>
+
+                            <div className="bonanza-hero-center">
+                                <h2 className="bonanza-title-main">CHAMPIONS</h2>
+                                <div className="bonanza-subtitle">LEADERBOARD</div>
+                                <p className="bonanza-hero-tagline">
+                                    <FaCrown aria-hidden="true" />
+                                    Compete. Play. Win Big!
+                                </p>
                                 <div className="bonanza-hero-meta">
-                                    <span>01 May 2025 00:00 – 31 May 2025 23:59 (EAT)</span>
-                                    <span>{drawerUpdateInterval}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bonanza-prize-card">
-                            <div className="bonanza-prize-label">Total Prize Pool</div>
-                            <div className="bonanza-prize-value">{prizePool}</div>
-                            <div className="bonanza-prize-caption">Prize details are updated live and shown in KES.</div>
-                            <button type="button" className="bonanza-prize-action">Prize details</button>
-                        </div>
-                    </div>
-
-                    <div className="bonanza-metrics">
-                        <div className="bonanza-metric-card">
-                            <div className="metric-label">Participants</div>
-                            <div className="metric-value">12,458</div>
-                        </div>
-                        <div className="bonanza-metric-card">
-                            <div className="metric-label">Your Rank</div>
-                            <div className="metric-value">24</div>
-                        </div>
-                        <div className="bonanza-metric-card">
-                            <div className="metric-label">Your Points</div>
-                            <div className="metric-value">8,350.45</div>
-                        </div>
-                        <div className="bonanza-metric-card">
-                            <div className="metric-label">Time Left</div>
-                            <div className="metric-value">12d 14h 32m 45s</div>
-                        </div>
-                    </div>
-
-                    <div className="bonanza-table-wrapper">
-                        <div className="bonanza-table">
-                            <div className="bonanza-row bonanza-row-head">
-                                <span>Rank</span>
-                                <span>Player</span>
-                                <span>Points</span>
-                                <span>Total Wager</span>
-                                <span>Net Win</span>
-                                <span>Games Played</span>
-                            </div>
-                            {bonanzaLeaderboard.map((row) => (
-                                <div key={row.rank} className="bonanza-row">
-                                    <span className="rank-badge">{row.rank}</span>
-                                    <span className="player-cell">
-                                        <span className="player-avatar">{row.player.charAt(0)}</span>
-                                        <span className="player-name">{row.player}</span>
-                                        {row.rank <= 3 && <span className="player-tag">VIP</span>}
+                                    <span className="bonanza-hero-date">
+                                        <FaCalendarAlt aria-hidden="true" />
+                                        01 May 2025 00:00 – 31 May 2025 23:59 (EAT)
                                     </span>
-                                    <span>{row.points.toLocaleString()}</span>
-                                    <span>KES {row.wager.toLocaleString()}</span>
-                                    <span>KES {row.netWin.toLocaleString()}</span>
-                                    <span>{row.games}</span>
+                                    <span className="bonanza-live-badge">{drawerUpdateInterval}</span>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                            </div>
 
-                <div className="bonanza-summary">
-                    <div className="summary-position-card">
-                        <div className="position-label">Your Position</div>
-                        <div className="position-value">24</div>
-                    </div>
-                    <div className="summary-player">
-                        <div className="summary-avatar">P</div>
-                        <div className="summary-details">
-                            <div className="summary-title">PlayerOne</div>
-                            <div className="summary-status"><span className="status-dot" />Active</div>
+                            <div className="bonanza-prize-card">
+                                <div className="bonanza-prize-label">Total Prize Pool</div>
+                                <div className="bonanza-prize-value">{prizePool}</div>
+                                <button type="button" className="bonanza-prize-action">
+                                    <span className="bonanza-prize-action-left">
+                                        <FaGift aria-hidden="true" />
+                                        Prize Details
+                                    </span>
+                                    <FaChevronRight aria-hidden="true" />
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div className="bonanza-content">
+                        <section className="bonanza-metrics">
+                            <div className="bonanza-metric-card">
+                                <span className="bonanza-metric-icon pink"><FaUsers aria-hidden="true" /></span>
+                                <div className="bonanza-metric-copy">
+                                    <div className="bonanza-metric-label">Participants</div>
+                                    <div className="bonanza-metric-value">12,458</div>
+                                </div>
+                            </div>
+                            <div className="bonanza-metric-card">
+                                <span className="bonanza-metric-icon gold"><FaStar aria-hidden="true" /></span>
+                                <div className="bonanza-metric-copy">
+                                    <div className="bonanza-metric-label">Your Rank</div>
+                                    <div className="bonanza-metric-value">{currentBonanzaUser.rank}</div>
+                                </div>
+                            </div>
+                            <div className="bonanza-metric-card">
+                                <span className="bonanza-metric-icon pink"><FaCoins aria-hidden="true" /></span>
+                                <div className="bonanza-metric-copy">
+                                    <div className="bonanza-metric-label">Your Points</div>
+                                    <div className="bonanza-metric-value">{formatBonanzaNumber(currentBonanzaUser.points)}</div>
+                                </div>
+                            </div>
+                            <div className="bonanza-metric-card">
+                                <span className="bonanza-metric-icon gold"><FaChartLine aria-hidden="true" /></span>
+                                <div className="bonanza-metric-copy">
+                                    <div className="bonanza-metric-label">Time Left</div>
+                                    <div className="bonanza-metric-value">12D 14H 32M 45S</div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div className="bonanza-table-wrapper">
+                            <div className="bonanza-table">
+                                <div className="bonanza-row bonanza-row-head">
+                                    <span>Rank</span>
+                                    <span>Player</span>
+                                    <span className="bonanza-th-points">
+                                        Points
+                                        <FaInfoCircle aria-hidden="true" />
+                                    </span>
+                                    <span>Total Wager (KES)</span>
+                                    <span>Net Win (KES)</span>
+                                    <span>Games Played</span>
+                                    <span aria-hidden="true" />
+                                </div>
+                                {bonanzaLeaderboard.map((row) => (
+                                    <div
+                                        key={row.rank}
+                                        ref={row.isCurrentUser ? userRowRef : null}
+                                        className={`bonanza-row${row.isCurrentUser ? ' bonanza-row-current' : ''}`}
+                                    >
+                                        <span className="bonanza-rank-cell">{getRankTrophy(row.rank)}</span>
+                                        <span className="bonanza-player-cell">
+                                            <span
+                                                className={`bonanza-player-avatar${row.isCurrentUser ? ' bonanza-player-avatar-current' : ''}`}
+                                                style={{ background: `linear-gradient(135deg, hsl(${row.avatarHue} 70% 45%), hsl(${row.avatarHue + 40} 65% 32%))` }}
+                                            >
+                                                {row.player.charAt(0)}
+                                            </span>
+                                            <span className="bonanza-player-name">{row.player}</span>
+                                            {row.rank <= 3 && <span className="bonanza-vip-tag">VIP</span>}
+                                            {row.isCurrentUser && <span className="bonanza-you-tag">You</span>}
+                                        </span>
+                                        <span className={row.rank <= 3 ? 'bonanza-points-gold' : ''}>
+                                            {formatBonanzaNumber(row.points)}
+                                        </span>
+                                        <span>KES {formatBonanzaNumber(row.wager)}</span>
+                                        <span className="bonanza-net-win">KES {formatBonanzaNumber(row.netWin)}</span>
+                                        <span>{formatBonanzaNumber(row.games)}</span>
+                                        <span className="bonanza-row-expand"><FaChevronDown aria-hidden="true" /></span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                    <div className="summary-stat">
-                        <div className="summary-label">Your Points</div>
-                        <div className="summary-value">8,350.45</div>
-                    </div>
-                    <div className="summary-stat">
-                        <div className="summary-label">Total Wager (KES)</div>
-                        <div className="summary-value">KES 4,520.00</div>
-                    </div>
-                    <div className="summary-stat">
-                        <div className="summary-label">Net Win (KES)</div>
-                        <div className="summary-value net-win">KES 720.00</div>
-                    </div>
-                    <div className="summary-stat">
-                        <div className="summary-label">Games Played</div>
-                        <div className="summary-value">68</div>
-                    </div>
+
+                    <footer className="bonanza-summary">
+                        <div className="bonanza-summary-position">
+                            <div className="bonanza-summary-position-label">Your Position</div>
+                            <div className="bonanza-summary-position-value">{currentBonanzaUser.rank}</div>
+                        </div>
+                        <div className="bonanza-summary-player">
+                            <div className="bonanza-summary-avatar">P</div>
+                            <div className="bonanza-summary-details">
+                                <div className="bonanza-summary-name">{currentBonanzaUser.player}</div>
+                                <div className="bonanza-summary-status">
+                                    <span className="bonanza-status-dot" />
+                                    Active
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bonanza-summary-stat">
+                            <div className="bonanza-summary-stat-label">Your Points</div>
+                            <div className="bonanza-summary-stat-value points">{formatBonanzaNumber(currentBonanzaUser.points)}</div>
+                        </div>
+                        <div className="bonanza-summary-stat">
+                            <div className="bonanza-summary-stat-label">Total Wager (KES)</div>
+                            <div className="bonanza-summary-stat-value">KES {formatBonanzaNumber(currentBonanzaUser.wager)}</div>
+                        </div>
+                        <div className="bonanza-summary-stat">
+                            <div className="bonanza-summary-stat-label">Net Win (KES)</div>
+                            <div className="bonanza-summary-stat-value net-win">KES {formatBonanzaNumber(currentBonanzaUser.netWin)}</div>
+                        </div>
+                        <div className="bonanza-summary-stat">
+                            <div className="bonanza-summary-stat-label">Games Played</div>
+                            <div className="bonanza-summary-stat-value">{formatBonanzaNumber(currentBonanzaUser.games)}</div>
+                        </div>
+                        <button type="button" className="bonanza-summary-toggle" aria-label="Collapse summary">
+                            <FaChevronUp aria-hidden="true" />
+                        </button>
+                    </footer>
                 </div>
             </Offcanvas.Body>
         </Offcanvas>

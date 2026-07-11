@@ -17,6 +17,7 @@ import './assets/css/skip-rope.css';
 import './assets/css/jumprope.css';
 import './assets/css/casino.css';
 import './assets/css/header-search-overlay.css';
+import './assets/css/bonanza-drawer.css';
 import 'react-toastify/dist/ReactToastify.css'
 import Store from './context/store';
 import Index from './components/index';
