@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { Context } from "../../context/store";
 
 import { IoMdLogOut } from "react-icons/io";
-import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaLock, FaChevronRight, FaBullhorn, FaShieldAlt } from "react-icons/fa";
+import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaLock, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins } from "react-icons/fa";
 import { IoListCircleOutline, IoWalletOutline } from "react-icons/io5";
-import { MdOutlineFileDownload, MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
+import { MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
 
 import ComingSoon from "../pages/comingsoon/ComingSoon";
 import { formatToFloat } from "../utils/formatters";
@@ -146,7 +146,7 @@ function MobileMenu(props) {
               className="account-drawer-action account-drawer-action-deposit"
               onClick={handleClose}
             >
-              <MdOutlineFileDownload aria-hidden="true" />
+              <FaCoins aria-hidden="true" />
               Deposit
             </Link>
             <Link

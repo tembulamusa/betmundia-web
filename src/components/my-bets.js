@@ -46,7 +46,7 @@ const MyBets = () => {
                 );
                 setShowConfirmModal(false);
                 setBetIdToCancel(null);
-                setMessage({ status: 200, message: "Bet Cancelled" });
+                setMessage({ status: 200, message: "Cancel Request sent" });
                 window.location.reload();
             } else {
                 setMessage({ status: 400, message: result?.message || result?.result || "Failed to cancel bet" });
