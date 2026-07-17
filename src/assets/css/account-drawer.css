@@ -9,13 +9,13 @@
   --acc-card: rgba(255, 255, 255, 0.15);
   --acc-border: rgba(255, 255, 255, 0.08);
   --acc-muted: #9a9aa8;
-  --acc-text: #ffffff;
+  --acc-text: rgba(255, 255, 255, 0.8);
   --acc-radius: 0.85rem;
   --acc-radius-sm: 0.55rem;
   width: min(380px, 100vw) !important;
   background: var(--acc-bg) !important;
   border: none !important;
-  border-left: none !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: -8px 0 24px rgba(0, 0, 0, 0.45);
   color: var(--acc-text);
 }
@@ -26,7 +26,7 @@
 .account-drawer.offcanvas.offcanvas-end.showing {
   background: var(--acc-bg) !important;
   border: none !important;
-  border-left: none !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: -8px 0 24px rgba(0, 0, 0, 0.45);
 }
 
@@ -45,6 +45,13 @@
   padding: 16px !important;
   background: rgba(0, 12, 36, 1) !important;
   color: var(--acc-text);
+}
+
+/* Extra separation around Activity / Account section panels */
+.account-drawer-section + .account-drawer-section,
+.account-drawer-actions + .account-drawer-section,
+.account-drawer-section + .account-drawer-logout {
+  margin-top: 0.85rem;
 }
 
 /* Header */
@@ -80,7 +87,7 @@
   font-size: 1.4rem;
   font-weight: 700;
   line-height: 1.2;
-  color: #fff;
+  color: var(--acc-text);
 }
 
 .account-drawer-subtitle {
@@ -92,24 +99,24 @@
 
 .account-drawer-close {
   flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
+  width: 2.85rem;
+  height: 2.85rem;
   border: none;
   border-radius: 999px;
   background: transparent;
-  color: #fff;
-  font-size: 1.65rem;
+  color: var(--acc-text);
+  font-size: 2.35rem;
   line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  opacity: 0.9;
+  opacity: 1;
   padding: 0;
 }
 
 .account-drawer-close:hover {
-  opacity: 1;
+  color: #fff;
   background: rgba(255, 255, 255, 0.06);
 }
 
@@ -145,7 +152,7 @@
   font-size: 1.4rem;
   font-weight: 700;
   line-height: 1.2;
-  color: #fff;
+  color: var(--acc-text);
   letter-spacing: 0.01em;
   word-break: break-word;
 }
@@ -196,7 +203,7 @@
 
 .account-drawer-wallet-grid {
   display: grid;
-  grid-template-columns: 1.15fr auto 1fr;
+  grid-template-columns: 2fr auto 3fr;
   gap: 0.85rem;
   align-items: stretch;
 }
@@ -232,8 +239,10 @@
 
 .account-drawer-wallet-side-row {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .account-drawer-wallet-side-label {
@@ -243,6 +252,7 @@
   color: var(--acc-muted);
   font-size: 0.85rem;
   font-weight: 500;
+  min-width: 0;
 }
 
 .account-drawer-wallet-side-label svg {
@@ -256,6 +266,9 @@
   color: rgba(255, 215, 0);
   font-size: 1.05rem;
   font-weight: 700;
+  flex-shrink: 0;
+  text-align: right;
+  white-space: nowrap;
 }
 
 /* Deposit / Withdraw */
@@ -344,7 +357,7 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  color: #fff !important;
+  color: var(--acc-text) !important;
   font-size: 1.05rem;
   font-weight: 600;
   text-align: left;
@@ -359,7 +372,7 @@
 
 .account-drawer-item:hover {
   background: rgba(255, 255, 255, 0.04);
-  color: #fff !important;
+  color: var(--acc-text) !important;
 }
 
 .account-drawer-item-icon {
