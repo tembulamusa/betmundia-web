@@ -1,0 +1,853 @@
+/* Free Bet promotional landing page */
+
+.freebet-landing {
+  --fb-pink: #e91e8c;
+  --fb-pink-soft: #ff52d4;
+  --fb-magenta: #a71f66;
+  --fb-gold: #ffc72c;
+  --fb-bg: #000c24;
+  --fb-card: #2c3649;
+  --fb-card-alt: #2c3649;
+  --fb-text: #ffffff;
+  --fb-muted: rgba(255, 255, 255, 0.78);
+  color: var(--fb-text);
+  background: var(--fb-bg);
+  padding-bottom: 2.5rem;
+  font-size: 1rem;
+}
+
+.freebet-landing * {
+  box-sizing: border-box;
+}
+
+/* Hero */
+.freebet-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem 1.15rem;
+  margin: 0 0.75rem;
+  border-radius: 0.85rem;
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(0, 40, 20, 0.55), transparent 55%),
+    radial-gradient(ellipse 45% 35% at 15% 25%, rgba(255, 199, 44, 0.12), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 85% 20%, rgba(255, 199, 44, 0.1), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 15%, rgba(255, 255, 255, 0.08), transparent 50%),
+    linear-gradient(180deg, #001535 0%, #000c24 45%, #00102e 100%);
+}
+
+.freebet-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 72% 58%, rgba(233, 30, 140, 0.22), transparent 42%),
+    radial-gradient(circle at 28% 72%, rgba(167, 31, 102, 0.14), transparent 38%),
+    linear-gradient(90deg, rgba(0, 12, 36, 0.92) 0%, rgba(0, 12, 36, 0.55) 48%, rgba(0, 12, 36, 0.35) 100%);
+  pointer-events: none;
+}
+
+.freebet-hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 36rem;
+}
+
+.freebet-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(233, 30, 140, 0.2);
+  border: 1px solid rgba(255, 82, 212, 0.5);
+  color: var(--fb-pink-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.freebet-hero-title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.freebet-hero-free {
+  color: var(--fb-gold);
+}
+
+.freebet-hero-bet {
+  color: #ffffff;
+}
+
+.freebet-hero-text {
+  margin: 0 0 0.85rem;
+  color: var(--fb-muted);
+  font-size: 1.1rem;
+  line-height: 1.45;
+  max-width: 30rem;
+}
+
+.freebet-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 15rem;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 0.65rem;
+  background: linear-gradient(90deg, #e91e8c 0%, #a71f66 100%);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(167, 31, 102, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.freebet-hero-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px rgba(167, 31, 102, 0.45);
+}
+
+.freebet-hero-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.9rem;
+}
+
+.freebet-hero-visual {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  perspective: 900px;
+}
+
+.freebet-hero-visual:has(.freebet-hero-card-stage) {
+  min-height: 220px;
+}
+
+.freebet-hero-card-stage {
+  position: relative;
+  width: min(100%, 340px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 0.5rem 2rem;
+}
+
+.freebet-hero-glow {
+  position: absolute;
+  left: 50%;
+  bottom: 0.35rem;
+  width: 78%;
+  height: 2.2rem;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 82, 212, 0.55), transparent 70%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.freebet-hero-spark {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.freebet-hero-spark-a {
+  top: 12%;
+  left: 4%;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: #ff52d4;
+  box-shadow: 0 0 10px rgba(255, 82, 212, 0.8);
+}
+
+.freebet-hero-spark-b {
+  top: 38%;
+  right: 2%;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.65);
+}
+
+.freebet-hero-spark-c {
+  bottom: 28%;
+  left: 8%;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 2px;
+  background: var(--fb-gold);
+  box-shadow: 0 0 8px rgba(255, 199, 44, 0.7);
+}
+
+.freebet-match-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 0.85rem 0.9rem 0.95rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, #323c50 0%, #252e40 100%);
+  border: 2px solid #ff52d4;
+  box-shadow:
+    0 0 0 1px rgba(255, 82, 212, 0.35),
+    0 0 22px rgba(233, 30, 140, 0.55),
+    0 18px 36px rgba(0, 0, 0, 0.45);
+  transform: rotateY(-18deg) rotateX(6deg) rotateZ(-2deg);
+  transform-style: preserve-3d;
+  animation: freebet-card-float 4.5s ease-in-out infinite;
+}
+
+@keyframes freebet-card-float {
+  0%,
+  100% {
+    transform: rotateY(-18deg) rotateX(6deg) rotateZ(-2deg) translateY(0);
+  }
+  50% {
+    transform: rotateY(-16deg) rotateX(5deg) rotateZ(-1.5deg) translateY(-6px);
+  }
+}
+
+.freebet-match-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+  color: var(--fb-gold);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.freebet-match-card-header svg {
+  font-size: 1.35rem;
+  color: #ffffff;
+}
+
+.freebet-match-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0.5rem;
+  align-items: start;
+  margin-bottom: 0.35rem;
+}
+
+.freebet-match-team {
+  text-align: center;
+  min-width: 0;
+}
+
+.freebet-match-flag {
+  width: 1.65rem;
+  height: 1.65rem;
+  margin: 0 auto 0.35rem;
+}
+
+.freebet-match-flag img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.freebet-match-team-name {
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.freebet-match-meta {
+  text-align: center;
+  padding-top: 0.15rem;
+  white-space: nowrap;
+}
+
+.freebet-match-date,
+.freebet-match-time {
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.freebet-match-market {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.15rem 0 0.55rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+.freebet-match-market::before,
+.freebet-match-market::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.freebet-match-market span {
+  padding: 0 0.65rem;
+  white-space: nowrap;
+}
+
+.freebet-match-odds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.freebet-match-odd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.45rem 0.35rem;
+  border: none;
+  border-radius: 0.55rem;
+  background: #404050;
+  color: var(--fb-gold);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+}
+
+.freebet-match-odd:hover {
+  background: #4a4a5c;
+}
+
+.freebet-match-odd:active {
+  background: #383848;
+}
+
+.freebet-match-card-skeleton {
+  min-height: 9.5rem;
+  pointer-events: none;
+}
+
+.freebet-match-card-empty {
+  min-height: 9.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.freebet-match-empty-msg {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 1rem 0.5rem 0.75rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+}
+
+.freebet-match-skel-line,
+.freebet-match-skel-block,
+.freebet-match-skel-odds span {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  background-size: 200% 100%;
+  animation: freebet-skel-shine 1.4s ease-in-out infinite;
+  border-radius: 0.35rem;
+}
+
+.freebet-match-skel-line {
+  height: 0.85rem;
+  width: 38%;
+  margin-bottom: 0.9rem;
+}
+
+.freebet-match-skel-row {
+  display: grid;
+  grid-template-columns: 1fr 0.85fr 1fr;
+  gap: 0.55rem;
+  margin-bottom: 0.85rem;
+}
+
+.freebet-match-skel-block {
+  height: 3.2rem;
+}
+
+.freebet-match-skel-block.mid {
+  height: 2.4rem;
+  margin-top: 0.4rem;
+}
+
+.freebet-match-skel-odds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.freebet-match-skel-odds span {
+  height: 2.5rem;
+  display: block;
+  border-radius: 0.55rem;
+}
+
+@keyframes freebet-skel-shine {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* Features */
+.freebet-features {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0 0.75rem;
+  padding: 1.25rem 0;
+  background: var(--fb-card);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.freebet-feature-card {
+  padding: 1.1rem 1.25rem;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.freebet-feature-card:last-child {
+  border-right: none;
+}
+
+.freebet-feature-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto 0.85rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(233, 30, 140, 0.16);
+  border: 1px solid rgba(255, 82, 212, 0.35);
+  color: var(--fb-pink-soft);
+  font-size: 2.3rem;
+}
+
+.freebet-feature-card h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.freebet-feature-card p {
+  margin: 0;
+  color: var(--fb-muted);
+  font-size: 1.8rem;
+  line-height: 1.45;
+}
+
+/* Content grid — How It Works full width, Details + Important below */
+.freebet-content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.25rem 0.75rem;
+  align-items: stretch;
+}
+
+.freebet-panel-how {
+  grid-column: 1 / -1;
+}
+
+.freebet-panel {
+  background: var(--fb-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.85rem;
+  padding: 1.35rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.freebet-panel-title {
+  margin: 0 0 1.15rem;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.freebet-panel-details .freebet-panel-title,
+.freebet-important .freebet-panel-title {
+  color: var(--fb-pink-soft);
+}
+
+.freebet-important-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.freebet-important-title svg {
+  font-size: 2.1rem;
+}
+
+/* How it works steps */
+.freebet-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1.35rem;
+  flex: 1;
+}
+
+.freebet-step {
+  text-align: center;
+  position: relative;
+  padding: 0 0.35rem;
+}
+
+.freebet-step-connector {
+  position: absolute;
+  top: 2.4rem;
+  left: calc(50% + 2.6rem);
+  width: calc(100% - 2.6rem);
+  height: 0;
+  border-top: 2px dotted rgba(255, 82, 212, 0.55);
+  pointer-events: none;
+}
+
+.freebet-step-icon {
+  width: 5rem;
+  height: 5rem;
+  margin: 0 auto 0.65rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(233, 30, 140, 0.14);
+  border: 1px solid rgba(255, 82, 212, 0.35);
+  color: var(--fb-pink-soft);
+  font-size: 2.3rem;
+}
+
+.freebet-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 0.45rem;
+  border-radius: 999px;
+  background: var(--fb-magenta);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.freebet-step h4 {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.freebet-step p {
+  margin: 0;
+  color: var(--fb-muted);
+  font-size: 1.75rem;
+  line-height: 1.4;
+}
+
+.freebet-secondary-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: none;
+  border-radius: 0.65rem;
+  background: linear-gradient(90deg, #e91e8c 0%, #a71f66 100%);
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+/* Free bet details */
+.freebet-detail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  flex: 1;
+}
+
+.freebet-detail-list li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.freebet-detail-list svg {
+  color: var(--fb-pink-soft);
+  flex-shrink: 0;
+  font-size: 1.5rem;
+}
+
+.freebet-detail-label {
+  color: var(--fb-muted);
+}
+
+.freebet-detail-value {
+  color: var(--fb-pink-soft);
+  font-weight: 400;
+  text-align: right;
+}
+
+/* Important panel */
+.freebet-important {
+  border-color: rgba(233, 30, 140, 0.4);
+  background: var(--fb-card);
+}
+
+.freebet-important-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  flex: 1;
+}
+
+.freebet-important-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  color: var(--fb-muted);
+  font-size: 1.5rem;
+  line-height: 1.45;
+}
+
+.freebet-important-list svg {
+  color: var(--fb-pink-soft);
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+  font-size: 1.5rem;
+}
+
+/* Terms — always open accordions */
+.freebet-terms {
+  margin: 0.5rem 0.75rem 0;
+  padding: 0 0.25rem;
+}
+
+.freebet-terms-heading {
+  margin: 0 0 1rem;
+  color: var(--fb-pink-soft);
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.freebet-terms-accordions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.freebet-terms-item {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--fb-card-alt);
+}
+
+.freebet-terms-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  background: rgba(0, 0, 0, 0.15);
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.freebet-terms-item-header svg {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1.7rem;
+  flex-shrink: 0;
+}
+
+.freebet-terms-item-body {
+  padding: 0 1.15rem 1.1rem;
+  color: var(--fb-muted);
+  font-size: 1.5rem;
+  line-height: 1.55;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.freebet-terms-item-body ul {
+  margin: 0.85rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.freebet-terms-item-body li {
+  margin-bottom: 0.5rem;
+}
+
+.freebet-terms-item-body li:last-child {
+  margin-bottom: 0;
+}
+
+.freebet-empty-wrap {
+  padding: 0.75rem;
+}
+
+@media screen and (max-width: 1100px) {
+  .freebet-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .freebet-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1.5rem;
+  }
+
+  .freebet-step-connector {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .freebet-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .freebet-hero-visual {
+    min-height: 0;
+    perspective: none;
+    order: -1;
+  }
+
+  .freebet-match-card {
+    transform: none;
+    animation: freebet-card-float-flat 4.5s ease-in-out infinite;
+  }
+
+  @keyframes freebet-card-float-flat {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  .freebet-features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .freebet-feature-card {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .freebet-feature-card:nth-child(odd) {
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .freebet-feature-card:nth-last-child(-n + 2) {
+    border-bottom: none;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .freebet-features,
+  .freebet-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .freebet-feature-card,
+  .freebet-feature-card:nth-child(odd) {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .freebet-feature-card:last-child {
+    border-bottom: none;
+  }
+
+  .freebet-hero-cta,
+  .freebet-secondary-cta {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .freebet-detail-list li {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .freebet-detail-value {
+    grid-column: 2;
+    text-align: left;
+  }
+}
+
+.freebet-register-modal-text {
+  font-size: 1.3rem;
+}
+
+.freebet-register-modal-ok {
+  width: 60px;
+}

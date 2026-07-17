@@ -1,0 +1,446 @@
+/* My Account drawer */
+
+.account-drawer.offcanvas,
+.account-drawer.offcanvas.offcanvas-end {
+  --acc-pink: #e91e8c;
+  --acc-pink-soft: #ff52d4;
+  --acc-pink-deep: #a71f66;
+  --acc-bg: #121216;
+  --acc-card: #1a1a22;
+  --acc-border: rgba(255, 255, 255, 0.08);
+  --acc-muted: #9a9aa8;
+  --acc-text: #ffffff;
+  --acc-radius: 0.85rem;
+  --acc-radius-sm: 0.55rem;
+  width: min(380px, 100vw) !important;
+  background: var(--acc-bg) !important;
+  border: none !important;
+  border-left: none !important;
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.45);
+  color: var(--acc-text);
+}
+
+.account-drawer.offcanvas.show,
+.account-drawer.offcanvas.showing,
+.account-drawer.offcanvas.offcanvas-end.show,
+.account-drawer.offcanvas.offcanvas-end.showing {
+  background: var(--acc-bg) !important;
+  border: none !important;
+  border-left: none !important;
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.45);
+}
+
+.account-drawer .offcanvas-body {
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(233, 30, 140, 0.35) transparent;
+}
+
+.account-drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  min-height: 100%;
+  padding: 1rem 1.5rem 1.35rem;
+  background: var(--acc-bg);
+  color: var(--acc-text);
+}
+
+/* Header */
+.account-drawer-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.account-drawer-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.account-drawer-header-icon {
+  flex-shrink: 0;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 999px;
+  background: var(--acc-pink);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.account-drawer-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.account-drawer-subtitle {
+  margin: 0.15rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.3;
+  color: var(--acc-muted);
+}
+
+.account-drawer-close {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  font-size: 1.65rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.9;
+  padding: 0;
+}
+
+.account-drawer-close:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* User row */
+.account-drawer-user {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.account-drawer-avatar {
+  flex-shrink: 0;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 999px;
+  background: var(--acc-pink);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+}
+
+.account-drawer-user-meta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.account-drawer-phone {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  letter-spacing: 0.01em;
+  word-break: break-word;
+}
+
+.account-drawer-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--acc-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.account-drawer-verified-icon {
+  color: var(--acc-pink);
+  font-size: 0.9rem;
+}
+
+/* Wallet card */
+.account-drawer-wallet {
+  background: var(--acc-card);
+  border: 1px solid var(--acc-border);
+  border-radius: var(--acc-radius);
+  padding: 0.95rem 1rem 1.05rem;
+}
+
+.account-drawer-wallet-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+  color: var(--acc-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.account-drawer-wallet-label svg {
+  color: var(--acc-pink);
+  font-size: 1.05rem;
+}
+
+.account-drawer-wallet-grid {
+  display: grid;
+  grid-template-columns: 1.15fr auto 1fr;
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.account-drawer-wallet-main-label {
+  margin: 0 0 0.3rem;
+  color: var(--acc-muted);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.account-drawer-wallet-main-amount {
+  margin: 0;
+  color: #fff;
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.account-drawer-wallet-divider {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  align-self: stretch;
+}
+
+.account-drawer-wallet-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  justify-content: center;
+}
+
+.account-drawer-wallet-side-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.account-drawer-wallet-side-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--acc-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.account-drawer-wallet-side-label svg {
+  color: var(--acc-pink);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.account-drawer-wallet-side-amount {
+  margin: 0;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* Deposit / Withdraw */
+.account-drawer-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.account-drawer-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--acc-radius-sm);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.account-drawer-action svg {
+  font-size: 1.1rem;
+}
+
+.account-drawer-action-deposit {
+  background: var(--acc-pink);
+  border: 1px solid var(--acc-pink);
+  color: #fff !important;
+}
+
+.account-drawer-action-deposit:hover {
+  background: var(--acc-pink-deep);
+  border-color: var(--acc-pink-deep);
+  color: #fff !important;
+}
+
+.account-drawer-action-withdraw {
+  background: transparent;
+  border: 1.5px solid var(--acc-pink);
+  color: var(--acc-pink) !important;
+}
+
+.account-drawer-action-withdraw:hover {
+  background: rgba(233, 30, 140, 0.1);
+  color: var(--acc-pink-soft) !important;
+  border-color: var(--acc-pink-soft);
+}
+
+/* Grouped lists */
+.account-drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.account-drawer-section-label {
+  margin: 0;
+  padding: 0 0.15rem;
+  color: var(--acc-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.account-drawer-list {
+  background: var(--acc-card);
+  border: 1px solid var(--acc-border);
+  border-radius: var(--acc-radius);
+  overflow: hidden;
+}
+
+.account-drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.9rem 0.95rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #fff !important;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.account-drawer-item:last-child {
+  border-bottom: none;
+}
+
+.account-drawer-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff !important;
+}
+
+.account-drawer-item-icon {
+  flex-shrink: 0;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(233, 30, 140, 0.55);
+  color: var(--acc-pink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.account-drawer-item-label {
+  flex: 1;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1.25;
+}
+
+.account-drawer-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--acc-pink);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.account-drawer-chevron {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.9rem;
+}
+
+/* Logout */
+.account-drawer-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 2.85rem;
+  margin-top: 0.15rem;
+  padding: 0.7rem 1rem;
+  border-radius: var(--acc-radius-sm);
+  border: 1.5px solid var(--acc-pink);
+  background: transparent;
+  color: var(--acc-pink) !important;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.account-drawer-logout svg {
+  font-size: 1.3rem;
+}
+
+.account-drawer-logout:hover {
+  background: rgba(233, 30, 140, 0.1);
+  color: var(--acc-pink-soft) !important;
+  border-color: var(--acc-pink-soft);
+}
+
+@media (max-width: 380px) {
+  .account-drawer-phone {
+    font-size: 1.2rem;
+  }
+
+  .account-drawer-wallet-main-amount {
+    font-size: 1.35rem;
+  }
+
+  .account-drawer-wallet-grid {
+    gap: 0.65rem;
+  }
+}

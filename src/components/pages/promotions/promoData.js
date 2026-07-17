@@ -1,12 +1,8 @@
 import MshipiBonusImg from "../../../assets/img/banner/products/Mshipi-Bonus.png";
-import hundredPercentDepositBonus from "../../../assets/img/banner/products/Deposit-Bonus.png";
-import earlyBirdDailyDepositBonus from "../../../assets/img/banner/products/Deposit-Bonus.png";
 import cashbackBonus from "../../../assets/img/banner/products/cashbackBonus.jpeg";
-import freebetBonus from "../../../assets/img/banner/products/freebet.png";
 import depositBonus from "../../../assets/img/banner/products/depositBonus.png";
 import karibuBonus from "../../../assets/img/banner/products/KaribuBonus.png";
 import AviatorRainsImg from "../../../assets/img/banner/products/AviatorRainsImg.png";
-import AviatrixTournImg from "../../../assets/img/banner/products/AviatrixTournamentImg.png";
 
 export const promoData = [
   {
@@ -225,16 +221,131 @@ Only 18+. Play responsibly.
     title: "GET 50% DEPOSIT BONUS",
     image: depositBonus,
     description: `
-1.	TO USE BONUS? Select 3 Games on SPORTS, Min Odd 1.9, 1X2 Market. Stake will Automaticaly pick 50:50 bonus & Cash. E.g Stake of 200, 100 will be bonus,100 Cash
+BetMundial – 50% First Deposit of the Day Bonus
+Terms & Conditions
+Promotion
+Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+Eligibility
+1.The bonus is awarded once per day on your first successful deposit.
+2.The maximum qualifying deposit for this promotion is KES 10,000.
+3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
+Bonus Bet Requirements
+4.To qualify, your bet slip must contain:
+oExactly 4 selections.
+oEach selection must have minimum odds of 1.50.
+oAll standard sports betting markets are eligible.
+Example:
+Manchester City vs Arsenal
+Bayern Munich vs Werder Bremen
+Manchester United vs Chelsea
+Barcelona vs Sevilla
+Sample Odds
+Selection 1: Arsenal – 1.91
+Selection 2: Bayern Munich – 2.31
+Selection 3: Manchester United – 2.50
+Selection 4: Barcelona – 1.75
+Minimum combined odds: 10.00
+Note: Repetitive, duplicate, or intentionally similar bets placed to abuse the promotion are strictly prohibited. BetMundial reserves the right to void such bets and withdraw the bonus.
+Bonus Usage
+5.Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (50:50 ratio).
+Example:
+Cash Balance: KES 100
+Bonus Balance: KES 100
+If you place a KES 100 bet:
+KES 50 will be deducted from your cash balance.
+KES 50 will be deducted from your bonus balance.
+Any winnings will be credited according to the applicable cash and bonus contribution and in line with BetMundial's Bonus Policy.
+Bonus Expiry
+6.The bonus is valid for 24 hours from the time it is credited. Any unused bonus balance will automatically expire after this period.
+General Terms
+7.BetMundial reserves the right to amend, suspend, or cancel this promotion at any time without prior notice.
+8.Any suspected fraud, bonus abuse, or breach of these Terms & Conditions may result in disqualification, forfeiture of bonuses, and/or account suspension.
+9.All bets are subject to the BetMundial General Terms & Conditions and Bonus Rules.
     `,
     details: `
       
     TERMS AND CONDITIONS: 50% DEPOSIT BONUS (1st deposit of the day)
 Term and conditions and Bonus rules.
-TO USE BONUS? Select 3 Games on SPORTS, Min Odd 1.9, 1X2 Market. Stake will Automaticaly pick 50:50 bonus & Cash. E.g Stake of 200, 100 will be bonus,100 Cash
+BetMundial – 50% First Deposit of the Day Bonus
+Terms & Conditions
+Promotion
+Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+Eligibility
+1.The bonus is awarded once per day on your first successful deposit.
+2.The maximum qualifying deposit for this promotion is KES 10,000.
+3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
+Bonus Bet Requirements
+4.To qualify, your bet slip must contain:
+oExactly 4 selections.
+oEach selection must have minimum odds of 1.50.
+oAll standard sports betting markets are eligible.
+Example:
+Manchester City vs Arsenal
+Bayern Munich vs Werder Bremen
+Manchester United vs Chelsea
+Barcelona vs Sevilla
+Sample Odds
+Selection 1: Arsenal – 1.91
+Selection 2: Bayern Munich – 2.31
+Selection 3: Manchester United – 2.50
+Selection 4: Barcelona – 1.75
+Minimum combined odds: 10.00
+Note: Repetitive, duplicate, or intentionally similar bets placed to abuse the promotion are strictly prohibited. BetMundial reserves the right to void such bets and withdraw the bonus.
+Bonus Usage
+5.Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (50:50 ratio).
+Example:
+Cash Balance: KES 100
+Bonus Balance: KES 100
+If you place a KES 100 bet:
+KES 50 will be deducted from your cash balance.
+KES 50 will be deducted from your bonus balance.
+Any winnings will be credited according to the applicable cash and bonus contribution and in line with BetMundial's Bonus Policy.
+Bonus Expiry
+6.The bonus is valid for 24 hours from the time it is credited. Any unused bonus balance will automatically expire after this period.
+General Terms
+7.BetMundial reserves the right to amend, suspend, or cancel this promotion at any time without prior notice.
+8.Any suspected fraud, bonus abuse, or breach of these Terms & Conditions may result in disqualification, forfeiture of bonuses, and/or account suspension.
+9.All bets are subject to the BetMundial General Terms & Conditions and Bonus Rules.
 
     `,
-    termsAndConditions: `TO USE BONUS? Select 3 Games on SPORTS, Min Odd 1.9, 1X2 Market. Stake will Automaticaly pick 50:50 bonus & Cash. E.g Stake of 200, 100 will be bonus,100 Cash
+    termsAndConditions: `Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+Eligibility
+1.	The bonus is awarded once per day on your first successful deposit.
+2.	The maximum qualifying deposit for this promotion is KES 10,000.
+3.	This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
+Bonus Bet Requirements
+4.	To qualify, your bet slip must contain:
+o	Exactly 4 selections.
+o	Each selection must have minimum odds of 1.50.
+o	All standard sports betting markets are eligible.
+Example:
+•	Manchester City vs Arsenal
+•	Bayern Munich vs Werder Bremen
+•	Manchester United vs Chelsea
+•	Barcelona vs Sevilla
+Sample Odds
+•	Selection 1: Arsenal – 1.51
+•	Selection 2: Bayern Munich – 2.31
+•	Selection 3: Manchester United – 2.50
+•	Selection 4: Barcelona – 1.75
+Minimum combined odds: 10.00
+Note: Repetitive, duplicate, or intentionally similar bets placed to abuse the promotion are strictly prohibited. BetMundial reserves the right to void such bets and withdraw the bonus.
+Bonus Usage
+5.	Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (50:50 ratio).
+Example:
+•	Cash Balance: KES 100
+•	Bonus Balance: KES 100
+If you place a KES 100 bet:
+•	KES 50 will be deducted from your cash balance.
+•	KES 50 will be deducted from your bonus balance.
+Any winnings will be credited according to the applicable cash and bonus contribution and in line with BetMundial's Bonus Policy.
+Bonus Expiry
+6.	The bonus is valid for 24 hours from the time it is credited. Any unused bonus balance will automatically expire after this period.
+General Terms
+7.	BetMundial reserves the right to amend, suspend, or cancel this promotion at any time without prior notice.
+8.	Any suspected fraud, bonus abuse, or breach of these Terms & Conditions may result in disqualification, forfeiture of bonuses, and/or account suspension.
+9.	All bets are subject to the BetMundial General Terms & Conditions and Bonus Rules.
+
 `
   },
   // {

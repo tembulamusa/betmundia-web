@@ -89,6 +89,9 @@ const ShareExistingbet = (props) => {
 
     const destroyShareModal = () => {
         setShowShareModal(false)
+        if (props.onClose) {
+            props.onClose();
+        }
     }
 
     return (

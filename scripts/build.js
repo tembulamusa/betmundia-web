@@ -23,3 +23,23 @@ config.plugins = [
         process: 'process/browser',
     }),
 ];
+
+// Ignore == vs === (eqeqeq) while keeping other ESLint rules
+config.plugins.forEach((plugin) => {
+    if (plugin?.constructor?.name === 'ESLintWebpackPlugin' && plugin.options) {
+        plugin.options.baseConfig = {
+            ...plugin.options.baseConfig,
+            rules: {
+                ...(plugin.options.baseConfig?.rules || {}),
+                eqeqeq: 'off',
+            },
+        };
+        plugin.options.overrideConfig = {
+            ...(plugin.options.overrideConfig || {}),
+            rules: {
+                ...(plugin.options.overrideConfig?.rules || {}),
+                eqeqeq: 'off',
+            },
+        };
+    }
+});

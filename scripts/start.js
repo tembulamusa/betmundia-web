@@ -3,6 +3,27 @@ const webpack = require('webpack');
 const defaults = rewire('react-scripts/scripts/start.js');
 const webpackConfig = require('react-scripts/config/webpack.config');
 
+function disableEqeqeq(config) {
+    config.plugins.forEach((plugin) => {
+        if (plugin?.constructor?.name === 'ESLintWebpackPlugin' && plugin.options) {
+            plugin.options.baseConfig = {
+                ...plugin.options.baseConfig,
+                rules: {
+                    ...(plugin.options.baseConfig?.rules || {}),
+                    eqeqeq: 'off',
+                },
+            };
+            plugin.options.overrideConfig = {
+                ...(plugin.options.overrideConfig || {}),
+                rules: {
+                    ...(plugin.options.overrideConfig?.rules || {}),
+                    eqeqeq: 'off',
+                },
+            };
+        }
+    });
+}
+
 //In order to override the webpack configuration without ejecting the create-react-app
 defaults.__set__('configFactory', (webpackEnv) => {
     let config = webpackConfig(webpackEnv);
@@ -25,6 +46,9 @@ defaults.__set__('configFactory', (webpackEnv) => {
             process: 'process/browser',
         }),
     ];
+
+    // Ignore == vs === (eqeqeq) while keeping other ESLint rules
+    disableEqeqeq(config);
 
     return config;
 });

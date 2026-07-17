@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 360" fill="none">
+  <defs>
+    <radialGradient id="podiumGlow" cx="50%" cy="78%" r="42%">
+      <stop offset="0%" stop-color="#ff4fd8" stop-opacity="0.7"/>
+      <stop offset="55%" stop-color="#a71f66" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#120018" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ticketFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a0630"/>
+      <stop offset="50%" stop-color="#14051a"/>
+      <stop offset="100%" stop-color="#2d0838"/>
+    </linearGradient>
+    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff8de8"/>
+      <stop offset="50%" stop-color="#e91e8c"/>
+      <stop offset="100%" stop-color="#a71f66"/>
+    </linearGradient>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <ellipse cx="260" cy="300" rx="170" ry="36" fill="url(#podiumGlow)"/>
+  <ellipse cx="260" cy="300" rx="120" ry="18" fill="#a71f66" fill-opacity="0.35"/>
+  <ellipse cx="260" cy="300" rx="86" ry="10" fill="#ff52d4" fill-opacity="0.45"/>
+
+  <g transform="translate(90 58) rotate(-12 170 120)" filter="url(#softGlow)">
+    <rect x="20" y="24" width="300" height="190" rx="18" fill="url(#ticketFace)" stroke="url(#neon)" stroke-width="4"/>
+    <circle cx="20" cy="119" r="18" fill="#0a0410"/>
+    <circle cx="320" cy="119" r="18" fill="#0a0410"/>
+    <path d="M62 48 H278" stroke="#ff52d4" stroke-opacity="0.35" stroke-width="2" stroke-dasharray="6 8"/>
+    <path d="M62 190 H278" stroke="#ff52d4" stroke-opacity="0.35" stroke-width="2" stroke-dasharray="6 8"/>
+    <text x="170" y="108" text-anchor="middle" fill="#ffc72c" font-family="Arial Black, Arial, sans-serif" font-size="42" font-weight="900" font-style="italic" letter-spacing="4">FREE</text>
+    <text x="170" y="158" text-anchor="middle" fill="#ffffff" font-family="Arial Black, Arial, sans-serif" font-size="42" font-weight="900" font-style="italic" letter-spacing="4">BET</text>
+    <text x="170" y="188" text-anchor="middle" fill="#ffffff" fill-opacity="0.55" font-family="Arial, sans-serif" font-size="14" letter-spacing="6">BETMUNDIAL</text>
+  </g>
+
+  <g opacity="0.85">
+    <circle cx="70" cy="80" r="4" fill="#ff8de8"/>
+    <circle cx="430" cy="70" r="3" fill="#ffd84d"/>
+    <circle cx="450" cy="140" r="3.5" fill="#ff52d4"/>
+    <circle cx="60" cy="180" r="2.5" fill="#fff"/>
+    <rect x="400" y="200" width="8" height="8" rx="1" fill="#ff8de8" transform="rotate(20 404 204)"/>
+    <rect x="90" y="220" width="6" height="6" rx="1" fill="#ffd84d" transform="rotate(-15 93 223)"/>
+  </g>
+</svg>

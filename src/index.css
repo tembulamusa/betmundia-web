@@ -628,6 +628,15 @@ aside[class*="ps-sidebar-root"],
   color: #ffffff;
 }
 
+.freebet-page-board {
+  width: 100%;
+}
+
+.freebet-page-board .no-events-div {
+  width: 100%;
+  display: block;
+}
+
 .resp-sharing-button__icon svg {
   width: 30px;
 }

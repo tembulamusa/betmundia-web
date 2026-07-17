@@ -24,6 +24,7 @@ import logo from "../../assets/img/logo.svg";
 import bonanzaTrophyHero from "../../assets/img/bonanza-trophy-hero.svg";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 
+const EXCLUDED_PROVIDERS = ["unicraft"];
 
 const BigIconMenu = () => {
     const { pathname } = useLocation();
@@ -34,10 +35,8 @@ const BigIconMenu = () => {
     const [categories, setCategories] = useState([]);
     const [casinoProviders, setCasinoProviders] = useState([]);
     const [showBonanza, setShowBonanza] = useState(false);
-    const bonanzaParticipants = 20;
     const navigate = useNavigate();
     const loc = useLocation();
-    const excludedProviderList = ["unicraft"];
 
     const handleBonanzaOpen = () => setShowBonanza(true);
     const handleBonanzaClose = () => setShowBonanza(false);
@@ -302,7 +301,7 @@ const BigIconMenu = () => {
         const providers = state?.casinofilters?.providers || [];
 
         const filteredProviders = providers.filter(provider =>
-            !excludedProviderList.includes(provider?.name?.toLowerCase())
+            !EXCLUDED_PROVIDERS.includes(provider?.name?.toLowerCase())
         );
 
         setCasinoProviders(filteredProviders);
@@ -310,7 +309,7 @@ const BigIconMenu = () => {
 
     useEffect(() => {
         if (state?.categories && state?.categories instanceof Array) {
-            {/* NO SPORTS CURRENTLY. UNCOMMENT WHEN AVAILABLE */ }
+            // NO SPORTS CURRENTLY. UNCOMMENT WHEN AVAILABLE
             setCategories(state?.categories);
         }
     }, [state?.categories])
@@ -513,7 +512,7 @@ const BigIconMenu = () => {
             <div className="bonanza-trigger" onClick={handleBonanzaOpen} title="Bonanza">
                 <div className="bonanza-trigger-top">
                     <span>Bonanza</span>
-                    <span className="bonanza-trigger-count">({bonanzaParticipants})</span>
+                    <span className="bonanza-trigger-count">({20})</span>
                 </div>
                 <div className="bonanza-trigger-label">Leaderboards</div>
             </div>
@@ -553,7 +552,7 @@ const BigIconMenu = () => {
                                     </div>
                                     <div className="bonanza-item-content">
                                         <div className="bonanza-item-title">Bonanza</div>
-                                        <div className="bonanza-item-subtitle">Leaderboard ({item.participants})</div>
+                                        <div className="bonanza-item-subtitle">Leaderboard ({20})</div>
                                     </div>
                                 </li>
                             );
@@ -593,7 +592,7 @@ const BigIconMenu = () => {
                         );
                     })}
 
-                    {(!loc?.pathname?.includes("/casino") && categories || []).map((category, idx) => {
+                    {((!loc?.pathname?.includes("/casino") && categories) || []).map((category, idx) => {
 
                         return (
                             <li onClick={() => changeUserSelection(category)} key={idx} className={`${pathname == `/sports/matches/${category?.sport_id}` ? "active" : ''} big-icon-item text-center capitalize`}>

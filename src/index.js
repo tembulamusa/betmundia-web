@@ -1,10 +1,9 @@
-import React, { useEffect, useCallback, Suspense, useContext } from "react";
+import React, { useEffect, Suspense, useContext } from "react";
 import { createRoot } from 'react-dom/client';
 import {
     BrowserRouter,
     Route,
     Routes,
-    useLocation
 } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,6 +17,8 @@ import './assets/css/jumprope.css';
 import './assets/css/casino.css';
 import './assets/css/header-search-overlay.css';
 import './assets/css/bonanza-drawer.css';
+import './assets/css/freebet-page.css';
+import './assets/css/account-drawer.css';
 import 'react-toastify/dist/ReactToastify.css'
 import Store from './context/store';
 import Index from './components/index';
@@ -40,9 +41,8 @@ import ResetPassword from './components/pages/auth/reset-password';
 import VerifyAccount from './components/pages/auth/verify-account';
 import MobileApp from './components/pages/app';
 import ProtectedRoute from './components/utils/protected-route';
-import PrintMatches from './components/pages/downloads';
 import Promotions from './components/pages/promotions/Promotions';
-import PromotionsNew from "./components/pages/promotions/PromotionsNew";
+import FreeBetPage from './components/pages/freebet';
 import Casino from './components/pages/casino/Casino';
 import CheckDepositStatus from "./components/check-deposit-status";
 import Exclude from "./components/pages/exclude";
@@ -135,6 +135,7 @@ const App = () => {
                                     <Route exact path="/livescore" element={<LiveScore />} />
                                     <Route exact path="/promotions" element={<Promotions />} />
                                     {/* <Route exact path="/promotions-new" element={<PromotionsNew />} /> */}
+                                    <Route exact path="/freebet" element={<FreeBetPage />} />
                                     <Route exact path="/crash-terms" element={<CrashTerms />} />
                                     <Route exact path="/deposit"
                                         element={<ProtectedRoute><Deposit /></ProtectedRoute>} />

@@ -4,18 +4,31 @@ import { Link } from "react-router-dom";
 import { Context } from "../../context/store";
 
 import { IoMdLogOut } from "react-icons/io";
-import { BiMoneyWithdraw } from "react-icons/bi";
-import { FaGifts, FaRegUser } from "react-icons/fa";
-import { FaCheckToSlot } from "react-icons/fa6";
-import { GiTwoCoins } from "react-icons/gi";
-import { IoListCircleOutline } from "react-icons/io5";
-import { MdCancel } from "react-icons/md";
+import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaLock, FaChevronRight, FaBullhorn, FaShieldAlt } from "react-icons/fa";
+import { IoListCircleOutline, IoWalletOutline } from "react-icons/io5";
+import { MdOutlineFileDownload, MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
 
 import ComingSoon from "../pages/comingsoon/ComingSoon";
 import { formatToFloat } from "../utils/formatters";
 
-function MobileMenu(props) {
+const PROMO_WINS_COUNT = 0;
 
+function formatMsisdn(msisdn) {
+  if (!msisdn) return "";
+  const digits = String(msisdn).replace(/\D/g, "");
+  if (digits.startsWith("254") && digits.length >= 12) {
+    return `+254 ${digits.slice(3, 6)} ${digits.slice(6, 9)} ${digits.slice(9, 12)}`;
+  }
+  if (digits.startsWith("0") && digits.length === 10) {
+    return `+254 ${digits.slice(1, 4)} ${digits.slice(4, 7)} ${digits.slice(7, 10)}`;
+  }
+  if (digits.length === 9) {
+    return `+254 ${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 9)}`;
+  }
+  return String(msisdn);
+}
+
+function MobileMenu(props) {
   const { user } = props;
 
   const [show, setShow] = useState(false);
@@ -25,66 +38,17 @@ function MobileMenu(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleComingSoonClick = () => {
-    setShowComingSoon(true);
-    setTimeout(() => setShowComingSoon(false), 3000);
+  const closeThen = (fn) => () => {
+    setShow(false);
+    if (typeof fn === "function") fn();
   };
 
-  const UserBalance = () => (
-    <div className="bx">
-      <div className="bx-1">BALANCE</div>
-
-      <div className="bx-2 secondary-text">
-        KSh. {formatToFloat(user?.balance || 0)}
-      </div>
-      <div className="bx-3 uppercase ">
-        <div className="bx-3-1">
-          Restricted Bal:
-          <div className="bx-2 secondary-text">
-            KSh. {formatToFloat(user?.restricted_balance || 0.00)}
-          </div>
-        </div>
-      </div>
-      <div className="bx-3">
-        <div className="bx-3-1">
-          Bonus:
-          <div className="bx-2">
-            KSh. {formatToFloat(user?.bonus || user?.bonus_balance || 0)}
-          </div>
-        </div>
-      </div>
-
-    </div>
-  );
-
-  const CanvasBottom = () => {
-    return (
-      <div className="flex text-center">
-
-        <div className="col-6 offcanvas-big-icon p-5">
-          <Link
-            to="/logout"
-            style={{ color: "#dc3545" }}
-            onMouseOver={(e) => (e.currentTarget.style.color = "#c82333")}
-            onMouseOut={(e) => (e.currentTarget.style.color = "#dc3545")}
-          >
-            <IoMdLogOut className="big-offcanvas-icon mx-auto" />
-            Logout
-          </Link>
-        </div>
-
-        <ComingSoon
-          show={showComingSoon}
-          onClose={() => setShowComingSoon(false)}
-        />
-
-      </div>
-    );
-  };
+  const balance = formatToFloat(user?.balance || 0);
+  const restricted = formatToFloat(user?.restricted_balance || 0.0);
+  const bonus = formatToFloat(user?.bonus || user?.bonus_balance || 0);
 
   return (
     <span className="inline-block" style={{ height: "auto" }}>
-
       <span
         className="font-[500] cursor-pointer user-profile"
         onClick={handleShow}
@@ -97,98 +61,214 @@ function MobileMenu(props) {
         placement="end"
         show={show}
         onHide={handleClose}
-        className="header-account"
+        className="account-drawer"
         style={{ height: "auto" }}
       >
-
-        <Offcanvas.Header closeButton>
-
-          <div className="d-flex align-items-center justify-content-between w-100">
-
-            {/* LEFT CLOSE BUTTON */}
+        <Offcanvas.Body className="account-drawer-body">
+          <div className="account-drawer-header">
+            <div className="account-drawer-header-left">
+              <span className="account-drawer-header-icon" aria-hidden="true">
+                <FaUser />
+              </span>
+              <div>
+                <h2 className="account-drawer-title">Account</h2>
+                <p className="account-drawer-subtitle">
+                  Manage your account and wallet
+                </p>
+              </div>
+            </div>
             <button
               type="button"
+              className="account-drawer-close"
               onClick={handleClose}
-              className="btn btn-sm btn-outline-secondary bg-[red] text-white absoute top-2 left-2"
+              aria-label="Close"
             >
-              Close
+              &times;
             </button>
+          </div>
 
-            <div className="text-center">
-              <FaRegUser className="mr-2 inline-block" />
-              {user?.msisdn}
+          <div className="account-drawer-user">
+            <span className="account-drawer-avatar" aria-hidden="true">
+              <FaUser />
+            </span>
+            <div className="account-drawer-user-meta">
+              <p className="account-drawer-phone">
+                {formatMsisdn(user?.msisdn) || user?.msisdn}
+              </p>
+              <span className="account-drawer-verified">
+                <FaCheckCircle className="account-drawer-verified-icon" />
+                Verified Account
+              </span>
             </div>
-
           </div>
 
-        </Offcanvas.Header>
-
-        <Offcanvas.Body
-          className="off-canvas"
-          style={{ marginBottom: "20px", overflowY: "auto" }}
-        >
-
-          <div className="highlight-box">
-            <UserBalance />
+          <div className="account-drawer-wallet">
+            <div className="account-drawer-wallet-label">
+              <IoWalletOutline aria-hidden="true" />
+              WALLET
+            </div>
+            <div className="account-drawer-wallet-grid">
+              <div>
+                <p className="account-drawer-wallet-main-label">
+                  Available Balance
+                </p>
+                <p className="account-drawer-wallet-main-amount">
+                  KSh {balance}
+                </p>
+              </div>
+              <div className="account-drawer-wallet-divider" aria-hidden="true" />
+              <div className="account-drawer-wallet-side">
+                <div className="account-drawer-wallet-side-row">
+                  <span className="account-drawer-wallet-side-label">
+                    <FaGift aria-hidden="true" />
+                    Bonus
+                  </span>
+                  <p className="account-drawer-wallet-side-amount">
+                    KSh {bonus}
+                  </p>
+                </div>
+                <div className="account-drawer-wallet-side-row">
+                  <span className="account-drawer-wallet-side-label">
+                    <FaLock aria-hidden="true" />
+                    Restricted Balance
+                  </span>
+                  <p className="account-drawer-wallet-side-amount">
+                    KSh {restricted}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="cd" onClick={() => setShow(false)}>
-
-            <Link to="/deposit" className="cd-l">
-              <GiTwoCoins className="inline-block mr-3" />
+          <div className="account-drawer-actions">
+            <Link
+              to="/deposit"
+              className="account-drawer-action account-drawer-action-deposit"
+              onClick={handleClose}
+            >
+              <MdOutlineFileDownload aria-hidden="true" />
               Deposit
             </Link>
-
-            <Link to="/withdraw" className="cd-l">
-              <BiMoneyWithdraw className="mr-3 inline-block" />
+            <Link
+              to="/withdraw"
+              className="account-drawer-action account-drawer-action-withdraw"
+              onClick={handleClose}
+            >
+              <MdOutlineFileUpload aria-hidden="true" />
               Withdraw
             </Link>
-
-            <Link to="/promo-wins">
-              <FaGifts className="mr-3 inline-block" />
-              Promo Wins (0)
-            </Link>
-
-            <div
-              className="cd-l"
-              onClick={() =>
-                dispatch({
-                  type: "SET",
-                  key: "showcheckmpesadepositstatus",
-                  payload: true,
-                })
-              }
-            >
-              <FaCheckToSlot className="mr-3 inline-block" />
-              Check MPESA Deposit status
-            </div>
-
-            <Link to="/my-bets" className="cd-l">
-              <IoListCircleOutline className="mr-3 inline-block" />
-              My bets
-            </Link>
-            <Link to="/promotions" className="cd-l">
-              <FaGifts className="mr-3 inline-block" />
-              Promotions
-            </Link>
-            <Link to="/exclude" className="cd-l">
-              <MdCancel className="mr-3 inline-block" />
-              Exclude myself from betting
-            </Link>
-
-            <Link to="/reset-password" className="cd-l">
-              <MdCancel className="mr-3 inline-block" />
-              Change Password
-            </Link>
-
           </div>
 
-          <CanvasBottom />
+          <div className="account-drawer-section">
+            <p className="account-drawer-section-label">Activity</p>
+            <div className="account-drawer-list">
+              <Link
+                to="/promo-wins"
+                className="account-drawer-item"
+                onClick={handleClose}
+              >
+                <span className="account-drawer-item-icon" aria-hidden="true">
+                  <FaGifts />
+                </span>
+                <span className="account-drawer-item-label">
+                  Promo Wins
+                  <span className="account-drawer-count">{PROMO_WINS_COUNT}</span>
+                </span>
+                <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
+              </Link>
 
+              <Link
+                to="/my-bets"
+                className="account-drawer-item"
+                onClick={handleClose}
+              >
+                <span className="account-drawer-item-icon" aria-hidden="true">
+                  <IoListCircleOutline />
+                </span>
+                <span className="account-drawer-item-label">My bets</span>
+                <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
+              </Link>
+
+              <button
+                type="button"
+                className="account-drawer-item"
+                onClick={closeThen(() =>
+                  dispatch({
+                    type: "SET",
+                    key: "showcheckmpesadepositstatus",
+                    payload: true,
+                  })
+                )}
+              >
+                <span className="account-drawer-item-icon" aria-hidden="true">
+                  <MdPhoneIphone />
+                </span>
+                <span className="account-drawer-item-label">
+                  Check MPESA Deposit status
+                </span>
+                <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
+              </button>
+
+              <Link
+                to="/promotions"
+                className="account-drawer-item"
+                onClick={handleClose}
+              >
+                <span className="account-drawer-item-icon" aria-hidden="true">
+                  <FaBullhorn />
+                </span>
+                <span className="account-drawer-item-label">Promotions</span>
+                <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="account-drawer-section">
+            <p className="account-drawer-section-label">Account</p>
+            <div className="account-drawer-list">
+              <Link
+                to="/reset-password"
+                className="account-drawer-item"
+                onClick={handleClose}
+              >
+                <span className="account-drawer-item-icon" aria-hidden="true">
+                  <MdLockOutline />
+                </span>
+                <span className="account-drawer-item-label">Change Password</span>
+                <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
+              </Link>
+
+              <Link
+                to="/exclude"
+                className="account-drawer-item"
+                onClick={handleClose}
+              >
+                <span className="account-drawer-item-icon" aria-hidden="true">
+                  <FaShieldAlt />
+                </span>
+                <span className="account-drawer-item-label">
+                  Exclude myself from betting
+                </span>
+                <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+
+          <Link
+            to="/logout"
+            className="account-drawer-logout"
+            onClick={handleClose}
+          >
+            <IoMdLogOut aria-hidden="true" />
+            Logout
+          </Link>
+
+          <ComingSoon
+            show={showComingSoon}
+            onClose={() => setShowComingSoon(false)}
+          />
         </Offcanvas.Body>
-
       </Offcanvas>
-
     </span>
   );
 }

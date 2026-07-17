@@ -1,23 +1,28 @@
-import React, { useState, useCallback, useContext, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import makeRequest from "../utils/fetch-request";
-import { Context } from "../../context/store";
-import Notify from "../utils/Notify";
-import { Link } from "react-router-dom";
 import { GiSoccerBall } from "react-icons/gi";
 import HomeTeamDefaultFlag from "../../assets/team-jersies/home-default.png"
 import AwayTeamDefaultFlag from "../../assets/team-jersies/away-default.png"
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
+import NoEvents from "../utils/no-events";
 
-const FreeBet = (props) => {
+const FreeBet = ({ isFreebetPage = false } = {}) => {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState({});
-    const [state, dispatch] = useContext(Context);
     const [freebet, setFreebet] = useState(null);
     const [freebetSlip, setFreeBetslip] = useState();
     const [selectedOdd, setSelectedOdd] = useState();
     const [ipInfo, setIpInfo] = useState();
     const [submitting, setSubmitting] = useState(false);
     const [alert, setAlert] = useState(null);
+    const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
+    const [fetchCompleted, setFetchCompleted] = useState(false);
+    const isFetchingRef = useRef(false);
+
+    const user = getFromLocalStorage("user");
+    const isLoggedIn = Boolean(user?.token);
 
 
     useEffect(() => {
@@ -67,7 +72,7 @@ const FreeBet = (props) => {
             let slip = [
                 {
                     away_team: freebet?.away_team,
-                    bet_pick: "",
+                    bet_pick: selectedOdd || "",
                     bet_type: "0",
                     home_team: freebet?.home_team,
                     live: freebet?.live || 0,
@@ -101,15 +106,13 @@ const FreeBet = (props) => {
                 }
             );
         }
-    }, [freebet]);
+    }, [freebet, ipInfo, selectedOdd]);
 
-    const fetchFreeBet = () => {
-        if (isLoading) return;
+    const fetchFreeBet = useCallback((endpoint = "/user/freebet") => {
+        if (isFetchingRef.current) return;
 
+        isFetchingRef.current = true;
         setIsLoading(true);
-        setMessage(null);
-
-        let endpoint = "/user/freebet";
 
         makeRequest({ url: endpoint, method: "GET", api_version: 2 })
             .then(([status, result]) => {
@@ -134,17 +137,46 @@ const FreeBet = (props) => {
                 }
 
 
+            })
+            .finally(() => {
+                isFetchingRef.current = false;
+                setIsLoading(false);
+                setFetchCompleted(true);
             });
-    };
+    }, []);
 
     useEffect(() => {
-        if (getFromLocalStorage("user")?.has_freebet == 1) {
-            fetchFreeBet();
+        const currentUser = getFromLocalStorage("user");
+        const loggedIn = Boolean(currentUser?.token);
+
+        if (isFreebetPage) {
+            if (loggedIn) {
+                // Logged-in on freebet page: only load if profile says they have a freebet
+                if (currentUser?.has_freebet == 1) {
+                    fetchFreeBet("/user/freebet");
+                } else {
+                    setFetchCompleted(true);
+                }
+            } else {
+                // Guest on freebet page: fetch public freebet link (no profile gate)
+                fetchFreeBet("/freebet");
+            }
+            return;
         }
-    }, []);
+
+        // Highlights / other pages: normal profile-related logic
+        if (currentUser?.has_freebet == 1) {
+            fetchFreeBet("/user/freebet");
+        }
+    }, [isFreebetPage, fetchFreeBet]);
 
 
     const updatePick = (outcome) => {
+        // Freebet page for guests: prompt to register, then redirect
+        if (isFreebetPage && !isLoggedIn) {
+            setShowRegisterPrompt(true);
+            return;
+        }
 
         setFreeBetslip((prevSlip) => {
             let currentSlip = { ...prevSlip };
@@ -154,6 +186,11 @@ const FreeBet = (props) => {
 
         setSelectedOdd(outcome?.odd_key);
 
+    }
+
+    const handleRegisterConfirm = () => {
+        setShowRegisterPrompt(false);
+        navigate("/signup");
     }
 
     const Alert = ({ message }) => {
@@ -172,7 +209,7 @@ const FreeBet = (props) => {
                 <div className=''>
                     <div className='alert-title text-2xl fex font-bold w-full py-3 justify-between'>
                         {/* <div className=' w-10/12'>{message?.title ? message?.title : "Error!"}</div> */}
-                        <div aria-hidden="true" style={x_style} onClick={() => setMessage(null)}>&times;</div>
+                        <div aria-hidden="true" style={x_style} onClick={() => setAlert(null)}>&times;</div>
                     </div>
                     <div className='text-2xl mb-3 font-normal'>{message.message}</div>
                 </div>
@@ -268,7 +305,7 @@ const FreeBet = (props) => {
                             </div>
                         </div>
 
-                        {selectedOdd &&
+                        {!(isFreebetPage && !isLoggedIn) && selectedOdd &&
                             <div className="absolute m-auto top-0 freebet-btn-parent">
                                 <button onClick={() => placeFreebet()}
                                     disabled={submitting}
@@ -280,6 +317,44 @@ const FreeBet = (props) => {
                 </div >
 
             }
+
+            {isFreebetPage && fetchCompleted && !isLoading && !freebet && !alert && (
+                <div className="w-full">
+                    <NoEvents message="There are no free bets." />
+                </div>
+            )}
+
+            <Modal
+                show={showRegisterPrompt}
+                onHide={() => setShowRegisterPrompt(false)}
+                centered
+            >
+                <Modal.Header closeButton className="no-header">
+                    <Modal.Title>Register for Free Bet</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="mb-4 text-lg">
+                        Please register to claim and place your free bet.
+                    </p>
+                    <div className="flex justify-end gap-2">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setShowRegisterPrompt(false)}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            className="btn text-white"
+                            style={{ backgroundColor: "#a71f66" }}
+                            onClick={handleRegisterConfirm}
+                        >
+                            OK
+                        </button>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </>
     )
 }
