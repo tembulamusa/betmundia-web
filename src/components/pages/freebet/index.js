@@ -241,9 +241,87 @@ const FreeBetPage = () => {
                         <span className="freebet-hero-free">FREE</span>{" "}
                         <span className="freebet-hero-bet">BET</span>
                     </h1>
-                    <p className="freebet-hero-text">
-                        Bet risk-free! Get a Free Bet when you sign up and verify your account.
-                    </p>
+                </div>
+
+                <div className="freebet-hero-visual" aria-busy={isLoading}>
+                    {isLoading && (
+                        <div className="freebet-match-card freebet-match-card-skeleton">
+                            <div className="freebet-match-skel-line short" />
+                            <div className="freebet-match-skel-row">
+                                <div className="freebet-match-skel-block" />
+                                <div className="freebet-match-skel-block mid" />
+                                <div className="freebet-match-skel-block" />
+                            </div>
+                            <div className="freebet-match-skel-odds">
+                                <span />
+                                <span />
+                                <span />
+                            </div>
+                        </div>
+                    )}
+
+                    {!isLoading && freebet && (
+                        <div className="freebet-match-card">
+                            <div className="freebet-match-card-header">
+                                <GiSoccerBall aria-hidden="true" />
+                                <span>Free Bet</span>
+                            </div>
+
+                            <div className="freebet-match-teams">
+                                <div className="freebet-match-team">
+                                    <div className="freebet-match-flag">
+                                        <img src={HomeTeamDefaultFlag} alt="" />
+                                    </div>
+                                    <div className="freebet-match-team-name">{freebet?.home_team}</div>
+                                </div>
+
+                                <div className="freebet-match-meta">
+                                    {dateLabel && <div className="freebet-match-date">{dateLabel}</div>}
+                                    {timeLabel && <div className="freebet-match-time">{timeLabel}</div>}
+                                    {!dateLabel && !timeLabel && freebet?.start_time && (
+                                        <div className="freebet-match-date">{freebet.start_time}</div>
+                                    )}
+                                </div>
+
+                                <div className="freebet-match-team">
+                                    <div className="freebet-match-flag">
+                                        <img src={AwayTeamDefaultFlag} alt="" />
+                                    </div>
+                                    <div className="freebet-match-team-name">{freebet?.away_team}</div>
+                                </div>
+                            </div>
+
+                            <div className="freebet-match-market" aria-hidden="true">
+                                <span>1 x 2</span>
+                            </div>
+
+                            <div className="freebet-match-odds">
+                                {outcomes.map((outcome) => (
+                                    <button
+                                        key={outcome?.outcome_id || outcome?.odd_key}
+                                        type="button"
+                                        className="freebet-match-odd"
+                                        onClick={handleClaim}
+                                    >
+                                        {outcome?.odd_value}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {!isLoading && !freebet && (
+                        <div className="freebet-match-card freebet-match-card-empty">
+                            <div className="freebet-match-card-header">
+                                <GiSoccerBall aria-hidden="true" />
+                                <span>Free Bet</span>
+                            </div>
+                            <p className="freebet-match-empty-msg">No freebets available</p>
+                        </div>
+                    )}
+                </div>
+
+                <div className="freebet-hero-actions">
                     <button type="button" className="freebet-hero-cta" onClick={handleClaim}>
                         Claim Your Free Bet
                         <FaChevronRight aria-hidden="true" />
@@ -251,91 +329,6 @@ const FreeBetPage = () => {
                     <div className="freebet-hero-note">
                         New customers only
                         <FaInfoCircle aria-hidden="true" />
-                    </div>
-                </div>
-
-                <div className="freebet-hero-visual">
-                    <div className="freebet-hero-card-stage" aria-busy={isLoading}>
-                        <span className="freebet-hero-spark freebet-hero-spark-a" />
-                        <span className="freebet-hero-spark freebet-hero-spark-b" />
-                        <span className="freebet-hero-spark freebet-hero-spark-c" />
-                        <div className="freebet-hero-glow" />
-
-                        {isLoading && (
-                            <div className="freebet-match-card freebet-match-card-skeleton">
-                                <div className="freebet-match-skel-line short" />
-                                <div className="freebet-match-skel-row">
-                                    <div className="freebet-match-skel-block" />
-                                    <div className="freebet-match-skel-block mid" />
-                                    <div className="freebet-match-skel-block" />
-                                </div>
-                                <div className="freebet-match-skel-odds">
-                                    <span />
-                                    <span />
-                                    <span />
-                                </div>
-                            </div>
-                        )}
-
-                        {!isLoading && freebet && (
-                            <div className="freebet-match-card">
-                                <div className="freebet-match-card-header">
-                                    <GiSoccerBall aria-hidden="true" />
-                                    <span>Free Bet</span>
-                                </div>
-
-                                <div className="freebet-match-teams">
-                                    <div className="freebet-match-team">
-                                        <div className="freebet-match-flag">
-                                            <img src={HomeTeamDefaultFlag} alt="" />
-                                        </div>
-                                        <div className="freebet-match-team-name">{freebet?.home_team}</div>
-                                    </div>
-
-                                    <div className="freebet-match-meta">
-                                        {dateLabel && <div className="freebet-match-date">{dateLabel}</div>}
-                                        {timeLabel && <div className="freebet-match-time">{timeLabel}</div>}
-                                        {!dateLabel && !timeLabel && freebet?.start_time && (
-                                            <div className="freebet-match-date">{freebet.start_time}</div>
-                                        )}
-                                    </div>
-
-                                    <div className="freebet-match-team">
-                                        <div className="freebet-match-flag">
-                                            <img src={AwayTeamDefaultFlag} alt="" />
-                                        </div>
-                                        <div className="freebet-match-team-name">{freebet?.away_team}</div>
-                                    </div>
-                                </div>
-
-                                <div className="freebet-match-market" aria-hidden="true">
-                                    <span>1 x 2</span>
-                                </div>
-
-                                <div className="freebet-match-odds">
-                                    {outcomes.map((outcome) => (
-                                        <button
-                                            key={outcome?.outcome_id || outcome?.odd_key}
-                                            type="button"
-                                            className="freebet-match-odd"
-                                            onClick={handleClaim}
-                                        >
-                                            {outcome?.odd_value}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {!isLoading && !freebet && (
-                            <div className="freebet-match-card freebet-match-card-empty">
-                                <div className="freebet-match-card-header">
-                                    <GiSoccerBall aria-hidden="true" />
-                                    <span>Free Bet</span>
-                                </div>
-                                <p className="freebet-match-empty-msg">No freebets available</p>
-                            </div>
-                        )}
                     </div>
                 </div>
             </section>
