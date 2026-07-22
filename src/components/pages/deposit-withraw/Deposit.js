@@ -1,21 +1,31 @@
-import React, { useState, useContext, useEffect } from 'react';
-
+import React, { useState, useContext } from 'react';
 import { Formik, Form } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import Accordion from 'react-bootstrap/Accordion';
 import makeRequest from "../../utils/fetch-request";
-import mpesa from '../../../assets/img/mpesa.png'
 import { Context } from '../../../context/store';
 import Notify from '../../utils/Notify';
-import Accordion from 'react-bootstrap/Accordion';
 import '../../../assets/css/accordion.react.css';
-import StdTable from '../../utils/std-table';
-import { Link } from 'react-router-dom';
-import { GoAlertFill } from "react-icons/go";
 import { getFromLocalStorage, removeItem } from '../../utils/local-storage';
+import {
+    FaArrowLeft,
+    FaShieldAlt,
+    FaMobileAlt,
+    FaCoins,
+    FaWallet,
+    FaInfoCircle,
+    FaFileAlt,
+    FaChevronDown,
+    FaCheck,
+    FaStar,
+} from 'react-icons/fa';
+import { MdPhoneIphone } from 'react-icons/md';
 
 
 const Deposit = (props) => {
 
     const [state, dispatch] = useContext(Context);
+    const navigate = useNavigate();
 
     const app_name = "desktop-web";
     const promoName = state?.promoInfo;
@@ -85,20 +95,17 @@ const Deposit = (props) => {
     }
 
 
-
-
-    // Upon loading this page call the function that polls for balance every 3 seconds and then stops after 1 minute
-
-
-    const FormTitle = () => {
+    const Alert = () => {
+        if (!message) return null;
         return (
-            <div className='p-4 text-center border-b bg-primary'>
-                <h4 className="!uppercase">
-                    Deposit Funds (Mobile money)
-                </h4>
+            <div
+                role="alert"
+                className={`deposit-alert deposit-alert--${success ? 'success' : 'danger'}`}
+            >
+                <a href="#pay-via-mobile">{message?.message}</a>
             </div>
-        )
-    }
+        );
+    };
 
 
     const DepositFormFields = (props) => {
@@ -106,82 +113,121 @@ const Deposit = (props) => {
 
         return (
             <>
+                {message && <Alert />}
 
-                <div className="form-group row d-flex justify-content-center mt-4">
-
-                    <div className="row">
-                        {message &&
-                            <div className='mt-3 font-bold'>
-                                <Link to={"#pay-via-mobile"}><Alert /></Link>
-                            </div>}
+                <div className="deposit-field">
+                    <label className="deposit-field-label" htmlFor="deposit-msisdn">
+                        <MdPhoneIphone aria-hidden="true" />
+                        Your Phone Number
+                    </label>
+                    <div className="deposit-input-wrap">
                         <input
+                            id="deposit-msisdn"
                             onChange={ev => onFieldChanged(ev)}
-                            style={{}}
-                            className="text-dark deposit-input form-control input-field"
+                            className="deposit-field-input"
                             name="msisdn"
                             type="text"
                             readOnly
                             disabled
-                            value={user?.msisdn}
+                            value={user?.msisdn || ''}
                         />
-                        <label className='pl-0 mb-1'>Amount to Deposit</label>
+                    </div>
+                    {errors.msisdn && <div className="deposit-field-error">{errors.msisdn}</div>}
+                </div>
+
+                <div className="deposit-field">
+                    <label className="deposit-field-label" htmlFor="amount">
+                        <FaCoins aria-hidden="true" />
+                        Amount To Deposit
+                    </label>
+                    <div className="deposit-input-wrap deposit-input-wrap--amount">
                         <input
                             onChange={ev => onFieldChanged(ev)}
-                            style={{}}
-                            className="text-dark deposit-input form-control  input-field"
+                            className="deposit-field-input"
                             id="amount"
                             name="amount"
                             type="text"
                             value={values.amount}
-                            placeholder='Enter Amount'
+                            placeholder="Enter amount"
+                            inputMode="decimal"
                         />
-                        {errors.amount && <div className='text-danger'> {errors.amount} </div>}
-
-                        <button
-                            disabled={isLoading}
-                            style={{}}
-                            className='btn btn-lg btn-primary mt-3 col-md-12 deposit-withdraw-button'>
-                            {isLoading ? "wait..." : "Deposit"}
-                        </button>
+                        <span className="deposit-currency-suffix">KSh</span>
                     </div>
+                    {errors.amount && <div className="deposit-field-error">{errors.amount}</div>}
                 </div>
+
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="deposit-submit-btn"
+                >
+                    <FaWallet aria-hidden="true" />
+                    {isLoading ? "WAIT..." : "DEPOSIT"}
+                </button>
             </>
         )
     }
 
 
-    const PaymentInstructions = (props) => {
-        return (
-            <>
-                <hr className='my-3' />
-                <div className='' id='pay-via-mobile'>
-                    <h2 className='text-2x text-gray-700 font-[500] mb-3 '>Direct Mpesa Deposit</h2>
-                    <div className="row">
-                        <div className="col"> 1. Go to Mpesa.</div>
-                    </div>
-                    <div className="row">
-                        <div className="col"> 2. Select Lipa na mpesa</div>
-                    </div>
-                    <div className="row">
-                        <div className="col"> 3. Enter Paybill number: <span className='text-2x font-bold'>444142</span></div>
-                    </div>
-                    <div className="row">
-                        <div className="col"> 4. Account Number:
-                            <span className='text-2x font-bold'>Enter your phone number</span>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col"> 5. Enter Amount</div>
-                    </div>
-                    <div className="row">
-                        <div className="col"> 5. Enter PIN and accept</div>
-                    </div>
+    const PAYBILL_STEPS = [
+        { text: 'Go to M-Pesa menu.' },
+        { text: 'Select Lipa na M-Pesa.' },
+        {
+            text: (
+                <>
+                    Enter Paybill number: <span className="deposit-step-highlight">444142</span>
+                </>
+            ),
+        },
+        {
+            text: (
+                <>
+                    Account Number: <span className="deposit-step-strong">Enter your phone number</span>
+                </>
+            ),
+        },
+        { text: 'Enter Amount.' },
+        { text: 'Enter your PIN and accept.' },
+    ];
 
+
+    const PaymentInstructions = () => {
+        return (
+            <div className="deposit-paybill-body" id="pay-via-mobile">
+                <div className="deposit-steps-col">
+                    <h3 className="deposit-steps-heading">Follow the steps below:</h3>
+                    <ol className="deposit-steps">
+                        {PAYBILL_STEPS.map((step, index) => (
+                            <li className="deposit-step" key={index}>
+                                <span className="deposit-step-num">{index + 1}</span>
+                                <span className="deposit-step-text">{step.text}</span>
+                            </li>
+                        ))}
+                    </ol>
                 </div>
 
-            </>
+                <div className="deposit-phone-art" aria-hidden="true">
+                    <FaStar className="deposit-phone-sparkle deposit-phone-sparkle--1" />
+                    <FaStar className="deposit-phone-sparkle deposit-phone-sparkle--2" />
+                    <FaStar className="deposit-phone-sparkle deposit-phone-sparkle--3" />
+                    <div className="deposit-phone-frame">
+                        <div className="deposit-phone-notch" />
+                        <div className="deposit-phone-mpesa">M-PESA</div>
+                        <div className="deposit-phone-screen-lines">
+                            <span />
+                            <span />
+                            <span />
+                        </div>
+                    </div>
+                    <span className="deposit-phone-shield">
+                        <FaCheck />
+                    </span>
+                </div>
+            </div>
         );
     }
+
+
     const MyDepositForm = (props) => {
         const { errors, values, setFieldValue } = props;
 
@@ -191,70 +237,79 @@ const Deposit = (props) => {
             setFieldValue(field, value);
         }
 
-        const DepositSelfService = (props) => {
-
-            return (
-                <div className='cursor-pointer opacity-80 hover:opacity-100'
-                    onClick={() => dispatch({ type: "SET", key: "showcheckmpesadepositstatus", payload: true })}>
-                    <div className='flex'>
-                        <GoAlertFill className='text-3xl mr-4 align-middle' size={30} />
-                        <div className=''>
-                            <div className='font-bold'>Missing Deposit</div>
-                            <div className='block font-[500] opacity-70'>
-                                Deposit not reflecting? sort your missing deposit here
-                            </div>
-                            <button className='btn rounded-md btn-default text-gray-700 capitalize py-3 my-2 font-[500]'>
-                                Check Deposit status
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
+        const openDepositStatus = () => {
+            dispatch({ type: "SET", key: "showcheckmpesadepositstatus", payload: true });
+        };
 
         return (
-            <div className='std-medium-width-block'>
-                <Form className="rounded border-0">
-                    <div className="pt-0">
-                        <div className="row px-3">
-                            <div className='text-center'>
-                                <img src={mpesa} alt="" />
-                            </div>
-
-
-                        </div>
-                        <hr className='my-2' />
-                        <div className='row'>
-                            <div className=''>
-                                <DepositFormFields onFieldChanged={onFieldChanged} values={values} errors={errors} />
-
-                                <div className='my-3'><DepositSelfService /></div>
-
-                                <Accordion
-                                    className="accordion mt-4"
-                                    defaultActiveKey={0}
-                                    allowMultipleExpanded={false}
-                                // uuid = {}
-                                >
-                                    <Accordion.Item eventKey={0}>
-                                        <Accordion.Header className='capitalize'>
-                                            <span className='capitalize'>Deposit via paybill number (444142)</span>
-                                        </Accordion.Header>
-                                        <Accordion.Body>
-                                            <PaymentInstructions />
-                                        </Accordion.Body>
-                                    </Accordion.Item>
-                                </Accordion>
-                            </div>
-
+            <Form className="deposit-form">
+                <div className="deposit-card">
+                    <div className="deposit-mpesa-head">
+                        <span className="deposit-mpesa-icon-wrap" aria-hidden="true">
+                            <FaMobileAlt />
+                        </span>
+                        <div>
+                            <h2 className="deposit-mpesa-title">Lipa na Mpesa</h2>
+                            <p className="deposit-mpesa-sub">Fast. Secure. Convenient.</p>
                         </div>
                     </div>
-                </Form>
-            </div>
+
+                    <DepositFormFields
+                        onFieldChanged={onFieldChanged}
+                        values={values}
+                        errors={errors}
+                    />
+
+                    <div
+                        className="deposit-status-box"
+                        role="button"
+                        tabIndex={0}
+                        onClick={openDepositStatus}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                openDepositStatus();
+                            }
+                        }}
+                    >
+                        <span className="deposit-status-icon" aria-hidden="true">
+                            <FaInfoCircle />
+                        </span>
+                        <div className="deposit-status-copy">
+                            <p className="deposit-status-title">Missing Deposit?</p>
+                            <p className="deposit-status-desc">
+                                Deposit not reflecting? Sort your missing deposit here.
+                            </p>
+                        </div>
+                        <span className="deposit-status-btn">Check Deposit Status</span>
+                    </div>
+                </div>
+
+                <div className="deposit-card deposit-paybill-card">
+                    <Accordion
+                        className="accordion"
+                        defaultActiveKey="0"
+                        allowMultipleExpanded={false}
+                    >
+                        <Accordion.Item eventKey="0">
+                            <Accordion.Header>
+                                <FaFileAlt className="deposit-paybill-header-icon" aria-hidden="true" />
+                                <span className="deposit-paybill-header-text">
+                                    Deposit Via Paybill Number (444142)
+                                </span>
+                                <FaChevronDown className="deposit-paybill-chevron" aria-hidden="true" />
+                            </Accordion.Header>
+                            <Accordion.Body>
+                                <PaymentInstructions />
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
+                </div>
+            </Form>
         );
     }
 
-    const DepositForm = (props) => {
+    const DepositForm = () => {
         return (
             <Formik
                 initialValues={initialValues}
@@ -266,26 +321,32 @@ const Deposit = (props) => {
         );
     }
 
-    const Alert = (props) => {
-        let c = success ? 'success' : 'danger';
-        return (
-            <>
-                {message &&
-                    <div role="alert" className={`rounded-md fade alert alert-${c} show`}>
-                        {message?.message}
-                    </div>
-                }
-            </>
-        );
-
-    };
-
     return (
-        <div className="homepage">
-            <FormTitle />
-            <div className="col-md-12 mt-2  p-2">
-                <div className="pb-0" data-backdrop="static">
-                    <DepositForm />
+        <div className="deposit-page">
+            <div className="deposit-page-inner">
+                <header className="deposit-page-header">
+                    <button
+                        type="button"
+                        className="deposit-page-back"
+                        aria-label="Go back"
+                        onClick={() => navigate(-1)}
+                    >
+                        <FaArrowLeft />
+                    </button>
+                    <h1 className="deposit-page-title">Deposit Funds (Mobile Money)</h1>
+                    <span className="deposit-page-secure-icon" aria-hidden="true" title="Secure">
+                        <FaShieldAlt />
+                    </span>
+                </header>
+
+                <DepositForm />
+
+                <div className="deposit-trust">
+                    <FaShieldAlt className="deposit-trust-icon" aria-hidden="true" />
+                    <div>
+                        <p className="deposit-trust-title">Your transactions are secure and encrypted</p>
+                        <p className="deposit-trust-sub">We never share your details with anyone.</p>
+                    </div>
                 </div>
             </div>
         </div>
