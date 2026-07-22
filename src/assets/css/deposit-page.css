@@ -32,15 +32,17 @@
   padding: 0 1rem 1rem;
 }
 
-/* Header */
+/* Header — full width with thin underline */
 .deposit-page-header {
   display: grid;
   grid-template-columns: 2.5rem 1fr 2.5rem;
   align-items: center;
   gap: 0.75rem;
-  margin: 0 -1rem 2rem;
-  padding: 0.75rem 1rem 0.85rem;
+  width: 100%;
+  margin: 0.75rem 0 2rem;
+  padding: 1.15rem 1rem 1.25rem;
   background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .deposit-page-back {
@@ -52,7 +54,7 @@
   border-radius: 50%;
   border: 1.5px solid rgba(255, 255, 255, 0.35);
   background: transparent;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   padding: 0;
   transition: background 0.15s ease, border-color 0.15s ease;
@@ -73,7 +75,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: var(--dep-text);
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.25;
 }
 
@@ -140,7 +142,7 @@
 
 /* Form fields */
 .deposit-field {
-  margin-bottom: 0.85rem;
+  margin-bottom: 1.85rem;
 }
 
 .deposit-field-label {
@@ -149,8 +151,8 @@
   gap: 0.45rem;
   margin-bottom: 0.35rem;
   font-size: 1.46rem;
-  font-weight: 600;
-  color: var(--dep-text);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .deposit-field-label svg {
@@ -185,7 +187,8 @@
 }
 
 .deposit-page .deposit-field-input::placeholder {
-  color: var(--dep-muted);
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 300;
   opacity: 1;
 }
 
@@ -514,110 +517,154 @@
   font-weight: 800;
 }
 
-/* Phone illustration */
+/* Phone illustration — neon M-PESA phone + shield */
 .deposit-phone-art {
+  --phone-neon: #a855f7;
+  --phone-neon-soft: #c084fc;
+  --phone-body: #0d1220;
+  --phone-body-mid: #12182a;
+  --mpesa-green: #22c55e;
+  --shield-green: #22c55e;
+  --shield-edge: #16a34a;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 0;
-  padding: 0.15rem 0;
+  min-height: 160px;
+  padding: 1.1rem 0.5rem 1.35rem;
   position: relative;
+  background:
+    radial-gradient(ellipse 70% 65% at 50% 48%, rgba(88, 40, 140, 0.18) 0%, transparent 70%),
+    #0b0e1b;
+  border-radius: 10px;
+  overflow: visible;
 }
 
 .deposit-phone-frame {
-  width: 78px;
-  height: 132px;
-  border-radius: 14px;
-  border: 2.5px solid #7c4dff;
-  background: linear-gradient(160deg, #2a1a4a 0%, #1a1030 55%, #120c22 100%);
+  width: 82px;
+  height: 140px;
+  border-radius: 16px;
+  border: 1.5px solid var(--phone-neon);
+  background:
+    linear-gradient(165deg, var(--phone-body-mid) 0%, var(--phone-body) 45%, #080b14 100%);
   position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transform: rotate(-12deg);
+  box-shadow:
+    0 0 6px rgba(168, 85, 247, 0.85),
+    0 0 14px rgba(168, 85, 247, 0.45),
+    0 0 28px rgba(168, 85, 247, 0.22),
+    inset 0 0 8px rgba(168, 85, 247, 0.35),
+    inset 0 0 1px rgba(192, 132, 252, 0.6),
+    0 10px 22px rgba(0, 0, 0, 0.55);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 0.55rem;
+  justify-content: center;
+  padding-top: 0.35rem;
+  z-index: 1;
 }
 
 .deposit-phone-notch {
-  width: 24px;
-  height: 4px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.2);
-  margin-bottom: 0.85rem;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 4px rgba(168, 85, 247, 0.25);
 }
 
 .deposit-phone-mpesa {
-  font-size: 0.86rem;
+  font-size: 0.92rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
-  color: #69f0ae;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  line-height: 1;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
-.deposit-phone-screen-lines {
-  margin-top: 0.7rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  width: 60%;
+.deposit-phone-mpesa-m,
+.deposit-phone-mpesa-esa {
+  color: rgba(255, 255, 255, 0.92);
 }
 
-.deposit-phone-screen-lines span {
-  display: block;
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.deposit-phone-screen-lines span:nth-child(2) {
-  width: 75%;
-}
-
-.deposit-phone-screen-lines span:nth-child(3) {
-  width: 50%;
+.deposit-phone-mpesa-p {
+  color: var(--mpesa-green);
 }
 
 .deposit-phone-shield {
   position: absolute;
-  right: calc(50% - 54px);
-  bottom: 14px;
+  right: calc(50% - 58px);
+  bottom: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 50%;
-  background: var(--dep-green);
-  color: #fff;
-  font-size: 1.53rem;
-  box-shadow: 0 4px 12px rgba(0, 200, 83, 0.4);
+  width: 2.85rem;
+  height: 3.25rem;
   z-index: 2;
+  filter: drop-shadow(0 4px 10px rgba(34, 197, 94, 0.45));
+  pointer-events: none;
+}
+
+.deposit-phone-shield-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.deposit-phone-shield-body {
+  fill: var(--shield-green);
+  stroke: var(--shield-edge);
+  stroke-width: 1.5;
+}
+
+.deposit-phone-shield-check {
+  stroke: #ffffff;
 }
 
 .deposit-phone-sparkle {
   position: absolute;
-  color: var(--dep-pink);
-  font-size: 0.98rem;
-  opacity: 0.85;
+  width: 14px;
+  height: 14px;
+  z-index: 3;
   pointer-events: none;
+  background: var(--phone-neon-soft);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    100% 50%,
+    61% 65%,
+    50% 100%,
+    39% 65%,
+    0% 50%,
+    39% 35%
+  );
+  filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.9));
+  opacity: 0.95;
 }
 
 .deposit-phone-sparkle--1 {
-  top: 18%;
-  left: 12%;
-  font-size: 1.18rem;
+  top: 22%;
+  left: 8%;
+  width: 16px;
+  height: 16px;
 }
 
 .deposit-phone-sparkle--2 {
-  top: 28%;
+  top: 18%;
   right: 10%;
-  font-size: 0.77rem;
+  width: 10px;
+  height: 10px;
+  opacity: 0.85;
 }
 
 .deposit-phone-sparkle--3 {
-  bottom: 22%;
-  left: 8%;
-  font-size: 0.84rem;
+  bottom: 28%;
+  right: 6%;
+  width: 11px;
+  height: 11px;
+  opacity: 0.9;
 }
 
 /* Trust footer */
@@ -658,8 +705,8 @@
   }
 
   .deposit-page-header {
-    margin: 0 -1.25rem 2rem;
-    padding: 0.85rem 1.25rem 0.9rem;
+    margin: 0.75rem 0 2rem;
+    padding: 1.25rem 1.25rem 1.35rem;
   }
 
   .deposit-page-title {

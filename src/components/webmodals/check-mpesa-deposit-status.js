@@ -5,10 +5,16 @@ import { Formik, Form, Field } from 'formik';
 import StdTable from "../utils/std-table";
 import makeRequest from "../utils/fetch-request";
 import Alert from "../utils/alert";
+import { FaSearch, FaInfoCircle, FaLock, FaCheck, FaClipboard } from "react-icons/fa";
+import { MdClose } from "react-icons/md";
+import "../../assets/css/confirm-deposit-modal.css";
 
 const CheckMpesaDepositStatus = (props) => {
     const [state, dispatch] = useContext(Context);
 
+    const closeModal = () => {
+        dispatch({ type: "SET", key: "showcheckmpesadepositstatus", payload: false });
+    };
 
     const CheckMpesaDepositStatusForm = (props) => {
         const [fakeMessage, setFakeMessage] = useState(false);
@@ -40,55 +46,102 @@ const CheckMpesaDepositStatus = (props) => {
 
         };
 
+        const handlePaste = async (setFieldValue) => {
+            try {
+                if (navigator?.clipboard?.readText) {
+                    const text = await navigator.clipboard.readText();
+                    if (text) {
+                        setFieldValue('mpesa_code', text.trim());
+                    }
+                }
+            } catch (e) {
+                // Clipboard permission denied or unavailable — user can still paste manually
+            }
+        };
+
         return (
             <Formik
                 initialValues={initialValues}
                 onSubmit={handleSubmit}
             >
-                <Form>
-                    <div className="pt-0">
-                        <div className="row form-block">
-                            <div className='text-center'>
-
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '30px' }}>
-                                    <p>
-                                        Need to check if your deposit has reflected? Copy the
-                                        MPESA message you received and paste it in the field below.
-                                    </p>
-                                </div>
-                                <div className="col-md-12 py-5">
-                                    {message && <Alert message={message} />}
-                                    <div className="col-md-12">
-                                        <label style={{ display: 'block', textAlign: 'left' }}>MPESA Message Code</label>
-                                        <Field
-                                            placeholder="eg EDK98G76HHKB"
-                                            as="textarea"
-                                            name="mpesa_code"
-                                            className="form-control block py-3 rounded-2xl std-input"
-                                            rows={4}
-                                            style={{
-                                                resize: 'none',
-                                            }}
-                                        />
+                {({ setFieldValue }) => (
+                    <Form>
+                        <div className="cdm-hero" aria-hidden="true">
+                            <div className="cdm-hero-ring">
+                                <div className="cdm-hero-phone">
+                                    <div className="cdm-hero-bubble">
+                                        <span className="cdm-hero-dot" />
+                                        <span className="cdm-hero-dot" />
+                                        <span className="cdm-hero-dot" />
                                     </div>
-
-                                    <div className="">
-
-                                        <button
-                                            type="submit"
-                                            className={`btn btn-lg btn-primary mt-5 deposit-withdraw-button font-bold`}
-                                            disabled={isSubmitting}
-                                        >
-                                            Check Now
-                                        </button>
-                                    </div>
-
+                                    <span className="cdm-hero-check">
+                                        <FaCheck />
+                                    </span>
                                 </div>
-
                             </div>
                         </div>
-                    </div>
-                </Form>
+
+                        <h3 className="cdm-heading">
+                            Need to check if your deposit has reflected?
+                        </h3>
+                        <p className="cdm-subtext">
+                            Copy the MPESA message you received and paste it in the field below.
+                        </p>
+
+                        {message && (
+                            <div className="cdm-alert">
+                                <Alert message={message} />
+                            </div>
+                        )}
+
+                        <div className="cdm-field">
+                            <label className="cdm-label" htmlFor="mpesa_code">
+                                MPESA Message Code
+                                <FaInfoCircle aria-hidden="true" title="Confirmation code from your MPESA SMS" />
+                            </label>
+                            <div className="cdm-input-wrap">
+                                <Field
+                                    id="mpesa_code"
+                                    placeholder="e.g. EDK98G76HHKB"
+                                    name="mpesa_code"
+                                    type="text"
+                                    className="cdm-input"
+                                    autoComplete="off"
+                                />
+                                <button
+                                    type="button"
+                                    className="cdm-paste-btn"
+                                    title="Paste from clipboard"
+                                    aria-label="Paste from clipboard"
+                                    onClick={() => handlePaste(setFieldValue)}
+                                >
+                                    <FaClipboard />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="cdm-info-card">
+                            <span className="cdm-info-icon" aria-hidden="true">
+                                <FaLock />
+                            </span>
+                            <div className="cdm-info-copy">
+                                <p className="cdm-info-title">Where do I find the code?</p>
+                                <p className="cdm-info-desc">
+                                    It&apos;s the confirmation code within the MPESA message you received after making the deposit.
+                                </p>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="cdm-submit-btn"
+                            disabled={isSubmitting}
+                        >
+                            <FaSearch aria-hidden="true" />
+                            {isSubmitting ? 'Checking…' : 'CHECK NOW'}
+                        </button>
+                    </Form>
+                )}
             </Formik>
         );
     }
@@ -114,10 +167,10 @@ const CheckMpesaDepositStatus = (props) => {
         return (
             <>
                 {pastDeposits &&
-                    <>
-                        <h1 className="text-2xl text-gray-600 my-2">Past Deposits</h1>
+                    <div className="cdm-past">
+                        <h4 className="cdm-past-title">Past Deposits</h4>
                         <StdTable headers={tableHeaders} data={pastDeposits} emptymessage="No Deposits. Please make your first deposit" />
-                    </>
+                    </div>
                 }
 
             </>
@@ -127,17 +180,34 @@ const CheckMpesaDepositStatus = (props) => {
         <>
             <Modal
                 show={state?.showcheckmpesadepositstatus == true}
-                onHide={() => dispatch({ type: "SET", key: "showcheckmpesadepositstatus", payload: false })}
-                dialog className="popover-login-modal"
-                aria-labelledby="contained-modal-title-vcenter">
-                <Modal.Header closeButton className="no-header">
-                    <Modal.Title>Confirm Mpesa Deposit</Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="p-4">
-                    <CheckMpesaDepositStatusForm />
-
-                    {/* Check past deposits */}
-                    {state?.user && <PastUserDeposits />}
+                onHide={closeModal}
+                dialogClassName="confirm-deposit-modal"
+                centered
+                aria-labelledby="confirm-mpesa-deposit-title"
+            >
+                <div className="cdm-header">
+                    <span className="cdm-header-icon" aria-hidden="true">
+                        <span className="cdm-header-phone">
+                            <span className="cdm-header-icon-ksh">KSh</span>
+                        </span>
+                    </span>
+                    <h2 id="confirm-mpesa-deposit-title" className="cdm-header-title">
+                        Confirm Mpesa Deposit
+                    </h2>
+                    <button
+                        type="button"
+                        className="cdm-header-close"
+                        onClick={closeModal}
+                        aria-label="Close"
+                    >
+                        <MdClose />
+                    </button>
+                </div>
+                <Modal.Body>
+                    <div className="cdm-body">
+                        <CheckMpesaDepositStatusForm />
+                        {state?.user && <PastUserDeposits />}
+                    </div>
                 </Modal.Body>
             </Modal>
         </>

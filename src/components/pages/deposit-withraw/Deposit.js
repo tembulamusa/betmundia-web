@@ -16,8 +16,6 @@ import {
     FaInfoCircle,
     FaFileAlt,
     FaChevronDown,
-    FaCheck,
-    FaStar,
 } from 'react-icons/fa';
 import { MdPhoneIphone } from 'react-icons/md';
 
@@ -207,20 +205,32 @@ const Deposit = (props) => {
                 </div>
 
                 <div className="deposit-phone-art" aria-hidden="true">
-                    <FaStar className="deposit-phone-sparkle deposit-phone-sparkle--1" />
-                    <FaStar className="deposit-phone-sparkle deposit-phone-sparkle--2" />
-                    <FaStar className="deposit-phone-sparkle deposit-phone-sparkle--3" />
+                    <span className="deposit-phone-sparkle deposit-phone-sparkle--1" />
+                    <span className="deposit-phone-sparkle deposit-phone-sparkle--2" />
+                    <span className="deposit-phone-sparkle deposit-phone-sparkle--3" />
                     <div className="deposit-phone-frame">
                         <div className="deposit-phone-notch" />
-                        <div className="deposit-phone-mpesa">M-PESA</div>
-                        <div className="deposit-phone-screen-lines">
-                            <span />
-                            <span />
-                            <span />
+                        <div className="deposit-phone-mpesa">
+                            <span className="deposit-phone-mpesa-m">M-</span>
+                            <span className="deposit-phone-mpesa-p">P</span>
+                            <span className="deposit-phone-mpesa-esa">ESA</span>
                         </div>
                     </div>
                     <span className="deposit-phone-shield">
-                        <FaCheck />
+                        <svg viewBox="0 0 40 46" className="deposit-phone-shield-svg" focusable="false">
+                            <path
+                                className="deposit-phone-shield-body"
+                                d="M20 2 L36 8.5 V22 C36 33 28.5 40.5 20 44 C11.5 40.5 4 33 4 22 V8.5 Z"
+                            />
+                            <path
+                                className="deposit-phone-shield-check"
+                                d="M12.5 23.5 L17.5 28.5 L27.5 17.5"
+                                fill="none"
+                                strokeWidth="3.2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
                     </span>
                 </div>
             </div>
@@ -323,22 +333,22 @@ const Deposit = (props) => {
 
     return (
         <div className="deposit-page">
-            <div className="deposit-page-inner">
-                <header className="deposit-page-header">
-                    <button
-                        type="button"
-                        className="deposit-page-back"
-                        aria-label="Go back"
-                        onClick={() => navigate(-1)}
-                    >
-                        <FaArrowLeft />
-                    </button>
-                    <h1 className="deposit-page-title">Deposit Funds (Mobile Money)</h1>
-                    <span className="deposit-page-secure-icon" aria-hidden="true" title="Secure">
-                        <FaShieldAlt />
-                    </span>
-                </header>
+            <header className="deposit-page-header">
+                <button
+                    type="button"
+                    className="deposit-page-back"
+                    aria-label="Go back"
+                    onClick={() => navigate(-1)}
+                >
+                    <FaArrowLeft />
+                </button>
+                <h1 className="deposit-page-title">Deposit Funds (Mobile Money)</h1>
+                <span className="deposit-page-secure-icon" aria-hidden="true" title="Secure">
+                    <FaShieldAlt />
+                </span>
+            </header>
 
+            <div className="deposit-page-inner">
                 <DepositForm />
 
                 <div className="deposit-trust">
