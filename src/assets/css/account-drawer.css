@@ -79,12 +79,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
 }
 
 .account-drawer-title {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.55rem;
   font-weight: 700;
   line-height: 1.2;
   color: var(--acc-text);
@@ -92,7 +92,7 @@
 
 .account-drawer-subtitle {
   margin: 0.15rem 0 0;
-  font-size: 0.92rem;
+  font-size: 1.05rem;
   line-height: 1.3;
   color: var(--acc-muted);
 }
@@ -137,7 +137,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.7rem;
+  font-size: 1.85rem;
 }
 
 .account-drawer-user-meta {
@@ -149,7 +149,7 @@
 
 .account-drawer-phone {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.55rem;
   font-weight: 700;
   line-height: 1.2;
   color: var(--acc-text);
@@ -167,13 +167,13 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.06);
   color: var(--acc-muted);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 500;
 }
 
 .account-drawer-verified-icon {
   color: var(--acc-pink);
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 /* Wallet card */
@@ -190,7 +190,7 @@
   gap: 0.4rem;
   margin-bottom: 0.85rem;
   color: var(--acc-muted);
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -198,7 +198,7 @@
 
 .account-drawer-wallet-label svg {
   color: var(--acc-pink);
-  font-size: 1.35rem;
+  font-size: 1.45rem;
 }
 
 .account-drawer-wallet-grid {
@@ -211,14 +211,14 @@
 .account-drawer-wallet-main-label {
   margin: 0 0 0.3rem;
   color: var(--acc-muted);
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
 .account-drawer-wallet-main-amount {
   margin: 0;
   color: rgba(255, 215, 0);
-  font-size: 1.55rem;
+  font-size: 1.7rem;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.01em;
@@ -250,21 +250,21 @@
   align-items: center;
   gap: 0.35rem;
   color: var(--acc-muted);
-  font-size: 0.85rem;
+  font-size: 0.98rem;
   font-weight: 500;
   min-width: 0;
 }
 
 .account-drawer-wallet-side-label svg {
   color: var(--acc-pink);
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   flex-shrink: 0;
 }
 
 .account-drawer-wallet-side-amount {
   margin: 0;
   color: rgba(255, 215, 0);
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   font-weight: 700;
   flex-shrink: 0;
   text-align: right;
@@ -286,14 +286,14 @@
   min-height: 2.75rem;
   padding: 0.65rem 0.75rem;
   border-radius: var(--acc-radius-sm);
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   font-weight: 700;
   text-decoration: none !important;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
 .account-drawer-action svg {
-  font-size: 1.35rem;
+  font-size: 1.45rem;
 }
 
 .account-drawer-action-deposit {
@@ -335,7 +335,7 @@
   margin: 0;
   padding: 0 0.15rem;
   color: var(--acc-muted);
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -358,7 +358,7 @@
   border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   color: var(--acc-text) !important;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   font-weight: 600;
   text-align: left;
   text-decoration: none !important;

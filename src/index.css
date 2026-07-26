@@ -223,11 +223,12 @@ input[type="password"].form-control {
 .css-1wvake5,
 .ps-sidebar-root {
   position: relative;
+  border: none !important;
   border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-right-width: 1px !important;
   border-right-style: solid !important;
   border-right-color: rgba(255, 255, 255, 0.15) !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
+  outline: none !important;
   transition: width, left, right, 300ms;
   width: auto !important;
   min-width: auto !important;
@@ -246,9 +247,22 @@ aside[class*="css-1wvake5"],
 aside[class*="ps-sidebar-root"],
 *[class*="ps-sidebar-root"],
 *[class*="css-1wvake5"] {
-  border-right: 1px solid rgba(255, 255, 255, 0) !important;
+  border: none !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-right-color: rgba(255, 255, 255, 0.15) !important;
-  border-color: rgba(255, 255, 255, 0) !important;
+  outline: none !important;
+}
+
+/* Kill blue :focus-visible outline on the sports menu sidebar when open/focused */
+.ps-sidebar-root:focus,
+.ps-sidebar-root:focus-visible,
+aside.ps-sidebar-root:focus,
+aside.ps-sidebar-root:focus-visible,
+*[class*="ps-sidebar-root"]:focus,
+*[class*="ps-sidebar-root"]:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.15) !important;
+  outline-offset: -1px;
+  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
 /* Target the pro-sidebar-inner as well */
@@ -777,8 +791,28 @@ tr.my-bets:last-child {
   top: 0;
   right: 0;
   width: var(--bs-offcanvas-width);
-  border-left: 2px solid rgba(255, 255, 255, 0.1) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
   transform: translateX(100%);
+}
+
+/* Left / start drawers — thin white edge (bonanza keeps its own border: none) */
+.offcanvas.offcanvas-start:not(.bonanza-drawer) {
+  top: 0;
+  left: 0;
+  width: var(--bs-offcanvas-width);
+  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+  transform: translateX(-100%);
+}
+
+/* Replace global blue :focus-visible outline on open offcanvas panels (not bonanza) */
+.offcanvas:not(.bonanza-drawer):focus,
+.offcanvas:not(.bonanza-drawer):focus-visible,
+.offcanvas.show:not(.bonanza-drawer):focus,
+.offcanvas.show:not(.bonanza-drawer):focus-visible,
+.offcanvas.showing:not(.bonanza-drawer):focus,
+.offcanvas.showing:not(.bonanza-drawer):focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.15) !important;
+  outline-offset: -1px;
 }
 
 .header-account .cd a:hover,
@@ -2113,6 +2147,17 @@ button:focus-visible {
   outline: none !important;
   box-shadow: none !important;
   text-decoration: none !important;
+}
+
+/* Logo link lives in <nav.app-navbar>, not <header> — kill click/focus outline */
+.header-logo-link:focus,
+.header-logo-link:focus-visible,
+.header-logo-link:active,
+.logo > a:focus,
+.logo > a:focus-visible,
+.logo > a:active {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 

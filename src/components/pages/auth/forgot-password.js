@@ -270,7 +270,7 @@ const ResetPassword = (props) => {
     };
 
     return (
-        <>
+        <div className="forgot-password-page">
             <div className='col-md-12 page-title p-4 text-center mb-4'>
                 <h4 className="">Forgot Password</h4>
             </div>
@@ -283,7 +283,7 @@ const ResetPassword = (props) => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

@@ -1,0 +1,348 @@
+/* Crash Terms & Conditions page */
+
+.crash-terms-page {
+  --ct-pink: #e91e8c;
+  --ct-pink-alt: #e91e63;
+  --ct-pink-soft: #ff52d4;
+  --ct-pink-deep: #a71f66;
+  --ct-card: rgba(255, 255, 255, 0.1);
+  --ct-icon-bg: rgba(255, 255, 255, 0.06);
+  --ct-border: rgba(255, 255, 255, 0.12);
+  --ct-panel: rgba(255, 255, 255, 0.05);
+  --ct-panel-border: rgba(255, 255, 255, 0.09);
+  --ct-text: #ffffff;
+  --ct-muted: rgba(255, 255, 255, 0.8);
+  --ct-radius: 14px;
+  --ct-radius-sm: 8px;
+  color: var(--ct-text);
+  background: transparent;
+  min-height: 100%;
+  padding: 0 0 2rem;
+  font-size: 1.53rem;
+}
+
+.crash-terms-page * {
+  box-sizing: border-box;
+}
+
+/* Header — full width with thin underline */
+.crash-terms-page-header {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0.75rem 0 1.75rem;
+  padding: 1rem 1rem 1rem;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.crash-terms-page-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: 0.15rem;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.crash-terms-page-back:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.crash-terms-page-back svg {
+  font-size: 1.15rem;
+}
+
+.crash-terms-page-heading {
+  text-align: center;
+  min-width: 0;
+}
+
+.crash-terms-page-title {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.crash-terms-page-subtitle {
+  margin: 0.4rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: var(--ct-muted);
+  line-height: 1.4;
+}
+
+.crash-terms-page-shield {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: 0.15rem;
+  color: var(--ct-pink);
+  font-size: 1.55rem;
+}
+
+.crash-terms-page-inner {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 1rem 1rem;
+}
+
+/* Accordion list — distinct cards, Cookie Policy gap */
+.crash-terms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.crash-terms-page .crash-terms-accordion {
+  width: 100%;
+  background: var(--ct-panel) !important;
+  background-color: var(--ct-panel) !important;
+  box-shadow: none !important;
+  border: 1px solid var(--ct-panel-border) !important;
+  margin: 0 !important;
+  padding: 0;
+  border-radius: var(--ct-radius-sm) !important;
+  overflow: hidden;
+}
+
+.crash-terms-page .crash-terms-accordion::before {
+  display: none !important;
+}
+
+.crash-terms-page .crash-terms-accordion.Mui-expanded {
+  margin: 0 !important;
+}
+
+.crash-terms-page .crash-terms-accordion:first-of-type,
+.crash-terms-page .crash-terms-accordion:last-of-type {
+  border-radius: var(--ct-radius-sm) !important;
+}
+
+.crash-terms-page .crash-terms-summary {
+  min-height: 0 !important;
+  padding: 0.85rem 1rem !important;
+  gap: 0.65rem;
+  background: transparent !important;
+  border-bottom: none;
+}
+
+.crash-terms-page .crash-terms-summary:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.crash-terms-page .crash-terms-summary.Mui-focused,
+.crash-terms-page .crash-terms-summary.Mui-focusVisible {
+  background: transparent !important;
+}
+
+.crash-terms-page .crash-terms-summary.Mui-expanded {
+  min-height: 0 !important;
+  border-bottom: 1px solid var(--ct-panel-border);
+}
+
+.crash-terms-page .crash-terms-summary .MuiAccordionSummary-content {
+  margin: 0 !important;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.crash-terms-page .crash-terms-summary .MuiAccordionSummary-content.Mui-expanded {
+  margin: 0 !important;
+}
+
+.crash-terms-page .crash-terms-summary .MuiAccordionSummary-expandIconWrapper {
+  color: var(--ct-pink);
+}
+
+.crash-terms-page .crash-terms-summary .MuiAccordionSummary-expandIconWrapper svg {
+  font-size: 20px;
+  color: var(--ct-pink);
+}
+
+.crash-terms-row-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: var(--ct-radius-sm);
+  background: var(--ct-icon-bg);
+  border: 1px solid rgba(233, 30, 140, 0.18);
+  color: var(--ct-pink);
+  font-size: 1.05rem;
+}
+
+.crash-terms-row-num {
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ct-pink);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.crash-terms-row-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+/* Continuous open card — no nested dark content box */
+.crash-terms-page .crash-terms-details {
+  padding: 0.95rem 1rem 1.05rem !important;
+}
+
+.crash-terms-page .crash-terms-details-inner {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+}
+
+.crash-terms-page .crash-terms-details-inner p,
+.crash-terms-page .crash-terms-details-inner li {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ct-muted);
+}
+
+.crash-terms-page .crash-terms-details-inner p + p {
+  margin-top: 0.65rem;
+}
+
+.crash-terms-page .crash-terms-details-inner b,
+.crash-terms-page .crash-terms-details-inner strong {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+}
+
+.crash-terms-page .crash-terms-details-inner ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.crash-terms-page .crash-terms-details-inner li + li {
+  margin-top: 0.45rem;
+}
+
+.crash-terms-page .crash-terms-details-inner a {
+  color: var(--ct-pink-soft);
+  text-decoration: underline;
+}
+
+.crash-terms-page .crash-terms-details-inner a:hover {
+  color: #fff;
+}
+
+/* Important Notice */
+.crash-terms-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-top: 2.75rem;
+  padding: 1.1rem 1rem;
+  background: var(--ct-card);
+  border: 1px solid var(--ct-border);
+  border-radius: var(--ct-radius);
+}
+
+.crash-terms-notice-badge {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.15rem;
+  height: 3.15rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ff52d4 0%, #e91e8c 45%, #a71f66 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(233, 30, 140, 0.35);
+}
+
+.crash-terms-notice-shield {
+  font-size: 1.5rem;
+}
+
+.crash-terms-notice-lock {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  font-size: 0.68rem;
+}
+
+.crash-terms-notice-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.crash-terms-notice-title {
+  margin: 0 0 0.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.crash-terms-notice-text {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--ct-muted);
+}
+
+.crash-terms-notice-text + .crash-terms-notice-text {
+  margin-top: 0.45rem;
+}
+
+@media (min-width: 576px) {
+  .crash-terms-page-title {
+    font-size: 1.7rem;
+  }
+
+  .crash-terms-page-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .crash-terms-page-header {
+    margin-bottom: 2rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .crash-terms-page-inner {
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  .crash-terms-notice {
+    margin-top: 3rem;
+    padding: 1.25rem 1.15rem;
+  }
+}

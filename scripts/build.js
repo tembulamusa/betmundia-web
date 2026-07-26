@@ -1,5 +1,7 @@
 const rewire = require('rewire');
 const webpack = require('webpack');
+const { fixMuiCreateThemeExport } = require('./fix-mui-create-theme-export');
+fixMuiCreateThemeExport();
 const defaults = rewire('react-scripts/scripts/build.js');
 
 //In order to override the webpack configuration without ejecting the create-react-app

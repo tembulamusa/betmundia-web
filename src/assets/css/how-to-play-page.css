@@ -1,0 +1,344 @@
+/* How to Play / Betting Rules page */
+
+.how-to-play-page {
+  --htp-pink: #e91e8c;
+  --htp-pink-alt: #e91e63;
+  --htp-pink-soft: #ff52d4;
+  --htp-pink-deep: #a71f66;
+  --htp-card: rgba(255, 255, 255, 0.1);
+  --htp-icon-bg: rgba(255, 255, 255, 0.06);
+  --htp-border: rgba(255, 255, 255, 0.12);
+  --htp-panel: rgba(255, 255, 255, 0.05);
+  --htp-panel-border: rgba(255, 255, 255, 0.09);
+  --htp-text: #ffffff;
+  --htp-muted: rgba(255, 255, 255, 0.8);
+  --htp-radius: 14px;
+  --htp-radius-sm: 8px;
+  color: var(--htp-text);
+  background: transparent;
+  min-height: 100%;
+  padding: 0 0 2rem;
+  font-size: 1.53rem;
+}
+
+.how-to-play-page * {
+  box-sizing: border-box;
+}
+
+/* Header */
+.how-to-play-page-header {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0.75rem 0 1.75rem;
+  padding: 1rem 1rem 0.25rem;
+  background: transparent;
+}
+
+.how-to-play-page-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: 0.15rem;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.how-to-play-page-back:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.how-to-play-page-back svg {
+  font-size: 1.15rem;
+}
+
+.how-to-play-page-heading {
+  text-align: center;
+  min-width: 0;
+}
+
+.how-to-play-page-title {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.how-to-play-page-subtitle {
+  margin: 0.4rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: var(--htp-muted);
+  line-height: 1.4;
+}
+
+.how-to-play-page-shield {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: 0.15rem;
+  color: var(--htp-pink);
+  font-size: 1.55rem;
+}
+
+.how-to-play-page-inner {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 1rem 1rem;
+}
+
+/* Accordion list — distinct cards, Cookie Policy gap */
+.how-to-play-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.how-to-play-page .how-to-play-accordion {
+  background: var(--htp-panel) !important;
+  background-color: var(--htp-panel) !important;
+  box-shadow: none !important;
+  border: 1px solid var(--htp-panel-border) !important;
+  margin: 0 !important;
+  padding: 0;
+  border-radius: var(--htp-radius-sm) !important;
+  overflow: hidden;
+}
+
+.how-to-play-page .how-to-play-accordion::before {
+  display: none !important;
+}
+
+.how-to-play-page .how-to-play-accordion.Mui-expanded {
+  margin: 0 !important;
+}
+
+.how-to-play-page .how-to-play-accordion:first-of-type,
+.how-to-play-page .how-to-play-accordion:last-of-type {
+  border-radius: var(--htp-radius-sm) !important;
+}
+
+.how-to-play-page .how-to-play-summary {
+  min-height: 0 !important;
+  padding: 0.85rem 1rem !important;
+  gap: 0.65rem;
+  background: transparent !important;
+  border-bottom: none;
+}
+
+.how-to-play-page .how-to-play-summary:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.how-to-play-page .how-to-play-summary.Mui-focused,
+.how-to-play-page .how-to-play-summary.Mui-focusVisible {
+  background: transparent !important;
+}
+
+.how-to-play-page .how-to-play-summary.Mui-expanded {
+  min-height: 0 !important;
+  border-bottom: 1px solid var(--htp-panel-border);
+}
+
+.how-to-play-page .how-to-play-summary .MuiAccordionSummary-content {
+  margin: 0 !important;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.how-to-play-page .how-to-play-summary .MuiAccordionSummary-content.Mui-expanded {
+  margin: 0 !important;
+}
+
+.how-to-play-page .how-to-play-summary .MuiAccordionSummary-expandIconWrapper {
+  color: var(--htp-pink);
+}
+
+.how-to-play-page .how-to-play-summary .MuiAccordionSummary-expandIconWrapper svg {
+  font-size: 20px;
+  color: var(--htp-pink);
+}
+
+.how-to-play-row-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: var(--htp-radius-sm);
+  background: var(--htp-icon-bg);
+  border: 1px solid rgba(233, 30, 140, 0.18);
+  color: var(--htp-pink);
+  font-size: 1.05rem;
+}
+
+.how-to-play-row-num {
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--htp-pink);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.how-to-play-row-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+/* Continuous open card — no nested dark content box */
+.how-to-play-page .how-to-play-details {
+  padding: 0.95rem 1rem 1.05rem !important;
+}
+
+.how-to-play-page .how-to-play-details-inner {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+}
+
+.how-to-play-page .how-to-play-details-inner p,
+.how-to-play-page .how-to-play-details-inner li {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--htp-muted);
+}
+
+.how-to-play-page .how-to-play-details-inner p + p {
+  margin-top: 0.65rem;
+}
+
+.how-to-play-page .how-to-play-details-inner b,
+.how-to-play-page .how-to-play-details-inner strong {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+}
+
+.how-to-play-page .how-to-play-details-inner ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.how-to-play-page .how-to-play-details-inner li + li {
+  margin-top: 0.45rem;
+}
+
+.how-to-play-page .how-to-play-details-inner a {
+  color: var(--htp-pink-soft);
+  text-decoration: underline;
+}
+
+.how-to-play-page .how-to-play-details-inner a:hover {
+  color: #fff;
+}
+
+/* Important Notice */
+.how-to-play-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-top: 2.75rem;
+  padding: 1.1rem 1rem;
+  background: var(--htp-card);
+  border: 1px solid var(--htp-border);
+  border-radius: var(--htp-radius);
+}
+
+.how-to-play-notice-badge {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.15rem;
+  height: 3.15rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ff52d4 0%, #e91e8c 45%, #a71f66 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(233, 30, 140, 0.35);
+}
+
+.how-to-play-notice-shield {
+  font-size: 1.5rem;
+}
+
+.how-to-play-notice-lock {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  font-size: 0.68rem;
+}
+
+.how-to-play-notice-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.how-to-play-notice-title {
+  margin: 0 0 0.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.how-to-play-notice-text {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--htp-muted);
+}
+
+.how-to-play-notice-text + .how-to-play-notice-text {
+  margin-top: 0.45rem;
+}
+
+@media (min-width: 576px) {
+  .how-to-play-page-title {
+    font-size: 1.7rem;
+  }
+
+  .how-to-play-page-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .how-to-play-page-header {
+    margin-bottom: 2rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .how-to-play-page-inner {
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  .how-to-play-notice {
+    margin-top: 3rem;
+    padding: 1.25rem 1.15rem;
+  }
+}

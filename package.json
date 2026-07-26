@@ -78,7 +78,8 @@
     "staging": "git checkout development && GENERATE_SOURCEMAP=false && node scripts/build.js && sudo cp -rf build/* ../betmundial-integration/ && sudo chown -R www-data ../betmundial-integration",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "preinstall": "npx npm-force-resolutions"
+    "preinstall": "npx npm-force-resolutions",
+    "postinstall": "node scripts/fix-mui-create-theme-export.js"
   },
   "eslintConfig": {
     "extends": [

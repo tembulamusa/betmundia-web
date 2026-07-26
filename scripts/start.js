@@ -1,5 +1,7 @@
 const rewire = require('rewire');
 const webpack = require('webpack');
+const { fixMuiCreateThemeExport } = require('./fix-mui-create-theme-export');
+fixMuiCreateThemeExport();
 const defaults = rewire('react-scripts/scripts/start.js');
 const webpackConfig = require('react-scripts/config/webpack.config');
 

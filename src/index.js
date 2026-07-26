@@ -20,6 +20,8 @@ import './assets/css/bonanza-drawer.css';
 import './assets/css/freebet-page.css';
 import './assets/css/deposit-page.css';
 import './assets/css/change-password-page.css';
+import './assets/css/crash-terms-page.css';
+import './assets/css/how-to-play-page.css';
 import './assets/css/account-drawer.css';
 import 'react-toastify/dist/ReactToastify.css'
 import Store from './context/store';
@@ -69,6 +71,7 @@ import PageviewTracker from "./components/utils/pageview-tracker";
 import { PromoTracker } from "./promo-tracker";
 import PromoWins from "./components/pages/promo-wins";
 import './index.css';
+import './assets/css/forgot-password-page.css';
 import LiveCasino from "./components/pages/casino/LiveCasino";
 import CrashTerms from "./components/pages/terms-and-conditions/crash-terms";
 
