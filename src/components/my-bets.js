@@ -36,7 +36,7 @@ const MyBets = () => {
                 api_version: 2
             });
             if ([200, 201].includes(status)) {
-                // Hide cancel button for this bet, then reload the page
+                // Hide cancel button for this bet, then give the success alert time to display before reloading.
                 setUserBets((prev) =>
                     (prev || []).map((bet) =>
                         bet?.bet_id === betId
@@ -47,7 +47,9 @@ const MyBets = () => {
                 setShowConfirmModal(false);
                 setBetIdToCancel(null);
                 setMessage({ status: 200, message: "Cancel Request sent" });
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
             } else {
                 setMessage({ status: 400, message: result?.message || result?.result || "Failed to cancel bet" });
             }

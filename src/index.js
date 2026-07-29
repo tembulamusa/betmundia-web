@@ -22,6 +22,10 @@ import './assets/css/deposit-page.css';
 import './assets/css/change-password-page.css';
 import './assets/css/crash-terms-page.css';
 import './assets/css/how-to-play-page.css';
+import './assets/css/responsible-gambling-page.css';
+import './assets/css/faqs-page.css';
+import './assets/css/dispute-resolution-page.css';
+import './assets/css/anti-money-laundering-page.css';
 import './assets/css/account-drawer.css';
 import 'react-toastify/dist/ReactToastify.css'
 import Store from './context/store';

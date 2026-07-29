@@ -41,9 +41,9 @@ const ShareExistingbet = (props) => {
             // endCustomerIP: getIp(),
             channel_id: 'web',
             slip: bet.betslip,
-            profile_id: state?.user?.profile_id,
+            profile_id: state?.user?.profile_id || user?.profile_id,
             account: 1,
-            msisdn: state?.user?.msisdn,
+            // msisdn: state?.user?.msisdn || user?.msisdn,
             accept_all_odds_change: 1,
             bet_type: "3", // update for live,
             bet_id: bet.bet_id

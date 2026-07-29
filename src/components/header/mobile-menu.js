@@ -163,6 +163,18 @@ function MobileMenu(props) {
             <p className="account-drawer-section-label">Activity</p>
             <div className="account-drawer-list">
               <Link
+                to="/my-bets"
+                className="account-drawer-item"
+                onClick={handleClose}
+              >
+                <span className="account-drawer-item-icon" aria-hidden="true">
+                  <IoListCircleOutline />
+                </span>
+                <span className="account-drawer-item-label">My Bets</span>
+                <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
+              </Link>
+
+              <Link
                 to="/promo-wins"
                 className="account-drawer-item"
                 onClick={handleClose}
@@ -174,18 +186,6 @@ function MobileMenu(props) {
                   Promo Wins
                   <span className="account-drawer-count">{PROMO_WINS_COUNT}</span>
                 </span>
-                <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
-              </Link>
-
-              <Link
-                to="/my-bets"
-                className="account-drawer-item"
-                onClick={handleClose}
-              >
-                <span className="account-drawer-item-icon" aria-hidden="true">
-                  <IoListCircleOutline />
-                </span>
-                <span className="account-drawer-item-label">My bets</span>
                 <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
               </Link>
 

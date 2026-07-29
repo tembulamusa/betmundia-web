@@ -1,61 +1,91 @@
-import React, { useState } from "react";
-import Carousel from "react-bootstrap/Carousel";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { getFromLocalStorage } from "../utils/local-storage";
+import CasinoBannerMain from "../../assets/img/backgrounds/casino_banner_main.jpeg";
 
-import Two from "../../assets/img/casino/carousel/2.jpg";
-import Nine from "../../assets/img/casino/carousel/9.jpg";
-import Ten from "../../assets/img/casino/carousel/10.jpg";
-import Fifteen from "../../assets/img/casino/carousel/15.png";
-import Sixteen from "../../assets/img/casino/carousel/16.jpg";
-import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg';
-import LiveCasino from "../../assets/img/casino/carousel/casino-live.jpeg";
-import CasinoOffers from "../../assets/img/casino/carousel/casino-offers.jpeg";
-import CasinoLive from "../../assets/img/casino/carousel/live-casino.jpeg";
-import Highflyer from "../../assets/img/casino/carousel/highflyer.jpeg";
-import KukuMaziwa from "../../assets/img/casino/carousel/kuku_maziwa.jpeg";
-
-const banners = [
-    { src: MundialLeague, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
-    { src: LiveCasino, link: "/casino/categories/livegames", requiresAuth: false },
-    { src: CasinoOffers, link: null, requiresAuth: false },
-    { src: CasinoLive, link: "/casino/categories/livegames", requiresAuth: false },
-    { src: Highflyer, link: "/casino/providers/pragmatic", requiresAuth: false },
-    { src: KukuMaziwa, link: "/casino/providers/spribe", requiresAuth: false },
-    // { src: Sixteen, link: null, requiresAuth: false }, 
+const fallbackLeadingBets = [
+    { id: "lb-1", player: "Nairobi Ace", game: "Aviator", stake: "KES 1,200", potential: "KES 14,400", link: "/casino/providers/spribe", requiresAuth: false },
+    { id: "lb-2", player: "Coast Queen", game: "JetX", stake: "KES 850", potential: "KES 8,925", link: "/casino-game/smartsoft/jetx", requiresAuth: false },
+    { id: "lb-3", player: "Turbo Ken", game: "Aviatrix", stake: "KES 1,500", potential: "KES 12,750", link: "/casino-game/aviatrix/aviatrix", requiresAuth: false },
+    { id: "lb-4", player: "Lucky Vee", game: "Spaceman", stake: "KES 600", potential: "KES 6,300", link: "/casino/providers/pragmatic", requiresAuth: false },
+    { id: "lb-5", player: "High Roller", game: "Mundial League", stake: "KES 2,000", potential: "KES 18,000", link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
+    { id: "lb-6", player: "Night Owl", game: "Live Casino", stake: "KES 900", potential: "KES 7,650", link: "/casino/categories/livegames", requiresAuth: false },
 ];
 
 const CasinoCarousel = () => {
-    const [imageLoaded, setImageLoaded] = useState(false);
     const navigate = useNavigate();
     const user = getFromLocalStorage("user");
+    const storedGames = getFromLocalStorage("casinogames");
 
-    const handleNavigation = (banner) => {
-        if (!banner.link) return; // Skip if there is no link
-        
-        if (banner.requiresAuth && !user) {
-            navigate(`/login?next=${encodeURIComponent(banner.link)}`);
+    const leadingBets = Array.isArray(storedGames)
+        ? storedGames
+            .flatMap((category) => Array.isArray(category?.gameList) ? category.gameList : [])
+            .filter((game) => game?.game_name && game?.provider_name)
+            .slice(0, 8)
+            .map((game, index) => {
+                const stakes = [1200, 850, 1500, 600, 2000, 900, 700, 1750];
+                const multipliers = [12, 10.5, 8.5, 9.25, 9, 8.5, 11, 7.8];
+                const playerNames = ["Nairobi Ace", "Coast Queen", "Turbo Ken", "Lucky Vee", "High Roller", "Night Owl", "Bet Boss", "Swift Punter"];
+                const providerSlug = game.provider_name.split(" ").join("-").toLowerCase();
+                const gameSlug = game.game_name.split(" ").join("-").toLowerCase();
+                const stakeValue = stakes[index % stakes.length];
+                const potentialValue = Math.round(stakeValue * multipliers[index % multipliers.length]);
+
+                return {
+                    id: `game-${game.game_id || index}`,
+                    player: playerNames[index % playerNames.length],
+                    game: game.game_name,
+                    stake: `KES ${stakeValue.toLocaleString()}`,
+                    potential: `KES ${potentialValue.toLocaleString()}`,
+                    link: `/casino-game/${providerSlug}/${gameSlug}`,
+                    requiresAuth: false,
+                };
+            })
+        : fallbackLeadingBets;
+
+    const handleNavigation = (item) => {
+        if (!item?.link) return;
+
+        if (item.requiresAuth && !user) {
+            navigate(`/login?next=${encodeURIComponent(item.link)}`);
         } else {
-            navigate(banner.link);
+            navigate(item.link);
         }
     };
 
     return (
-        <Carousel indicators={false} className="casino banner-imgs cursor-pointer">
-            {banners.map((banner, index) => (
-                <Carousel.Item key={index}>
-                    <img
-                        className="d-block w-100"
-                        style={{ display: imageLoaded ? "block" : "none" }}
-                        src={banner.src}
-                        onLoad={() => setImageLoaded(true)}
-                        alt="betmundial"
-                        effects="blur"
-                        onClick={() => handleNavigation(banner)}
-                    />
-                </Carousel.Item>
-            ))}
-        </Carousel>
+        <section
+            className="casino-leading-bets-banner"
+            style={{ backgroundImage: `linear-gradient(90deg, rgba(7, 13, 37, 0.92), rgba(18, 21, 48, 0.72)), url(${CasinoBannerMain})` }}
+        >
+            <div className="casino-leading-bets-inner">
+                <div className="casino-leading-bets-label">
+                    <span className="casino-leading-bets-kicker">Casino</span>
+                    <span className="casino-leading-bets-title">Leading Bets</span>
+                </div>
+
+                <div className="casino-leading-bets-marquee" aria-label="Leading bets ticker">
+                    <div className="casino-leading-bets-track">
+                        {[...leadingBets, ...leadingBets].map((item, index) => (
+                            <button
+                                key={`${item.id}-${index}`}
+                                type="button"
+                                className="casino-leading-bet-item"
+                                onClick={() => handleNavigation(item)}
+                            >
+                                <span className="casino-leading-bet-player">{item.player}</span>
+                                <span className="casino-leading-bet-separator">•</span>
+                                <span className="casino-leading-bet-game">{item.game}</span>
+                                <span className="casino-leading-bet-separator">•</span>
+                                <span className="casino-leading-bet-meta">Stake {item.stake}</span>
+                                <span className="casino-leading-bet-separator">•</span>
+                                <span className="casino-leading-bet-win">Potential {item.potential}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 

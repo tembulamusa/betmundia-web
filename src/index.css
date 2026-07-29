@@ -1193,6 +1193,50 @@ input.std-input::placeholder {
 
 @media (max-width: 767px) {
 
+  .casino-leading-bets-banner {
+    min-height: 100px;
+    border-radius: 10px;
+  }
+
+  .casino-leading-bets-inner {
+    min-height: inherit;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.9rem 0.85rem;
+  }
+
+  .casino-leading-bets-label {
+    flex: initial;
+    min-width: 0;
+  }
+
+  .casino-leading-bets-title {
+    font-size: 1.2rem;
+  }
+
+  .casino-leading-bets-marquee {
+    width: 100%;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .casino-leading-bets-track {
+    gap: 0.7rem;
+    animation-duration: 22s;
+  }
+
+  .casino-leading-bet-item {
+    min-height: 42px;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  .casino-leading-bet-meta,
+  .casino-leading-bet-win {
+    font-size: 0.78rem;
+  }
+
   .logo {
     display: flex;
   }
@@ -1541,6 +1585,123 @@ img.highlights-content-img {
 
 .banner-imgs img {
   /* height: 150px; */
+}
+
+.casino-leading-bets-banner {
+  min-height: 150px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.casino-leading-bets-inner {
+  min-height: inherit;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.15rem 1.25rem;
+}
+
+.casino-leading-bets-label {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 190px;
+  min-width: 190px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.casino-leading-bets-kicker {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  margin-bottom: 0.35rem;
+}
+
+.casino-leading-bets-title {
+  color: #ffffff;
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.casino-leading-bets-marquee {
+  flex: 1 1 auto;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.casino-leading-bets-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  gap: 0.9rem;
+  animation: casinoLeadingBetsScroll 28s linear infinite;
+}
+
+.casino-leading-bets-banner:hover .casino-leading-bets-track {
+  animation-play-state: paused;
+}
+
+.casino-leading-bet-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 52px;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(90deg, rgba(10, 18, 48, 0.82), rgba(167, 31, 102, 0.18));
+  color: #ffffff;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.casino-leading-bet-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(231, 6, 84, 0.5);
+  background: linear-gradient(90deg, rgba(10, 18, 48, 0.95), rgba(167, 31, 102, 0.3));
+}
+
+.casino-leading-bet-player {
+  color: #ff7cb3;
+  font-weight: 700;
+}
+
+.casino-leading-bet-game {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.casino-leading-bet-meta {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.92rem;
+}
+
+.casino-leading-bet-win {
+  color: #ffd166;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.casino-leading-bet-separator {
+  color: rgba(255, 255, 255, 0.34);
+}
+
+@keyframes casinoLeadingBetsScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .menu-icon {
