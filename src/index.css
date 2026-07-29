@@ -1685,13 +1685,13 @@ img.highlights-content-img {
   gap: 0.75rem;
   min-height: 78px;
   padding: 0.6rem 1.05rem 0.6rem 0.6rem;
-  border: 1px solid rgba(233, 30, 140, 0.45);
+  border: 1px solid rgba(255, 213, 74, 0.45);
   background: transparent;
   color: #ffffff;
   border-radius: 14px;
   white-space: nowrap;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), 0 0 8px rgba(233, 30, 140, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), 0 0 8px rgba(255, 213, 74, 0.2);
   transition: transform 180ms ease;
 }
 
