@@ -1195,7 +1195,7 @@ input.std-input::placeholder {
 
   .casino-leading-bets-banner {
     min-height: 100px;
-    border-radius: 10px;
+    border-radius: 0;
   }
 
   .casino-leading-bets-inner {
@@ -1589,13 +1589,14 @@ img.highlights-content-img {
 
 .casino-leading-bets-banner {
   min-height: 150px;
-  background-position: center;
+  width: 100%;
+  background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: 14px;
+  border-radius: 0;
   overflow: hidden;
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
