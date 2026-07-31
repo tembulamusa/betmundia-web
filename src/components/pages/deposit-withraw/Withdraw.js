@@ -1,90 +1,111 @@
 import React, { useState, useContext, useEffect } from 'react';
-import mpesa from '../../../assets/img/mpesa-3.png';
-import makeRequest from "../../utils/fetch-request";
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
+import {
+    FaArrowLeft,
+    FaCoins,
+    FaInfoCircle,
+    FaLock,
+    FaHeadset,
+    FaChevronRight,
+    FaPaperPlane,
+    FaShieldAlt,
+} from 'react-icons/fa';
+import { MdPhoneIphone } from 'react-icons/md';
+import mpesa from '../../../assets/img/mpesa-3.png';
+import makeRequest from '../../utils/fetch-request';
 import { Context } from '../../../context/store';
-import { getBetslip } from '../../utils/betslip'
+import { getBetslip } from '../../utils/betslip';
 import { getFromLocalStorage, removeItem } from '../../utils/local-storage';
+
+const SUPPORT_EMAIL = 'mailto:customercare@betmundial.com';
+
+const WITHDRAW_STEPS = [
+    'Confirm your M-Pesa phone number.',
+    'Enter the amount.',
+    'Click withdraw.',
+    'Confirm on your phone.',
+];
 
 const Withdrawal = () => {
     const [state, dispatch] = useContext(Context);
+    const navigate = useNavigate();
 
     const [success, setSuccess] = useState(false);
     const [message, setMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const user = getFromLocalStorage("user");
+    const user = getFromLocalStorage('user');
 
     const initialValues = {
         amount: '',
-        msisdn: user?.msisdn
+        msisdn: user?.msisdn || '',
     };
 
-    // ✅ SUBMIT
     const handleSubmit = (values) => {
         const amount = Math.floor(Number(values.amount) || 0);
         const balance = Number(user?.balance || 0);
+        const msisdn = values.msisdn || user?.msisdn;
 
-        // ✅ VALIDATION BEFORE REQUEST
         if (amount > 70000) {
-            setMessage({ status: 400, message: "Maximum withdrawal is 70,000" });
+            setSuccess(false);
+            setMessage({ status: 400, message: 'Maximum withdrawal is 70,000' });
             return;
         }
 
         if (amount > balance) {
-            setMessage({ status: 400, message: "Insufficient balance" });
+            setSuccess(false);
+            setMessage({ status: 400, message: 'Insufficient balance' });
             return;
         }
 
-        let endpoint = 'v2/withdrawals/new';
-
-        let data = {
-            msisdn: user?.msisdn,
-            amount: amount
-        };
+        setIsLoading(true);
+        setMessage(null);
+        setSuccess(false);
 
         makeRequest({
-            url: endpoint,
+            url: 'v2/withdrawals/new',
             method: 'POST',
-            data: data,
-            api_version: 3
+            data: {
+                msisdn,
+                amount,
+            },
+            api_version: 3,
         }).then(([status, response]) => {
-
+            setIsLoading(false);
             setSuccess(status === 200 || status === 201);
 
             if (status === 200 || status === 201) {
                 setMessage({
                     status: 200,
-                    message: "Withdrawal request sent successfully."
+                    message: 'Withdrawal request sent successfully.',
                 });
 
                 dispatch({
-                    type: "SET",
-                    key: "toggleuserbalance",
+                    type: 'SET',
+                    key: 'toggleuserbalance',
                     payload: state?.toggleuserbalance
                         ? !state?.toggleuserbalance
-                        : true
+                        : true,
                 });
-
             } else if (status === 403 || status === 401) {
-                dispatch({ type: "DEL", key: "user" });
-                removeItem("user");
-                dispatch({ type: "SET", key: "showloginmodal", payload: true });
-
+                dispatch({ type: 'DEL', key: 'user' });
+                removeItem('user');
+                dispatch({ type: 'SET', key: 'showloginmodal', payload: true });
             } else {
                 setMessage({
                     status: 400,
                     message:
                         response?.message ||
                         response?.error ||
-                        "Error sending withdrawal request"
+                        'Error sending withdrawal request',
                 });
             }
         });
     };
 
-    // ✅ VALIDATION
     const validate = (values) => {
-        let errors = {};
+        const errors = {};
 
         if (!values.msisdn || !values.msisdn.match(/(254|0)?[71]\d{8}/)) {
             errors.msisdn = 'Please enter a valid phone number';
@@ -93,103 +114,115 @@ const Withdrawal = () => {
         const amount = Number(values.amount);
 
         if (!amount || amount <= 0) {
-            errors.amount = "Please enter a valid amount";
+            errors.amount = 'Please enter a valid amount';
         } else if (amount > 70000) {
-            errors.amount = "Maximum withdrawal is 70,000";
+            errors.amount = 'Maximum withdrawal is 70,000';
         } else if (amount > Number(user?.balance || 0)) {
-            errors.amount = "Insufficient balance";
+            errors.amount = 'Insufficient balance';
         }
 
         return errors;
     };
 
     useEffect(() => {
-        let betslip = getBetslip();
+        const betslip = getBetslip();
         if (betslip) {
-            dispatch({ type: "SET", key: "betslip", payload: betslip });
+            dispatch({ type: 'SET', key: 'betslip', payload: betslip });
         }
-    }, []);
+    }, [dispatch]);
 
-    // ✅ ALERT
     const Alert = () => {
-        let c = success ? 'success' : 'danger';
+        if (!message) return null;
         return (
-            <>
-                {message &&
-                    <div className={`fade alert alert-${c} show`}>
-                        {message?.message}
-                    </div>
-                }
-            </>
+            <div
+                role="alert"
+                className={`withdraw-alert withdraw-alert--${success ? 'success' : 'danger'}`}
+            >
+                {message?.message}
+            </div>
         );
     };
 
-    // ✅ FORM FIELDS
-    const WithdrawFormFields = ({ values, errors, onFieldChanged }) => {
-        return (
-            <>
-                <div className="form-group row d-flex justify-content-center">
-                    <div className="mt-4">
-                        <input
-                            readOnly
-                            disabled
-                            className="text-dark deposit-input form-control input-field"
-                            name="msisdn"
-                            type="text"
-                            value={values.msisdn}
-                        />
-                        {errors.msisdn && <div className='text-danger'>{errors.msisdn}</div>}
-                    </div>
-                </div>
-
-                <div className="form-group row mt-3">
-                    <div className="col-md-12">
-                        <label>Amount to Withdraw</label>
-                        <input
-                            onChange={onFieldChanged}
-                            className="text-dark deposit-input form-control input-field"
-                            name="amount"
-                            type="number"
-                            min="0"
-                            value={values.amount}
-                            placeholder='Enter Amount'
-                        />
-                        {errors?.amount && <div className='text-danger'>{errors.amount}</div>}
-                    </div>
-                </div>
-
-                <div className='mt-3'><Alert /></div>
-
-                <button className='btn btn-lg btn-primary mt-3 w-100'>
-                    Withdraw
-                </button>
-            </>
-        );
-    };
-
-    // ✅ INSTRUCTIONS
-    const PaymentInstructions = () => (
+    const WithdrawFormFields = ({ values, errors, onFieldChanged }) => (
         <>
-            <h5 className='mt-3'>Withdrawal Instructions</h5>
-            <ol>
-                <li>Enter your M-Pesa phone number.</li>
-                <li>Enter the amount.</li>
-                <li>Click withdraw.</li>
-                <li>Confirm on your phone.</li>
-            </ol>
+            {message && <Alert />}
+
+            <div className="withdraw-field">
+                <label className="withdraw-field-label" htmlFor="withdraw-msisdn">
+                    <MdPhoneIphone aria-hidden="true" />
+                    M-Pesa Phone Number
+                </label>
+                <p className="withdraw-field-hint">
+                    Withdrawals go to the M-Pesa number linked to your account.
+                </p>
+                <div className="withdraw-input-wrap">
+                    <span className="withdraw-mpesa-badge" aria-hidden="true">
+                        <img src={mpesa} alt="" />
+                    </span>
+                    <input
+                        id="withdraw-msisdn"
+                        className="withdraw-field-input"
+                        name="msisdn"
+                        type="text"
+                        inputMode="tel"
+                        readOnly
+                        disabled
+                        value={values.msisdn || user?.msisdn || ''}
+                    />
+                </div>
+                {errors.msisdn && (
+                    <div className="withdraw-field-error">{errors.msisdn}</div>
+                )}
+            </div>
+
+            <div className="withdraw-field">
+                <label className="withdraw-field-label" htmlFor="withdraw-amount">
+                    <FaCoins aria-hidden="true" />
+                    Amount To Withdraw
+                </label>
+                <p className="withdraw-field-hint">
+                    Enter the amount you want to withdraw.
+                </p>
+                <div className="withdraw-input-wrap withdraw-input-wrap--amount">
+                    <span className="withdraw-currency-prefix" aria-hidden="true">
+                        KES
+                    </span>
+                    <input
+                        id="withdraw-amount"
+                        className="withdraw-field-input"
+                        name="amount"
+                        type="number"
+                        min="0"
+                        inputMode="decimal"
+                        value={values.amount}
+                        placeholder="Enter Amount"
+                        onChange={onFieldChanged}
+                    />
+                </div>
+                {errors.amount && (
+                    <div className="withdraw-field-error">{errors.amount}</div>
+                )}
+            </div>
+
+            <button
+                type="submit"
+                className="withdraw-submit-btn"
+                disabled={isLoading}
+            >
+                {isLoading ? 'Please wait…' : 'Withdraw'}
+                <FaPaperPlane aria-hidden="true" />
+            </button>
         </>
     );
 
     const MyWithdrawalForm = ({ values, errors, setFieldValue }) => {
-
         const onFieldChanged = (ev) => {
             let field = ev.target.name;
             let value = ev.target.value;
 
-            // ✅ FIX: allow natural typing (no forced Math.floor here)
-            if (field === "amount") {
-                if (value.startsWith("0") && value.length > 1) {
-                    value = value.replace(/^0+/, ""); // remove leading zeros
+            if (field === 'amount') {
+                if (value.startsWith('0') && value.length > 1) {
+                    value = value.replace(/^0+/, '');
                 }
             }
 
@@ -197,31 +230,68 @@ const Withdrawal = () => {
         };
 
         return (
-            <Form>
-                <div className="text-center">
-                    <img src={mpesa} alt="" style={{ maxWidth: "100px" }} />
+            <Form className="withdraw-form">
+                <div className="withdraw-card">
+                    <WithdrawFormFields
+                        values={values}
+                        errors={errors}
+                        onFieldChanged={onFieldChanged}
+                    />
                 </div>
 
-                <WithdrawFormFields
-                    values={values}
-                    errors={errors}
-                    onFieldChanged={onFieldChanged}
-                />
+                <div className="withdraw-card">
+                    <div className="withdraw-instructions-head">
+                        <FaInfoCircle aria-hidden="true" />
+                        <h3 className="withdraw-instructions-title">
+                            Withdrawal Instructions
+                        </h3>
+                    </div>
+                    <ol className="withdraw-steps">
+                        {WITHDRAW_STEPS.map((text, index) => (
+                            <li className="withdraw-step" key={text}>
+                                <span className="withdraw-step-num">{index + 1}</span>
+                                <span className="withdraw-step-text">{text}</span>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
 
-                <PaymentInstructions />
+                <div className="withdraw-card">
+                    <div className="withdraw-secure">
+                        <span className="withdraw-secure-icon" aria-hidden="true">
+                            <FaShieldAlt />
+                        </span>
+                        <div>
+                            <p className="withdraw-secure-title">Secure &amp; Instant</p>
+                            <p className="withdraw-secure-sub">
+                                Withdrawals are processed securely and instantly to your
+                                M-Pesa account.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </Form>
         );
     };
 
     return (
-        <>
-            <div className='p-4 text-center border-b bg-primary'>
-                <h4 className="!uppercase">
+        <div className="withdraw-page">
+            <header className="withdraw-page-header">
+                <button
+                    type="button"
+                    className="withdraw-page-back"
+                    aria-label="Go back"
+                    onClick={() => navigate(-1)}
+                >
+                    <FaArrowLeft />
+                </button>
+                <h1 className="withdraw-page-title">
                     Withdraw Funds (Mobile Money)
-                </h4>
-            </div>
+                </h1>
+                <span className="withdraw-page-header-spacer" aria-hidden="true" />
+            </header>
 
-            <div className="std-medium-width-block">
+            <div className="withdraw-page-inner">
                 <Formik
                     initialValues={initialValues}
                     onSubmit={handleSubmit}
@@ -231,8 +301,26 @@ const Withdrawal = () => {
                 >
                     {(props) => <MyWithdrawalForm {...props} />}
                 </Formik>
+
+                <div className="withdraw-footer">
+                    <span className="withdraw-footer-item">
+                        <FaLock aria-hidden="true" />
+                        Your transactions are 100% secure
+                    </span>
+                    <a className="withdraw-footer-link" href={SUPPORT_EMAIL}>
+                        <FaHeadset aria-hidden="true" />
+                        <span>
+                            Need Help? <strong>Contact Support</strong>
+                        </span>
+                        <FaChevronRight
+                            className="withdraw-footer-chevron"
+                            aria-hidden="true"
+                        />
+                    </a>
+                </div>
             </div>
-        </>
+        </div>
     );
 };
+
 export default Withdrawal;

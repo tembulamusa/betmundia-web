@@ -31,6 +31,8 @@ const ShareExistingbet = (props) => {
     const createSharableBet = useCallback(async () => {
         let endpoint = "/bet/share";
         setDoneShare(false);
+        setShareId(undefined);
+        setShowAlert(false);
         let payload = {
             bet_string: 'web',
             app_name: 'desktop',
@@ -51,9 +53,12 @@ const ShareExistingbet = (props) => {
         }
 
         makeRequest({ url: endpoint, method: "POST", data: payload, api_version: 2 }).then(([status, result]) => {
-            if (status == 200) {
-                setShareId(result?.data?.message);
+            const code = result?.data?.message;
+            if (status == 200 && code) {
+                setShareId(code);
+                setShowAlert(false);
             } else {
+                setShareId(undefined);
                 setShareMessage({ status: status, message: "unable to process share" });
                 setShowAlert(true);
             }
@@ -110,12 +115,11 @@ const ShareExistingbet = (props) => {
                         <div>
                             <ShimmerTitle line={2} gap={10} variant="secondary" />
                             <ShimmerTable row={2} col={3} />
-                        </div>) : (
+                        </div>) : shareId ? (
                         <><div className="row mb-3">
                             <div className="col-12"> Share the love, tell your friend to bet on this bet</div>
                         </div>
 
-                            {showAlert && <Alert message={shareMessage} />}
                             <div className="row col-12">
                                 <div className="col-3">
                                     <a rel="noreferrer" className="resp-sharing-button__link" href={`https://api.whatsapp.com/send?text=I%20placed%20this%20bet%20on%20betmundial.com%20Check%20my%20bet%20and%20bet.%20https://betmundial.com/betslip/share/${shareId}`} target="_blank" title="Share via Whatsapp">
@@ -152,6 +156,8 @@ const ShareExistingbet = (props) => {
                             <h5 className="mt-3"> Copy Code </h5>
                             <ClipboardCopy copyText={shareId} />
                         </>
+                    ) : (
+                        showAlert && <Alert message={shareMessage} />
                     )}
 
                     <div className=""><button className="my-3 font-bold btn btn-default capitalize border border-gray-200 text-white bg-red-400 px-3">cancel</button></div>
