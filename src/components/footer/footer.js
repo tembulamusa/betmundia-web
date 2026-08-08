@@ -90,7 +90,7 @@ const Footer = () => {
                         </div>
 
                         <a
-                            className="site-footer__help"
+                            className="site-footer__help px-4 py-3"
                             href="https://wa.me/254143444142"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -128,18 +128,18 @@ const Footer = () => {
                             </span>
                             <span>18 year and above</span>
                         </div>
-                        <p className="site-footer__legal-copy">
+                        <p className="site-footer__legal-copy leading-[2.25]">
                             You MUST be 18 years of age or older to register or play at Betmundial.
                             Gambling may have adverse effects if not done with moderation. When the
                             fun stops, STOP!
                         </p>
                         <div className="site-footer__legal-actions">
-                            <a href="/dispute-resolution" className="site-footer__legal-row">
+                            <a href="/dispute-resolution" className="site-footer__legal-row py-3">
                                 <FaShieldHalved aria-hidden="true" />
                                 <span>Dispute Resolution</span>
                                 <FaChevronRight aria-hidden="true" />
                             </a>
-                            <a href="/anti-money-laundering" className="site-footer__legal-row">
+                            <a href="/anti-money-laundering" className="site-footer__legal-row py-3">
                                 <FaScaleBalanced aria-hidden="true" />
                                 <span>Anti-money Laundering</span>
                                 <FaChevronRight aria-hidden="true" />
@@ -149,7 +149,7 @@ const Footer = () => {
 
                     <div className="site-footer__col">
                         <h5 className="site-footer__heading">Licensing</h5>
-                        <p className="site-footer__licensing">
+                        <p className="site-footer__licensing leading-[2.25]">
                             AIB Petals Limited is licensed by the Gambling Regulatory Authority of
                             Kenya (GRAK- formerly BCLB) under the Betting, Lotteries and gaming Act,
                             1966 (now repealed by the Gambling Control Act, 2025) and any regulations
@@ -158,8 +158,10 @@ const Footer = () => {
                         </p>
                     </div>
                 </div>
+            </div>
 
-                <div className="site-footer__trust">
+            <div className="site-footer__trust">
+                <div className="site-footer__trust-inner">
                     <div className="site-footer__trust-item">
                         <FaShieldHalved aria-hidden="true" />
                         <div>
@@ -182,10 +184,10 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div className="site-footer__copyright">
-                    Copyright &copy; {new Date().getFullYear()} Betmundial. All rights reserved.
-                </div>
+            <div className="site-footer__copyright">
+                Copyright &copy; {new Date().getFullYear()} Betmundial. All rights reserved.
             </div>
         </footer>
     );

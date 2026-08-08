@@ -165,8 +165,8 @@
 }
 
 .dispute-page .dispute-accordion {
-  background: rgba(255, 255, 255, 0.1) !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background: transparent !important;
+  background-color: transparent !important;
   border: 1px solid var(--dispute-border-soft) !important;
   border-radius: 10px !important;
   box-shadow: none !important;
@@ -180,8 +180,8 @@
 .dispute-page .dispute-accordion.Mui-expanded,
 .dispute-page .dispute-accordion.is-open {
   margin: 0 !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background: transparent !important;
+  background-color: transparent !important;
   border-color: rgba(255, 255, 255, 0.14) !important;
 }
 
