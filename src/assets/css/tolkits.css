@@ -2549,7 +2549,7 @@ img {
 }
 
 footer {
-    background: #dddbdb;
+    background: transparent;
     color: #fff;
     padding: 0;
     font-size: 16px;
@@ -2557,8 +2557,8 @@ footer {
 }
 
 footer a {
-    padding: 5px;
-    color: #121212;
+    padding: 0;
+    color: inherit;
 }
 
 .jp-matches .theteam {
@@ -2694,27 +2694,7 @@ footer a {
 }
 
 .footer-custom {
-    color: whitesmoke;
-    border-bottom: 0px solid rgba(255, 255, 255, 0.25);
-    font-family: arial;
-    font-size: 15px;
-    background: rgba(255, 255, 255, 0.07) !important;
-    padding: 30px;
-    margin-top: 10px;
-}
-
-.footer-custom ul {
-    list-style: none;
-}
-
-.footer-custom ul li {
-    color: whitesmoke;
-    text-decoration: none;
-    opacity: 0.75;
-}
-
-.footer-custom ul li a {
-    color: whitesmoke;
+    /* superseded by .site-footer */
 }
 
 .footer-upper {

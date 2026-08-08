@@ -27,9 +27,15 @@
 }
 
 .deposit-page-inner {
-  max-width: 480px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding: 0 1rem 1rem;
+}
+
+.deposit-form {
+  width: 100%;
+  max-width: none;
 }
 
 /* Header — full width with thin underline */
@@ -700,8 +706,20 @@
 
 @media (min-width: 768px) {
   .deposit-page-inner {
-    max-width: 520px;
+    max-width: none;
     padding: 0.35rem 1.25rem 1.25rem;
+  }
+
+  .deposit-form {
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .deposit-trust {
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .deposit-page-header {
