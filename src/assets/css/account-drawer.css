@@ -48,9 +48,9 @@
 }
 
 /* Extra separation around Activity / Account section panels */
-.account-drawer-section + .account-drawer-section,
-.account-drawer-actions + .account-drawer-section,
-.account-drawer-section + .account-drawer-logout {
+.account-drawer-section+.account-drawer-section,
+.account-drawer-actions+.account-drawer-section,
+.account-drawer-section+.account-drawer-logout {
   margin-top: 0.85rem;
 }
 
@@ -309,7 +309,7 @@
 }
 
 .account-drawer-action-deposit svg {
-  color: rgba(255, 215, 0);
+  /* color: rgba(255, 215, 0); */
 }
 
 .account-drawer-action-withdraw {

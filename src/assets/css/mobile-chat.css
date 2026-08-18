@@ -1,0 +1,148 @@
+.mobile-chat-button {
+    display: none;
+}
+
+/* mobile-only styles */
+@media (max-width: 768px) {
+    .mobile-chat-button {
+        display: none;
+        /* base hidden; specific variants shown below */
+    }
+
+    /* inline variant: placed in header next to search */
+    .mobile-chat-button--inline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-left: 0;
+        /* margin-right: 0.25rem; */
+        z-index: 2100;
+        background: linear-gradient(135deg, #a71f66, #d12b7d);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-weight: 500;
+        box-shadow: 0 6px 14px rgba(167, 31, 102, 0.18);
+        cursor: pointer;
+        min-width: 52px;
+        min-height: 26px !important;
+        height: auto;
+    }
+
+    /* fixed bubble variant: bottom-right floating button */
+    .mobile-chat-button--fixed {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 16px;
+        right: 14px;
+        z-index: 2200;
+        background: linear-gradient(135deg, #a71f66, #d12b7d);
+        color: #fff;
+        border: none;
+        border-radius: 28px;
+        padding: 10px 14px;
+        font-weight: 700;
+        box-shadow: 0 8px 20px rgba(167, 31, 102, 0.28);
+        cursor: pointer;
+        min-width: 64px;
+        min-height: 32px;
+        height: auto;
+    }
+
+    .mobile-chat-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 2300;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        overflow: hidden;
+        /* prevent modal overlay from scrolling */
+    }
+
+    .mobile-chat-modal__inner {
+        width: 100%;
+        max-width: 420px;
+        height: 80vh;
+        background: #0b1220;
+        border-radius: 12px;
+        overflow: hidden;
+        /* ensure inner content doesn't show scrollbars */
+        position: relative;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    /* loader overlay shown while iframe is loading */
+    .mobile-chat-loader {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(180deg, rgba(11, 18, 32, 0.75), rgba(11, 18, 32, 0.9));
+        z-index: 12;
+        color: #fff;
+        font-weight: 600;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .mobile-chat-spinner {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 4px solid rgba(255, 255, 255, 0.12);
+        border-top-color: #ffc428;
+        animation: mobile-chat-spin 1s linear infinite;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .mobile-chat-loader-text {
+        font-size: 14px;
+        opacity: 0.95;
+    }
+
+    @keyframes mobile-chat-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .mobile-chat-modal__close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 10;
+        background: rgba(0, 0, 0, 0.3);
+        border: none;
+        color: #fff;
+        font-size: 22px;
+        line-height: 1;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .mobile-chat-iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+        overflow: hidden;
+    }
+}
+
+/* prevent body scrolling while modal is open */
+body.mobile-chat-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import {
     FaEnvelope,
     FaFacebook,
+    FaYoutube,
     FaXTwitter,
     FaInstagram,
     FaWhatsapp,
@@ -14,6 +15,7 @@ import {
     FaScaleBalanced,
     FaChevronRight,
 } from 'react-icons/fa6';
+import { SiTiktok } from 'react-icons/si';
 
 const TERM_LINKS = [
     { href: '/terms-and-conditions', label: 'Terms and Conditions' },
@@ -28,7 +30,9 @@ const TERM_LINKS = [
 const SOCIAL_LINKS = [
     { href: 'https://www.facebook.com/kebetmundial', icon: FaFacebook, label: 'Facebook' },
     { href: 'https://x.com/Kenya_betmundial', icon: FaXTwitter, label: 'X' },
+    { href: 'https://www.youtube.com/@BetMundialKenya', icon: FaYoutube, label: 'YouTube' },
     { href: 'https://www.instagram.com/betmundial_kenya_official', icon: FaInstagram, label: 'Instagram' },
+    { href: 'https://www.tiktok.com/@betmundialkenya', icon: SiTiktok, label: 'TikTok' },
     { href: 'https://wa.me/254143444142', icon: FaWhatsapp, label: 'WhatsApp' },
 ];
 

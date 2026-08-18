@@ -54,7 +54,11 @@ function MobileMenu(props) {
         onClick={handleShow}
       >
         <FaRegUser className="inline-block user-profile-icon" />
-        <span className="hidden md:inline-block">My</span> Account
+        {user ? (
+          <span className="user-profile-text hidden d-md-inline">Account</span>
+        ) : (
+          <span></span>
+        )}
       </span>
 
       <Offcanvas
@@ -72,9 +76,7 @@ function MobileMenu(props) {
               </span>
               <div>
                 <h2 className="account-drawer-title">Account</h2>
-                <p className="account-drawer-subtitle">
-                  Manage your account and wallet
-                </p>
+                <p className="account-drawer-subtitle">Manage your account and wallet</p>
               </div>
             </div>
             <button
@@ -143,15 +145,15 @@ function MobileMenu(props) {
           <div className="account-drawer-actions">
             <Link
               to="/deposit"
-              className="account-drawer-action account-drawer-action-deposit"
+              className="account-drawer-action account-drawer-action-deposit sportpesa-deposit-btn"
               onClick={handleClose}
             >
-              <FaCoins aria-hidden="true" />
+              <FaCoins className="deposit-coins-icon" aria-hidden="true" />
               Deposit
             </Link>
             <Link
               to="/withdraw"
-              className="account-drawer-action account-drawer-action-withdraw"
+              className="account-drawer-action account-drawer-action-withdraw sportpesa-withdraw-btn"
               onClick={handleClose}
             >
               <MdOutlineFileUpload aria-hidden="true" />

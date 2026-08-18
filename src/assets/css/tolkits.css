@@ -2,6 +2,12 @@
     color: #000 !important;
 }
 
+:root {
+    --acc-pink: #e91e8c;
+    --acc-pink-soft: #ff52d4;
+    --acc-radius-sm: 0.55rem;
+}
+
 .pro-sidebar .pro-menu .pro-menu-item>.pro-inner-item:hover .pro-icon-wrapper .pro-icon {
     animation: none !important;
 }
@@ -108,61 +114,216 @@
     border: 1px solid rgba(108, 92, 192, 0.5) !important;
     font-weight: 700;
     padding: 8px 15px !important;
-}
-
-.sportpesa-deposit-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.45rem;
-    color: #111 !important;
-    background: #FFC428 !important;
-    background-image: linear-gradient(#e6cf4c 30%, #FFC428 70%) !important;
-    background-image: -webkit-linear-gradient(#e6cf4c 30%, #FFC428 70%) !important;
-    background-image: -moz-linear-gradient(#e6cf4c 30%, #FFC428 70%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 4px !important;
-    box-shadow:
-        0 2px 0 rgba(0, 0, 0, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 0.03em;
-    text-decoration: none !important;
-    transition:
-        transform 0.18s ease,
-        box-shadow 0.18s ease,
-        filter 0.18s ease;
+    min-height: 32px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-radius: 4px;
 }
+
+.sportpesa-deposit-btn,
+.btn.sportpesa-deposit-btn,
+.top-login-btn.sportpesa-deposit-btn,
+.header-top-actions .sportpesa-deposit-btn,
+.header-mobile-actions .sportpesa-deposit-btn,
+.app-navbar .sportpesa-deposit-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    color: #111 !important;
+    background: linear-gradient(180deg, #e6cf4c 30%, #FFC428 70%) !important;
+    border: 1px solid #e6cf4c !important;
+    border-radius: 6px !important;
+    min-height: 32px !important;
+    padding: 6px 14px !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    letter-spacing: 0.02em !important;
+    text-decoration: none !important;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease !important;
+}
+
+/* Ensure deposit in account drawer matches action deposit styling */
+.account-drawer-action-deposit.sportpesa-deposit-btn,
+.account-drawer .sportpesa-deposit-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    color: #111 !important;
+    background: linear-gradient(180deg, #e6cf4c 30%, #FFC428 70%) !important;
+    border: 1px solid #e6cf4c !important;
+    border-radius: 6px !important;
+    min-height: 40px !important;
+    padding: 6px 14px !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    letter-spacing: 0.02em !important;
+    text-decoration: none !important;
+}
+
+/* Ensure withdraw in account drawer matches sizing (only drawer) */
+.account-drawer-action-withdraw.sportpesa-withdraw-btn,
+.account-drawer .sportpesa-withdraw-btn {
+    min-height: 40px !important;
+    padding: 6px 14px !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.45rem !important;
+}
+
 
 .sportpesa-deposit-btn:hover,
-.sportpesa-deposit-btn:focus {
-    color: #111 !important;
-    background: #FFC428 !important;
-    background-image: linear-gradient(#f0d95e 25%, #FFC428 75%) !important;
-    background-image: -webkit-linear-gradient(#f0d95e 25%, #FFC428 75%) !important;
-    background-image: -moz-linear-gradient(#f0d95e 25%, #FFC428 75%) !important;
-    transform: translateY(-1px);
-    box-shadow:
-        0 4px 0 rgba(0, 0, 0, 0.14),
-        inset 0 1px 0 rgba(255, 255, 255, 0.38);
-    filter: saturate(1.05);
+.btn.sportpesa-deposit-btn:hover,
+.top-login-btn.sportpesa-deposit-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
+    filter: saturate(1.05) !important;
 }
 
-.sportpesa-deposit-btn:focus,
-.sportpesa-deposit-btn:focus-visible,
-.sportpesa-deposit-btn:active {
-    outline: none !important;
-    transform: translateY(0);
-    box-shadow:
-        0 2px 0 rgba(0, 0, 0, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
-    filter: none;
+.sportpesa-deposit-btn:active,
+.btn.sportpesa-deposit-btn:active,
+.top-login-btn.sportpesa-deposit-btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.sportpesa-withdraw-btn,
+.btn.sportpesa-withdraw-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.45rem !important;
+    /* match deposit button sizing */
+    min-height: 32px !important;
+    padding: 6px 14px !important;
+    background: transparent !important;
+    border: 1.5px solid var(--acc-pink) !important;
+    color: var(--acc-pink) !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.02em !important;
+    text-decoration: none !important;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.sportpesa-withdraw-btn:hover,
+.btn.sportpesa-withdraw-btn:hover {
+    background: rgba(233, 30, 140, 0.1) !important;
+    /* same as drawer */
+    color: var(--acc-pink-soft) !important;
+    border-color: var(--acc-pink-soft) !important;
+}
+
+.btn.sportpesa-deposit-btn:hover,
+.top-login-btn.sportpesa-deposit-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
+    filter: saturate(1.05) !important;
+}
+
+.sportpesa-deposit-btn:active,
+.btn.sportpesa-deposit-btn:active,
+.top-login-btn.sportpesa-deposit-btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
 .deposit-coins-icon {
     color: #8d2585;
     font-size: 0.95em;
+}
+
+
+.mobile-chat-launcher {
+    position: fixed;
+    right: 12px;
+    bottom: 92px;
+    z-index: 99999;
+    display: none;
+}
+
+/* Ensure the account label visibility is enforced across breakpoints.
+   Use high-specificity selectors and !important to override conflicting rules. */
+.app-navbar .user-profile .user-profile-text,
+.header .user-profile .user-profile-text,
+.header-top-actions .user-profile .user-profile-text {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+@media (min-width: 768px) {
+
+    .app-navbar .user-profile .user-profile-text,
+    .header .user-profile .user-profile-text,
+    .header-top-actions .user-profile .user-profile-text {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+.mobile-chat-launcher__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.95rem;
+    color: #fff;
+    background: linear-gradient(180deg, #a71f66 0%, #8d2585 100%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.mobile-chat-launcher__button:hover,
+.mobile-chat-launcher__button:focus {
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.mobile-chat-modal .modal-content {
+    background: #0f0f1f;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.mobile-chat-modal__header {
+    background: rgba(167, 31, 102, 0.14);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-chat-modal__body {
+    padding: 0;
+    background: #0f0f1f;
+}
+
+.mobile-chat-modal__frame {
+    width: 100%;
+    height: 70vh;
+    border: 0;
+    display: block;
+    background: #0f0f1f;
 }
 
 .input-group .btn {
@@ -1472,6 +1633,23 @@ template {
     background-color: #151525;
     color: #ffffff;
     box-shadow: none;
+}
+
+/* mobile overrides: compact login and deposit buttons to 32px */
+@media (max-width: 768px) {
+
+    .top-login-btn,
+    .sportpesa-deposit-btn,
+    .sportpesa-withdraw-btn {
+        min-height: 32px !important;
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        line-height: 1 !important;
+    }
+
+    .account-drawer-action.sportpesa-withdraw-btn {
+        min-height: 40px !important;
+    }
 }
 
 .inner-content label,
@@ -8809,6 +8987,7 @@ ul.sport {
     .top-nav {
         top: 0px;
         z-index: 9999 !important;
+        background: rgba(0, 12, 36) !important;
     }
 
     .navbar-nav .open .dropdown-menu>li>a,
@@ -16119,7 +16298,7 @@ li a.live-game:hover {
 
     .amt {
         /* margin-top: 60px !important; */
-        margin-top: 126px !important;
+        margin-top: 140px !important;
     }
 
     .move-up {

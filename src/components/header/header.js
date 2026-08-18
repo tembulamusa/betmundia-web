@@ -20,6 +20,9 @@ import useInterval from "../../hooks/set-interval.hook";
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import socket from '../utils/socket-connect';
 import HeaderNav from './header-nav';
+import MobileChat from './mobile-chat';
+import { MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
+import { FaCoins } from "react-icons/fa";
 
 
 const ProfileMenu = React.lazy(() => import('./profile-menu'));
@@ -192,8 +195,8 @@ const Header = (props) => {
                         Download Now
                     </Link>
                 </div> */}
-                <div className='main-header-top w-full px-2 py-2  md:!p-0'>
-                    <Container fluid className={'d-grid mobile-change position-relative header-top-grid'}>
+                <div className='main-header-top w-full px-2 pt-2  md:!p-0'>
+                    <Container className={'d-grid mobile-change position-relative header-top-grid'}>
 
                         <div className="e logo align-self-start items-center pl-0" title="betmundial">
                             <a className="header-logo-link mt-2 inline-block" href="/" style={{ display: "inline-block" }}>
@@ -201,11 +204,12 @@ const Header = (props) => {
                             </a>
                         </div>
 
-                        <div className="header-search-slot px-3">
+                        <div className="header-search-slot">
                             <HeaderNav />
+                            <MobileChat />
                         </div>
 
-                        <div className="header-top-actions" id="navbar-collapse-main">
+                        <div className="header-top-actions d-none d-md-flex" id="navbar-collapse-main">
                             {/* {user ? <ProfileMenu user={user}/> : <HeaderLogin setUser={setUser}/>} */}
                             <div className="flex justify-end">
                                 {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
@@ -213,6 +217,19 @@ const Header = (props) => {
                         </div>
 
                     </Container>
+
+                    {/* Mobile-only actions row: shows deposit/login/register under the logo */}
+                    <div className="header-mobile-actions d-md-none">
+                        <div className="flex justify-end align-items-center">
+                            {user ? (
+                                <>
+                                    <ProfileMenu user={user} />
+                                </>
+                            ) : (
+                                <HeaderLogin setUser={setUser} />
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 <div className={`block w-full ${state?.hideBigIconNav && 'hidden'}`}><BigIconNav /></div>

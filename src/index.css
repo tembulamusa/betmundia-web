@@ -1756,12 +1756,10 @@ img.highlights-content-img {
   padding: 0.7rem 1.65rem;
   min-height: 2.4rem;
   border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    rgba(109, 224, 109, 0.78) 0%,
-    rgba(47, 157, 58, 0.78) 55%,
-    rgba(35, 138, 47, 0.78) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(109, 224, 109, 0.78) 0%,
+      rgba(47, 157, 58, 0.78) 55%,
+      rgba(35, 138, 47, 0.78) 100%);
   color: #ffffff;
   font-weight: 800;
   font-size: 1.08rem;
@@ -2143,6 +2141,39 @@ h1.std-title {
   border-radius: 100%;
 }
 
+@media (max-width: 768px) {
+
+  /* remove extra right margin on user menu columns for mobile */
+  .user-menu-col {
+    margin-right: 0 !important;
+    margin-top: 6px;
+  }
+
+  /* stack and center the account icon and label on mobile */
+  .user-profile {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-align: center;
+  }
+
+  .user-profile-icon {
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    display: inline-block;
+    margin: 0;
+  }
+
+  .user-profile span,
+  .user-profile>* {
+    display: block !important;
+    text-align: center !important;
+  }
+}
+
 svg.big-offcanvas-icon {
   width: 35px;
   height: 35px;
@@ -2156,7 +2187,7 @@ svg.big-offcanvas-icon {
 
 .main-header-top {
   background: rgba(0, 12, 36, 0.1) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0.06); */
   box-shadow: -1px 0 1px 1px rgba(0, 0, 0, 0.23);
   -moz-box-shadow: -1px 0 1px 1px rgba(0, 0, 0, 0.23);
   -webkit-box-shadow: -1px 0 1px 1px rgba(0, 0, 0, 0.23);
@@ -2419,9 +2450,9 @@ button:focus-visible {
 .header-logo-link:focus,
 .header-logo-link:focus-visible,
 .header-logo-link:active,
-.logo > a:focus,
-.logo > a:focus-visible,
-.logo > a:active {
+.logo>a:focus,
+.logo>a:focus-visible,
+.logo>a:active {
   outline: none !important;
   box-shadow: none !important;
 }
@@ -2540,13 +2571,30 @@ button.locked-button:hover {
   }
 
   .big-icon-item {
-    padding: 4px 8px;
+    padding: 0px 8px;
 
   }
 
   .big-icon-icon img {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .big-icon-item .big-icon-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ss.profile {
+    padding-bottom: 0px;
+    padding-top: 0px;
+    /* margin-right: 40px !important; */
+    width: auto;
+    font-size: 12px;
+    font-weight: normal;
   }
 
   .big-icon-link {
@@ -2554,14 +2602,29 @@ button.locked-button:hover {
   }
 
   .big-icon-name {
-    font-size: 0.9rem;
+    font-size: 1.4rem;
   }
 
   .top-login-btn {
     background: rgba(255, 255, 255, 0.2);
     border: 1px solid #6c5cc0 !important;
     font-weight: 500;
-    padding: 5px 15px !important;
+    padding: 6px 14px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    border-radius: 4px;
+  }
+
+  /* ensure top-login buttons are compact on mobile */
+  @media (max-width: 768px) {
+    .top-login-btn {
+      min-height: 32px !important;
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+      line-height: 1 !important;
+    }
   }
 
   .header-login-links .onboard {
@@ -2779,8 +2842,8 @@ button.locked-button:hover {
 }
 
 .search-btn__label {
-  font-size: 1.6rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 @media (max-width: 767.98px) {

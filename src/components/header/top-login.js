@@ -24,7 +24,7 @@ const HeaderLogin = (props) => {
 
                         {/* <SearchInput onSearch={handleSearch} /> */}
 
-                        <div className='hidden md:inline-block top-item'>
+                        <div className='top-item'>
                             <Link
                                 to={{ pathname: "/deposit" }} >
                                 <span className="font-black mr-4 top-login-btn btn sportpesa-deposit-btn">

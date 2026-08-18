@@ -8,6 +8,7 @@ import MobileMenu from "./mobile-menu";
 import SearchInput from './search-component';
 import { Context } from "../../context/store";
 import { FaHome } from "react-icons/fa";
+import { MdOutlineFileUpload } from "react-icons/md";
 import { formatToFloat } from "../utils/formatters";
 
 
@@ -28,23 +29,26 @@ const ProfileMenu = (props) => {
 
             {/* <SearchInput onSearch={handleSearch} /> */}
 
-            <div className="user-menu-col {'mt-1'} col-md-2 d-flex flex-column justify-content-start space-deposit">
-              <Link
-                to={{ pathname: "/deposit" }}
-                className={"btn hidden md:inline-block sportpesa-deposit-btn"}
-                style={{ fontSize: "16px", fontWeight: "bold !important", padding: "5px 26px", width: "max-content" }}
-              >
-                <span className="uppercase overflow-hidden justify-content-center  rescale">
-                  <span className="space-icons"> <FontAwesomeIcon className="deposit-coins-icon" icon={faCoins} /></span> Deposit
-                </span>
-              </Link>
-              {/* <Link to={"/"}><FaHome className="mr-3 inline-block"/>Play Now</Link> */}
-
+            <div className=" user-menu-col col-md-3 d-flex flex-column right justify-content-start w-change2">
+              <div className="me-3">
+                <span className="font-tbt py-2 flex-wrap text-gray-200 font-[500]"><span className="currency-label d-none d-md-inline">KES&nbsp;</span><span className="font-bold ml-1 secondary-text"> {formatToFloat(user?.balance) || 0} </span></span>
+              </div>
             </div>
 
-            <div className=" user-menu-col col-md-3 d-flex flex-column right justify-content-end w-change2">
-              <div className="mr-3">
-                <span className="font-tbt py-2 flex-wrap text-gray-200 font-[500]">BAL. KES <span className="font-bold ml-1 secondary-text"> {formatToFloat(user?.balance) || 0} </span></span>
+            <div className="user-menu-col {'mt-1'} col-md-2 d-flex flex-column justify-content-start space-deposit">
+              <div className="d-flex align-items-center">
+                <Link to={{ pathname: "/deposit" }} className="me-3">
+                  <span className="font-black mr-4 top-login-btn btn sportpesa-deposit-btn" style={{ fontSize: "16px", fontWeight: "bold !important", padding: "5px 26px", width: "max-content" }}>
+                    <span className="uppercase overflow-hidden justify-content-center  rescale">
+                      <span className="space-icons"> <FontAwesomeIcon className="deposit-coins-icon" icon={faCoins} /></span> Deposit
+                    </span>
+                  </span>
+                </Link>
+
+                <Link to="/withdraw" className="sportpesa-withdraw-btn me-3">
+                  <MdOutlineFileUpload aria-hidden="true" />
+                  <span className="ms-2">Withdraw</span>
+                </Link>
               </div>
             </div>
 
