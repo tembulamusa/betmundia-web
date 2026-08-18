@@ -25,11 +25,15 @@
         padding: 8px 10px;
         border-radius: 6px;
         font-size: 12px;
-        width: 260px;
+        width: auto;
+        max-width: min(260px, calc(100vw - 48px));
+        box-sizing: border-box;
         display: none;
         text-align: center;
         box-shadow: 0 10px 24px rgba(0,0,0,0.45);
         z-index: 30;
+        white-space: normal;
+        word-break: break-word;
     }
 
     .bonus-terms-tooltip::after {
@@ -291,6 +295,19 @@
 .bonus-terms:focus .bonus-terms-tooltip,
 .bonus-terms:hover .bonus-terms-tooltip {
     display: block;
+}
+
+/* When inside the account drawer constrain tooltip to the drawer width so it doesn't overflow to the far right */
+.account-drawer .bonus-terms-tooltip {
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: calc(100% - 32px);
+}
+
+@media (max-width: 420px) {
+    .bonus-terms-tooltip {
+        max-width: calc(100vw - 40px);
+    }
 }
 
 
