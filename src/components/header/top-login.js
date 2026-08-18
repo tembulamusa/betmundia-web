@@ -27,8 +27,8 @@ const HeaderLogin = (props) => {
                         <div className='hidden md:inline-block top-item'>
                             <Link
                                 to={{ pathname: "/deposit" }} >
-                                <span className="font-black mr-4 top-login-btn btn text-white">
-                                    <span className=" space-icons text-yellow"> <FontAwesomeIcon icon={faCoins} className='secondary-text' /></span> Deposit
+                                <span className="font-black mr-4 top-login-btn btn sportpesa-deposit-btn">
+                                    <span className="space-icons"> <FontAwesomeIcon icon={faCoins} className='deposit-coins-icon' /></span> Deposit
                                 </span>
                             </Link>
                         </div>

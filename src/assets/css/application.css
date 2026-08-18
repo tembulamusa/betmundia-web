@@ -47,6 +47,7 @@
 /* navbar */
 .app-navbar {
   -webkit-font-smoothing: antialiased;
+  background: rgba(0, 12, 36, 0.1) !important;
 }
 
 .app-navbar .form-control {

@@ -193,18 +193,21 @@ const Header = (props) => {
                     </Link>
                 </div> */}
                 <div className='main-header-top w-full px-2 py-2  md:!p-0'>
-                    <Container fluid className={'d-flex justify-content-between mobile-change'}>
+                    <Container fluid className={'d-grid mobile-change position-relative header-top-grid'}>
 
-                        <div className="e col-md-5 col-sm-6 logo align-self-start  items-center pl-0" title="betmundial">
+                        <div className="e logo align-self-start items-center pl-0" title="betmundial">
                             <a className="header-logo-link mt-2 inline-block" href="/" style={{ display: "inline-block" }}>
                                 <img src={logo} alt="betmundial" title="betmundial" effects="blur" style={{ height: "auto" }} className="w-[220px]" />
                             </a>
                         </div>
 
-                        <div className="col-md-7 col-sm-6" id="navbar-collapse-main">
+                        <div className="header-search-slot px-3">
+                            <HeaderNav />
+                        </div>
+
+                        <div className="header-top-actions" id="navbar-collapse-main">
                             {/* {user ? <ProfileMenu user={user}/> : <HeaderLogin setUser={setUser}/>} */}
                             <div className="flex justify-end">
-                                <HeaderNav />
                                 {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
                             </div>
                         </div>

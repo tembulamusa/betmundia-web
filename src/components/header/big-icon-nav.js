@@ -221,7 +221,7 @@ const BigIconMenu = () => {
                             className={`cursor-pointer ${loc?.pathname?.includes(provider?.name) ? "active" : ''} big-icon-item text-center capitalize relative`}
                             onClick={() => filterGames("provider", provider)}
                         >
-                            <span title={provider?.name} className="relative inline-block">
+                            <span title={provider?.name} className="big-icon-link">
                                 <div className="big-icon-icon">
                                     <img
                                         className="mx-auto"
@@ -525,12 +525,12 @@ const BigIconMenu = () => {
 
             <div
                 ref={scrollContainerRef}
-                className="flex overflow-x-auto space-x-4 big-icon-scrollbar-hide"
+                className="flex overflow-x-auto space-x-2 big-icon-scrollbar-hide"
             // style={{ maxWidth: '100%', paddingLeft: '120px', backgroundColor: 'transparent' }}
             >
-                <ListGroup as="ul" horizontal className="flex space-x-4 big-icon-list">
+                <ListGroup as="ul" horizontal className="flex space-x-2 big-icon-list">
                     <li key={"home-menu-item"} className={`${pathname === "/" || pathname === "/home" ? "active" : ''} big-icon-item text-center capitalize`}>
-                        <a href={"/"} title={"home"}>
+                        <a href={"/"} title={"home"} className="big-icon-link">
                             <div className="big-icon-icon"><img className="mx-auto" src={getSportImageIcon("home.svg")} alt={"home"} /></div>
                             <div className="big-icon-name">{"Home"}</div>
                         </a>
@@ -561,7 +561,7 @@ const BigIconMenu = () => {
                         return (
                             <li key={idx} className={itemClasses}>
                                 {item?.name.toLowerCase() === "livescore" ? (
-                                    <a href={item.link} title={item.name} target="_blank" rel="noopener noreferrer">
+                                    <a href={item.link} title={item.name} target="_blank" rel="noopener noreferrer" className="big-icon-link">
                                         <div className="big-icon-icon relative">
                                             {iconContent}
 
@@ -575,7 +575,7 @@ const BigIconMenu = () => {
                                         <div className="big-icon-name">{item.name}</div>
                                     </a>
                                 ) : (
-                                    <Link to={item.link} title={item.name}>
+                                    <Link to={item.link} title={item.name} className="big-icon-link">
                                         <div className="big-icon-icon relative">
                                             {iconContent}
 
@@ -596,7 +596,7 @@ const BigIconMenu = () => {
 
                         return (
                             <li onClick={() => changeUserSelection(category)} key={idx} className={`${pathname == `/sports/matches/${category?.sport_id}` ? "active" : ''} big-icon-item text-center capitalize`}>
-                                <Link to={`/sports/matches/${category?.sport_id}?sportId=${category?.sport_id}`} title={category?.sport_name}>
+                                <Link to={`/sports/matches/${category?.sport_id}?sportId=${category?.sport_id}`} title={category?.sport_name} className="big-icon-link">
                                     <div className="big-icon-icon"><img className="mx-auto" src={getSportImageIcon(`${category?.sport_name?.toLowerCase()}.svg`)} alt={category.sport_name} /></div>
                                     <div className="big-icon-name">{category.sport_name}</div>
                                 </Link>

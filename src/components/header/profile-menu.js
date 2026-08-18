@@ -31,11 +31,11 @@ const ProfileMenu = (props) => {
             <div className="user-menu-col {'mt-1'} col-md-2 d-flex flex-column justify-content-start space-deposit">
               <Link
                 to={{ pathname: "/deposit" }}
-                className={"btn   hidden md:inline-block"}
-                style={{ fontSize: "16px", fontWeight: "bold !important", background: "rgba(255,255,255,0.2)", borderRadius: "10px", padding: "5px 26px", width: "max-content" }}
+                className={"btn hidden md:inline-block sportpesa-deposit-btn"}
+                style={{ fontSize: "16px", fontWeight: "bold !important", padding: "5px 26px", width: "max-content" }}
               >
                 <span className="uppercase overflow-hidden justify-content-center  rescale">
-                  <span className=" space-icons"> <FontAwesomeIcon className="secondary-text" icon={faCoins} /></span> Deposit
+                  <span className="space-icons"> <FontAwesomeIcon className="deposit-coins-icon" icon={faCoins} /></span> Deposit
                 </span>
               </Link>
               {/* <Link to={"/"}><FaHome className="mr-3 inline-block"/>Play Now</Link> */}

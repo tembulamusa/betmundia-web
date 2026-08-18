@@ -1,96 +1,99 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Context } from "../../context/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const HeaderNav = () => {
-    const [, dispatch] = useContext(Context);
+    const [state, dispatch] = useContext(Context);
     const { pathname } = useLocation();
-    const [searching, setSearching] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const searchInputRef = useRef(null);
     const isCasino = pathname === "/casino" || pathname.startsWith("/casino/");
 
     const updateSearchTerm = (event) => {
         const value = event.target.value;
-        if (value.length >= 3) {
+        if (value) {
             dispatch({ type: "SET", key: "searchterm", payload: value });
         } else {
             dispatch({ type: "DEL", key: "searchterm" });
         }
     };
 
-    const showSearchBar = () => {
-        setSearching(true);
-        setTimeout(() => {
-            searchInputRef.current?.focus();
-        }, 100);
+    const openSearch = () => {
+        setIsOpen(true);
     };
 
-    const dismissSearch = () => {
-        setSearching(false);
-        dispatch({ type: "DEL", key: "searchterm" });
+    const closeSearch = () => {
+        setIsOpen(false);
     };
 
     useEffect(() => {
-        if (!searching) return;
-        const onEscape = (e) => {
-            if (e.key === "Escape") dismissSearch();
+        if (!isOpen) {
+            return;
+        }
+
+        searchInputRef.current?.focus();
+        const onEscape = (event) => {
+            if (event.key === "Escape") {
+                closeSearch();
+            }
         };
+
         document.addEventListener("keydown", onEscape);
         return () => document.removeEventListener("keydown", onEscape);
-    }, [searching]);
+    }, [isOpen]);
 
     return (
-        <div className="d-flex align-items-center">
-            {!searching && (
+        <div className={`header-search-float ${isOpen ? "header-search-float--open" : "header-search-float--closed"}`}>
+            {!isOpen ? (
                 <button
-                    onClick={showSearchBar}
-                    className="btn btn-link text-white p-0 me-3 search-btn"
+                    type="button"
+                    className="header-search-float__trigger"
+                    onClick={openSearch}
+                    aria-label="Open search"
                 >
-                    <FontAwesomeIcon size="lg" height={30} icon={faSearch} />
-                    <span className="search-btn__label"> Search</span>
+                    <span className="header-search-float__trigger-icon" aria-hidden="true">
+                        <FontAwesomeIcon icon={faSearch} />
+                    </span>
                 </button>
-            )}
-
-            {searching && (
-                <div
-                    className="header-search-overlay"
-                    role="dialog"
-                    aria-label="Search"
-                >
-                    <div className="header-search-overlay__inner">
-                        <div className="header-search-overlay__input-wrap">
-                            <input
-                                ref={searchInputRef}
-                                type="text"
-                                onChange={updateSearchTerm}
-                                placeholder="Start typing to search..."
-                                className="header-search-overlay__input"
-                            />
-                            <button
-                                type="button"
-                                className="header-search-overlay__close"
-                                onClick={dismissSearch}
-                                aria-label="Close search"
-                            >
-                                <FontAwesomeIcon icon={faTimes} />
-                            </button>
-                        </div>
-                        <div className="header-search-overlay__links">
-                            <Link
-                                to="/"
-                                className={`header-search-overlay__btn ${!isCasino ? "header-search-overlay__btn--active" : ""}`}
-                            >
-                                Sports
-                            </Link>
-                            <Link
-                                to="/casino"
-                                className={`header-search-overlay__btn ${isCasino ? "header-search-overlay__btn--active" : ""}`}
-                            >
-                                Casino
-                            </Link>
-                        </div>
+            ) : (
+                <div className="header-search-float__card header-search-float__card--open">
+                    <button
+                        type="button"
+                        className="header-search-float__exit"
+                        onClick={closeSearch}
+                        aria-label="Close search"
+                    >
+                        <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                    <div className="header-search-float__input-wrap">
+                        <span className="header-search-float__icon" aria-hidden="true">
+                            <FontAwesomeIcon icon={faSearch} />
+                        </span>
+                        <input
+                            ref={searchInputRef}
+                            type="text"
+                            value={state?.searchterm || ""}
+                            onChange={updateSearchTerm}
+                            placeholder="Search teams, competitions, or game IDs"
+                            className="header-search-float__input"
+                            aria-label="Search"
+                        />
+                    </div>
+                    <div className="header-search-float__links">
+                        <Link
+                            to="/"
+                            className={`header-search-float__btn ${!isCasino ? "header-search-float__btn--active" : ""}`}
+                        >
+                            Sports
+                        </Link>
+                        <Link
+                            to="/casino"
+                            className={`header-search-float__btn ${isCasino ? "header-search-float__btn--active" : ""}`}
+                        >
+                            Casino
+                        </Link>
                     </div>
                 </div>
             )}

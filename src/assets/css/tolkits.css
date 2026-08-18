@@ -110,6 +110,61 @@
     padding: 8px 15px !important;
 }
 
+.sportpesa-deposit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    color: #111 !important;
+    background: #FFC428 !important;
+    background-image: linear-gradient(#e6cf4c 30%, #FFC428 70%) !important;
+    background-image: -webkit-linear-gradient(#e6cf4c 30%, #FFC428 70%) !important;
+    background-image: -moz-linear-gradient(#e6cf4c 30%, #FFC428 70%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 4px !important;
+    box-shadow:
+        0 2px 0 rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-decoration: none !important;
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        filter 0.18s ease;
+}
+
+.sportpesa-deposit-btn:hover,
+.sportpesa-deposit-btn:focus {
+    color: #111 !important;
+    background: #FFC428 !important;
+    background-image: linear-gradient(#f0d95e 25%, #FFC428 75%) !important;
+    background-image: -webkit-linear-gradient(#f0d95e 25%, #FFC428 75%) !important;
+    background-image: -moz-linear-gradient(#f0d95e 25%, #FFC428 75%) !important;
+    transform: translateY(-1px);
+    box-shadow:
+        0 4px 0 rgba(0, 0, 0, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.38);
+    filter: saturate(1.05);
+}
+
+.sportpesa-deposit-btn:focus,
+.sportpesa-deposit-btn:focus-visible,
+.sportpesa-deposit-btn:active {
+    outline: none !important;
+    transform: translateY(0);
+    box-shadow:
+        0 2px 0 rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    filter: none;
+}
+
+.deposit-coins-icon {
+    color: #8d2585;
+    font-size: 0.95em;
+}
+
 .input-group .btn {
     position: relative;
     padding: 7px;
@@ -2031,7 +2086,7 @@ events-header {
 .top-nav {
     top: -2px;
     padding-top: 0px;
-    background: rgba(0, 12, 36, 1) !important;
+    background: rgba(0, 12, 36, 0.1) !important;
     background-position: center center;
     padding-bottom: 0px;
     background-size: cover;
