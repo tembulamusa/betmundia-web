@@ -44,7 +44,6 @@ function MobileMenu(props) {
   };
 
   const balance = formatToFloat(user?.balance || 0);
-  const restricted = formatToFloat(user?.restricted_balance || 0.0);
   const bonus = formatToFloat(user?.bonus || user?.bonus_balance || 0);
 
   return (
@@ -129,15 +128,7 @@ function MobileMenu(props) {
                     KSh {bonus}
                   </p>
                 </div>
-                <div className="account-drawer-wallet-side-row">
-                  <span className="account-drawer-wallet-side-label">
-                    <FaLock aria-hidden="true" />
-                    Restricted Balance
-                  </span>
-                  <p className="account-drawer-wallet-side-amount">
-                    KSh {restricted}
-                  </p>
-                </div>
+                {/* Restricted Balance removed per request */}
               </div>
             </div>
           </div>
