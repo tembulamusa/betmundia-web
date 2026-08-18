@@ -125,10 +125,11 @@ function MobileMenu(props) {
                     Bonus
                   </span>
                   <p className="account-drawer-wallet-side-amount">
+                    KSh {bonus}
                     <span className="bonus-terms" tabIndex={0} aria-label="Bonus terms">terms
+                      <span className="bonus-exclaim" aria-hidden="true">!</span>
                       <span className="bonus-terms-tooltip">Bonus funds are subject to wagering requirements and expiry. See Promotions page for full T&amp;Cs.</span>
                     </span>
-                    KSh {bonus}
                   </p>
                 </div>
                 {/* Restricted Balance removed per request */}
