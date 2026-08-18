@@ -2575,6 +2575,10 @@ button.locked-button:hover {
 
   }
 
+  .space-icons {
+    padding-right: 0px;
+  }
+
   .big-icon-icon img {
     width: 28px;
     height: 28px;
