@@ -123,6 +123,10 @@ function MobileMenu(props) {
                   <span className="account-drawer-wallet-side-label">
                     <FaGift aria-hidden="true" />
                     Bonus
+                    <span className="bonus-terms" tabIndex={0} aria-label="Bonus terms">
+                      <span className="bonus-terms-icon" aria-hidden="true">i</span>
+                      <span className="bonus-terms-tooltip">Bonus funds are subject to wagering requirements and expiry. See Promotions page for full T&amp;Cs.</span>
+                    </span>
                   </span>
                   <p className="account-drawer-wallet-side-amount">
                     KSh {bonus}
