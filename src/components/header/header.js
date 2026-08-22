@@ -196,7 +196,7 @@ const Header = (props) => {
                     </Link>
                 </div> */}
                 <div className='main-header-top w-full px-2 pt-2  md:!p-0'>
-                    <Container className={'d-grid mobile-change position-relative header-top-grid'}>
+                    <Container fluid className={'d-grid mobile-change position-relative header-top-grid'}>
 
                         <div className="e logo align-self-start items-center pl-0" title="betmundial">
                             <a className="header-logo-link mt-2 inline-block" href="/" style={{ display: "inline-block" }}>

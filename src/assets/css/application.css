@@ -49,7 +49,7 @@
   -webkit-font-smoothing: antialiased;
   /* slightly distinct, mostly-opaque header background for better contrast */
   background: rgba(7, 15, 32, 0.96) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: none !important;
 }
 
 .app-navbar .form-control {

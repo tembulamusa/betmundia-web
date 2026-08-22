@@ -21,8 +21,10 @@ import {
     Field
 } from 'formik';
 import { isMobile } from "react-device-detect";
+import { Modal } from "react-bootstrap";
 import { TbRefreshAlert } from "react-icons/tb";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
+import { formatToFloat } from '../utils/formatters';
 
 const Float = (equation, precision = 4) => {
     return Math.ceil(equation * (10 ** precision)) / (10 ** precision);
@@ -45,6 +47,35 @@ const BetslipSubmitForm = (props) => {
     const [ipInfo, setIpInfo] = useState({});
     const [totalGames, setTotalGames] = useState(0);
     const [totalOdds, setTotalOdds] = useState(1);
+    const [showBonusTooltip, setShowBonusTooltip] = useState(false);
+    const user = getFromLocalStorage("user");
+    const bonusBalance = formatToFloat(user?.bonus || user?.bonus_balance || 0);
+
+    // Bonus settings (how much of the stake bonus is allowed to cover) come
+    // from the bonus settings API. TODO: confirm the real endpoint + field
+    // name with the backend and swap it in below — until then this falls
+    // back to 100% (bonus covers the full stake, capped by bonusBalance)
+    // so the UI keeps working.
+    const [bonusSettings, setBonusSettings] = useState({ percentage: 100 });
+
+    useEffect(() => {
+        makeRequest({ url: 'bonus/settings', method: 'GET', api_version: 2 })
+            .then(([status, response]) => {
+                if (status === 200 && response?.data) {
+                    setBonusSettings({
+                        percentage: parseFloat(response.data.percentage ?? response.data.bonus_use_percentage ?? 100)
+                    });
+                }
+            })
+            .catch(() => { /* keep the 100% fallback */ });
+    }, []);
+
+    const bonusUsePercentage = bonusSettings?.percentage ?? 100;
+    const bonusStakePortion = Math.min(
+        Float(stake * (bonusUsePercentage / 100), 2),
+        parseFloat(bonusBalance) || 0
+    );
+    const balanceStakePortion = Math.max(Float(stake - bonusStakePortion, 2), 0);
 
 
     // const setbonusMatrix = () => {
@@ -227,7 +258,8 @@ const BetslipSubmitForm = (props) => {
             account: 1,
             msisdn: getFromLocalStorage("user")?.msisdn || state?.user?.msisdn,
             accept_all_odds_change: 0,//values.accept_all_odds_change == true ? 1 : 0,
-            bet_type: getFromLocalStorage("liveCount") > 0 ? "1" : jackpot ? "9" : "3" // update for live
+            bet_type: getFromLocalStorage("liveCount") > 0 ? "1" : jackpot ? "9" : "3", // update for live
+            use_bonus: bonusBalance > 0 && values.use_bonus ? 1 : 0
         };
         let endpoint = '/user/place-bet';
         let method = "POST"
@@ -403,6 +435,7 @@ const BetslipSubmitForm = (props) => {
     const initialValues = {
         bet_amount: jackpot ? jackpotData?.bet_amount : bonusBet ? 30 : 100,
         accept_all_odds_change: true,
+        use_bonus: bonusBalance > 0,
         user_id: state?.user?.profile_id,
         total_games: state?.[betslipkey]?.length,
         total_odd: totalOdds,
@@ -537,6 +570,31 @@ const BetslipSubmitForm = (props) => {
                                                 </div>
                                             </td>
                                         </tr>
+                                        {!jackpot && bonusBalance > 0 && (
+                                            <tr>
+                                                <td colSpan="2" className="py-2 normal-case use-bonus-row-body">
+                                                    <label className="checkbox use-bonus-label" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: 'normal' }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            name="use_bonus"
+                                                            checked={!!values?.use_bonus}
+                                                            onChange={(e) => onFieldChanged(e)}
+                                                        />
+                                                        <span>Use Bonus (<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {bonusBalance}</span>)</span>
+                                                    </label>
+
+                                                    <button
+                                                        type="button"
+                                                        className="bonus-terms-link"
+                                                        aria-label="Bonus terms"
+                                                        onClick={() => setShowBonusTooltip(true)}
+                                                        style={{ marginLeft: '10px' }}
+                                                    >
+                                                        Terms
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )}
                                         <tr>
                                             <td colSpan="2"></td>
                                         </tr>
@@ -601,6 +659,46 @@ const BetslipSubmitForm = (props) => {
                         </FormikForm>
 
                     }
+
+                    <Modal
+                        show={showBonusTooltip}
+                        onHide={() => setShowBonusTooltip(false)}
+                        centered
+                        className="popover-login-modal bonus-terms-modal"
+                    >
+                        <Modal.Body className="p-4 bonus-terms-modal-body">
+                            <button
+                                type="button"
+                                className="bonus-terms-modal-close"
+                                aria-label="Close"
+                                onClick={() => setShowBonusTooltip(false)}
+                            >
+                                &times;
+                            </button>
+                            <div className="bonus-terms-modal-title">Bonus Terms</div>
+                            <p className="bonus-terms-modal-text">
+                                Bonus funds are subject to wagering requirements and expiry.
+                            </p>
+                            {values?.use_bonus ? (
+                                <p className="bonus-terms-modal-text">
+                                    At {bonusUsePercentage}% bonus usage, placing this KSh {formatNumber(stake)} bet will deduct
+                                    {' '}<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {formatNumber(bonusStakePortion)}</span> from your bonus balance
+                                    and <b>KSh {formatNumber(balanceStakePortion)}</b> from your real balance.
+                                </p>
+                            ) : (
+                                <p className="bonus-terms-modal-text">
+                                    Tick "Use Bonus" to cover part of this stake from your bonus balance instead of your real balance.
+                                </p>
+                            )}
+                            <button
+                                type="button"
+                                className="place-bet-btn bold w-full"
+                                onClick={() => setShowBonusTooltip(false)}
+                            >
+                                Close
+                            </button>
+                        </Modal.Body>
+                    </Modal>
                 </>
             )
         }}

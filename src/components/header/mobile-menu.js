@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Context } from "../../context/store";
 
 import { IoMdLogOut } from "react-icons/io";
-import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaLock, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins } from "react-icons/fa";
+import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaLock, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins, FaInfoCircle } from "react-icons/fa";
 import { IoListCircleOutline, IoWalletOutline } from "react-icons/io5";
 import { MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
 
@@ -34,6 +34,7 @@ function MobileMenu(props) {
   const [show, setShow] = useState(false);
   const [, dispatch] = useContext(Context);
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [showBonusTooltip, setShowBonusTooltip] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -126,9 +127,25 @@ function MobileMenu(props) {
                   </span>
                   <p className="account-drawer-wallet-side-amount">
                     KSh {bonus}
-                    <span className="bonus-terms" tabIndex={0} aria-label="Bonus terms">terms
-                      <span className="bonus-exclaim" aria-hidden="true">!</span>
-                      <span className="bonus-terms-tooltip">Bonus funds are subject to wagering requirements and expiry. See Promotions page for full T&amp;Cs.</span>
+                    <span className="bonus-tooltip-wrap">
+                      <button
+                        type="button"
+                        className="bonus-tooltip-trigger"
+                        aria-label="Bonus terms"
+                        aria-expanded={showBonusTooltip}
+                        onClick={() => setShowBonusTooltip((v) => !v)}
+                        onBlur={() => setShowBonusTooltip(false)}
+                      >
+                        Terms
+                        <FaInfoCircle className="bonus-tooltip-icon" aria-hidden="true" />
+                      </button>
+
+                      {showBonusTooltip && (
+                        <span className="bonus-tooltip-bubble" role="tooltip">
+                          Bonus funds are subject to wagering requirements and expiry. See the Promotions page for full T&amp;Cs.
+                          <span className="bonus-tooltip-arrow" aria-hidden="true" />
+                        </span>
+                      )}
                     </span>
                   </p>
                 </div>

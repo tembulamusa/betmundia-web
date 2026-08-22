@@ -149,8 +149,8 @@
     min-height: 32px !important;
     padding: 6px 14px !important;
     background: transparent !important;
-    border: 1.5px solid var(--acc-pink) !important;
-    color: var(--acc-pink) !important;
+    border: 1.5px solid #a71f66 !important;
+    color: #a71f66 !important;
     border-radius: 6px !important;
     font-size: 13px !important;
     font-weight: 600 !important;
@@ -162,10 +162,9 @@
 
 .sportpesa-withdraw-btn:hover,
 .btn.sportpesa-withdraw-btn:hover {
-    background: rgba(233, 30, 140, 0.1) !important;
-    /* same as drawer */
-    color: var(--acc-pink-soft) !important;
-    border-color: var(--acc-pink-soft) !important;
+    background: rgba(167, 31, 102, 0.1) !important;
+    color: #a71f66 !important;
+    border-color: #a71f66 !important;
 }
 
 .btn.sportpesa-deposit-btn:hover,
@@ -14469,7 +14468,7 @@ fieldset[disabled] .tw.active {
 
 .amt {
     /* margin-top: 60px !important; */
-    margin-top: 135px !important;
+    margin-top: 120px !important;
 }
 
 .amu {

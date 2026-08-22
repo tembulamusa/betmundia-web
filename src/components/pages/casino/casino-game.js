@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Button, ButtonGroup } from "react-bootstrap";
 import { Context } from "../../../context/store";
 import makeRequest from "../../utils/fetch-request";
@@ -103,6 +104,13 @@ const CasinoGame = (props) => {
                             alt={game?.game_url}
                             src={imageSrc}
                             className="casino-game-image virtual-game-image"
+                            effect="blur"
+                            placeholderSrc={defaultImage}
+                            threshold={300}
+                            width="100%"
+                            height="100%"
+                            decoding="async"
+                            wrapperClassName="casino-game-image-lazy-wrapper"
                         />
 
                         {alertMessage && <div className="game-launch-issue"><Alert message={alertMessage} /></div>}

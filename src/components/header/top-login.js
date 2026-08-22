@@ -7,9 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import SearchInput from './search-component';
 
-import { faUser, faLock, faCoins } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 const HeaderLogin = (props) => {
     const { setUser } = props;
     const [, dispatch] = useContext(Context)
@@ -24,18 +21,10 @@ const HeaderLogin = (props) => {
 
                         {/* <SearchInput onSearch={handleSearch} /> */}
 
-                        <div className='top-item'>
-                            <Link
-                                to={{ pathname: "/deposit" }} >
-                                <span className="font-black mr-4 top-login-btn btn sportpesa-deposit-btn">
-                                    <span className="space-icons"> <FontAwesomeIcon icon={faCoins} className='deposit-coins-icon' /></span> Deposit
-                                </span>
-                            </Link>
-                        </div>
-
+                        {/* Deposit is only relevant once logged in — see profile-menu.js */}
 
                         <button
-                            className="mr-4  top-item uppercase top-login-btn text-white btn"
+                            className="mr-4 top-item uppercase top-login-btn btn red-bg"
                             onClick={() => dispatch({ type: "SET", key: "showloginmodal", payload: true })}
                             style={{ marginRight: '1rem' }}
                         >
@@ -43,7 +32,7 @@ const HeaderLogin = (props) => {
                         </button>
 
                         <Link
-                            className="top-login-btn btn red-bg top-item"
+                            className="top-login-btn btn register-btn-purple top-item"
                             to="/signup"
                             title="Join now"
                             style={{}}

@@ -137,7 +137,7 @@ const Signup = (props) => {
                         </div>
                         <div className="form-group row d-flex justify-content-center mt-5">
                             <div className="col-md-12">
-                                <label style={{ color: '#ffffff' }}>Mobile Number <span className="text-danger">(Safaricom Only)</span></label>
+                                <label style={{ color: '#ffffff' }}>Mobile Number <span style={{ color: '#a71f66' }}>(Safaricom Only)</span></label>
                                 <input
                                     value={values.msisdn}
                                     className="form-control block px-3 py-3 w-full rounded-2xl std-input "

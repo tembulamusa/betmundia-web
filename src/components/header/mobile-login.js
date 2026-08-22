@@ -179,7 +179,6 @@ const BodyLogin = (props) => {
                                 value={values.msisdn}
                             />
                             <br />
-
                         </div>
                         <div className="px-0">
                             <label className='modal-label'>Password</label>
@@ -188,7 +187,7 @@ const BodyLogin = (props) => {
                                     name="password"
                                     className={`block px-3 py-3 w-full rounded-2xl form-control std-input ${errors.password && 'text-danger'} `}
                                     data-action="grow"
-                                    placeholder={errors.password || "Password"}
+                                    placeholder={errors?.password || "Password"}
                                     onChange={ev => onFieldChanged(ev)}
                                     onKeyPress={handleKeyPress}
                                     value={values.password}
@@ -244,8 +243,9 @@ const BodyLogin = (props) => {
                             <span className="">Forgot Password</span>
                         </div>
                         <div className="my-5 px-0 cursor-pointer ">
-                            <div className="capitalize font-bold hover:underline" onClick={() => navigateAway("/signup")} style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                                <span className="">Don't have an account? Register now!</span>
+                            <div className="capitalize font-bold hover:underline" onClick={() => navigateAway("/signup")}>
+                                <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Don't have an account? </span>
+                                <span style={{ color: '#a71f66' }}>Register now!</span>
                             </div>
                         </div>
                     </Row>

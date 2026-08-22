@@ -228,13 +228,22 @@
     position: relative;
 }
 
+/* react-lazy-load-image-component wraps the <img> in a span — without this
+   it collapses to the intrinsic image size, breaking the blur placeholder
+   and the fixed-height box above. */
+.casino-game-image-lazy-wrapper {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .virtual-game-image {
     width: 100%;
     /* Cover the full width */
     height: 100%;
     /* Cover the full height */
-    /* object-fit: cover; */
-    /* Ensure the image fits without stretching */
+    object-fit: cover;
+    /* Fill the fixed-height box without distorting the source image */
     object-position: center;
     /* Center the image within the container */
 

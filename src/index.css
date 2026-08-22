@@ -2185,8 +2185,17 @@ svg.big-offcanvas-icon {
   background: #151525 !important;
 }
 
+/* The fixed nav itself has no background by default (Bootstrap Navbar with
+   no `bg` prop) — the BigIconNav row sits directly on it, below
+   .main-header-top, so give the whole fixed bar a solid backdrop. Otherwise
+   that row stays see-through over scrolled page content even though
+   .main-header-top below is opaque. */
+.app-navbar.top-nav {
+  background: rgba(0, 12, 36, 1) !important;
+}
+
 .main-header-top {
-  background: rgba(0, 12, 36, 0.1) !important;
+  background: rgba(0, 12, 36, 1) !important;
   /* border-bottom: 1px solid rgba(255, 255, 255, 0.06); */
   box-shadow: -1px 0 1px 1px rgba(0, 0, 0, 0.23);
   -moz-box-shadow: -1px 0 1px 1px rgba(0, 0, 0, 0.23);
@@ -2246,6 +2255,191 @@ svg.big-offcanvas-icon {
 
 .red-text {
   color: rgb(187, 2, 67) !important;
+}
+
+/* Header Register button — transparent with brand purple (#a71f66) */
+.top-login-btn.register-btn-purple {
+  background: transparent !important;
+  color: #a71f66 !important;
+  border: 1px solid #a71f66 !important;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.top-login-btn.register-btn-purple:hover,
+.top-login-btn.register-btn-purple:focus {
+  background: rgba(167, 31, 102, 0.1) !important;
+  border-color: #a71f66 !important;
+  color: #a71f66 !important;
+}
+
+/* Bonus "Terms" tooltip in the account drawer.
+   Uses the drawer's own --acc-* custom properties (defined on
+   .account-drawer.offcanvas) so it inherits the drawer's pink/dark theme. */
+.bonus-tooltip-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  vertical-align: middle;
+  white-space: normal;
+  z-index: 999999;
+}
+
+.bonus-tooltip-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--acc-border, rgba(255, 255, 255, 0.2));
+  color: var(--acc-text, #ffffff);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.bonus-tooltip-trigger:hover,
+.bonus-tooltip-trigger:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--acc-pink, #e91e8c);
+  color: #ffffff;
+  outline: none;
+}
+
+.bonus-tooltip-icon {
+  font-size: 12px;
+  color: var(--acc-pink, #e91e8c);
+}
+
+.bonus-tooltip-bubble {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 48px));
+  background: var(--acc-bg, #121216);
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(233, 30, 140, 0.35);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  z-index: 999999;
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: normal;
+}
+
+.bonus-tooltip-arrow {
+  position: absolute;
+  top: -6px;
+  right: 14px;
+  width: 12px;
+  height: 12px;
+  background: var(--acc-bg, #121216);
+  border-left: 1px solid rgba(233, 30, 140, 0.35);
+  border-top: 1px solid rgba(233, 30, 140, 0.35);
+  transform: rotate(45deg);
+}
+
+/* Betslip "Use Bonus" terms — a floating tooltip got clipped by #betslip's
+   own overflow-y: auto scroll box no matter how high its z-index went, so
+   this renders as a react-bootstrap Modal instead (portaled to <body>,
+   escaping the clipping ancestor entirely). Uses a lighter tint of the
+   page's navy background (rgba(0, 12, 36)) rather than the default dark
+   modal fill. */
+.bonus-terms-modal .modal-dialog {
+  max-width: 360px;
+}
+
+.bonus-terms-modal .modal-content {
+  background: rgb(191, 194, 200);
+  border: none;
+}
+
+.bonus-terms-modal-body {
+  position: relative;
+  background: rgba(0, 0, 0, 0.48);
+}
+
+.bonus-terms-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #d32f2f;
+  color: #ffffff;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.bonus-terms-modal-close:hover,
+.bonus-terms-modal-close:focus-visible {
+  background: #b71c1c;
+  outline: none;
+}
+
+.bonus-terms-modal-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 10px;
+  margin-right: 24px;
+  color: #ffffff;
+  text-transform: none;
+}
+
+.bonus-terms-modal-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 16px;
+  text-transform: none;
+}
+
+/* "Use Bonus" row body — same lighter tint of the page's navy background
+   (rgba(0, 12, 36)) as the terms modal, so the row reads as one unit. */
+.use-bonus-row-body {
+  background: rgb(38, 48, 69);
+  border-radius: 6px;
+  padding: 8px 10px !important;
+}
+
+/* Plain-text "Terms" trigger (betslip Use Bonus row) — dotted underline,
+   brand purple, no pill/background like .bonus-tooltip-trigger. */
+.bonus-terms-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #a71f66;
+  text-decoration: underline dotted;
+  text-decoration-color: #a71f66;
+  cursor: pointer;
+}
+
+.bonus-terms-link:hover,
+.bonus-terms-link:focus-visible {
+  color: #a71f66;
+  text-decoration: underline dotted;
+  outline: none;
 }
 
 .change-display {
@@ -2311,6 +2505,7 @@ label {
   min-width: 0;
   gap: 0.35rem;
   padding: 0 6px;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .big-icon-arrows {
@@ -2611,7 +2806,7 @@ button.locked-button:hover {
 
   .top-login-btn {
     background: rgba(255, 255, 255, 0.2);
-    border: 1px solid #6c5cc0 !important;
+    border: 1px solid #a71f66 !important;
     font-weight: 500;
     padding: 6px 14px !important;
     display: inline-flex;
