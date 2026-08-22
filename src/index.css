@@ -1780,6 +1780,38 @@ img.highlights-content-img {
   }
 }
 
+/* Re-applied after the base (non-media) .casino-leading-bets-* rules above so it
+   actually wins the cascade on mobile — the earlier @media (max-width: 767px)
+   block further up this file sets the same properties, but since it appears
+   BEFORE these unconditional base rules, the base rules were winning (equal
+   specificity, later source order), which forced the fixed 190px flex-basis
+   from .casino-leading-bets-label back on even on mobile. In a column-direction
+   flex container that flex-basis applies to height, not width, which is what
+   was pushing the ticker/carousel far down below the "Leading Bets" title. */
+@media (max-width: 767px) {
+  .casino-leading-bets-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.9rem 0.85rem;
+  }
+
+  .casino-leading-bets-label {
+    flex: initial;
+    min-width: 0;
+  }
+
+  .casino-leading-bets-title {
+    font-size: 1.2rem;
+  }
+
+  .casino-leading-bets-marquee {
+    width: 100%;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+}
+
 .menu-icon {
   width: 5rem;
   margin: auto;
