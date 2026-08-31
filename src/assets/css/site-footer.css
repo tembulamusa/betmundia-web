@@ -457,6 +457,30 @@
   }
 }
 
+@media (min-width: 768px) {
+  .site-footer__help-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+    background: var(--sf-pink-soft);
+    box-shadow: 0 0 18px rgba(255, 82, 212, 0.45);
+  }
+
+  .site-footer__age-badge {
+    width: 44px;
+    height: 44px;
+    font-size: 14px;
+    border-color: #fff;
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.3);
+  }
+
+  .site-footer__trust-item > svg {
+    font-size: 30px;
+    color: var(--sf-pink-soft);
+    filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 82, 212, 0.5));
+  }
+}
+
 @media (max-width: 767px) {
   .site-footer__inner {
     padding: 44px 22px 0;

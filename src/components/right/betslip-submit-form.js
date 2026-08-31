@@ -30,6 +30,38 @@ const Float = (equation, precision = 4) => {
     return Math.ceil(equation * (10 ** precision)) / (10 ** precision);
 }
 
+const cleanUcn = (str) => {
+    str = String(str).replace(/[^A-Za-z0-9\-]/g, '');
+    return str.replace(/-+/g, '-');
+}
+
+const formatSlipForPlaceBet = (slip) => {
+    const isLive = slip.live === 1 || slip.live === '1' || slip.bet_type == 1 || slip.bet_type === '1';
+
+    let marketActive = slip.market_active;
+    if (marketActive === 'null' || marketActive === '' || marketActive === undefined) {
+        marketActive = null;
+    }
+
+    return {
+        match_id: String(slip.match_id),
+        parent_match_id: String(slip.parent_match_id),
+        special_bet_value: slip.special_bet_value ?? '',
+        sub_type_id: String(slip.sub_type_id),
+        away_team: slip.away_team,
+        bet_pick: slip.bet_pick,
+        bet_type: isLive ? '1' : '0',
+        home_team: slip.home_team,
+        live: isLive ? 1 : 0,
+        market_active: marketActive,
+        odd_type: slip.odd_type,
+        odd_value: String(parseFloat(slip.odd_value).toFixed(2)),
+        producer_id: String(slip.producer_id || '3'),
+        sport_name: slip.sport_name,
+        ucn: cleanUcn(`${slip.match_id}${slip.sub_type_id}${slip.bet_pick}`),
+    };
+}
+
 
 const BetslipSubmitForm = (props) => {
 
@@ -44,7 +76,7 @@ const BetslipSubmitForm = (props) => {
     const [netWin, setNetWin] = useState(0);
     const [bonus, setBonus] = useState(0);
     const [betslipkey, setBetslipKey] = useState(() => jackpot ? "jackpotbetslip" : "betslip");
-    const [ipInfo, setIpInfo] = useState({});
+    const [ipAddress, setIpAddress] = useState('');
     const [totalGames, setTotalGames] = useState(0);
     const [totalOdds, setTotalOdds] = useState(1);
     const [showBonusTooltip, setShowBonusTooltip] = useState(false);
@@ -101,8 +133,8 @@ const BetslipSubmitForm = (props) => {
     useEffect(() => {
         fetch("https://api64.ipify.org?format=json")
             .then((response) => response.json())
-            .then((data) => setIpInfo(data.ip))
-            .catch((error) => setIpInfo({ city: "Error fetching IP" }));
+            .then((data) => setIpAddress(data.ip || ''))
+            .catch(() => setIpAddress(''));
 
     }, []);
 
@@ -251,15 +283,14 @@ const BetslipSubmitForm = (props) => {
             stake_amount: jackpot ? jackpotData?.bet_amount : stake,
             amount: jackpot ? jackpotData?.bet_amount : stake,
             bet_total_odds: Float(totalOdds, 2),
-            ip_address: ipInfo,
+            ip_address: ipAddress,
             channel_id: isMobile ? 'mobile' : 'web',
-            slip: bs,
+            slip: bs.map(formatSlipForPlaceBet),
             profile_id: getFromLocalStorage("user")?.profile_id || state?.user?.profile_id,
             account: 1,
             msisdn: getFromLocalStorage("user")?.msisdn || state?.user?.msisdn,
-            accept_all_odds_change: 0,//values.accept_all_odds_change == true ? 1 : 0,
+            accept_all_odds_change: 0,
             bet_type: getFromLocalStorage("liveCount") > 0 ? "1" : jackpot ? "9" : "3", // update for live
-            use_bonus: bonusBalance > 0 && values.use_bonus ? 1 : 0
         };
         let endpoint = '/user/place-bet';
         let method = "POST"

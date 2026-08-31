@@ -1088,8 +1088,86 @@ input.std-input::placeholder {
   padding-right: 7px;
 }
 
-.mkt-detail-label {
-  color: #ffffff !important;
+/* Match detail market rows — equal-height buttons + label/odds layout */
+.matches .top-matches.event-row > .grid {
+  align-items: stretch;
+}
+
+.matches .top-matches .match-detail {
+  display: flex;
+  min-height: 40px;
+}
+
+.matches .top-matches .match-detail > button {
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+  min-height: 40px;
+  float: none;
+  box-sizing: border-box;
+}
+
+.matches .top-matches .match-detail > button.home-team {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.matches .top-matches .match-detail > button.home-team .text-side,
+.matches .top-matches .match-detail > button.home-team .mkt-detail-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 400;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.matches .top-matches .match-detail > button.home-team .odd-side {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 3.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.matches .top-matches .match-detail > button.home-team .odd-value {
+  float: none;
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .matches .top-matches .match-detail > button.home-team {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+    height: auto;
+    min-height: 40px;
+    text-align: left;
+  }
+
+  .matches .top-matches .match-detail > button.home-team .text-side,
+  .matches .top-matches .match-detail > button.home-team .mkt-detail-label {
+    max-width: 100%;
+    width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    text-wrap: balance;
+  }
+
+  .matches .top-matches .match-detail > button.home-team .odd-side {
+    width: 100%;
+    min-width: 0;
+    align-self: stretch;
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 .qv.rc.alu {
@@ -2285,6 +2363,34 @@ svg.big-offcanvas-icon {
   border-color: rgb(187, 2, 67) !important;
 }
 
+/* Header Login & Register — equal width click/tap targets */
+.header-login-links .top-login-btn.red-bg,
+.header-login-links .top-login-btn.register-btn-purple {
+  width: 104px;
+  min-width: 104px;
+  max-width: 104px;
+  box-sizing: border-box;
+}
+
+.header-login-links .top-login-btn.red-bg {
+  padding-left: 28px !important;
+  padding-right: 28px !important;
+}
+
+@media (max-width: 768px) {
+  .header-login-links .top-login-btn.red-bg,
+  .header-login-links .top-login-btn.register-btn-purple {
+    width: 92px;
+    min-width: 92px;
+    max-width: 92px;
+  }
+
+  .header-login-links .top-login-btn.red-bg {
+    padding-left: 22px !important;
+    padding-right: 22px !important;
+  }
+}
+
 .red-text {
   color: rgb(187, 2, 67) !important;
 }
@@ -2619,7 +2725,7 @@ label {
 }
 
 .big-icon-name {
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #ffffff;
   opacity: 0.7;
   font-weight: 400;
