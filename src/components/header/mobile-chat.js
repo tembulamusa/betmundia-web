@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../../assets/css/mobile-chat.css';
 
+const MOBILE_MAX_WIDTH = 768;
+const isMobileViewport = () =>
+    typeof window !== 'undefined' &&
+    window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH}px)`).matches;
+
 const MobileChat = () => {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +31,31 @@ const MobileChat = () => {
         };
         const s0 = document.getElementsByTagName('script')[0];
         if (s0 && s0.parentNode) s0.parentNode.insertBefore(s1, s0);
+    }, []);
+
+    useEffect(() => {
+        const hideTawkOnMobile = () => {
+            if (!isMobileViewport()) return;
+            try {
+                if (window?.Tawk_API?.hideWidget) {
+                    window.Tawk_API.hideWidget();
+                }
+            } catch (err) {
+                console.warn('Tawk API hideWidget failed', err);
+            }
+        };
+
+        hideTawkOnMobile();
+
+        const tawkApi = window.Tawk_API || {};
+        const previousOnLoad = tawkApi.onLoad;
+        window.Tawk_API = tawkApi;
+        tawkApi.onLoad = function onTawkLoad() {
+            if (typeof previousOnLoad === 'function') {
+                previousOnLoad();
+            }
+            hideTawkOnMobile();
+        };
     }, []);
 
     useEffect(() => {
@@ -62,13 +92,15 @@ const MobileChat = () => {
             const stored = document.body.dataset.mobileChatScroll;
             document.body.classList.remove('mobile-chat-open');
             document.body.style.top = '';
-            // restore global widget when closing
-            try {
-                if (window && window.Tawk_API && typeof window.Tawk_API.showWidget === 'function') {
-                    window.Tawk_API.showWidget();
+            // restore global widget when closing (desktop only; mobile uses header chat)
+            if (!isMobileViewport()) {
+                try {
+                    if (window && window.Tawk_API && typeof window.Tawk_API.showWidget === 'function') {
+                        window.Tawk_API.showWidget();
+                    }
+                } catch (err) {
+                    console.warn('Tawk API showWidget failed', err);
                 }
-            } catch (err) {
-                console.warn('Tawk API showWidget failed', err);
             }
             if (stored) {
                 const y = parseInt(stored, 10) || 0;
@@ -79,12 +111,14 @@ const MobileChat = () => {
         return () => {
             document.body.classList.remove('mobile-chat-open');
             document.body.style.top = '';
-            try {
-                if (window && window.Tawk_API && typeof window.Tawk_API.showWidget === 'function') {
-                    window.Tawk_API.showWidget();
+            if (!isMobileViewport()) {
+                try {
+                    if (window && window.Tawk_API && typeof window.Tawk_API.showWidget === 'function') {
+                        window.Tawk_API.showWidget();
+                    }
+                } catch (err) {
+                    console.warn('Tawk API showWidget failed', err);
                 }
-            } catch (err) {
-                console.warn('Tawk API showWidget failed', err);
             }
         };
     }, [open]);
@@ -93,11 +127,6 @@ const MobileChat = () => {
         <>
             {/* inline header button (appears next to search in header on mobile) */}
             <button className="mobile-chat-button mobile-chat-button--inline" aria-label="Open chat" onClick={() => { setIsLoading(true); setOpen(true); }}>
-                Chat
-            </button>
-
-            {/* fixed floating bubble (bottom-right) */}
-            <button className="mobile-chat-button mobile-chat-button--fixed" aria-label="Open chat" onClick={() => { setIsLoading(true); setOpen(true); }}>
                 Chat
             </button>
 

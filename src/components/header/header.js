@@ -1,34 +1,27 @@
-import React, { useEffect, useCallback, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
 import { Context } from '../../context/store';
 import { getFromLocalStorage, removeItem } from '../utils/local-storage';
-import { ToastContainer } from 'react-toastify';
 import makeRequest from '../utils/fetch-request';
 import { setLocalStorage } from '../utils/local-storage';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import ShareModal from "../sharemodal";
 import logo from '../../assets/img/logo.svg';
 import { Navbar } from "react-bootstrap";
-import MobileRightMenu from './mobile-right-menu';
-import MobileLoggedInBals from './mobile-logged-in-bals';
 import LoginModal from '../loginmodal';
 import BigIconNav from './big-icon-nav';
 import CheckMpesaDepositStatus from '../webmodals/check-mpesa-deposit-status';
 import DepositModal from '../webmodals/deposit-modal';
 import useInterval from "../../hooks/set-interval.hook";
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import socket from '../utils/socket-connect';
 import HeaderNav from './header-nav';
 import MobileChat from './mobile-chat';
-import { MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
-import { FaCoins } from "react-icons/fa";
+import MobileTopBar from './mobile-top-bar';
 
 
 const ProfileMenu = React.lazy(() => import('./profile-menu'));
 const HeaderLogin = React.lazy(() => import('./top-login'));
-
-const INACTIVITY_MS = 60 * 20 * 1000; // 1 hour
 
 const Header = (props) => {
     const [user, setUser] = useState(getFromLocalStorage("user"));
@@ -36,24 +29,6 @@ const Header = (props) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchParams] = useSearchParams();
-    const inactivityTimerRef = useRef(null);
-
-
-
-    const NotifyToastContaner = () => {
-        return <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-        />
-    };
-
 
     useEffect(() => {
         handleTokenRefresh();
@@ -173,10 +148,6 @@ const Header = (props) => {
             dispatch({ type: "DEL", key: "hideBigIconNav" })
         }
     }, [location.pathname])
-    const expand = "md"
-    // toggle bal requ every 7 seconds
-
-
     return (
         <>
             <Navbar expand="md" className="mb-0 ck pc os app-navbar top-nav" fixed="top" variant="dark" style={{ flexWrap: "wrap" }}>
@@ -195,9 +166,9 @@ const Header = (props) => {
                         Download Now
                     </Link>
                 </div> */}
-                <div className='main-header-top w-full px-2 pt-2  md:!p-0'>
-                    <Container fluid className={'d-grid mobile-change position-relative header-top-grid'}>
-
+                <div className='main-header-top w-full px-2 pt-2 md:!p-0'>
+                    <MobileTopBar user={user} />
+                    <Container fluid className="d-none d-xl-grid mobile-change position-relative header-top-grid">
                         <div className="e logo align-self-start items-center pl-0" title="betmundial">
                             <a className="header-logo-link mt-2 inline-block" href="/" style={{ display: "inline-block" }}>
                                 <img src={logo} alt="betmundial" title="betmundial" effects="blur" style={{ height: "auto" }} className="w-[220px]" />
@@ -210,29 +181,16 @@ const Header = (props) => {
                         </div>
 
                         <div className="header-top-actions d-none d-md-flex" id="navbar-collapse-main">
-                            {/* {user ? <ProfileMenu user={user}/> : <HeaderLogin setUser={setUser}/>} */}
                             <div className="flex justify-end">
                                 {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
                             </div>
                         </div>
-
                     </Container>
-
-                    {/* Mobile-only actions row: shows deposit/login/register under the logo */}
-                    <div className="header-mobile-actions d-md-none">
-                        <div className="flex justify-end align-items-center">
-                            {user ? (
-                                <>
-                                    <ProfileMenu user={user} />
-                                </>
-                            ) : (
-                                <HeaderLogin setUser={setUser} />
-                            )}
-                        </div>
-                    </div>
                 </div>
 
-                <div className={`block w-full ${state?.hideBigIconNav && 'hidden'}`}><BigIconNav /></div>
+                <div className={`w-full ${state?.hideBigIconNav ? 'hidden' : ''}`}>
+                    <BigIconNav />
+                </div>
             </Navbar >
 
             {/* mobile bottom menu */}

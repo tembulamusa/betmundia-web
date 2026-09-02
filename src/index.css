@@ -1096,6 +1096,7 @@ input.std-input::placeholder {
 .matches .top-matches .match-detail {
   display: flex;
   min-height: 40px;
+  margin-bottom: 4px;
 }
 
 .matches .top-matches .match-detail > button {
@@ -1105,6 +1106,9 @@ input.std-input::placeholder {
   min-height: 40px;
   float: none;
   box-sizing: border-box;
+  margin-bottom: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .matches .top-matches .match-detail > button.home-team {
@@ -1168,6 +1172,30 @@ input.std-input::placeholder {
     justify-content: center;
     text-align: center;
   }
+}
+
+/* Remove focus/click outline on match rows, game links, and odds buttons */
+.match-detail-container a:focus,
+.match-detail-container a:focus-visible,
+.match-detail-container a:active,
+.top-matches a:focus,
+.top-matches a:focus-visible,
+.top-matches a:active,
+.matches .top-matches button:focus,
+.matches .top-matches button:focus-visible,
+.matches .top-matches button:active,
+.matches .top-matches .match-detail > button:focus,
+.matches .top-matches .match-detail > button:focus-visible,
+.matches .top-matches .match-detail > button:active,
+.top-matches .c-btn-group > .c-btn:focus,
+.top-matches .c-btn-group > .c-btn:focus-visible,
+.top-matches .c-btn-group > .c-btn:active,
+.popular-game:focus,
+.popular-game:focus-visible,
+.popular-game:active {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .qv.rc.alu {
@@ -3239,4 +3267,17 @@ button.locked-button:hover {
 
 .my-bets .accordion-body {
   padding: 0;
+}
+
+.match-widget-container {
+  width: 100%;
+  min-height: 160px;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.match-widget-container .sr-widget {
+  width: 100%;
+  min-height: 160px;
 }

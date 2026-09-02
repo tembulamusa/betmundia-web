@@ -19,7 +19,6 @@ import usePrevious from "../../hooks/previous.hook"
 import { match } from 'assert';
 import socket from '../utils/socket-connect';
 import { ShimmerTable } from "react-shimmer-effects";
-import MatchDetailBetrandder from "../../assets/img/betrader/test-game-details.png"
 import LockedButton, { EmptyButton } from '../utils/locked-button';
 import betslip from '../right/betslip';
 import useInterval from '../../hooks/set-interval.hook';
@@ -291,9 +290,14 @@ const MoreMarketsHeaderRow = (props) => {
         <>
 
             <div className="match-detail-header panel-header primary-bg pt-3">
-                <span> <a href={"#"} className="opacity-60 hover:opacity-100" onClick={(e) => { e.preventDefault(); navigate(-1); }}> <IoIosArrowBack className="inline-block" /> <span className='' style={{ fontSize: "13px" }}>Back</span></a> {match?.home_team} - {match?.away_team} </span>
+                <span> <a href={"#"} className="opacity-60 hover:opacity-100" onClick={(e) => { e.preventDefault(); navigate(-1); }}> <IoIosArrowBack className="inline-block" /> <span className='' style={{ fontSize: "13px" }}>Back</span></a> {match?.home_team} - {match?.away_team}</span>
             </div>
-            <MatchWidget parentMatchId={match?.parent_match_id} />
+            {match?.parent_match_id && (
+                <MatchWidget
+                    key={match.parent_match_id}
+                    parentMatchId={match.parent_match_id}
+                />
+            )}
         </>
     )
 }

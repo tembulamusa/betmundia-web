@@ -78,6 +78,7 @@ import PageviewTracker from "./components/utils/pageview-tracker";
 import { PromoTracker } from "./promo-tracker";
 import PromoWins from "./components/pages/promo-wins";
 import './index.css';
+import './assets/css/mobile-top-bar.css';
 import './assets/css/forgot-password-page.css';
 import LiveCasino from "./components/pages/casino/LiveCasino";
 import CrashTerms from "./components/pages/terms-and-conditions/crash-terms";
