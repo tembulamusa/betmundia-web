@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext, useCallback} from 'react';
+import React, {useState, useContext} from 'react';
 import {
     removeFromSlip,
     getBetslip,
@@ -14,16 +14,15 @@ import { Context } from "../context/store";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import {faFacebook, faInstagram, faTwitter, faYoutube, faWhatsapp} from "@fortawesome/free-brands-svg-icons"
-import publicIp from 'public-ip';
 import ShareModal from "./sharemodal";
 import makeRequest from './utils/fetch-request';
+import { getStoredIpAddress } from './utils/ip-address';
 
 
 const PostBet = (props) => {
     const [state, dispatch] = useContext(Context);
 	const oldBetslip = getFromLocalStorage('old_betslip');
     const [sharebleCode, setSharebleCode] = useState();
-    const [ipv4, setIpv4] = useState(null);
     const app_name = "desktop-web";
     const [doneShare, setDoneShare] = useState(false);
     const user = getFromLocalStorage("user");
@@ -40,20 +39,6 @@ const PostBet = (props) => {
 		window.location.reload();
 	}
 
-
-    const ipAddress = useCallback(async () => {
-        let ip = await publicIp.v4({
-            fallbackUrls: ['https://ifconfig.co/ip']
-        }).then((result) => {
-            return result
-        });
-
-        setIpv4(ip);
-    }, [ipv4]);
-
-    useEffect(() => {
-        ipAddress();
-    }, [ipAddress])
 
     const loadSocialPage = (code) => {
        if(sharebleCode){
@@ -77,7 +62,7 @@ const PostBet = (props) => {
         let sharedSlip = betslip || state?.betslip;
         let payload = {
             betslip: sharedSlip ,
-            ip_address: ipv4,
+            ip_address: String(getStoredIpAddress() || ''),
             app:app_name,
             msisdn:user?.msisdn,
             profile_id:user?.profile_id

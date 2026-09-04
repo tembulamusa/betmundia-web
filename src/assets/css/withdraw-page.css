@@ -8,7 +8,7 @@
   --wd-border: rgba(255, 255, 255, 0.1);
   --wd-text: #ffffff;
   --wd-muted: rgba(255, 255, 255, 0.55);
-  --wd-radius: 6px;
+  --wd-radius: 8px;
   --wd-radius-sm: 4px;
   --wd-radius-md: 8px;
   color: var(--wd-text);
@@ -34,16 +34,16 @@
   max-width: none;
 }
 
-/* Header */
+/* Header — match deposit (flush top, shared height) */
 .withdraw-page-header {
   display: grid;
   grid-template-columns: 2.5rem 1fr 2.5rem;
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-  margin: 0.75rem 0 1.5rem;
+  margin: 0 0 4rem;
   padding: 1.15rem 1rem 1.25rem;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -74,10 +74,10 @@
 .withdraw-page-title {
   margin: 0;
   text-align: center;
-  font-size: 1.65rem;
+  font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.25;
 }
 
@@ -127,6 +127,10 @@
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
+  max-width: 260px;
+  margin-left: 0;
+  margin-right: auto;
   background: var(--wd-input);
   border: 1px solid var(--wd-border);
   border-radius: var(--wd-radius-md);
@@ -232,20 +236,23 @@
 
 /* Submit */
 .withdraw-submit-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
   width: 100%;
+  max-width: 260px;
   min-height: 4.1rem;
   margin-top: 0.15rem;
+  margin-left: 0;
+  margin-right: auto;
   padding: 0.85rem 1rem;
   border: none;
   border-radius: var(--wd-radius-sm);
   background: var(--wd-pink);
   color: #fff;
   font-size: 1.7rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: none;
   cursor: pointer;
@@ -440,23 +447,24 @@
   }
 
   .withdraw-form {
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .withdraw-footer {
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .withdraw-page-header {
+    margin: 0 0 4rem;
     padding: 1.25rem 1.25rem 1.35rem;
   }
 
   .withdraw-page-title {
-    font-size: 1.8rem;
+    font-size: 1.89rem;
   }
 
   .withdraw-card {

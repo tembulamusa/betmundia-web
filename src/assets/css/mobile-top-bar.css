@@ -26,10 +26,15 @@
   }
 
   .mobile-top-bar__app-promo:hover,
-  .mobile-top-bar__app-promo:focus {
+  .mobile-top-bar__app-promo:focus,
+  .mobile-top-bar__app-promo:focus-visible,
+  .mobile-top-bar__app-promo:active {
     color: #000000;
     text-decoration: none;
     background: #ffd84d;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .mobile-top-bar__app-promo-text {
@@ -199,10 +204,45 @@
   }
 
   .mobile-top-bar__auth.header-login-links .top-login-btn.register-btn-purple:hover,
-  .mobile-top-bar__auth.header-login-links .top-login-btn.register-btn-purple:focus {
+  .mobile-top-bar__auth.header-login-links .top-login-btn.register-btn-purple:focus,
+  .mobile-top-bar__auth.header-login-links .top-login-btn.register-btn-purple:focus-visible,
+  .mobile-top-bar__auth.header-login-links .top-login-btn.register-btn-purple:active {
     color: #a71f66 !important;
     border-color: #a71f66 !important;
     background: rgba(167, 31, 102, 0.1) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Kill focus rings on mobile header chrome controls */
+  .mobile-top-bar a:focus,
+  .mobile-top-bar a:focus-visible,
+  .mobile-top-bar a:active,
+  .mobile-top-bar button:focus,
+  .mobile-top-bar button:focus-visible,
+  .mobile-top-bar button:active,
+  .mobile-top-bar .btn:focus,
+  .mobile-top-bar .btn:focus-visible,
+  .mobile-top-bar .btn:active,
+  .mobile-top-bar [role="button"]:focus,
+  .mobile-top-bar [role="button"]:focus-visible,
+  .mobile-top-bar [role="button"]:active,
+  .mobile-top-bar .user-profile:focus,
+  .mobile-top-bar .user-profile:focus-visible,
+  .mobile-top-bar .user-profile:active,
+  .mobile-top-bar .top-login-btn:focus,
+  .mobile-top-bar .top-login-btn:focus-visible,
+  .mobile-top-bar .top-login-btn:active,
+  .mobile-top-bar .mobile-top-bar__deposit:focus,
+  .mobile-top-bar .mobile-top-bar__deposit:focus-visible,
+  .mobile-top-bar .mobile-top-bar__deposit:active,
+  .mobile-top-bar .mobile-top-bar__logo:focus,
+  .mobile-top-bar .mobile-top-bar__logo:focus-visible,
+  .mobile-top-bar .mobile-top-bar__logo:active {
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .mobile-top-bar__auth.header-login-links .top-login-btn.register-btn-purple .register-labl {
@@ -231,6 +271,26 @@
   .mobile-top-bar__tools .header-search-float__trigger-icon {
     width: 34px;
     height: 34px;
+  }
+
+  /* Affiliate: match search trigger box + icon chip (more opaque chip) */
+  .mobile-top-bar__tools .header-affiliate-trigger {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    background: transparent;
+    border-radius: 8px;
+  }
+
+  .mobile-top-bar__tools .header-affiliate-trigger__icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 7px;
+    background: #a71f66;
+    color: #fff;
   }
 
   .mobile-top-bar__tools .mobile-chat-button--inline {

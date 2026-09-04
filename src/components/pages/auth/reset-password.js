@@ -748,12 +748,12 @@ const ResetPassword = (props) => {
                     alignItems: 'center',
                     gap: '0.75rem',
                     width: '100%',
-                    mt: '0.75rem',
-                    mb: { xs: '1.5rem', md: '1.75rem' },
+                    mt: 0,
+                    mb: '4rem',
                     pt: { xs: '1.15rem', md: '1.25rem' },
                     px: { xs: '1rem', md: '1.25rem' },
                     pb: { xs: '1.25rem', md: '1.35rem' },
-                    background: 'transparent',
+                    background: 'rgba(255, 255, 255, 0.1)',
                     borderBottom: `1px solid ${CP.headerLine}`,
                 }}
             >

@@ -2789,33 +2789,104 @@ label {
   /* Makes the icon appear white */
 }
 
-.big-icon-item a,
+/* Header chrome lives in <nav.app-navbar> (not <header>) — kill click/focus rings */
+.app-navbar a:focus,
+.app-navbar a:focus-visible,
+.app-navbar a:active,
+.app-navbar button:focus,
+.app-navbar button:focus-visible,
+.app-navbar button:active,
+.app-navbar .btn:focus,
+.app-navbar .btn:focus-visible,
+.app-navbar .btn:active,
+.app-navbar [role="button"]:focus,
+.app-navbar [role="button"]:focus-visible,
+.app-navbar [role="button"]:active,
+.app-navbar .user-profile:focus,
+.app-navbar .user-profile:focus-visible,
+.app-navbar .user-profile:active,
+.main-header-top a:focus,
+.main-header-top a:focus-visible,
+.main-header-top a:active,
+.main-header-top button:focus,
+.main-header-top button:focus-visible,
+.main-header-top button:active,
+.mobile-top-bar a:focus,
+.mobile-top-bar a:focus-visible,
+.mobile-top-bar a:active,
+.mobile-top-bar button:focus,
+.mobile-top-bar button:focus-visible,
+.mobile-top-bar button:active,
+.mobile-top-bar .btn:focus,
+.mobile-top-bar .btn:focus-visible,
+.mobile-top-bar .btn:active,
+.mobile-top-bar [role="button"]:focus,
+.mobile-top-bar [role="button"]:focus-visible,
+.mobile-top-bar [role="button"]:active,
+.header-top-actions a:focus,
+.header-top-actions a:focus-visible,
+.header-top-actions a:active,
+.header-top-actions button:focus,
+.header-top-actions button:focus-visible,
+.header-top-actions button:active,
+.header-search-slot a:focus,
+.header-search-slot a:focus-visible,
+.header-search-slot a:active,
+.header-search-slot button:focus,
+.header-search-slot button:focus-visible,
+.header-search-slot button:active,
+.header-search-float a:focus,
+.header-search-float a:focus-visible,
+.header-search-float a:active,
+.header-search-float button:focus,
+.header-search-float button:focus-visible,
+.header-search-float button:active,
+.header-affiliate-trigger:focus,
+.header-affiliate-trigger:focus-visible,
+.header-affiliate-trigger:active,
+.header-logo-link:focus,
+.header-logo-link:focus-visible,
+.header-logo-link:active,
+.logo > a:focus,
+.logo > a:focus-visible,
+.logo > a:active,
+.top-login-btn:focus,
+.top-login-btn:focus-visible,
+.top-login-btn:active,
+.sportpesa-deposit-btn:focus,
+.sportpesa-deposit-btn:focus-visible,
+.sportpesa-deposit-btn:active,
+.sportpesa-withdraw-btn:focus,
+.sportpesa-withdraw-btn:focus-visible,
+.sportpesa-withdraw-btn:active,
 .big-icon-item a:focus,
 .big-icon-item a:focus-visible,
 .big-icon-item a:active,
-.bonanza-trigger,
+.big-icon-item .big-icon-link:focus,
+.big-icon-item .big-icon-link:focus-visible,
+.big-icon-item .big-icon-link:active,
 .bonanza-trigger:focus,
 .bonanza-trigger:focus-visible,
+.bonanza-trigger:active,
 .bonanza-trigger button:focus,
 .bonanza-trigger button:focus-visible,
+.bonanza-trigger button:active,
+.mobile-chat-button:focus,
+.mobile-chat-button:focus-visible,
+.mobile-chat-button:active,
 header a:focus,
 header a:focus-visible,
+header a:active,
 button:focus,
 button:focus-visible {
   outline: none !important;
   box-shadow: none !important;
   text-decoration: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Logo link lives in <nav.app-navbar>, not <header> — kill click/focus outline */
-.header-logo-link:focus,
-.header-logo-link:focus-visible,
-.header-logo-link:active,
-.logo>a:focus,
-.logo>a:focus-visible,
-.logo>a:active {
-  outline: none !important;
-  box-shadow: none !important;
+.big-icon-item a {
+  text-decoration: none !important;
 }
 
 
@@ -3223,9 +3294,9 @@ button.locked-button:hover {
 
 .big-icon-bubble {
   position: absolute;
-  top: 0;
+  top: 6px;
   right: 0;
-  transform: translate(50%, -50%);
+  transform: translate(50%, -20%);
   background: #ff3b3b;
   color: #fff;
   font-size: 9px;

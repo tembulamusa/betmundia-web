@@ -144,10 +144,28 @@ const MyBets = () => {
 
             {/* HEADER */}
             <div
-                className="flex justify-between items-center mx-3 my-3 px-3 py-2 rounded-md"
-                style={{ background: "rgba(255,255,255,0.1)" }}
+                className="flex justify-between items-center"
+                style={{
+                    background: "rgba(255, 255, 255, 0.1)",
+                    margin: "0 0 4rem",
+                    padding: "1.15rem 1rem 1.25rem",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.12)",
+                    width: "100%",
+                    boxSizing: "border-box",
+                }}
             >
-                <h6 className="text-white m-0">My Bets</h6>
+                <h1
+                    className="m-0"
+                    style={{
+                        fontSize: "1.75rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.01em",
+                        color: "rgba(255, 255, 255, 0.75)",
+                        lineHeight: 1.25,
+                    }}
+                >
+                    My Bets
+                </h1>
 
                 <select
                     value={betsFilter}

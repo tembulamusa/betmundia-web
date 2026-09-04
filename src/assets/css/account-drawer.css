@@ -271,6 +271,92 @@
   white-space: nowrap;
 }
 
+/* Affiliate row (inside wallet) */
+.account-drawer-affiliate {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  border-radius: var(--acc-radius-sm);
+  outline: none;
+}
+
+.account-drawer-affiliate:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.account-drawer-affiliate:focus-visible {
+  outline: 2px solid var(--acc-pink);
+  outline-offset: 2px;
+}
+
+.account-drawer-affiliate-code-wrap {
+  min-width: 0;
+}
+
+.account-drawer-affiliate-code {
+  margin: 0;
+  color: rgba(255, 215, 0);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  word-break: break-all;
+  line-height: 1.15;
+}
+
+.account-drawer-affiliate-generate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.05rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.account-drawer-affiliate-generate:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.account-drawer-affiliate-generate:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.account-drawer-affiliate-generate svg {
+  color: var(--acc-pink);
+  font-size: 0.85rem;
+}
+
+.account-drawer-affiliate-bal {
+  min-width: 0;
+}
+
+.account-drawer-affiliate-bal-amount {
+  margin: 0;
+  color: rgba(255, 215, 0);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.account-drawer-affiliate-join {
+  margin: 0;
+  color: var(--acc-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.3;
+}
+
 /* Deposit / Withdraw */
 .account-drawer-actions {
   display: grid;

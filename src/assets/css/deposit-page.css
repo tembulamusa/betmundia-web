@@ -13,7 +13,7 @@
   --dep-border: rgba(255, 255, 255, 0.1);
   --dep-text: #ffffff;
   --dep-muted: rgba(255, 255, 255, 0.55);
-  --dep-radius: 12px;
+  --dep-radius: 8px;
   --dep-radius-sm: 8px;
   color: var(--dep-text);
   background: transparent;
@@ -45,9 +45,9 @@
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-  margin: 0.75rem 0 2rem;
+  margin: 0 0 4rem;
   padding: 1.15rem 1rem 1.25rem;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -170,6 +170,10 @@
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
+  max-width: 260px;
+  margin-left: 0;
+  margin-right: auto;
 }
 
 .deposit-page .deposit-field-input {
@@ -253,20 +257,23 @@
 
 /* Deposit CTA */
 .deposit-submit-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
   width: 100%;
+  max-width: 260px;
   min-height: 4rem;
   margin-top: 0.15rem;
+  margin-left: 0;
+  margin-right: auto;
   padding: 0.8rem 1rem;
   border: none;
   border-radius: var(--dep-radius-sm);
   background: var(--dep-pink);
   color: #fff;
   font-size: 1.68rem;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
@@ -711,19 +718,19 @@
   }
 
   .deposit-form {
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .deposit-trust {
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .deposit-page-header {
-    margin: 0.75rem 0 2rem;
+    margin: 0 0 4rem;
     padding: 1.25rem 1.25rem 1.35rem;
   }
 

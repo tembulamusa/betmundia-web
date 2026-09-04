@@ -1,14 +1,18 @@
-import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { getFromLocalStorage } from './local-storage';
 import 'react-toastify/dist/ReactToastify.css';
-import { Context } from "../../context/store";
 
-const ProtectedRoute = ({children}) => {
-    // const {next} = props;
-    // const [state, dispatch] = useContext(Context);
+const ProtectedRoute = ({ children }) => {
+    const location = useLocation();
     const user = getFromLocalStorage("user");
-    return user?.token ? children : <Navigate to={`/login`} />;
-}
+
+    if (user?.token) {
+        return children;
+    }
+
+    const next = `${location.pathname}${location.search || ""}`;
+    return <Navigate to={`/login?next=${encodeURIComponent(next)}`} replace />;
+};
 
 export default ProtectedRoute;

@@ -6,6 +6,7 @@ import { GiSoccerBall } from "react-icons/gi";
 import HomeTeamDefaultFlag from "../../assets/team-jersies/home-default.png"
 import AwayTeamDefaultFlag from "../../assets/team-jersies/away-default.png"
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
+import { getStoredIpAddress } from "../utils/ip-address";
 import NoEvents from "../utils/no-events";
 
 const FreeBet = ({ isFreebetPage = false } = {}) => {
@@ -14,7 +15,6 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
     const [freebet, setFreebet] = useState(null);
     const [freebetSlip, setFreeBetslip] = useState();
     const [selectedOdd, setSelectedOdd] = useState();
-    const [ipInfo, setIpInfo] = useState();
     const [submitting, setSubmitting] = useState(false);
     const [alert, setAlert] = useState(null);
     const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
@@ -30,11 +30,6 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
         if (loadedBetslip) {
             setFreeBetslip(loadedBetslip);
         }
-
-        fetch("https://api64.ipify.org?format=json")
-            .then((response) => response.json())
-            .then((data) => setIpInfo(data.ip))
-            .catch((error) => setIpInfo({ city: "Error fetching IP" }));
     }, []);
 
     useEffect(() => {
@@ -98,7 +93,7 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
                     bet_total_odds: 1,
                     bet_type: freebet?.live ? "1" : "3",
                     channel_id: "web",
-                    ip_address: ipInfo,
+                    ip_address: String(getStoredIpAddress() || ''),
                     msisdn: getFromLocalStorage("user")?.msisdn,
                     possible_win: 100,
                     profile_id: getFromLocalStorage("user")?.profile_id,
@@ -106,7 +101,7 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
                 }
             );
         }
-    }, [freebet, ipInfo, selectedOdd]);
+    }, [freebet, selectedOdd]);
 
     const fetchFreeBet = useCallback((endpoint = "/user/freebet") => {
         if (isFetchingRef.current) return;

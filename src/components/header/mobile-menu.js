@@ -1,17 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../context/store";
 
 import { IoMdLogOut } from "react-icons/io";
-import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaLock, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins, FaInfoCircle } from "react-icons/fa";
+import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins, FaInfoCircle, FaPlus } from "react-icons/fa";
 import { IoListCircleOutline, IoWalletOutline } from "react-icons/io5";
 import { MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
 
 import ComingSoon from "../pages/comingsoon/ComingSoon";
 import { formatToFloat } from "../utils/formatters";
-
-const PROMO_WINS_COUNT = 0;
+import makeRequest from "../utils/fetch-request";
+import {
+  getFromLocalStorage,
+  setLocalStorage,
+} from "../utils/local-storage";
 
 function formatMsisdn(msisdn) {
   if (!msisdn) return "";
@@ -28,13 +31,34 @@ function formatMsisdn(msisdn) {
   return String(msisdn);
 }
 
+function resolveAffiliateBalance(source) {
+  if (!source || typeof source !== "object") return null;
+  const raw =
+    source.affiliate_balance ??
+    source.commission_balance ??
+    source.commissions_balance ??
+    source.balance ??
+    source.total_commission ??
+    source.earnings ??
+    null;
+  if (raw == null || raw === "") return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
 function MobileMenu(props) {
   const { user } = props;
 
   const [show, setShow] = useState(false);
-  const [, dispatch] = useContext(Context);
+  const [state, dispatch] = useContext(Context);
+  const navigate = useNavigate();
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [showBonusTooltip, setShowBonusTooltip] = useState(false);
+  const [affiliateCode, setAffiliateCode] = useState(
+    user?.promo_code || null
+  );
+  const [affiliateBalance, setAffiliateBalance] = useState(null);
+  const [generatingCode, setGeneratingCode] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -46,6 +70,76 @@ function MobileMenu(props) {
 
   const balance = formatToFloat(user?.balance || 0);
   const bonus = formatToFloat(user?.bonus || user?.bonus_balance || 0);
+
+  useEffect(() => {
+    setAffiliateCode(user?.promo_code || null);
+  }, [user?.promo_code]);
+
+  useEffect(() => {
+    if (!show || !user) return;
+
+    makeRequest({ url: "/user/commissions", method: "GET", api_version: 2 }).then(
+      ([status, response]) => {
+        if (status !== 200) return;
+        const data = response?.data ?? response ?? null;
+        if (!data) return;
+        if (data.promo_code) {
+          setAffiliateCode(data.promo_code);
+        }
+        setAffiliateBalance(resolveAffiliateBalance(data));
+      }
+    );
+  }, [show, user]);
+
+  const persistAffiliateCode = (code) => {
+    setAffiliateCode(code);
+    const storedUser = getFromLocalStorage("user") || user || {};
+    const updatedUser = { ...storedUser, promo_code: code };
+    setLocalStorage("user", updatedUser);
+    if (state?.user) {
+      dispatch({
+        type: "SET",
+        key: "user",
+        payload: { ...state.user, promo_code: code },
+      });
+    }
+  };
+
+  const handleGenerateAffiliateCode = (e) => {
+    e?.stopPropagation?.();
+    if (generatingCode) return;
+    setGeneratingCode(true);
+
+    makeRequest({
+      url: "/user/promo-code",
+      method: "POST",
+      api_version: 2,
+    }).then(([status, response]) => {
+      setGeneratingCode(false);
+      const code =
+        response?.promo_code ||
+        response?.data?.promo_code ||
+        response?.code;
+
+      if ((status === 200 || status === 201) && code) {
+        persistAffiliateCode(code);
+        const bal = resolveAffiliateBalance(response?.data ?? response);
+        if (bal != null) setAffiliateBalance(bal);
+      }
+    });
+  };
+
+  const handleAffiliateSectionClick = () => {
+    if (!affiliateCode) {
+      handleGenerateAffiliateCode();
+      return;
+    }
+    setShow(false);
+    navigate("/affiliate");
+  };
+
+  const hasAffiliateBalance =
+    affiliateBalance != null && Number(affiliateBalance) > 0;
 
   return (
     <span className="inline-block" style={{ height: "auto" }}>
@@ -152,6 +246,56 @@ function MobileMenu(props) {
                 {/* Restricted Balance removed per request */}
               </div>
             </div>
+
+            <div
+              className="account-drawer-affiliate"
+              role="button"
+              tabIndex={0}
+              onClick={handleAffiliateSectionClick}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleAffiliateSectionClick();
+                }
+              }}
+              aria-label={
+                affiliateCode
+                  ? "Open affiliate page"
+                  : "Generate affiliate code"
+              }
+            >
+              <div className="account-drawer-wallet-grid">
+                <div className="account-drawer-affiliate-code-wrap">
+                  <p className="account-drawer-wallet-main-label">Code</p>
+                  {affiliateCode ? (
+                    <p className="account-drawer-affiliate-code">{affiliateCode}</p>
+                  ) : (
+                    <button
+                      type="button"
+                      className="account-drawer-affiliate-generate"
+                      disabled={generatingCode}
+                      onClick={handleGenerateAffiliateCode}
+                    >
+                      <FaPlus aria-hidden="true" />
+                      {generatingCode ? "Generating…" : "Generate code"}
+                    </button>
+                  )}
+                </div>
+                <div className="account-drawer-wallet-divider" aria-hidden="true" />
+                <div className="account-drawer-affiliate-bal">
+                  <p className="account-drawer-wallet-main-label">
+                    Affiliate balance
+                  </p>
+                  {hasAffiliateBalance ? (
+                    <p className="account-drawer-affiliate-bal-amount">
+                      KSh {formatToFloat(affiliateBalance)}
+                    </p>
+                  ) : (
+                    <p className="account-drawer-affiliate-join">join to earn</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="account-drawer-actions">
@@ -189,17 +333,14 @@ function MobileMenu(props) {
               </Link>
 
               <Link
-                to="/promo-wins"
+                to="/affiliate"
                 className="account-drawer-item"
                 onClick={handleClose}
               >
                 <span className="account-drawer-item-icon" aria-hidden="true">
                   <FaGifts />
                 </span>
-                <span className="account-drawer-item-label">
-                  Promo Wins
-                  <span className="account-drawer-count">{PROMO_WINS_COUNT}</span>
-                </span>
+                <span className="account-drawer-item-label">Affiliate</span>
                 <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
               </Link>
 

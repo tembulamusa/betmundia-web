@@ -23,6 +23,7 @@ import DefaultImg from "../../assets/img/colorsvgicons/soccer.svg";
 import logo from "../../assets/img/logo.svg";
 import bonanzaTrophyHero from "../../assets/img/bonanza-trophy-hero.svg";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
+import { openLoginWithRedirect } from "../utils/login-redirect";
 
 const EXCLUDED_PROVIDERS = ["unicraft"];
 
@@ -130,6 +131,7 @@ const BigIconMenu = () => {
         // { name: "world cup", icon: "world cup.svg", link: "/sports/competition/matches?id=18585", parentTo: null, bubble: "HOT" },
         { name: "live", icon: "livescore.svg", link: "/live", parentTo: null },
         { name: "jackpot", icon: "jackpot.svg", link: "/jackpot", parentTo: null },
+        { name: "affiliate", icon: "affiliate.svg", link: "/affiliate", parentTo: null, bubble: "HOT" },
         { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null, bubble: "HOT" },
         { name: "jet x", icon: "jetx.svg", link: "/casino-game/smartsoft/jetx", parentTo: null, bubble: "new" },
         // {name: "surecoin", icon:"surecoin.svg", link:"/surecoin", parentTo:null},
@@ -162,6 +164,13 @@ const BigIconMenu = () => {
         // {name: "print", icon:"print.svg", link:"/print-matches", parentTo:null},
     ]
 
+
+    const openAffiliate = (event) => {
+        const user = getFromLocalStorage("user") || state?.user;
+        if (user) return;
+        event.preventDefault();
+        openLoginWithRedirect(dispatch, "/affiliate");
+    };
 
     const filterGames = (filterName, filterItem) => {
         let payload = { filterType: "provider", provider: filterItem }
@@ -575,7 +584,12 @@ const BigIconMenu = () => {
                                         <div className="big-icon-name">{item.name}</div>
                                     </a>
                                 ) : (
-                                    <Link to={item.link} title={item.name} className="big-icon-link">
+                                    <Link
+                                        to={item.link}
+                                        title={item.name}
+                                        className="big-icon-link"
+                                        onClick={item?.name?.toLowerCase() === "affiliate" ? openAffiliate : undefined}
+                                    >
                                         <div className="big-icon-icon relative">
                                             {iconContent}
 

@@ -15,6 +15,7 @@ import {
 import Alert from '../utils/alert';
 import { type } from '@testing-library/user-event/dist/cjs/utility/type.js';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { clearLoginRedirect, resolveLoginRedirect } from '../utils/login-redirect';
 
 const BodyLogin = (props) => {
     const { setUser } = props
@@ -50,10 +51,15 @@ const BodyLogin = (props) => {
             if (state?.showloginmodal) {
                 dispatch({ type: "DEL", key: "showloginmodal" });
             }
-            if (navigateAwayRoutes.includes(location.pathname)) {
-                const queryParams = new URLSearchParams(location.search);
-                const next = queryParams.get('next') || '/';
+
+            const next = resolveLoginRedirect(state?.loginRedirect, location.search);
+            if (state?.loginRedirect) {
+                clearLoginRedirect(dispatch);
+            }
+            if (next) {
                 window.location.href = next;
+            } else if (navigateAwayRoutes.includes(location.pathname)) {
+                window.location.href = '/';
             }
 
         }
@@ -70,47 +76,56 @@ const BodyLogin = (props) => {
         dispatchUser();
     }, [dispatchUser]);
 
+    const NETWORK_ERROR_MESSAGE = "Unable to reach server. Please check your internet connection.";
+    const DEFAULT_ERROR_MESSAGE = "An error occurred. Check details and try again.";
+
+    const getLoginErrorMessage = (status, response) => {
+        if (!status) {
+            return NETWORK_ERROR_MESSAGE;
+        }
+        if (status == 403 && response?.result == "Failed") {
+            return response?.error?.description || "Login failed. Please check your credentials.";
+        }
+        return response?.result || response?.error?.description || response?.message || DEFAULT_ERROR_MESSAGE;
+    };
+
     const handleSubmit = values => {
         let endpoint = '/auth/login';
-        setIsLoading(true)
-        makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
-            if (status == 200 || status == 201 || status == 204) {
-                if (response.status == 200 || response.status == 201) {
-                    setMessage({ user: response?.data, status: 200 });
-                    // add to the chat window
-                    if (window.MessengerConfig) {
-                        window.MessengerConfig.user = {
-                            name: response?.data?.first_name || response?.data?.username || response?.data?.profile_id,
-                            phone: response?.data?.msisdn,
-                            email: "" /* no email provided in response */
-                        };
-                    }
-                } else {
-                    if (response?.result == "User account not verified") {
-                        dispatch({ type: "SET", key: "regmsisdn", payload: values.msisdn })
-                        setAlertVerifyMessage({ status: 400, message: response?.result || "Account not verified" })
+        setIsLoading(true);
+        setGeneralErrorMessage(null);
+        setAlertVerifyMessage(null);
+
+        makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 })
+            .then(([status, response]) => {
+                if (status == 200 || status == 201 || status == 204) {
+                    if (response?.status == 200 || response?.status == 201) {
+                        setMessage({ user: response?.data, status: 200 });
+                        if (window.MessengerConfig) {
+                            window.MessengerConfig.user = {
+                                name: response?.data?.first_name || response?.data?.username || response?.data?.profile_id,
+                                phone: response?.data?.msisdn,
+                                email: "" /* no email provided in response */
+                            };
+                        }
+                    } else if (response?.result == "User account not verified") {
+                        dispatch({ type: "SET", key: "regmsisdn", payload: values.msisdn });
+                        setAlertVerifyMessage({ status: 400, message: response?.result || "Account not verified" });
                     } else {
-                        setGeneralErrorMessage({ status: 400, message: response?.result || "An error occurred. Check details" })
+                        setGeneralErrorMessage({ status: 400, message: getLoginErrorMessage(status, response) });
                     }
-                }
-            } else {
-                if (status == 403) {
-                    if (response?.result == "Failed") {
-                        setGeneralErrorMessage({ status: 400, message: response.error.description })
-                    }
-                }
-                if (response?.result == "User account not verified") {
-                    setAlertVerifyMessage({ status: 400, message: response.result })
+                } else if (response?.result == "User account not verified") {
+                    dispatch({ type: "SET", key: "regmsisdn", payload: values.msisdn });
+                    setAlertVerifyMessage({ status: 400, message: response.result });
                 } else {
-                    //setAlertVerifyMessage({status: 400, message:"An error occurred. Check details"})
-                    setAlertVerifyMessage({ status: 400, message: response.result })
-
+                    setGeneralErrorMessage({ status: 400, message: getLoginErrorMessage(status, response) });
                 }
-
-            }
-
-            setIsLoading(false)
-        })
+            })
+            .catch(() => {
+                setGeneralErrorMessage({ status: 400, message: NETWORK_ERROR_MESSAGE });
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
 
 

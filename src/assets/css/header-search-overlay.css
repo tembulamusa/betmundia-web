@@ -224,11 +224,16 @@
 .header-search-float__input:focus,
 .header-search-float__trigger:focus,
 .header-search-float__trigger:focus-visible,
+.header-search-float__trigger:active,
 .header-search-float__exit:focus,
 .header-search-float__exit:focus-visible,
+.header-search-float__exit:active,
 .header-search-float__btn:focus,
-.header-search-float__btn:focus-visible {
-  outline: none;
+.header-search-float__btn:focus-visible,
+.header-search-float__btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .header-top-grid {
@@ -243,6 +248,87 @@
   align-items: center;
   justify-self: stretch;
   justify-content: stretch;
+  gap: 0.15rem;
+}
+
+/* Match search trigger: icon-only, same box; chip bg more opaque than search */
+.header-affiliate-trigger {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 44px;
+  min-width: 52px;
+  min-height: 44px;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: auto;
+  cursor: pointer;
+  line-height: 1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.header-affiliate-trigger:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.header-affiliate-trigger:focus,
+.header-affiliate-trigger:focus-visible,
+.header-affiliate-trigger:active {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Same chip as search icon, full opacity brand purple */
+.header-affiliate-trigger__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  border-radius: 7px;
+  background: #a71f66;
+  color: #fff;
+  line-height: 1;
+}
+
+.header-affiliate-trigger__icon svg {
+  display: block;
+}
+
+/* Mobile (≤1199.98px): same 44×44 box + 34×34 chip as search in tools row */
+@media (max-width: 1199.98px) {
+  .header-affiliate-trigger,
+  .mobile-top-bar__tools .header-affiliate-trigger {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    background: transparent;
+    border-radius: 8px;
+  }
+
+  .header-affiliate-trigger__icon,
+  .mobile-top-bar__tools .header-affiliate-trigger__icon {
+    width: 34px;
+    height: 34px;
+    background: #a71f66;
+  }
 }
 
 .logo-search-slot {

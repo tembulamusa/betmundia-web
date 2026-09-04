@@ -24,6 +24,7 @@ import { isMobile } from "react-device-detect";
 import { Modal } from "react-bootstrap";
 import { TbRefreshAlert } from "react-icons/tb";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
+import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
 
 const Float = (equation, precision = 4) => {
@@ -76,7 +77,6 @@ const BetslipSubmitForm = (props) => {
     const [netWin, setNetWin] = useState(0);
     const [bonus, setBonus] = useState(0);
     const [betslipkey, setBetslipKey] = useState(() => jackpot ? "jackpotbetslip" : "betslip");
-    const [ipAddress, setIpAddress] = useState('');
     const [totalGames, setTotalGames] = useState(0);
     const [totalOdds, setTotalOdds] = useState(1);
     const [showBonusTooltip, setShowBonusTooltip] = useState(false);
@@ -130,13 +130,6 @@ const BetslipSubmitForm = (props) => {
     //             })
     //     }
     // };
-    useEffect(() => {
-        fetch("https://api64.ipify.org?format=json")
-            .then((response) => response.json())
-            .then((data) => setIpAddress(data.ip || ''))
-            .catch(() => setIpAddress(''));
-
-    }, []);
 
 
 
@@ -283,7 +276,7 @@ const BetslipSubmitForm = (props) => {
             stake_amount: jackpot ? jackpotData?.bet_amount : stake,
             amount: jackpot ? jackpotData?.bet_amount : stake,
             bet_total_odds: Float(totalOdds, 2),
-            ip_address: ipAddress,
+            ip_address: String(getStoredIpAddress() || ''),
             channel_id: isMobile ? 'mobile' : 'web',
             slip: bs.map(formatSlipForPlaceBet),
             profile_id: getFromLocalStorage("user")?.profile_id || state?.user?.profile_id,

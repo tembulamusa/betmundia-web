@@ -1,26 +1,72 @@
 .promotions-page {
-  padding: 0 16px 24px;
+  padding: 0 0 1.5rem;
   color: #f5f7ff;
+  min-height: 100%;
+  background: transparent;
 }
 
+.promotions-page * {
+  box-sizing: border-box;
+}
+
+/* Header — match deposit/withdraw (flush top, shared height) */
 .promotions-page__header {
-  margin-bottom: 16px;
-  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0 0 4rem;
+  padding: 1.15rem 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+  box-shadow: none;
   text-align: center;
-  border-radius: 18px;
-  border: 1px solid rgba(228, 76, 160, 0.16);
-  background:
-    radial-gradient(circle at top, rgba(222, 58, 144, 0.18), transparent 40%),
-    linear-gradient(180deg, rgba(6, 12, 33, 0.96), rgba(7, 15, 39, 0.92));
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
+}
+
+.promotions-page__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.promotions-page__back:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.promotions-page__back svg {
+  font-size: 1.32rem;
 }
 
 .promotions-page__title {
   margin: 0;
-  font-size: 1.85rem;
-  font-weight: 800;
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 700;
   letter-spacing: 0.01em;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.25;
+}
+
+.promotions-page__header-spacer {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.promotions-page__body {
+  width: 100%;
+  padding: 0 1rem 1rem;
 }
 
 .promotions-page__list {
@@ -210,12 +256,20 @@
 
 @media (min-width: 768px) {
   .promotions-page {
-    padding: 12px 22px 32px;
+    padding: 0 0 2rem;
   }
 
   .promotions-page__header {
-    margin-bottom: 22px;
-    padding: 20px 28px;
+    margin: 0 0 4rem;
+    padding: 1.25rem 1.25rem 1.35rem;
+  }
+
+  .promotions-page__title {
+    font-size: 1.89rem;
+  }
+
+  .promotions-page__body {
+    padding: 0 1.25rem 1.25rem;
   }
 
   .promotions-page__list {

@@ -2,6 +2,7 @@ import React, { useEffect, Suspense, useContext } from "react";
 import { createRoot } from 'react-dom/client';
 import {
     BrowserRouter,
+    Navigate,
     Route,
     Routes,
 } from 'react-router-dom'
@@ -76,6 +77,7 @@ import CasinoHome from "./components/pages/casino/casino-home";
 import ReactGA from "react-ga4";
 import PageviewTracker from "./components/utils/pageview-tracker";
 import { PromoTracker } from "./promo-tracker";
+import useIpAddress from './hooks/use-ip-address';
 import PromoWins from "./components/pages/promo-wins";
 import './index.css';
 import './assets/css/mobile-top-bar.css';
@@ -87,6 +89,8 @@ const container = document.getElementById("app");
 
 const App = () => {
     const [state,] = useContext(Context);
+
+    useIpAddress();
 
     useEffect(() => {
         ReactGA.initialize("G-P98WY6WH5S");
@@ -156,8 +160,10 @@ const App = () => {
                                         element={<ProtectedRoute><Withdraw /></ProtectedRoute>} />
                                     <Route exact path="/my-bets"
                                         element={<ProtectedRoute><MyBets /> </ProtectedRoute>} />
-                                    <Route exact path="/promo-wins"
+                                    <Route exact path="/affiliate"
                                         element={<ProtectedRoute><PromoWins /> </ProtectedRoute>} />
+                                    <Route exact path="/promo-wins"
+                                        element={<Navigate to="/affiliate" replace />} />
 
                                     {/* DEFAULT CUrrently the default component. Switch to INDEX when SPORTS AVAILABLE */}
                                     <Route path="*" element={<Index />} />
