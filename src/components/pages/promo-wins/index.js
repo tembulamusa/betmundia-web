@@ -1620,6 +1620,13 @@ const PromoWins = () => {
         getUserCommision();
     }, []);
 
+    // Once per Affiliate page visit: open get-code modal for users without a code.
+    useEffect(() => {
+        if (promoCode) return;
+        setOpenCustomizeSignal((n) => n + 1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only auto-open
+    }, []);
+
     const handleTabChange = (_event, nextTab) => {
         setActiveTab(nextTab);
     };
