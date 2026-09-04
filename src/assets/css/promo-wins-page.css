@@ -1429,6 +1429,14 @@
   background: #c92a7a;
 }
 
+/* Modals portal to <body>, outside .promo-wins-page — redeclare brand tokens */
+.promo-wins-customize-modal,
+.promo-wins-terms-modal {
+  --pw-brand: #a71f66;
+  --pw-brand-soft: #c92a7a;
+  --pw-yellow: #ffc428;
+}
+
 /* Customize affiliate code modal */
 .promo-wins-customize-modal .modal-content,
 .promo-wins-customize-modal-content {
