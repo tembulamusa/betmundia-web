@@ -812,8 +812,8 @@ const PromoCode = ({
                         {generating
                             ? "Creating…"
                             : createMode === "auto"
-                              ? "Autogenerate"
-                              : "Generate"}
+                              ? "Generate"
+                              : "Submit"}
                     </button>
                 </Modal.Footer>
             </Modal>

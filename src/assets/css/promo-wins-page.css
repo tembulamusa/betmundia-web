@@ -333,10 +333,10 @@
   background: rgba(255, 255, 255, 0.14) !important;
 }
 
-/* Active: brand yellow text; darker bg; no bottom border to connect to content */
+/* Active: brand purple text; darker bg; no bottom border to connect to content */
 .promo-wins-tabs .MuiTab-root.Mui-selected,
 .promo-wins-tab.Mui-selected {
-  color: var(--pw-yellow) !important;
+  color: var(--pw-brand) !important;
   font-weight: 700 !important;
   background: rgba(0, 0, 0, 0.1) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -349,11 +349,11 @@
 }
 
 .promo-wins-tab.Mui-selected .MuiTab-iconWrapper {
-  color: var(--pw-yellow) !important;
+  color: var(--pw-brand) !important;
 }
 
 .promo-wins-tab.Mui-selected:hover {
-  color: var(--pw-yellow) !important;
+  color: var(--pw-brand) !important;
   background: rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -1525,8 +1525,10 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0 0 5px 5px;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.65rem;
   justify-content: flex-end;
+  align-items: stretch;
 }
 
 .promo-wins-customize-label {
@@ -1607,6 +1609,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
   padding: 0.55rem 1.05rem;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 5px;
@@ -1631,19 +1634,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.55rem 1.25rem;
+  flex: 1 1 auto;
+  min-width: 10.5rem;
+  padding: 0.72rem 1.85rem;
   border: none;
   border-radius: 5px;
   background: var(--pw-brand, #a71f66);
   color: #fff;
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 1.08rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background 0.15s ease, opacity 0.15s ease;
+  box-shadow: 0 2px 10px rgba(167, 31, 102, 0.35);
+  transition: background 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
 }
 
 .promo-wins-customize-generate:hover:not(:disabled) {
-  background: #c92a7a;
+  background: var(--pw-brand-soft, #c92a7a);
+  box-shadow: 0 3px 12px rgba(167, 31, 102, 0.42);
 }
 
 .promo-wins-customize-generate:disabled {

@@ -1,0 +1,13 @@
+---
+description: Always push this repo to the betmundial remote
+alwaysApply: true
+---
+
+# Git push remote
+
+When the user asks to push this project's code:
+
+- **Always push to remote `betmundial`** (`Betmundial-ke/betmundial_web`).
+- Prefer: `git push -u betmundial HEAD` or `git push betmundial <branch>`.
+- Do **not** push only to `origin` unless the user also asks for `origin` / both remotes.
+- Never force-push unless explicitly requested.
