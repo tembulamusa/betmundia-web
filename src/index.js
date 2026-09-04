@@ -23,6 +23,7 @@ import './assets/css/deposit-page.css';
 import './assets/css/withdraw-page.css';
 import './assets/css/change-password-page.css';
 import './assets/css/crash-terms-page.css';
+import './assets/css/affiliate-terms-page.css';
 import './assets/css/how-to-play-page.css';
 import './assets/css/responsible-gambling-page.css';
 import './assets/css/faqs-page.css';
@@ -84,6 +85,7 @@ import './assets/css/mobile-top-bar.css';
 import './assets/css/forgot-password-page.css';
 import LiveCasino from "./components/pages/casino/LiveCasino";
 import CrashTerms from "./components/pages/terms-and-conditions/crash-terms";
+import AffiliateTerms from "./components/pages/affiliate-terms";
 
 const container = document.getElementById("app");
 
@@ -154,6 +156,7 @@ const App = () => {
                                     {/* <Route exact path="/promotions-new" element={<PromotionsNew />} /> */}
                                     <Route exact path="/freebet" element={<FreeBetPage />} />
                                     <Route exact path="/crash-terms" element={<CrashTerms />} />
+                                    <Route exact path="/affiliate-terms" element={<AffiliateTerms />} />
                                     <Route exact path="/deposit"
                                         element={<ProtectedRoute><Deposit /></ProtectedRoute>} />
                                     <Route exact path="/withdraw"

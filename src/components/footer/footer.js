@@ -20,6 +20,7 @@ import { SiTiktok } from 'react-icons/si';
 const TERM_LINKS = [
     { href: '/terms-and-conditions', label: 'Terms and Conditions' },
     { href: '/crash-terms', label: 'Crash Terms' },
+    { href: '/affiliate-terms', label: 'Affiliate Terms' },
     { href: '/responsible-gambling', label: 'Responsible Gambling' },
     { href: '/privacy-policy', label: 'Privacy Policy' },
     { href: '/cookie-policy', label: 'Cookie Policy' },
