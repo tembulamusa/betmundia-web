@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
 import {
-    ProSidebar as ProSidebar2,
     Sidebar,
     Menu,
     MenuItem,
     SubMenu,
-    SidebarHeader,
-    //SidebarContent 
 } from 'react-pro-sidebar';
 
 //import 'react-pro-sidebar/dist/css/styles.css';
