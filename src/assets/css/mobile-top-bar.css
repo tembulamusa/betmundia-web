@@ -393,13 +393,18 @@
   }
 
   .mobile-top-bar__account .user-profile {
+    box-sizing: border-box;
     display: inline-flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 0.25rem !important;
-    min-height: 30px;
-    padding: 0.2rem 0.45rem !important;
-    border-radius: 999px;
+    justify-content: center !important;
+    gap: 0 !important;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0 !important;
+    border-radius: 50%;
     border: 1.5px solid var(--pw-brand, #a71f66);
     background: var(--pw-brand, #a71f66);
     color: #fff;
@@ -416,13 +421,7 @@
   }
 
   .mobile-top-bar__account .user-profile-text {
-    display: inline !important;
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    line-height: 1;
-    color: #fff;
+    display: none !important;
   }
 
   .mobile-top-bar__quick-links {
