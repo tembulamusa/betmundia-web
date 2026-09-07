@@ -43,7 +43,7 @@ export const getAppDownloadTarget = () => {
     }
 
     return {
-        href: '/app',
-        external: false,
+        href: ANDROID_PLAY_STORE_URL,
+        external: true,
     };
 };

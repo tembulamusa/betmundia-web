@@ -2,23 +2,49 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
+import { MdClose } from 'react-icons/md';
 import logo from '../../assets/img/logo.svg';
 import { Context } from '../../context/store';
 import { formatToFloat } from '../utils/formatters';
-import { getAppDownloadTarget } from '../utils/app-download';
+import { ANDROID_PLAY_STORE_URL, getAppDownloadTarget } from '../utils/app-download';
+import { getFromLocalStorage, setLocalStorage } from '../utils/local-storage';
 import HeaderNav from './header-nav';
 import MobileChat from './mobile-chat';
 import MobileMenu from './mobile-menu';
 import '../../assets/css/mobile-top-bar.css';
 
+const APP_PROMO_DISMISS_KEY = 'mobile_app_promo_dismissed';
+const APP_PROMO_DISMISS_TTL_MS = 1000 * 60 * 60 * 24 * 365; // 1 year
+
 const MobileTopBar = ({ user }) => {
     const [, dispatch] = useContext(Context);
     const balance = formatToFloat(user?.balance || 0);
-    const [appDownload, setAppDownload] = useState({ href: '/app', external: false });
+    const [appDownload, setAppDownload] = useState({
+        href: ANDROID_PLAY_STORE_URL,
+        external: true,
+    });
+    const [promoDismissed, setPromoDismissed] = useState(
+        () => Boolean(getFromLocalStorage(APP_PROMO_DISMISS_KEY))
+    );
 
     useEffect(() => {
         setAppDownload(getAppDownloadTarget());
     }, []);
+
+    // Keep layout spacing in sync with promo visibility (persisted via localStorage).
+    useEffect(() => {
+        document.body.classList.toggle('app-promo-dismissed', promoDismissed);
+        return () => {
+            document.body.classList.remove('app-promo-dismissed');
+        };
+    }, [promoDismissed]);
+
+    const dismissPromo = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setLocalStorage(APP_PROMO_DISMISS_KEY, true, APP_PROMO_DISMISS_TTL_MS);
+        setPromoDismissed(true);
+    };
 
     const promoContent = (
         <>
@@ -30,20 +56,35 @@ const MobileTopBar = ({ user }) => {
     );
 
     return (
-        <div className="mobile-top-bar" aria-label="Mobile navigation">
-            {appDownload.external ? (
-                <a
-                    href={appDownload.href}
-                    className="mobile-top-bar__app-promo"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    {promoContent}
-                </a>
-            ) : (
-                <Link to={appDownload.href} className="mobile-top-bar__app-promo">
-                    {promoContent}
-                </Link>
+        <div
+            className={`mobile-top-bar${promoDismissed ? ' mobile-top-bar--promo-hidden' : ''}`}
+            aria-label="Mobile navigation"
+        >
+            {!promoDismissed && (
+                <div className="mobile-top-bar__app-promo-row">
+                    {appDownload.external ? (
+                        <a
+                            href={appDownload.href}
+                            className="mobile-top-bar__app-promo"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {promoContent}
+                        </a>
+                    ) : (
+                        <Link to={appDownload.href} className="mobile-top-bar__app-promo">
+                            {promoContent}
+                        </Link>
+                    )}
+                    <button
+                        type="button"
+                        className="mobile-top-bar__app-promo-dismiss"
+                        onClick={dismissPromo}
+                        aria-label="Dismiss app download banner"
+                    >
+                        <MdClose aria-hidden="true" />
+                    </button>
+                </div>
             )}
 
             <div className="mobile-top-bar__brand">

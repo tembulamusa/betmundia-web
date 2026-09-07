@@ -52,7 +52,6 @@ import Deposit from './components/pages/deposit-withraw/Deposit';
 import Signup from './components/pages/signup';
 import ResetPassword from './components/pages/auth/reset-password';
 import VerifyAccount from './components/pages/auth/verify-account';
-import MobileApp from './components/pages/app';
 import ProtectedRoute from './components/utils/protected-route';
 import Promotions from './components/pages/promotions/Promotions';
 import FreeBetPage from './components/pages/freebet';
@@ -141,7 +140,6 @@ const App = () => {
                                     <Route exact path="/reset-password" element={<ResetPassword />} />
                                     <Route exact path="/forgot-password" element={<ForgotPassword />} />
                                     <Route exact path="/verify-account" element={<VerifyAccount />} />
-                                    <Route exact path="/app" element={<MobileApp />} />
                                     <Route exact path="/betslip/share/:code" element={<Index />} />
                                     <Route exact path="/logout" element={<Logout />} />
                                     <Route path="/check-deposit-status" element={<CheckDepositStatus />} />

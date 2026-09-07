@@ -12,17 +12,52 @@
     background: rgba(0, 12, 36, 1);
   }
 
+  .mobile-top-bar__app-promo-row {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    background: #f5c518;
+  }
+
   .mobile-top-bar__app-promo {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.65rem;
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
     min-height: 44px;
-    padding: 0.55rem 1.1rem;
+    padding: 0.55rem 0.75rem 0.55rem 1.1rem;
     background: #f5c518;
     color: #000000;
     text-decoration: none;
+  }
+
+  .mobile-top-bar__app-promo-dismiss {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #000000;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-top-bar__app-promo-dismiss:hover,
+  .mobile-top-bar__app-promo-dismiss:focus,
+  .mobile-top-bar__app-promo-dismiss:focus-visible,
+  .mobile-top-bar__app-promo-dismiss:active {
+    background: #ffd84d;
+    color: #000000;
+    outline: none !important;
+    box-shadow: none !important;
   }
 
   .mobile-top-bar__app-promo:hover,
@@ -385,5 +420,14 @@
 
   .no-big-icon-nav .amt {
     margin-top: 130px !important;
+  }
+
+  /* Promo strip (~44px) dismissed — pull main content up to fill the gap */
+  body.app-promo-dismissed .amt {
+    margin-top: 144px !important;
+  }
+
+  body.app-promo-dismissed .no-big-icon-nav .amt {
+    margin-top: 86px !important;
   }
 }

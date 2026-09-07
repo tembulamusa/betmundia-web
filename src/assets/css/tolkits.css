@@ -15368,8 +15368,8 @@ img.zoom-img {
 
 .top-matches:nth-child(2n) {
     /* background: #f5f5f5b3; */
-    border-bottom: 4px solid #101020c9 !important;
-    border-top: 4px solid #101020c9 !important;
+    border-bottom: 2px solid #101020c9 !important;
+    border-top: 2px solid #101020c9 !important;
 }
 
 .top-matches:nth-child(2n + 1) {
