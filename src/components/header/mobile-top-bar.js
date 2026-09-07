@@ -95,26 +95,29 @@ const MobileTopBar = ({ user }) => {
                 <div className="mobile-top-bar__tools">
                     <HeaderNav />
                     <MobileChat />
-                    {user && (
-                        <div className="mobile-top-bar__account">
-                            <MobileMenu user={user} />
-                        </div>
-                    )}
                 </div>
             </div>
 
             <div className="mobile-top-bar__auth-bar">
                 {user ? (
-                    <>
+                    <div className="mobile-top-bar__wallet">
                         <div className="mobile-top-bar__balance" title="Available balance">
                             <span className="mobile-top-bar__balance-label">KES</span>
                             <span className="mobile-top-bar__balance-value">{balance}</span>
                         </div>
-                        <Link to="/deposit" className="mobile-top-bar__deposit sportpesa-deposit-btn">
-                            <FontAwesomeIcon icon={faCoins} className="deposit-coins-icon" aria-hidden="true" />
-                            Deposit
-                        </Link>
-                    </>
+                        <div className="mobile-top-bar__wallet-actions">
+                            <Link to="/deposit" className="mobile-top-bar__deposit sportpesa-deposit-btn">
+                                <FontAwesomeIcon icon={faCoins} className="deposit-coins-icon" aria-hidden="true" />
+                                Deposit
+                            </Link>
+                            <Link to="/withdraw" className="mobile-top-bar__withdraw sportpesa-withdraw-btn">
+                                Withdraw
+                            </Link>
+                            <div className="mobile-top-bar__account">
+                                <MobileMenu user={user} showLabel />
+                            </div>
+                        </div>
+                    </div>
                 ) : (
                     <div className="mobile-top-bar__auth header-login-links uppercase">
                         <button

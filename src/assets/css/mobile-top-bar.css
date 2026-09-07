@@ -118,6 +118,32 @@
     padding: 0.35rem 0.5rem;
   }
 
+  /* Logged-in: Balance + Deposit + Withdraw + Account in one cohesive row */
+  .mobile-top-bar__auth-bar:has(.mobile-top-bar__wallet) {
+    justify-content: stretch;
+    min-height: 52px;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .mobile-top-bar__wallet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.45rem;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mobile-top-bar__wallet-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
   /* Logged-out: Login + Register fill the auth row evenly */
   .mobile-top-bar__auth-bar:has(.mobile-top-bar__auth) {
     justify-content: stretch;
@@ -146,30 +172,36 @@
   .mobile-top-bar__balance {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    line-height: 1.1;
+    align-items: flex-start;
+    justify-content: center;
+    line-height: 1;
     min-width: 0;
+    flex: 1 1 auto;
   }
 
   .mobile-top-bar__balance-label {
-    font-size: 0.62rem;
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.04em;
+    line-height: 1.1;
     color: rgba(255, 255, 255, 0.55);
     text-transform: uppercase;
   }
 
+  /* ~3× previous 0.82rem balance value */
   .mobile-top-bar__balance-value {
-    font-size: 0.82rem;
+    font-size: 2.46rem;
     font-weight: 700;
+    line-height: 1.05;
     color: #f5c518;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 72px;
+    max-width: 100%;
   }
 
-  .mobile-top-bar__deposit {
+  .mobile-top-bar__deposit,
+  .mobile-top-bar__withdraw {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
@@ -272,6 +304,9 @@
   .mobile-top-bar .mobile-top-bar__deposit:focus,
   .mobile-top-bar .mobile-top-bar__deposit:focus-visible,
   .mobile-top-bar .mobile-top-bar__deposit:active,
+  .mobile-top-bar .mobile-top-bar__withdraw:focus,
+  .mobile-top-bar .mobile-top-bar__withdraw:focus-visible,
+  .mobile-top-bar .mobile-top-bar__withdraw:active,
   .mobile-top-bar .mobile-top-bar__logo:focus,
   .mobile-top-bar .mobile-top-bar__logo:focus-visible,
   .mobile-top-bar .mobile-top-bar__logo:active {
@@ -339,22 +374,35 @@
   }
 
   .mobile-top-bar__account .user-profile {
+    display: inline-flex !important;
     flex-direction: row !important;
-    gap: 0 !important;
-  }
-
-  .mobile-top-bar__account .user-profile-icon {
-    width: 30px !important;
-    height: 30px !important;
-    padding: 5px !important;
-    margin: 0 !important;
-    border-radius: 6px;
+    align-items: center !important;
+    gap: 0.25rem !important;
+    min-height: 30px;
+    padding: 0.2rem 0.45rem !important;
+    border-radius: 4px;
     background: rgba(167, 31, 102, 0.22);
     color: #fff;
   }
 
+  .mobile-top-bar__account .user-profile-icon {
+    width: 14px !important;
+    height: 14px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0;
+    background: transparent;
+    color: #fff;
+  }
+
   .mobile-top-bar__account .user-profile-text {
-    display: none !important;
+    display: inline !important;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: #fff;
   }
 
   .mobile-top-bar__quick-links {
@@ -415,19 +463,19 @@
 
   /* Extra clearance below taller mobile header (promo + brand + auth + icon nav) */
   .amt {
-    margin-top: 188px !important;
+    margin-top: 200px !important;
   }
 
   .no-big-icon-nav .amt {
-    margin-top: 130px !important;
+    margin-top: 142px !important;
   }
 
   /* Promo strip (~44px) dismissed — pull main content up to fill the gap */
   body.app-promo-dismissed .amt {
-    margin-top: 144px !important;
+    margin-top: 156px !important;
   }
 
   body.app-promo-dismissed .no-big-icon-nav .amt {
-    margin-top: 86px !important;
+    margin-top: 98px !important;
   }
 }

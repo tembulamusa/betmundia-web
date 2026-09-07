@@ -47,7 +47,7 @@ function resolveAffiliateBalance(source) {
 }
 
 function MobileMenu(props) {
-  const { user } = props;
+  const { user, showLabel = false } = props;
 
   const [show, setShow] = useState(false);
   const [state, dispatch] = useContext(Context);
@@ -149,7 +149,9 @@ function MobileMenu(props) {
       >
         <FaRegUser className="inline-block user-profile-icon" />
         {user ? (
-          <span className="user-profile-text hidden d-md-inline">Account</span>
+          <span className={`user-profile-text${showLabel ? "" : " hidden d-md-inline"}`}>
+            Account
+          </span>
         ) : (
           <span></span>
         )}
