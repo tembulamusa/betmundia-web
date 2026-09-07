@@ -1,13 +1,33 @@
 ---
-description: Always push this repo to the betmundial remote
+description: Push remotes for Betmundial — betmundial + origin for day-to-day; backup on “all”; delete topic after merge
 alwaysApply: true
 ---
 
-# Git push remote
+# Git push remotes
 
-When the user asks to push this project's code:
+## Day-to-day (`dev` and topic work)
 
-- **Always push to remote `betmundial`** (`Betmundial-ke/betmundial_web`).
-- Prefer: `git push -u betmundial HEAD` or `git push betmundial <branch>`.
-- Do **not** push only to `origin` unless the user also asks for `origin` / both remotes.
+When pushing after merge to **`dev`** (or when the user asks to push the integration branch):
+
+- Push **`dev`** to **both**:
+  - **`betmundial`** (`Betmundial-ke/betmundial_web`)
+  - **`origin`** (`tembulamusa/betmundia-web`)
+- Prefer: `git push betmundial dev` and `git push origin dev` (set upstream on first push with `-u` on one or both remotes if needed).
+- Do **not** push only one of these two unless the user explicitly scopes the push.
+
+After a topic branch is merged into `dev` and `dev` is pushed:
+
+- Delete the topic branch **locally** always.
+- Delete it on the **remote** if it was pushed there (`git push <remote> --delete <branch>`).
+- Do **not** delete `dev` or `master`.
+
+## “All remotes”
+
+When the user asks for **all remotes**, also push **`backup`** (`tembulamusa/betmundial-backup`).
+
+## Safety
+
 - Never force-push unless explicitly requested.
+- Do not change git config.
+- Do not mass-delete unrelated remote branches without checking.
+- Branching model: see `git-workflow.mdc`.

@@ -1,0 +1,43 @@
+---
+description: Branching model — base on dev, feature/fix branches, local merge, push, delete topic branch
+alwaysApply: true
+---
+
+# Git workflow (Betmundial)
+
+## Base branch
+
+- Day-to-day base branch is **`dev`** (not `master` / `main`).
+- New work starts from an up-to-date local `dev`.
+- Day-to-day work happens **on / from `dev`**.
+
+## Coding flow
+
+1. Checkout / update `dev` (`git fetch --all`, then merge from remote `dev` as appropriate).
+2. Create a topic branch **from `dev`**: `feature/...`, `fix/...`, `chore/...`, etc.
+3. Implement and commit on the topic branch.
+4. **Merge on the user’s machine** into `dev` (prefer local merge when the user asks to land work).
+5. Push **`dev`** to **`betmundial` and `origin`** (see `git-push.mdc`). Include **`backup`** only when the user asks for all remotes.
+6. **Delete the topic branch after merge**:
+   - Always delete the **local** topic branch.
+   - If it was pushed, also delete it on the **remote(s)** where it existed.
+   - Do **not** delete `dev` or `master`.
+   - Keep only a few long-lived branches (e.g. `dev`, maybe `master`); clean up merged topic branches so they do not accumulate.
+
+## Remotes covered by default for `dev`
+
+| Remote | Role |
+|--------|------|
+| `betmundial` | Primary project remote — always push `dev` |
+| `origin` | Always push `dev` with betmundial |
+| `backup` | Only when user asks for all remotes |
+
+## Agent do / don’t
+
+- Do: branch from `dev`, merge locally into `dev` when asked, push `dev` to both `betmundial` and `origin`, then delete the merged topic branch (local always; remote if it existed).
+- Don’t: leave merged topic branches hanging locally or on remotes after landing into `dev`.
+- Don’t: treat `master` as the default integration branch for routine work.
+- Don’t: push a newly invented local-only `dev` unless the user asks (if `dev` is missing on remotes, create local `dev` and report that the user may need to push it once to both remotes).
+- Don’t: force-push or rewrite shared history without explicit request.
+- Don’t: mass-delete unrelated remote branches without checking; never delete `dev` or `master`.
+- Don’t: change git config.
