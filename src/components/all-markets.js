@@ -46,25 +46,27 @@ const MatchAllMarkets = (props) => {
     };
 
 
-    useEffect(() => {
-        fetchPagedData()
-    }, []);
-
-
-
-    const fetchPagedData = () => {
-        if (!isLoading && !isNaN(+params.id)) {
-            setIsLoading(true);
-            let betslip = findPostableSlip();
-            let endpoint = live ? "/sports/match/live/" + params.id :
-                "/sports/match/" + params.id
-            makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([status, result]) => {
-                setMatchWithMarkets(result?.data);
-                setProducers(result?.producer_statuses);
-                setIsLoading(false);
-            });
+    const fetchPagedData = useCallback(() => {
+        if (isNaN(+params.id)) {
+            return;
         }
-    };
+
+        setIsLoading(true);
+        const endpoint = live
+            ? "/sports/match/live/" + params.id
+            : "/sports/match/" + params.id;
+
+        makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([, result]) => {
+            setMatchWithMarkets(result?.data);
+            setProducers(result?.producer_statuses);
+            setIsLoading(false);
+        });
+    }, [live, params.id]);
+
+    useEffect(() => {
+        setMatchWithMarkets(undefined);
+        fetchPagedData();
+    }, [fetchPagedData]);
 
     const handleGameSocket = (type) => {
         socket.emit('user.match.listen', matchwithmarkets?.parent_match_id);

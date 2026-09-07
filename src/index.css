@@ -3360,4 +3360,9 @@ button.locked-button:hover {
 .match-widget-container .sr-widget {
   width: 100%;
   min-height: 160px;
+  display: block;
+}
+
+.match-widget-container .sr-widget .sr-bb {
+  width: 100%;
 }
