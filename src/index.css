@@ -2723,6 +2723,13 @@ label {
   transition: opacity 0.2s, color 0.2s;
 }
 
+/* App download nav item — mobile strip only (matches useMobileViewport / ≤1199.98px) */
+@media (min-width: 1200px) {
+  .big-icon-item--mobile-only {
+    display: none !important;
+  }
+}
+
 .big-icon-link {
   display: flex;
   align-items: center;

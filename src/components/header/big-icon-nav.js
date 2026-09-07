@@ -22,6 +22,8 @@ import { Context } from "../../context/store";
 import DefaultImg from "../../assets/img/colorsvgicons/soccer.svg";
 import logo from "../../assets/img/logo.svg";
 import bonanzaTrophyHero from "../../assets/img/bonanza-trophy-hero.svg";
+import useMobileViewport from "../../hooks/use-mobile-viewport";
+import { ANDROID_PLAY_STORE_URL, getAppDownloadTarget } from "../utils/app-download";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 import { openLoginWithRedirect } from "../utils/login-redirect";
 
@@ -36,6 +38,8 @@ const BigIconMenu = () => {
     const [categories, setCategories] = useState([]);
     const [casinoProviders, setCasinoProviders] = useState([]);
     const [showBonanza, setShowBonanza] = useState(false);
+    const [appDownloadHref, setAppDownloadHref] = useState(ANDROID_PLAY_STORE_URL);
+    const isMobileViewport = useMobileViewport();
     const navigate = useNavigate();
     const loc = useLocation();
 
@@ -145,8 +149,15 @@ const BigIconMenu = () => {
         // { name: "sports", icon: "sports.svg", link: '/sports', parentTo: "sportscategories" },
         // {name: "virtuals", icon:"virtuals.svg", link:"/virtuals", parentTo:null},
         { name: "promotions", icon: "promos.svg", link: "/promotions", parentTo: null },
-        // { name: "app", icon: "app.svg", link: "/app", parentTo: null },
-        { name: "livescore", icon: "livescore.svg", link: "https://statshub.sportradar.com/betmundialsmts/en/sport/1/tournament/17", parentTo: null },
+        {
+            name: "app",
+            icon: "app.svg",
+            link: appDownloadHref,
+            parentTo: null,
+            external: true,
+            mobileOnly: true,
+        },
+        { name: "livescore", icon: "livescore.svg", link: "https://statshub.sportradar.com/betmundialsmts/en/sport/1/tournament/17", parentTo: null, external: true },
         // {name: "basketball", icon:"basketball.svg", link:"/#basketball", parentTo:null},
         // {name: "cricket", icon:"cricket.svg", link:"/#cricket", parentTo:null},
         // {name: "tennis", icon:"tennis.svg", link:"/#tennis", parentTo:null},       
@@ -294,6 +305,10 @@ const BigIconMenu = () => {
         const refCurrent = scrollContainerRef.current;
         refCurrent?.addEventListener('scroll', handleScroll);
         return () => refCurrent?.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        setAppDownloadHref(getAppDownloadTarget().href);
     }, []);
 
     useEffect(() => {
@@ -544,9 +559,11 @@ const BigIconMenu = () => {
                             <div className="big-icon-name">{"Home"}</div>
                         </a>
                     </li>
-                    {(linkItems || []).map((item, idx) => {
-                        const isActive = item.link && pathname === item.link;
-                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative`;
+                    {(linkItems || [])
+                        .filter((item) => !item.mobileOnly || isMobileViewport)
+                        .map((item, idx) => {
+                        const isActive = item.link && !item.external && pathname === item.link;
+                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative${item.mobileOnly ? ' big-icon-item--mobile-only' : ''}`;
                         const iconContent = item.icon ? (
                             <img className="mx-auto" src={getSportImageIcon(item.icon)} alt={item.name} />
                         ) : (
@@ -569,7 +586,7 @@ const BigIconMenu = () => {
 
                         return (
                             <li key={idx} className={itemClasses}>
-                                {item?.name.toLowerCase() === "livescore" ? (
+                                {item?.external ? (
                                     <a href={item.link} title={item.name} target="_blank" rel="noopener noreferrer" className="big-icon-link">
                                         <div className="big-icon-icon relative">
                                             {iconContent}
