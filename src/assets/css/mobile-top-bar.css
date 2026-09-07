@@ -353,8 +353,11 @@
   }
 
   .mobile-top-bar__tools .header-search-float__trigger-icon {
+    box-sizing: border-box;
     width: 34px;
-    height: 34px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid #a71f66;
   }
 
   /* Affiliate: match search trigger box + icon chip (more opaque chip) */
@@ -371,15 +374,17 @@
 
   .mobile-top-bar__tools .header-affiliate-trigger__icon {
     width: 34px;
-    height: 34px;
-    border-radius: 7px;
+    height: 28px;
+    border-radius: 4px;
     background: #a71f66;
     color: #fff;
   }
 
   .mobile-top-bar__tools .mobile-chat-button--inline {
-    min-height: 40px;
-    padding: 0.4rem 0.7rem;
+    box-sizing: border-box;
+    height: 28px;
+    min-height: 28px;
+    padding: 0 0.7rem;
     font-size: 0.9rem;
     font-weight: 700;
     text-transform: uppercase;
