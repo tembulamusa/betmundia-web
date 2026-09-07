@@ -222,18 +222,6 @@ function resolveEarningDate(item) {
     );
 }
 
-function resolveEarningName(item, index) {
-    return (
-        item?.referred_by ||
-        item?.username ||
-        item?.user_name ||
-        item?.name ||
-        item?.member_name ||
-        item?.msisdn ||
-        `Referral #${index + 1}`
-    );
-}
-
 function resolveLeaderboardEarnings(item) {
     return pickNumber(
         item?.last_month_earnings,
@@ -433,13 +421,13 @@ function resolveEarningAmount(item) {
     );
 }
 
-function resolveEarningType(item) {
-    return (
-        item?.type ||
-        item?.commission_type ||
-        item?.earning_type ||
-        "Referral Commission"
-    );
+function resolveEarningMonth(item) {
+    if (item?.month) return String(item.month);
+    const dateValue = resolveEarningDate(item);
+    if (!dateValue) return "—";
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return "—";
+    return `${MONTH_SHORT[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 function isInPeriod(dateValue, period) {
@@ -687,6 +675,52 @@ const DUMMY_COUNTY_BREAKDOWN = [
     { name: "Kisumu", value: 14 },
     { name: "Nakuru", value: 12 },
     { name: "Kiambu", value: 10 },
+];
+
+/** Shown when commissions earnings list is empty. */
+const DUMMY_EARNINGS = [
+    {
+        id: "earn-1",
+        created_at: "2026-09-05T09:15:00",
+        status: "paid",
+        amount: 2450,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-2",
+        created_at: "2026-09-04T14:32:00",
+        status: "pending",
+        amount: 875,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-3",
+        created_at: "2026-09-03T11:08:00",
+        status: "paid",
+        amount: 3120,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-4",
+        created_at: "2026-09-02T16:45:00",
+        status: "paid",
+        amount: 1580,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-5",
+        created_at: "2026-09-01T10:20:00",
+        status: "pending",
+        amount: 640,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-6",
+        created_at: "2026-09-01T08:05:00",
+        status: "paid",
+        amount: 4210,
+        month: "Sep 2026",
+    },
 ];
 
 const DonutChart = ({ title, data, emptyLabel }) => {
@@ -1176,7 +1210,7 @@ const SupportFooter = () => (
     </div>
 );
 
-const EarningsPanel = ({ commissions, isLoading, onOpenShare }) => {
+const EarningsPanel = ({ commissions, isLoading, onOpenShare, promoCode }) => {
     const [period, setPeriod] = useState("this_month");
 
     const earnings = useMemo(() => {
@@ -1191,7 +1225,8 @@ const EarningsPanel = ({ commissions, isLoading, onOpenShare }) => {
             "promo_wins",
             "affiliate_wins",
         ]);
-        return list.filter((item) =>
+        const source = list.length ? list : DUMMY_EARNINGS;
+        return source.filter((item) =>
             isInPeriod(resolveEarningDate(item), period)
         );
     }, [commissions, period]);
@@ -1252,6 +1287,9 @@ const EarningsPanel = ({ commissions, isLoading, onOpenShare }) => {
             <div className="promo-wins-section-head">
                 <h2 className="promo-wins-section-title">Earnings Overview</h2>
                 <div className="promo-wins-section-head-actions">
+                    {promoCode ? (
+                        <span className="promo-wins-earnings-code">{promoCode}</span>
+                    ) : null}
                     <button
                         type="button"
                         className="promo-wins-earnings-share"
@@ -1261,24 +1299,6 @@ const EarningsPanel = ({ commissions, isLoading, onOpenShare }) => {
                         <FaShareAlt aria-hidden="true" />
                         <span>Share</span>
                     </button>
-                    <label className="promo-wins-filter promo-wins-filter--period">
-                        <FaCalendarAlt aria-hidden="true" />
-                        <select
-                            value={period}
-                            onChange={(e) => setPeriod(e.target.value)}
-                            aria-label="Earnings period"
-                        >
-                            {PERIOD_OPTIONS.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </option>
-                            ))}
-                        </select>
-                        <FaChevronDown
-                            className="promo-wins-filter-chevron"
-                            aria-hidden="true"
-                        />
-                    </label>
                 </div>
             </div>
 
@@ -1314,65 +1334,64 @@ const EarningsPanel = ({ commissions, isLoading, onOpenShare }) => {
             </div>
 
             <section className="promo-wins-table-card" aria-label="Latest earnings">
-                <h2 className="promo-wins-section-title">Latest Earnings</h2>
+                <div className="promo-wins-section-head promo-wins-section-head--table">
+                    <h2 className="promo-wins-section-title">Latest Earnings</h2>
+                    <label className="promo-wins-filter promo-wins-filter--period">
+                        <FaCalendarAlt aria-hidden="true" />
+                        <select
+                            value={period}
+                            onChange={(e) => setPeriod(e.target.value)}
+                            aria-label="Earnings period"
+                        >
+                            {PERIOD_OPTIONS.map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </option>
+                            ))}
+                        </select>
+                        <FaChevronDown
+                            className="promo-wins-filter-chevron"
+                            aria-hidden="true"
+                        />
+                    </label>
+                </div>
 
-                <div className="promo-wins-table-wrap">
-                    <table className="promo-wins-table">
+                <div className="promo-wins-table-wrap promo-wins-table-wrap--earnings">
+                    <table className="promo-wins-table promo-wins-table--earnings">
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Referred By</th>
                                 <th>Status</th>
                                 <th>Amount</th>
-                                <th>Type</th>
-                                <th>Details</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             {earnings.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="promo-wins-table-empty">
+                                    <td colSpan={4} className="promo-wins-table-empty">
                                         No earnings yet. Share your affiliate code to start
                                         earning.
                                     </td>
                                 </tr>
                             ) : (
                                 earnings.map((item, index) => {
-                                    const name = resolveEarningName(item, index);
                                     const status = resolveEarningStatus(item);
                                     return (
                                         <tr
                                             key={
                                                 item?.id ??
-                                                `${name}-${resolveEarningDate(item)}-${index}`
+                                                `${resolveEarningDate(item)}-${index}`
                                             }
                                         >
                                             <td>{formatDisplayDate(resolveEarningDate(item))}</td>
-                                            <td>
-                                                <div className="promo-wins-person">
-                                                    <span
-                                                        className={`promo-wins-avatar promo-wins-avatar--${avatarTone(index)}`}
-                                                        aria-hidden="true"
-                                                    >
-                                                        {getInitials(name)}
-                                                    </span>
-                                                    <span>{name}</span>
-                                                </div>
-                                            </td>
                                             <td>
                                                 <StatusBadge status={status} />
                                             </td>
                                             <td className="promo-wins-table-amount">
                                                 {formatKes(resolveEarningAmount(item))}
                                             </td>
-                                            <td className="promo-wins-table-type">
-                                                {resolveEarningType(item)}
-                                            </td>
-                                            <td>
-                                                <span className="promo-wins-table-link">
-                                                    View &gt;
-                                                </span>
-                                            </td>
+                                            <td>{resolveEarningMonth(item)}</td>
                                         </tr>
                                     );
                                 })
@@ -1720,10 +1739,7 @@ const PromoWins = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [commissions, setCommissions] = useState(null);
     const [activeTab, setActiveTab] = useState(TAB_DETAIL);
-    // TEMP (dev): dummy affiliate code so has-code Detail UI shows; remove when done.
-    const [promoCode, setPromoCode] = useState(
-        user?.promo_code || "moses-tembula"
-    );
+    const [promoCode, setPromoCode] = useState(user?.promo_code || null);
     const [openCustomizeSignal, setOpenCustomizeSignal] = useState(0);
     const [shareOpen, setShareOpen] = useState(false);
     const [earnOpen, setEarnOpen] = useState(false);
@@ -1905,6 +1921,7 @@ const PromoWins = () => {
                                 commissions={commissions}
                                 isLoading={isLoading}
                                 onOpenShare={handleOpenShare}
+                                promoCode={promoCode}
                             />
                         ) : null}
                     </div>

@@ -10,6 +10,7 @@ import {
     FaWhatsapp,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 import makeRequest from "../../utils/fetch-request";
 import {
     getFromLocalStorage,
@@ -393,9 +394,8 @@ const PromoCode = ({
 }) => {
     const user = getFromLocalStorage("user");
     const [state, dispatch] = useContext(Context);
-    // TEMP (dev): dummy affiliate code so has-code UI shows; remove when done.
     const [localPromoCode, setLocalPromoCode] = useState(
-        user?.promo_code || "moses-tembula"
+        user?.promo_code || null
     );
     const [generating, setGenerating] = useState(false);
     const [message, setMessage] = useState(null);
@@ -418,8 +418,7 @@ const PromoCode = ({
         }
     }, [commissions]);
 
-    // TEMP (dev): fall back to moses-tembula when user has none; real API code always wins.
-    const promoCode = localPromoCode || user?.promo_code || "moses-tembula";
+    const promoCode = localPromoCode || user?.promo_code || null;
 
     useEffect(() => {
         if (typeof onPromoCodeChange === "function") {
@@ -712,12 +711,22 @@ const PromoCode = ({
                         </span>
                         <div>
                             <p className="promo-wins-code-stat-label">
-                                Total Earnings
+                                Balance
                             </p>
                             <p className="promo-wins-code-stat-value promo-wins-code-stat-value--yellow">
-                                {isLoading
-                                    ? "…"
-                                    : `KES ${formatToFloat(totalEarnings)}`}
+                                {isLoading ? (
+                                    "…"
+                                ) : (
+                                    <>
+                                        {`KES ${formatToFloat(totalEarnings)}`}{" "}
+                                        <Link
+                                            to="/withdraw"
+                                            className="promo-wins-code-stat-withdraw"
+                                        >
+                                            Withdraw
+                                        </Link>
+                                    </>
+                                )}
                             </p>
                             <button
                                 type="button"
