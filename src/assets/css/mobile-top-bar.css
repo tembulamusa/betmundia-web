@@ -227,8 +227,8 @@
     border-radius: 6px !important;
     text-decoration: none !important;
     /* Equal width: fit "Withdraw" at restored type — do not shrink Deposit */
-    min-width: 6.75rem;
-    width: 6.75rem;
+    /* min-width: 6.75rem; */
+    /* width: 6.75rem; */
   }
 
   .mobile-top-bar__deposit .deposit-coins-icon {
