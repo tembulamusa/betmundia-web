@@ -7749,7 +7749,7 @@ ul.sport {
 @media (min-width: 768px) {
     .amt {
         /* margin-top: 60px !important; */
-        margin-top: 125px !important;
+        margin-top: 117px !important;
     }
 
     .disp-sidebar {
@@ -14470,7 +14470,7 @@ fieldset[disabled] .tw.active {
 .amt {
     /* margin-top: 60px !important; */
     /* Must match @media (min-width: 768px) .amt — this rule loads later and wins */
-    margin-top: 125px !important;
+    margin-top: 117px !important;
 }
 
 .amu {

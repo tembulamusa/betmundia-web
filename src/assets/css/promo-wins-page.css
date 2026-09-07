@@ -301,7 +301,7 @@
   padding: 0 0.45rem !important;
   margin: 0 !important;
   text-transform: none !important;
-  font-size: 1.12rem !important;
+  font-size: 1.3rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.01em !important;
   line-height: 1.2 !important;
@@ -324,7 +324,7 @@
 .promo-wins-tab .MuiTab-iconWrapper {
   margin-right: 0.35rem !important;
   margin-bottom: 0 !important;
-  font-size: 1.05rem !important;
+  font-size: 2.1rem !important;
   color: inherit !important;
 }
 
@@ -677,7 +677,7 @@
 }
 
 .promo-wins-table--members {
-  min-width: 640px;
+  min-width: 480px;
 }
 
 .promo-wins-table th,
@@ -2595,7 +2595,7 @@
 
   .promo-wins-tabs .MuiTab-root,
   .promo-wins-tab {
-    font-size: 0.98rem !important;
+    font-size: 1.15rem !important;
     padding: 0 0.2rem !important;
     flex-direction: column !important;
     gap: 0.15rem !important;
@@ -2677,7 +2677,7 @@
 
   .promo-wins-tabs .MuiTab-root,
   .promo-wins-tab {
-    font-size: 1.2rem !important;
+    font-size: 1.38rem !important;
     padding: 0 0.7rem !important;
   }
 

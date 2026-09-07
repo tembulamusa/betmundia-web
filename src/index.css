@@ -756,8 +756,8 @@ aside.ps-sidebar-root:focus-visible,
 }
 
 .big-icon-item .big-icon-icon {
-  width: 50px;
-  height: 50px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2708,16 +2708,17 @@ label {
 }
 
 .big-icon-item {
-  padding: 4px 9px;
+  padding: 4px 0px;
   align-items: center;
   color: #ddd;
   font-weight: 600;
-  text-align: center;
+  text-align: left;
   position: relative;
   border-bottom: 3px solid transparent;
+  margin-right: 12px !important;
   margin-bottom: 0 !important;
   display: flex !important;
-  justify-content: center;
+  justify-content: flex-start;
   opacity: 0.9;
   transition: opacity 0.2s, color 0.2s;
 }
@@ -2764,8 +2765,8 @@ label {
 }
 
 .big-icon-icon img {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   opacity: 1;
   transition: opacity 0.2s, filter 0.2s;
 }
@@ -3003,7 +3004,7 @@ button.locked-button:hover {
   }
 
   .big-icon-item {
-    padding: 0px 8px;
+    padding: 4px 0px;
 
   }
 
@@ -3012,13 +3013,13 @@ button.locked-button:hover {
   }
 
   .big-icon-icon img {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
   }
 
   .big-icon-item .big-icon-icon {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3299,7 +3300,7 @@ button.locked-button:hover {
   transform: translate(50%, -20%);
   background: #ff3b3b;
   color: #fff;
-  font-size: 9px;
+  font-size: 7px;
   font-weight: 500;
   padding: 2px 6px;
   border-radius: 4px;
@@ -3310,7 +3311,8 @@ button.locked-button:hover {
 
 #betslip {
   position: sticky;
-  top: 130px;
+  /* Match left sidebar + .betslip-container sticky top (was 130px → sat ~30px lower) */
+  top: 100px;
   max-height: calc(100vh - 10px);
   overflow-y: auto;
   z-index: 999999;

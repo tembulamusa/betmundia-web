@@ -227,7 +227,7 @@ const BigIconMenu = () => {
                     return (
                         <li
                             key={idx}
-                            className={`cursor-pointer ${loc?.pathname?.includes(provider?.name) ? "active" : ''} big-icon-item text-center capitalize relative`}
+                            className={`cursor-pointer ${loc?.pathname?.includes(provider?.name) ? "active" : ''} big-icon-item text-left capitalize relative`}
                             onClick={() => filterGames("provider", provider)}
                         >
                             <span title={provider?.name} className="big-icon-link">
@@ -538,7 +538,7 @@ const BigIconMenu = () => {
             // style={{ maxWidth: '100%', paddingLeft: '120px', backgroundColor: 'transparent' }}
             >
                 <ListGroup as="ul" horizontal className="flex space-x-2 big-icon-list">
-                    <li key={"home-menu-item"} className={`${pathname === "/" || pathname === "/home" ? "active" : ''} big-icon-item text-center capitalize`}>
+                    <li key={"home-menu-item"} className={`${pathname === "/" || pathname === "/home" ? "active" : ''} big-icon-item text-left capitalize`}>
                         <a href={"/"} title={"home"} className="big-icon-link">
                             <div className="big-icon-icon"><img className="mx-auto" src={getSportImageIcon("home.svg")} alt={"home"} /></div>
                             <div className="big-icon-name">{"Home"}</div>
@@ -546,11 +546,11 @@ const BigIconMenu = () => {
                     </li>
                     {(linkItems || []).map((item, idx) => {
                         const isActive = item.link && pathname === item.link;
-                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-center capitalize relative`;
+                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative`;
                         const iconContent = item.icon ? (
                             <img className="mx-auto" src={getSportImageIcon(item.icon)} alt={item.name} />
                         ) : (
-                            <FaHeart className="mx-auto text-white" style={{ fontSize: '24px' }} />
+                            <FaHeart className="mx-auto text-white" style={{ fontSize: '20px' }} />
                         );
 
                         if (item?.action === "bonanza") {
@@ -609,7 +609,7 @@ const BigIconMenu = () => {
                     {((!loc?.pathname?.includes("/casino") && categories) || []).map((category, idx) => {
 
                         return (
-                            <li onClick={() => changeUserSelection(category)} key={idx} className={`${pathname == `/sports/matches/${category?.sport_id}` ? "active" : ''} big-icon-item text-center capitalize`}>
+                            <li onClick={() => changeUserSelection(category)} key={idx} className={`${pathname == `/sports/matches/${category?.sport_id}` ? "active" : ''} big-icon-item text-left capitalize`}>
                                 <Link to={`/sports/matches/${category?.sport_id}?sportId=${category?.sport_id}`} title={category?.sport_name} className="big-icon-link">
                                     <div className="big-icon-icon"><img className="mx-auto" src={getSportImageIcon(`${category?.sport_name?.toLowerCase()}.svg`)} alt={category.sport_name} /></div>
                                     <div className="big-icon-name">{category.sport_name}</div>
