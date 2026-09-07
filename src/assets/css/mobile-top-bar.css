@@ -394,8 +394,9 @@
     gap: 0.25rem !important;
     min-height: 30px;
     padding: 0.2rem 0.45rem !important;
-    border-radius: 4px;
-    background: rgba(167, 31, 102, 0.22);
+    border-radius: 999px;
+    border: 1.5px solid var(--pw-brand, #a71f66);
+    background: var(--pw-brand, #a71f66);
     color: #fff;
   }
 
