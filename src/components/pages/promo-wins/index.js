@@ -201,16 +201,6 @@ function resolveJoinedAt(item) {
     );
 }
 
-function resolveFirstActivity(item) {
-    return (
-        item?.first_activity ||
-        item?.first_bet_at ||
-        item?.last_activity ||
-        item?.updated_at ||
-        null
-    );
-}
-
 function resolveEarningDate(item) {
     return (
         item?.created_at ||
@@ -1595,14 +1585,12 @@ const MembersPanel = ({ commissions, isLoading }) => {
                                 <th>Member</th>
                                 <th>Joined On</th>
                                 <th>Status</th>
-                                <th>First Activity</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {pageItems.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="promo-wins-table-empty">
+                                    <td colSpan={3} className="promo-wins-table-empty">
                                         {members.length === 0
                                             ? "No members yet. Members who join with your affiliate code will appear here."
                                             : "No members match your filters."}
@@ -1645,14 +1633,6 @@ const MembersPanel = ({ commissions, isLoading }) => {
                                             <td>{formatDisplayDate(resolveJoinedAt(item))}</td>
                                             <td>
                                                 <StatusBadge status={status} kind="member" />
-                                            </td>
-                                            <td>
-                                                {formatDisplayDate(resolveFirstActivity(item))}
-                                            </td>
-                                            <td>
-                                                <span className="promo-wins-table-link">
-                                                    View &gt;
-                                                </span>
                                             </td>
                                         </tr>
                                     );
