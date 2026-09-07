@@ -54,12 +54,18 @@
   margin-top: 0.85rem;
 }
 
-/* Header */
+/* Header — full-bleed strip across the drawer */
 .account-drawer-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.15);
+  /* Cancel .account-drawer-body padding (16px) for edge-to-edge width */
+  margin: -16px -16px 0;
+  padding: 16px;
+  width: calc(100% + 32px);
+  box-sizing: border-box;
 }
 
 .account-drawer-header-left {
