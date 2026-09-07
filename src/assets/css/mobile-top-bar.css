@@ -201,30 +201,38 @@
     max-width: 100%;
   }
 
-  /* Shared tap targets: Deposit's pre-equalize size; Withdraw matched to it */
+  /*
+   * Restore Deposit to original .sportpesa-deposit-btn size (tolkits.css).
+   * mobile-top-bar.css loads after tolkits and previously overrode it smaller
+   * (0.68rem / 30px) — that was wrong. Withdraw uses the same dimensions.
+   */
   .mobile-top-bar__deposit,
-  .mobile-top-bar__withdraw {
+  .mobile-top-bar__deposit.sportpesa-deposit-btn,
+  .mobile-top-bar__withdraw,
+  .mobile-top-bar__withdraw.sportpesa-withdraw-btn {
     display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
     box-sizing: border-box;
-    min-width: 6.5rem;
-    width: 6.5rem;
-    min-height: 30px !important;
-    padding: 0.2rem 0.55rem !important;
-    font-size: 0.68rem !important;
-    font-weight: 700 !important;
+    min-height: 32px !important;
+    height: auto !important;
+    padding: 6px 14px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
     line-height: 1 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    white-space: nowrap;
-    border-radius: 4px !important;
-    text-decoration: none;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    border-radius: 6px !important;
+    text-decoration: none !important;
+    /* Equal width: fit "Withdraw" at restored type — do not shrink Deposit */
+    min-width: 6.75rem;
+    width: 6.75rem;
   }
 
   .mobile-top-bar__deposit .deposit-coins-icon {
-    font-size: 0.75rem;
+    font-size: 0.95em;
   }
 
   .mobile-top-bar__auth.header-login-links {
@@ -478,7 +486,7 @@
 
   /* Promo strip (~44px) dismissed — pull main content up to fill the gap */
   body.app-promo-dismissed .amt {
-    margin-top: 156px !important;
+    margin-top: 150px !important;
   }
 
   body.app-promo-dismissed .no-big-icon-nav .amt {
