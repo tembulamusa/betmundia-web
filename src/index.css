@@ -994,7 +994,7 @@ tr.my-bets td {
 }
 
 .jackpot-header {
-  background: rgba(0, 0, 0, 0.4) !important;
+  background: transparent !important;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
