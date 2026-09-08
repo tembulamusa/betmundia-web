@@ -3635,6 +3635,11 @@ button.locked-button:hover {
 }
 
 @media (max-width: 767.98px) {
+  .my-bets-panel,
+  .my-bets-filters {
+    border-radius: 4px;
+  }
+
   .my-bets .my-bets-accordion .accordion-item {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.08);
