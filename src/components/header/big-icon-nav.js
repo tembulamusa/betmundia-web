@@ -134,7 +134,7 @@ const BigIconMenu = () => {
     const linkItems = [
         // { name: "world cup", icon: "world cup.svg", link: "/sports/competition/matches?id=18585", parentTo: null, bubble: "HOT" },
         { name: "live", icon: "livescore.svg", link: "/live", parentTo: null },
-        { name: "jackpots", icon: "jackpot.svg", link: "/jackpot", parentTo: null },
+        { name: "jackpots", icon: "jackpot.svg", link: "/jackpot", parentTo: null, bubble: "HOT" },
         { name: "affiliate", icon: "affiliate.svg", link: "/affiliate", parentTo: null, bubble: "HOT" },
         { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null, bubble: "HOT" },
         { name: "jet x", icon: "jetx.svg", link: "/casino-game/smartsoft/jetx", parentTo: null, bubble: "new" },
@@ -567,8 +567,7 @@ const BigIconMenu = () => {
                                 ? (pathname === "/jackpot" || pathname.startsWith("/jackpot/"))
                                 : pathname === item.link
                         );
-                        const isJackpotsBleed = item.name === "jackpots" && isActive;
-                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative${item.mobileOnly ? ' big-icon-item--mobile-only' : ''}${isJackpotsBleed ? ' big-icon-item--bleed' : ''}`;
+                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative${item.mobileOnly ? ' big-icon-item--mobile-only' : ''}`;
                         const iconContent = item.icon ? (
                             <img className="mx-auto" src={getSportImageIcon(item.icon)} alt={item.name} />
                         ) : (

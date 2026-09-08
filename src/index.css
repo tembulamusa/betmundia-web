@@ -1007,42 +1007,12 @@ tr.my-bets td {
 }
 
 /* Mobile jackpot type strip — sticky just below fixed header + big-icon nav.
-   Shares elevated surface (#151525) with .big-icon-item--bleed so active Jackpots
-   bleeds into types as one dark tab+subnav block (app --base-color, not brand purple). */
+   Own elevated bar (#151525); Jackpots nav item uses standard active styles. */
 .jackpot-types-strip {
   display: none;
 }
 
 @media (max-width: 1199.98px) {
-  /* Active Jackpots tab: dark elevated fill that meets the types strip below */
-  .big-icon-list {
-    align-items: stretch;
-  }
-
-  .big-icon-item--bleed {
-    background: #151525;
-    border-bottom: none;
-    margin-bottom: 0 !important;
-    padding-left: 0.65rem;
-    padding-right: 1.1rem;
-    opacity: 1;
-    align-self: stretch;
-  }
-
-  .big-icon-item--bleed::after {
-    display: none;
-  }
-
-  .big-icon-item--bleed .big-icon-name {
-    color: #ffffff;
-    opacity: 1;
-    font-weight: 700;
-  }
-
-  .big-icon-item--bleed .big-icon-icon img {
-    opacity: 1;
-  }
-
   .jackpot-types-strip {
     display: block;
     position: sticky;
