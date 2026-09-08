@@ -1143,10 +1143,18 @@ tr.my-bets td {
   line-height: 19px;
   text-transform: uppercase;
   opacity: 1;
+  filter: none;
   pointer-events: auto;
-  transition: all ease-in 0.3s;
-  -webkit-transition: all ease-in 0.3s;
-  -moz-transition: all ease-in 0.3s;
+  transition: filter ease-in 0.2s, opacity ease-in 0.2s;
+  -webkit-transition: filter ease-in 0.2s, opacity ease-in 0.2s;
+  -moz-transition: filter ease-in 0.2s, opacity ease-in 0.2s;
+}
+
+.btn-auto-pick:not(:disabled):not(.is-auto-picking) {
+  opacity: 1;
+  filter: none;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .btn-auto-pick:disabled,
@@ -1156,19 +1164,19 @@ tr.my-bets td {
   pointer-events: none;
 }
 
-/* Avoid sticky :hover opacity on touch after Auto Pick */
+/* Prefer filter over opacity so sticky :hover on touch cannot leave the button faded */
 @media (hover: hover) and (pointer: fine) {
   .btn-auto-pick:hover:not(:disabled):not(.is-auto-picking) {
-    opacity: 0.6;
-    transition: all ease-in 0.3s;
-    -webkit-transition: all ease-in 0.3s;
-    -moz-transition: all ease-in 0.3s;
+    filter: brightness(0.92);
+    opacity: 1;
   }
 }
 
 .btn-auto-pick:focus,
-.btn-auto-pick:focus-visible {
+.btn-auto-pick:focus-visible,
+.btn-auto-pick:active {
   opacity: 1;
+  filter: none;
   outline: none;
 }
 
