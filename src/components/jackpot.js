@@ -59,7 +59,14 @@ const Jackpot = (props) => {
     const [activeTypeKey, setActiveTypeKey] = useState(null);
     const [results, setResults] = useState(null);
     const [isAutoPicking, setIsAutoPicking] = useState(false);
+    const [autoPickButtonKey, setAutoPickButtonKey] = useState(0);
     const [, dispatch] = useContext(Context);
+
+    const resetAutoPickButton = useCallback(() => {
+        setIsAutoPicking(false);
+        // Remount clears sticky :hover/:active/:focus left after touch taps.
+        setAutoPickButtonKey((key) => key + 1);
+    }, []);
 
     const Float = (equation, precision = 4) => {
         return Math.round(equation * (10 ** precision)) / (10 ** precision);
@@ -173,7 +180,7 @@ const Jackpot = (props) => {
         fetchMatches(type);
     };
 
-    const AutoPickAllMatches = () => {
+    const AutoPickAllMatches = async () => {
         if (isAutoPicking || !jackpotData?.matches) {
             return;
         }
@@ -189,6 +196,9 @@ const Jackpot = (props) => {
 
         setIsAutoPicking(true);
         try {
+            // Yield so loading/disabled paints before sync picks (React batches otherwise).
+            await new Promise((resolve) => setTimeout(resolve, 0));
+
             let betslip;
             Object.entries(jackpotData.matches).forEach(([, match]) => {
                 let reference = match.match_id + "_selected";
@@ -220,7 +230,7 @@ const Jackpot = (props) => {
         } catch (error) {
             Notify({ status: 400, message: "Error auto-picking jackpot matches" });
         } finally {
-            setIsAutoPicking(false);
+            resetAutoPickButton();
         }
     }
 
@@ -283,10 +293,10 @@ const Jackpot = (props) => {
                             <div className="col-md-4 justify-center mt-3 md:mt-0">
                                 <div className="autopick-button-div !px-3">
                                     <button
+                                        key={autoPickButtonKey}
                                         type="button"
-                                        onClick={(event) => {
-                                            AutoPickAllMatches();
-                                            event.currentTarget.blur();
+                                        onClick={() => {
+                                            void AutoPickAllMatches();
                                         }}
                                         disabled={isAutoPicking}
                                         aria-busy={isAutoPicking}
