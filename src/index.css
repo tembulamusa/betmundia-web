@@ -3506,6 +3506,7 @@ button.locked-button:hover {
   .my-bets-mobile-pick {
     padding: 14px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
   }
 
   .my-bets-mobile-pick:last-child {
