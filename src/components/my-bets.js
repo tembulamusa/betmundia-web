@@ -10,8 +10,9 @@ import { Tooltip } from "@mui/material";
 import { removeItem } from "./utils/local-storage";
 import NoEvents from "./utils/no-events";
 import ShareExistingbet from "./utils/shareexisting-bet";
+import getSportImageIcon from "./utils/get-sport-image-icon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShare } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faShare } from "@fortawesome/free-solid-svg-icons";
 
 /** Status badge colors aligned with existing btn-bet-hist / statusIcon palette. */
 const getStatusBadge = (status) => {
@@ -52,7 +53,7 @@ const getBetTypeLabel = (bet) => {
     return `Single Bet (${count || 1})`;
 };
 
-const formatPossibleWin = (value) => {
+const formatMoney = (value) => {
     const num = parseFloat(value);
     if (Number.isNaN(num)) {
         return `KSH ${value ?? "0.00"}`;
@@ -61,6 +62,24 @@ const formatPossibleWin = (value) => {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     })}`;
+};
+
+const formatPossibleWin = formatMoney;
+
+const canCancelBet = (bet) =>
+    bet?.cancelable == 1 ||
+    bet?.can_cancel == 1 ||
+    bet?.cancelable === true ||
+    bet?.can_cancel === true;
+
+const canShareBet = (bet) => bet?.sharable == 1 || bet?.sharable === true;
+
+const getSlipResult = (slip) => {
+    const result = slip?.result ?? slip?.results;
+    if (result == null) return null;
+    if (typeof result === "string" && result.trim() === "") return null;
+    if (Array.isArray(result) && result.length === 0) return null;
+    return result;
 };
 
 const MyBets = () => {
@@ -330,55 +349,200 @@ const MyBets = () => {
                                     </div>
                                 </Accordion.Header>
 
-                                <Accordion.Body style={{ padding: "15px 20px" }}>
-                                    <div className="flex gap-3 mb-3">
-                                        {(bet?.cancelable == 1 || bet?.can_cancel == 1 || bet?.cancelable === true || bet?.can_cancel === true) && (
-                                            <button
-                                                disabled={isLoading}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setBetIdToCancel(bet.bet_id);
-                                                    setShowConfirmModal(true);
-                                                }}
-                                                style={{
-                                                    background: "#ff4d4f",
-                                                    color: "#fff",
-                                                    border: "none",
-                                                    padding: "6px 14px",
-                                                    borderRadius: "6px",
-                                                    cursor: "pointer",
-                                                    fontSize: "12px",
-                                                    fontWeight: "500"
-                                                }}
-                                            >
-                                                Cancel Bet
-                                            </button>
+                                <Accordion.Body className="my-bets-accordion-body">
+                                    {/* Mobile: expanded detail matching reference layout */}
+                                    <div className="d-md-none my-bets-mobile-detail">
+                                        <div className="my-bets-mobile-bet-amount">
+                                            <span className="my-bets-mobile-bet-amount-label">Bet Amount: </span>
+                                            <span className="my-bets-mobile-bet-amount-value">
+                                                {formatMoney(bet?.bet_amount)}
+                                            </span>
+                                        </div>
+
+                                        {(canShareBet(bet) || canCancelBet(bet)) && (
+                                            <div className="my-bets-mobile-actions">
+                                                {canShareBet(bet) && (
+                                                    <button
+                                                        type="button"
+                                                        className="my-bets-mobile-action-btn"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setSharableBet(bet);
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon icon={faShare} />
+                                                        Share
+                                                    </button>
+                                                )}
+                                                {canCancelBet(bet) && (
+                                                    <button
+                                                        type="button"
+                                                        className="my-bets-mobile-action-btn"
+                                                        disabled={isLoading}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setBetIdToCancel(bet.bet_id);
+                                                            setShowConfirmModal(true);
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon icon={faBan} />
+                                                        Cancel
+                                                    </button>
+                                                )}
+                                            </div>
                                         )}
 
-                                        {(bet?.sharable == 1 || bet?.sharable === true) && (
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSharableBet(bet);
-                                                }}
-                                                style={{
-                                                    background: "#1890ff",
-                                                    color: "#fff",
-                                                    border: "none",
-                                                    padding: "6px 14px",
-                                                    borderRadius: "6px",
-                                                    cursor: "pointer",
-                                                    fontSize: "12px",
-                                                    fontWeight: "500",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: "6px"
-                                                }}
-                                            >
-                                                <FontAwesomeIcon icon={faShare} />
-                                                Share Bet
-                                            </button>
-                                        )}
+                                        <div className="my-bets-mobile-picks-heading">YOUR PICKS</div>
+
+                                        <div className="my-bets-mobile-picks">
+                                            {(bet?.betslip || []).map((slip, index) => {
+                                                const slipResult = getSlipResult(slip);
+                                                return (
+                                                    <div
+                                                        className="my-bets-mobile-pick"
+                                                        key={slip?.game_id ?? index}
+                                                    >
+                                                        <div className="my-bets-mobile-pick-meta">
+                                                            <span>{slip?.start_time}</span>
+                                                            <span>
+                                                                Game ID: {slip?.game_id ?? "—"}
+                                                            </span>
+                                                        </div>
+                                                        <div className="my-bets-mobile-pick-match">
+                                                            <img
+                                                                src={getSportImageIcon(
+                                                                    slip?.sport_name || "Soccer"
+                                                                )}
+                                                                alt=""
+                                                                className="my-bets-mobile-pick-sport-icon"
+                                                            />
+                                                            <span>
+                                                                {slip?.home_team} – {slip?.away_team}
+                                                            </span>
+                                                        </div>
+                                                        {slipResult != null && (
+                                                            <div className="my-bets-mobile-pick-line">
+                                                                <span className="my-bets-mobile-pick-label">
+                                                                    Results:{" "}
+                                                                </span>
+                                                                <span className="my-bets-mobile-pick-value">
+                                                                    {slipResult}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {slip?.market_name && (
+                                                            <div className="my-bets-mobile-pick-line">
+                                                                <span className="my-bets-mobile-pick-label">
+                                                                    Market :{" "}
+                                                                </span>
+                                                                <span className="my-bets-mobile-pick-value">
+                                                                    {slip.market_name}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        <div className="my-bets-mobile-pick-footer">
+                                                            <div className="my-bets-mobile-pick-selection">
+                                                                {statusIcon(slip?.status)}
+                                                                <span>
+                                                                    <span className="my-bets-mobile-pick-label">
+                                                                        Your Pick:{" "}
+                                                                    </span>
+                                                                    <span className="my-bets-mobile-pick-bold">
+                                                                        {slip?.bet_pick}
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                            <div className="my-bets-mobile-pick-odds">
+                                                                <span className="my-bets-mobile-pick-label">
+                                                                    Odds{" "}
+                                                                </span>
+                                                                <span className="my-bets-mobile-pick-bold">
+                                                                    {slip?.odd_value}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Desktop: existing table + controls */}
+                                    <div className="d-none d-md-block my-bets-desktop-detail">
+                                        <div className="flex gap-3 mb-3">
+                                            {canCancelBet(bet) && (
+                                                <button
+                                                    disabled={isLoading}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setBetIdToCancel(bet.bet_id);
+                                                        setShowConfirmModal(true);
+                                                    }}
+                                                    style={{
+                                                        background: "#ff4d4f",
+                                                        color: "#fff",
+                                                        border: "none",
+                                                        padding: "6px 14px",
+                                                        borderRadius: "6px",
+                                                        cursor: "pointer",
+                                                        fontSize: "12px",
+                                                        fontWeight: "500"
+                                                    }}
+                                                >
+                                                    Cancel Bet
+                                                </button>
+                                            )}
+
+                                            {canShareBet(bet) && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSharableBet(bet);
+                                                    }}
+                                                    style={{
+                                                        background: "#1890ff",
+                                                        color: "#fff",
+                                                        border: "none",
+                                                        padding: "6px 14px",
+                                                        borderRadius: "6px",
+                                                        cursor: "pointer",
+                                                        fontSize: "12px",
+                                                        fontWeight: "500",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: "6px"
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon icon={faShare} />
+                                                    Share Bet
+                                                </button>
+                                            )}
+                                        </div>
+
+                                        <table className="table table-bordered mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Start Time</th>
+                                                    <th>Game</th>
+                                                    <th>Odds</th>
+                                                    <th>Market</th>
+                                                    <th>Pick</th>
+                                                    <th>Result</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {(bet?.betslip || []).map((slip, index) => (
+                                                    <tr key={index}>
+                                                        <td>{slip?.start_time}</td>
+                                                        <td>{slip?.home_team} - {slip?.away_team}</td>
+                                                        <td>{slip?.odd_value}</td>
+                                                        <td>{slip?.market_name}</td>
+                                                        <td>{slip?.bet_pick}</td>
+                                                        <td>{slip?.result || "n/a"}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
                                     </div>
 
                                     {sharableBet?.bet_id === bet?.bet_id && (
@@ -388,30 +552,6 @@ const MyBets = () => {
                                             onClose={() => setSharableBet(null)}
                                         />
                                     )}
-                                    <table className="table table-bordered mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>Start Time</th>
-                                                <th>Game</th>
-                                                <th>Odds</th>
-                                                <th>Market</th>
-                                                <th>Pick</th>
-                                                <th>Result</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {(bet?.betslip || []).map((slip, index) => (
-                                                <tr key={index}>
-                                                    <td>{slip?.start_time}</td>
-                                                    <td>{slip?.home_team} - {slip?.away_team}</td>
-                                                    <td>{slip?.odd_value}</td>
-                                                    <td>{slip?.market_name}</td>
-                                                    <td>{slip?.bet_pick}</td>
-                                                    <td>{slip?.result || "n/a"}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
                                 </Accordion.Body>
 
                             </Accordion.Item>
