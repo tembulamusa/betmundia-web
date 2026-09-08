@@ -161,7 +161,6 @@ function MobileMenu(props) {
         show={show}
         onHide={handleClose}
         className="account-drawer"
-        style={{ height: "auto" }}
       >
         <Offcanvas.Body className="account-drawer-body">
           <div className="account-drawer-header">
