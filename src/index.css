@@ -1099,10 +1099,12 @@ tr.my-bets td {
 
   .jackpot-types-strip__label {
     color: inherit;
-    font-weight: 500;
+    font-weight: 700;
     max-width: 7.5rem;
     overflow: hidden;
+    font-size: 12px;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .jackpot-types-strip__item.active {
