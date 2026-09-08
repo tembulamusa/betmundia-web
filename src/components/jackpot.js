@@ -236,28 +236,40 @@ const Jackpot = (props) => {
     return (
         <>
             {jackpotTypes.length > 0 && (
-                <nav className="jackpot-types-strip" aria-label="Jackpot types">
+                <nav
+                    className="jackpot-types-strip"
+                    aria-label="Jackpot types"
+                    style={{ "--jackpot-types-count": String(jackpotTypes.length) }}
+                    onTouchStart={(event) => event.currentTarget.classList.add("is-paused")}
+                    onTouchEnd={(event) => event.currentTarget.classList.remove("is-paused")}
+                    onTouchCancel={(event) => event.currentTarget.classList.remove("is-paused")}
+                >
                     <div className="jackpot-types-strip__scroll big-icon-scrollbar-hide">
-                        {jackpotTypes.map((type) => {
-                            const key = String(type.key || typeKey(type));
-                            const isActive = key === String(activeTypeKey);
-                            return (
-                                <button
-                                    key={key}
-                                    type="button"
-                                    className={`jackpot-types-strip__item${isActive ? " active" : ""}`}
-                                    onClick={() => selectJackpotType(type)}
-                                    aria-pressed={isActive}
-                                >
-                                    <span className="jackpot-types-strip__icon" aria-hidden="true">
-                                        <FaCoins />
-                                    </span>
-                                    <span className="jackpot-types-strip__label">
-                                        {type.label || typeLabel(type)}
-                                    </span>
-                                </button>
-                            );
-                        })}
+                        {[0, 1].flatMap((copy) =>
+                            jackpotTypes.map((type) => {
+                                const key = String(type.key || typeKey(type));
+                                const isActive = key === String(activeTypeKey);
+                                const isClone = copy === 1;
+                                return (
+                                    <button
+                                        key={`${copy}-${key}`}
+                                        type="button"
+                                        className={`jackpot-types-strip__item${isActive ? " active" : ""}`}
+                                        onClick={() => selectJackpotType(type)}
+                                        aria-pressed={isActive}
+                                        tabIndex={isClone ? -1 : undefined}
+                                        aria-hidden={isClone ? true : undefined}
+                                    >
+                                        <span className="jackpot-types-strip__icon" aria-hidden="true">
+                                            <FaCoins />
+                                        </span>
+                                        <span className="jackpot-types-strip__label">
+                                            {type.label || typeLabel(type)}
+                                        </span>
+                                    </button>
+                                );
+                            })
+                        )}
                     </div>
                 </nav>
             )}

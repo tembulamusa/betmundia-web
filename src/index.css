@@ -1021,6 +1021,7 @@ tr.my-bets td {
     background: #151525;
     border-bottom: none;
     margin: 0;
+    overflow: hidden;
   }
 
   body.app-promo-dismissed .jackpot-types-strip {
@@ -1030,10 +1031,38 @@ tr.my-bets td {
   .jackpot-types-strip__scroll {
     display: flex;
     flex-wrap: nowrap;
+    width: max-content;
     gap: 0.55rem;
-    padding: 0.4rem 0.5rem 0.55rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    padding: 0.6rem 0.5rem 0.55rem;
+    overflow: visible;
+    animation: jackpot-types-marquee calc(max(14s, var(--jackpot-types-count, 4) * 3.5s)) linear infinite;
+    will-change: transform;
+  }
+
+  .jackpot-types-strip:hover .jackpot-types-strip__scroll,
+  .jackpot-types-strip:focus-within .jackpot-types-strip__scroll,
+  .jackpot-types-strip:active .jackpot-types-strip__scroll,
+  .jackpot-types-strip.is-paused .jackpot-types-strip__scroll {
+    animation-play-state: paused;
+  }
+
+  @keyframes jackpot-types-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jackpot-types-strip__scroll {
+      animation: none;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      width: auto;
+      max-width: 100%;
+    }
   }
 
   .jackpot-types-strip__item {
@@ -1049,8 +1078,8 @@ tr.my-bets td {
     background: transparent;
     color: rgba(255, 255, 255, 0.55);
     border-radius: 0;
-    padding: 0.5rem 0.9rem;
-    font-size: 0.82rem;
+    padding: calc(0.6rem + 8px) 0.9rem 0.5rem;
+    font-size: 1.1rem;
     font-weight: 500;
     line-height: 1.15;
     white-space: nowrap;
@@ -1063,13 +1092,14 @@ tr.my-bets td {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
+    font-size: 1.5rem;
     line-height: 1;
     color: inherit;
   }
 
   .jackpot-types-strip__label {
     color: inherit;
+    font-weight: 500;
     max-width: 7.5rem;
     overflow: hidden;
     text-overflow: ellipsis;
