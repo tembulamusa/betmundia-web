@@ -3435,7 +3435,7 @@ button.locked-button:hover {
   .my-bets .my-bets-accordion .accordion-body,
   .my-bets .my-bets-accordion .my-bets-accordion-body {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 14px 14px 16px;
+    padding: 14px 0 16px;
   }
 
   .my-bets-mobile-detail {
