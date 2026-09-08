@@ -2835,6 +2835,8 @@ label {
   gap: 0.15rem;
   white-space: nowrap;
   line-height: 1;
+  position: relative;
+  overflow: visible;
 }
 
 .big-icon-icon {}
@@ -3150,12 +3152,11 @@ button.locked-button:hover {
   }
 
   /*
-   * HOT/NEW: sit fully above the icon (labels are beside it). Prior
-   * translateY(-50%) still overlapped the centered name. Prefer overflow
-   * visible on the item/icon over padding that stretches the menu row.
+   * HOT/NEW: sit fully above the icon (labels are beside it). Bubble is a
+   * sibling under .big-icon-link — anchor to icon center, not the label.
    */
   .big-icon-item,
-  .big-icon-item .big-icon-icon {
+  .big-icon-link {
     overflow: visible;
   }
 
@@ -3165,9 +3166,9 @@ button.locked-button:hover {
 
   .big-icon-bubble {
     top: 0;
-    right: 0;
-    left: auto;
-    transform: translate(30%, calc(-100% - 2px));
+    left: 14px;
+    right: auto;
+    transform: translate(-50%, calc(-100% - 2px));
     line-height: 1;
     z-index: 12;
     pointer-events: none;
@@ -3424,11 +3425,13 @@ button.locked-button:hover {
   background: rgba(255, 255, 255, 0.1) !important;
 }
 
+/* HOT/NEW: sibling of icon + name under .big-icon-link; anchor to icon (left), not label */
 .big-icon-bubble {
   position: absolute;
-  top: 6px;
-  right: 0;
-  transform: translate(50%, -20%);
+  top: 0;
+  left: 18px;
+  right: auto;
+  transform: translate(-50%, -45%);
   background: #ff3b3b;
   color: #fff;
   font-size: 7px;
@@ -3438,6 +3441,7 @@ button.locked-button:hover {
   line-height: 1;
   z-index: 10;
   text-transform: uppercase;
+  pointer-events: none;
 }
 
 #betslip {

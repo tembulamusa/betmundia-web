@@ -592,17 +592,15 @@ const BigIconMenu = () => {
                             <li key={idx} className={itemClasses}>
                                 {item?.external ? (
                                     <a href={item.link} title={item.name} target="_blank" rel="noopener noreferrer" className="big-icon-link">
-                                        <div className="big-icon-icon relative">
+                                        <div className="big-icon-icon">
                                             {iconContent}
-
-                                            {item?.bubble && (
-                                                <span className="big-icon-bubble">
-                                                    {item.bubble}
-                                                </span>
-                                            )}
                                         </div>
-
                                         <div className="big-icon-name">{item.name}</div>
+                                        {item?.bubble && (
+                                            <span className="big-icon-bubble">
+                                                {item.bubble}
+                                            </span>
+                                        )}
                                     </a>
                                 ) : (
                                     <Link
@@ -611,16 +609,15 @@ const BigIconMenu = () => {
                                         className="big-icon-link"
                                         onClick={item?.name?.toLowerCase() === "affiliate" ? openAffiliate : undefined}
                                     >
-                                        <div className="big-icon-icon relative">
+                                        <div className="big-icon-icon">
                                             {iconContent}
-
-                                            {item?.bubble && (
-                                                <span className="big-icon-bubble">
-                                                    {item.bubble}
-                                                </span>
-                                            )}
                                         </div>
                                         <div className="big-icon-name">{item.name}</div>
+                                        {item?.bubble && (
+                                            <span className="big-icon-bubble">
+                                                {item.bubble}
+                                            </span>
+                                        )}
                                     </Link>
                                 )}
                             </li>
