@@ -13,6 +13,56 @@ import ShareExistingbet from "./utils/shareexisting-bet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
 
+/** Status badge colors aligned with existing btn-bet-hist / statusIcon palette. */
+const getStatusBadge = (status) => {
+    const raw = (status || "").toLowerCase().trim();
+
+    switch (raw) {
+        case "won":
+            return { label: "WON", background: "#19BC54", color: "#ffffff" };
+        case "lost":
+        case "not won":
+            return { label: "NOT WON", background: "#99999E", color: "#17242F" };
+        case "pending":
+        case "active":
+        case "not approved":
+            return { label: "PENDING", background: "#00A8FA", color: "#ffffff" };
+        case "cancelled":
+        case "canceled":
+            return { label: "CANCELLED", background: "#6B7280", color: "#ffffff" };
+        case "void":
+            return { label: "VOID", background: "#8B7355", color: "#ffffff" };
+        default:
+            return {
+                label: (status || "UNKNOWN").toUpperCase(),
+                background: "#99999E",
+                color: "#17242F",
+            };
+    }
+};
+
+const getBetTypeLabel = (bet) => {
+    const count = Number(bet?.total_games ?? bet?.betslip?.length ?? 0);
+    if (bet?.jackpot_bet_id) {
+        return `Jackpot (${count})`;
+    }
+    if (count > 1) {
+        return `Multi Bet (${count})`;
+    }
+    return `Single Bet (${count || 1})`;
+};
+
+const formatPossibleWin = (value) => {
+    const num = parseFloat(value);
+    if (Number.isNaN(num)) {
+        return `KSH ${value ?? "0.00"}`;
+    }
+    return `KSH ${num.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })}`;
+};
+
 const MyBets = () => {
     const [state, dispatch] = useContext(Context);
     const [userBets, setUserBets] = useState([]);
@@ -197,7 +247,7 @@ const MyBets = () => {
             {/* ================= SPORTS ================= */}
             {betsFilter === "sports" && (
                 <>
-                    <div className="mx-3">
+                    <div className="mx-3 my-bets-column-headers d-none d-md-block">
                         <div
                             style={{
                                 display: "grid",
@@ -219,17 +269,21 @@ const MyBets = () => {
                         </div>
                     </div>
 
-                    <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mx-3 mt-1">
-                        {userBets.map((bet) => (
+                    <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mx-3 mt-1 my-bets-accordion">
+                        {userBets.map((bet) => {
+                            const badge = getStatusBadge(bet?.status);
+                            return (
                             <Accordion.Item key={bet.bet_id} eventKey={String(bet.bet_id)}>
 
                                 <Accordion.Header>
-                                    <div style={{
-                                        width: "100%",
-                                        display: "grid",
-                                        gridTemplateColumns: "1fr 1fr 0.7fr 0.7fr 1fr 1fr 1fr",
-                                        gap: "5px"
-                                    }}>
+                                    {/* Desktop: column grid (unchanged) */}
+                                    <div
+                                        className="d-none d-md-grid w-100"
+                                        style={{
+                                            gridTemplateColumns: "1fr 1fr 0.7fr 0.7fr 1fr 1fr 1fr",
+                                            gap: "5px"
+                                        }}
+                                    >
                                         <div>{bet?.created}</div>
                                         <div>{bet?.bet_id}</div>
                                         <div>{bet?.total_games}</div>
@@ -246,6 +300,32 @@ const MyBets = () => {
                                                     ? "Pending"
                                                     : bet?.status}
                                             </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Mobile: stacked card header */}
+                                    <div className="d-md-none my-bets-mobile-card w-100">
+                                        <span
+                                            className="my-bets-status-badge"
+                                            style={{
+                                                background: badge.background,
+                                                color: badge.color,
+                                            }}
+                                        >
+                                            {badge.label}
+                                        </span>
+                                        <div className="my-bets-mobile-type">
+                                            {getBetTypeLabel(bet)}
+                                        </div>
+                                        <div className="my-bets-mobile-win">
+                                            <span className="my-bets-mobile-win-label">Possible Win: </span>
+                                            <span className="my-bets-mobile-win-amount">
+                                                {formatPossibleWin(bet?.possible_win)}
+                                            </span>
+                                        </div>
+                                        <div className="my-bets-mobile-meta">
+                                            <span>{bet?.created}</span>
+                                            <span>Bet ID: {bet?.bet_id}</span>
                                         </div>
                                     </div>
                                 </Accordion.Header>
@@ -335,7 +415,8 @@ const MyBets = () => {
                                 </Accordion.Body>
 
                             </Accordion.Item>
-                        ))}
+                            );
+                        })}
                     </Accordion>
                 </>
             )}
