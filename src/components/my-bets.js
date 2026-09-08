@@ -667,9 +667,7 @@ const MyBets = () => {
 
                     {/* ================= JACKPOT ================= */}
                     {betsFilter === "jackpot" && (
-                        <div className="text-white">
-                            Jackpot bets coming soon...
-                        </div>
+                        <NoEvents message="No jackpot bets yet" />
                     )}
                 </div>
             </div>
