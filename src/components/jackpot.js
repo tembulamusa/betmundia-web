@@ -4,52 +4,136 @@ import makeRequest from "./utils/fetch-request";
 import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.jpeg';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import Container from "react-bootstrap/Container";
 import { Context } from '../context/store';
 import {
     addToJackpotSlip,
+    clearJackpotSlip,
     getJackpotBetslip
 } from './utils/betslip';
 import Notify from "./utils/Notify";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
+const typeKey = (item) =>
+    item?.jackpot_event_id ?? item?.id ?? item?.jackpot_type ?? item?.type ?? item?.jackpot_name ?? item?.name;
+
+const typeLabel = (item) =>
+    item?.jackpot_name || item?.name || item?.jackpot_type || item?.type || "Jackpot";
+
+const normalizeJackpotTypes = (payload) => {
+    if (!payload) {
+        return [];
+    }
+
+    const asList = (list) =>
+        (list || [])
+            .filter(Boolean)
+            .map((item) => ({
+                ...item,
+                key: String(typeKey(item)),
+                label: typeLabel(item),
+            }));
+
+    if (Array.isArray(payload)) {
+        return asList(payload);
+    }
+    if (Array.isArray(payload?.jackpots)) {
+        return asList(payload.jackpots);
+    }
+    if (Array.isArray(payload?.types)) {
+        return asList(payload.types);
+    }
+    if (Array.isArray(payload?.data) && (payload.data[0]?.jackpot_name || payload.data[0]?.jackpot_event_id)) {
+        return asList(payload.data);
+    }
+    if (payload?.jackpot_event_id || payload?.jackpot_name || payload?.jackpot_type || payload?.type) {
+        return asList([payload]);
+    }
+
+    return [];
+};
+
 const Jackpot = (props) => {
     const [jackpotData, setJackpotData] = useState(null);
+    const [jackpotTypes, setJackpotTypes] = useState([]);
+    const [activeTypeKey, setActiveTypeKey] = useState(null);
     const [results, setResults] = useState(null);
     const [, dispatch] = useContext(Context);
 
     const Float = (equation, precision = 4) => {
         return Math.round(equation * (10 ** precision)) / (10 ** precision);
     }
-    const fetchMatches = useCallback(async () => {
-        const matchEndpoint = "/jackpot/matches";
+
+    const applyJackpotPayload = useCallback((data) => {
+        const now = new Date();
+        const matches = data?.matches;
+        const hasStarted = matches
+            ? Object.values(matches).some((match) => {
+                const startTime = new Date(match?.start_time || match?.startTime);
+                return startTime < now;
+            })
+            : false;
+
+        if (hasStarted || !data) {
+            setJackpotData(null);
+            dispatch({ type: "DEL", key: "jackpotdata" });
+            return null;
+        }
+
+        setJackpotData(data);
+        dispatch({ type: "SET", key: "jackpotdata", payload: data });
+        return data;
+    }, [dispatch]);
+
+    const fetchMatches = useCallback(async (selectedType = null) => {
+        const eventId = selectedType?.jackpot_event_id ?? selectedType?.id;
+        const typeParam = selectedType?.jackpot_type || selectedType?.type;
+        let matchEndpoint = "/jackpot/matches";
+        const params = new URLSearchParams();
+        if (eventId) {
+            params.set("jackpot_event_id", eventId);
+        } else if (typeParam) {
+            params.set("type", typeParam);
+        }
+        const query = params.toString();
+        if (query) {
+            matchEndpoint = `${matchEndpoint}?${query}`;
+        }
+
         const [m_status, result] = await makeRequest({ url: matchEndpoint, method: "GET", api_version: 2 });
 
         if (m_status == 200) {
-            const checkStartedMatches = () => {
-                const now = new Date();
-
-                const hasStarted = Object.values(result?.data?.matches).some((match) => {
-                    const startTime = new Date(match?.start_time || match?.startTime);
-                    return startTime < now;
+            const data = applyJackpotPayload(result?.data);
+            if (data) {
+                const fromMatches = normalizeJackpotTypes(data);
+                setJackpotTypes((prev) => {
+                    if (prev?.length > 1) {
+                        return prev;
+                    }
+                    return fromMatches.length ? fromMatches : prev;
                 });
-
-                if (hasStarted) {
-                    setJackpotData(null);
-                } else {
-                    setJackpotData(result?.data);
-                    dispatch({ type: "SET", key: "jackpotdata", payload: result?.data });
-
-                }
-            };
-
-            // Run immediately once
-            checkStartedMatches();
-
+                setActiveTypeKey(String(typeKey(selectedType || data)));
+            }
         }
 
         let jackpotbetslip = getJackpotBetslip();
         dispatch({ type: "SET", key: "jackpotbetslip", payload: jackpotbetslip });
+    }, [applyJackpotPayload, dispatch]);
+
+    const fetchJackpotTypes = useCallback(async () => {
+        const [listStatus, listResult] = await makeRequest({
+            url: "/jackpot/list",
+            method: "GET",
+            api_version: 2,
+        });
+
+        if (listStatus == 200) {
+            const types = normalizeJackpotTypes(listResult?.data ?? listResult);
+            if (types.length) {
+                setJackpotTypes(types);
+                return types;
+            }
+        }
+        return null;
     }, []);
 
     const fetchResults = useCallback(async () => {
@@ -64,14 +148,28 @@ const Jackpot = (props) => {
 
     useEffect(() => {
         const abortController = new AbortController();
-        fetchMatches();
-        fetchResults();
+        (async () => {
+            const listed = await fetchJackpotTypes();
+            await fetchMatches(listed?.[0] || null);
+            await fetchResults();
+        })();
         return () => {
             dispatch({ type: "DEL", key: "jackpotbetslip" });
             dispatch({ type: "DEL", key: "jackpotdata" });
             abortController.abort();
         };
-    }, [fetchMatches, fetchResults, dispatch]);
+    }, [fetchJackpotTypes, fetchMatches, fetchResults, dispatch]);
+
+    const selectJackpotType = (type) => {
+        const nextKey = String(typeKey(type));
+        if (nextKey === String(activeTypeKey)) {
+            return;
+        }
+        setActiveTypeKey(nextKey);
+        clearJackpotSlip();
+        dispatch({ type: "SET", key: "jackpotbetslip", payload: [] });
+        fetchMatches(type);
+    };
 
     const AutoPickAllMatches = () => {
         const clean = (_str) => {
@@ -127,9 +225,31 @@ const Jackpot = (props) => {
 
     return (
         <>
+            {jackpotTypes.length > 0 && (
+                <nav className="jackpot-types-strip" aria-label="Jackpot types">
+                    <div className="jackpot-types-strip__scroll big-icon-scrollbar-hide">
+                        {jackpotTypes.map((type) => {
+                            const key = String(type.key || typeKey(type));
+                            const isActive = key === String(activeTypeKey);
+                            return (
+                                <button
+                                    key={key}
+                                    type="button"
+                                    className={`jackpot-types-strip__item${isActive ? " active" : ""}`}
+                                    onClick={() => selectJackpotType(type)}
+                                    aria-pressed={isActive}
+                                >
+                                    {type.label || typeLabel(type)}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </nav>
+            )}
+
             <LazyLoadImage src={dailyJackpot} alt="jackpot" className="std-carousel-image" />
 
-            <div className="jackpot-header row bg-secondary">
+            <div className="jackpot-header row">
                 <div className="col-12">
                     <JackpotHeader jackpot={jackpotData} />
                 </div>
