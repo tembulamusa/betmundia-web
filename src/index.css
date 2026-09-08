@@ -3440,6 +3440,7 @@ button.locked-button:hover {
 
   .my-bets-mobile-detail {
     color: #ffffff;
+    padding: 8px;
   }
 
   .my-bets-mobile-bet-amount {
