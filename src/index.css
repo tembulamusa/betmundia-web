@@ -3423,6 +3423,15 @@ button.locked-button:hover {
   color: #fff;
 }
 
+/* Selected / hovered option — brand purple where browsers allow option styling */
+.my-bets-filter-select option:hover,
+.my-bets-filter-select option:checked,
+.my-bets-filter-select option:focus,
+.my-bets-filter-select option:checked:hover {
+  background: #a71f66;
+  color: #fff;
+}
+
 .my-bets-date-filters {
   display: flex;
   flex-wrap: wrap;
