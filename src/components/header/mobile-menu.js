@@ -363,7 +363,7 @@ function MobileMenu(props) {
                 <span className="account-drawer-item-icon" aria-hidden="true">
                   <IoListCircleOutline />
                 </span>
-                <span className="account-drawer-item-label">My Bets</span>
+                <span className="account-drawer-item-label">Bet History</span>
                 <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
               </Link>
 

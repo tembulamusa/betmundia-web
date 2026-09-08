@@ -82,6 +82,29 @@ const getSlipResult = (slip) => {
     return result;
 };
 
+/** Normalize bet.created to YYYY-MM-DD for range compares. */
+const getBetDateKey = (created) => {
+    if (!created) return null;
+    const raw = String(created).trim();
+    const isoDay = raw.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (isoDay) return isoDay[1];
+    const parsed = new Date(raw);
+    if (Number.isNaN(parsed.getTime())) return null;
+    const y = parsed.getFullYear();
+    const m = String(parsed.getMonth() + 1).padStart(2, "0");
+    const d = String(parsed.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+};
+
+const isBetInDateRange = (bet, fromDate, toDate) => {
+    if (!fromDate && !toDate) return true;
+    const key = getBetDateKey(bet?.created);
+    if (!key) return true;
+    if (fromDate && key < fromDate) return false;
+    if (toDate && key > toDate) return false;
+    return true;
+};
+
 const MyBets = () => {
     const [state, dispatch] = useContext(Context);
     const [userBets, setUserBets] = useState([]);
@@ -90,9 +113,18 @@ const MyBets = () => {
     const [message, setMessage] = useState(null);
     const [activeKey, setActiveKey] = useState(null);
     const [betsFilter, setBetsFilter] = useState("sports");
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
     const [sharableBet, setSharableBet] = useState(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [betIdToCancel, setBetIdToCancel] = useState(null);
+
+    const filteredSportsBets = (userBets || []).filter((bet) =>
+        isBetInDateRange(bet, fromDate, toDate)
+    );
+    const filteredCasinoBets = (casinoBets || []).filter((bet) =>
+        isBetInDateRange(bet, fromDate, toDate)
+    );
 
     // ✅ CANCEL BET
     const cancelBet = async (betId) => {
@@ -213,7 +245,7 @@ const MyBets = () => {
 
             {/* HEADER */}
             <div
-                className="flex justify-between items-center"
+                className="my-bets-page-header"
                 style={{
                     background: "rgba(255, 255, 255, 0.1)",
                     margin: "0 0 4rem",
@@ -223,32 +255,55 @@ const MyBets = () => {
                     boxSizing: "border-box",
                 }}
             >
-                <h1
-                    className="m-0"
-                    style={{
-                        fontSize: "1.75rem",
-                        fontWeight: 700,
-                        letterSpacing: "0.01em",
-                        color: "rgba(255, 255, 255, 0.75)",
-                        lineHeight: 1.25,
-                    }}
-                >
-                    My Bets
-                </h1>
+                <div className="my-bets-page-header-row flex justify-between items-center">
+                    <h1
+                        className="m-0"
+                        style={{
+                            fontSize: "1.75rem",
+                            fontWeight: 700,
+                            letterSpacing: "0.01em",
+                            color: "rgba(255, 255, 255, 0.75)",
+                            lineHeight: 1.25,
+                        }}
+                    >
+                        Bet History
+                    </h1>
 
-                <select
-                    value={betsFilter}
-                    onChange={(e) => setBetsFilter(e.target.value)}
-                    className="px-4 py-2 rounded-md text-white w-[200px] outline-none"
-                    style={{
-                        background: "rgba(0,0,0,0.4)",
-                        border: "1px solid rgba(255,255,255,0.15)"
-                    }}
-                >
-                    <option value="sports">Sports</option>
-                    <option value="casino">Casino</option>
-                    <option value="jackpot">Jackpot</option>
-                </select>
+                    <select
+                        value={betsFilter}
+                        onChange={(e) => setBetsFilter(e.target.value)}
+                        className="px-4 py-2 rounded-md text-white w-[200px] outline-none"
+                        style={{
+                            background: "rgba(0,0,0,0.4)",
+                            border: "1px solid rgba(255,255,255,0.15)"
+                        }}
+                    >
+                        <option value="sports">Sports</option>
+                        <option value="casino">Casino</option>
+                        <option value="jackpot">Jackpot</option>
+                    </select>
+                </div>
+
+                <div className="my-bets-date-filters">
+                    <input
+                        type="date"
+                        className="my-bets-date-input"
+                        value={fromDate}
+                        onChange={(e) => setFromDate(e.target.value)}
+                        placeholder="From"
+                        aria-label="From"
+                        max={toDate || undefined}
+                    />
+                    <input
+                        type="date"
+                        className="my-bets-date-input"
+                        value={toDate}
+                        onChange={(e) => setToDate(e.target.value)}
+                        placeholder="To"
+                        aria-label="To"
+                        min={fromDate || undefined}
+                    />
+                </div>
             </div>
 
             {/* ALERT */}
@@ -259,12 +314,18 @@ const MyBets = () => {
             )}
 
             {/* EMPTY */}
-            {betsFilter === "sports" && userBets.length === 0 && (
-                <NoEvents message="No sports bets yet" />
+            {betsFilter === "sports" && filteredSportsBets.length === 0 && (
+                <NoEvents
+                    message={
+                        userBets.length === 0
+                            ? "No sports bets yet"
+                            : "No sports bets in this date range"
+                    }
+                />
             )}
 
             {/* ================= SPORTS ================= */}
-            {betsFilter === "sports" && (
+            {betsFilter === "sports" && filteredSportsBets.length > 0 && (
                 <>
                     <div className="mx-3 my-bets-column-headers d-none d-md-block">
                         <div
@@ -289,7 +350,7 @@ const MyBets = () => {
                     </div>
 
                     <Accordion activeKey={activeKey} onSelect={(k) => setActiveKey(k)} className="mx-3 mt-1 my-bets-accordion">
-                        {userBets.map((bet) => {
+                        {filteredSportsBets.map((bet) => {
                             const badge = getStatusBadge(bet?.status);
                             return (
                             <Accordion.Item key={bet.bet_id} eventKey={String(bet.bet_id)}>
@@ -562,7 +623,17 @@ const MyBets = () => {
             )}
 
             {/* ================= CASINO ================= */}
-            {betsFilter === "casino" && (
+            {betsFilter === "casino" && filteredCasinoBets.length === 0 && (
+                <NoEvents
+                    message={
+                        casinoBets.length === 0
+                            ? "No casino bets yet"
+                            : "No casino bets in this date range"
+                    }
+                />
+            )}
+
+            {betsFilter === "casino" && filteredCasinoBets.length > 0 && (
                 <div className="mx-3">
                     <table className="table table-bordered">
                         <thead>
@@ -575,7 +646,7 @@ const MyBets = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {casinoBets.map((bet) => (
+                            {filteredCasinoBets.map((bet) => (
                                 <tr key={bet.id}>
                                     <td>{bet?.created}</td>
                                     <td>{bet?.game_name}</td>
