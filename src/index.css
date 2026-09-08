@@ -3050,22 +3050,28 @@ button.locked-button:hover {
     font-size: 1.4rem;
   }
 
-  /* HOT/NEW badges: float above the label like desktop (smaller icons sink them otherwise) */
+  /*
+   * HOT/NEW: sit fully above the icon (labels are beside it). Prior
+   * translateY(-50%) still overlapped the centered name. padding-top on
+   * the overflow-x scroll parent keeps raised badges inside the scrollport.
+   */
   .big-icon-item,
   .big-icon-item .big-icon-icon {
     overflow: visible;
   }
 
-  .big-icon-list {
-    padding-top: 6px;
+  .big-icon-scrollbar-hide {
+    padding-top: 12px;
   }
 
   .big-icon-bubble {
     top: 0;
     right: 0;
-    transform: translate(50%, -50%);
+    left: auto;
+    transform: translate(30%, calc(-100% - 2px));
     line-height: 1;
     z-index: 12;
+    pointer-events: none;
   }
 
   .top-login-btn {
