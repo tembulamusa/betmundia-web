@@ -3043,10 +3043,29 @@ button.locked-button:hover {
 
   .big-icon-link {
     gap: 0.1rem;
+    overflow: visible;
   }
 
   .big-icon-name {
     font-size: 1.4rem;
+  }
+
+  /* HOT/NEW badges: float above the label like desktop (smaller icons sink them otherwise) */
+  .big-icon-item,
+  .big-icon-item .big-icon-icon {
+    overflow: visible;
+  }
+
+  .big-icon-list {
+    padding-top: 6px;
+  }
+
+  .big-icon-bubble {
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    line-height: 1;
+    z-index: 12;
   }
 
   .top-login-btn {
