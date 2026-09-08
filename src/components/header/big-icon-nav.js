@@ -134,7 +134,7 @@ const BigIconMenu = () => {
     const linkItems = [
         // { name: "world cup", icon: "world cup.svg", link: "/sports/competition/matches?id=18585", parentTo: null, bubble: "HOT" },
         { name: "live", icon: "livescore.svg", link: "/live", parentTo: null },
-        { name: "jackpot", icon: "jackpot.svg", link: "/jackpot", parentTo: null },
+        { name: "jackpots", icon: "jackpot.svg", link: "/jackpot", parentTo: null },
         { name: "affiliate", icon: "affiliate.svg", link: "/affiliate", parentTo: null, bubble: "HOT" },
         { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null, bubble: "HOT" },
         { name: "jet x", icon: "jetx.svg", link: "/casino-game/smartsoft/jetx", parentTo: null, bubble: "new" },
