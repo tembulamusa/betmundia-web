@@ -16,6 +16,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 const Jackpot = (props) => {
     const [jackpotData, setJackpotData] = useState(null);
     const [results, setResults] = useState(null);
+    const [isAutoPicking, setIsAutoPicking] = useState(false);
     const [, dispatch] = useContext(Context);
 
     const Float = (equation, precision = 4) => {
@@ -74,6 +75,10 @@ const Jackpot = (props) => {
     }, [fetchMatches, fetchResults, dispatch]);
 
     const AutoPickAllMatches = () => {
+        if (isAutoPicking || !jackpotData?.matches) {
+            return;
+        }
+
         const clean = (_str) => {
             _str = _str.replace(/[^A-Za-z0-9\-]/g, '');
             return _str.replace(/-+/g, '-');
@@ -83,10 +88,10 @@ const Jackpot = (props) => {
             return Math.floor(min + Math.random() * (max - min + 1));
         }
 
-        if (jackpotData) {
+        setIsAutoPicking(true);
+        try {
             let betslip;
-            Object.entries(jackpotData?.matches).map(([key, match]) => {
-                // alert(JSON.stringify(match));
+            Object.entries(jackpotData.matches).forEach(([, match]) => {
                 let reference = match.match_id + "_selected";
                 let pick = randomPick(1, 3);
                 let pickedValue = (pick == 1 ? match.home_team : (pick == 2 ? 'draw' : match?.away_team));
@@ -113,6 +118,10 @@ const Jackpot = (props) => {
                 dispatch({ type: "SET", key: reference, payload: cstm });
             });
             dispatch({ type: "SET", key: "jackpotbetslip", payload: betslip });
+        } catch (error) {
+            Notify({ status: 400, message: "Error auto-picking jackpot matches" });
+        } finally {
+            setIsAutoPicking(false);
         }
     }
 
@@ -148,8 +157,15 @@ const Jackpot = (props) => {
                             <div className="col-md-4 justify-center mt-3 md:mt-0">
                                 <div className="autopick-button-div !px-3">
                                     <button
-                                        onClick={() => AutoPickAllMatches()}
-                                        className="btn btn-auto-pick mt-3 mx-auto md:mx-0">Auto Pick
+                                        type="button"
+                                        onClick={(event) => {
+                                            AutoPickAllMatches();
+                                            event.currentTarget.blur();
+                                        }}
+                                        disabled={isAutoPicking}
+                                        aria-busy={isAutoPicking}
+                                        className={`btn btn-auto-pick mt-3 mx-auto md:mx-0${isAutoPicking ? " is-auto-picking" : ""}`}>
+                                        {isAutoPicking ? "Picking..." : "Auto Pick"}
                                     </button>
                                 </div>
                             </div>
