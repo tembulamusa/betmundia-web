@@ -1024,7 +1024,7 @@ tr.my-bets td {
     border-bottom: none;
     margin-bottom: 0 !important;
     padding-left: 0.65rem;
-    padding-right: 0.65rem;
+    padding-right: 1.1rem;
     opacity: 1;
     align-self: stretch;
   }
@@ -1060,7 +1060,7 @@ tr.my-bets td {
   .jackpot-types-strip__scroll {
     display: flex;
     flex-wrap: nowrap;
-    gap: 0.25rem;
+    gap: 0.55rem;
     padding: 0.4rem 0.5rem 0.55rem;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -1079,8 +1079,8 @@ tr.my-bets td {
     background: transparent;
     color: rgba(255, 255, 255, 0.55);
     border-radius: 0;
-    padding: 0.35rem 0.7rem;
-    font-size: 0.72rem;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.82rem;
     font-weight: 500;
     line-height: 1.15;
     white-space: nowrap;
@@ -1107,12 +1107,12 @@ tr.my-bets td {
 
   .jackpot-types-strip__item.active {
     background: transparent;
-    color: #ffffff;
+    color: #a71f66;
     font-weight: 700;
   }
 
   .jackpot-types-strip__item.active .jackpot-types-strip__icon {
-    color: #ffffff;
+    color: #a71f66;
     opacity: 1;
   }
 }
