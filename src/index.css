@@ -3052,8 +3052,8 @@ button.locked-button:hover {
 
   /*
    * HOT/NEW: sit fully above the icon (labels are beside it). Prior
-   * translateY(-50%) still overlapped the centered name. padding-top on
-   * the overflow-x scroll parent keeps raised badges inside the scrollport.
+   * translateY(-50%) still overlapped the centered name. Prefer overflow
+   * visible on the item/icon over padding that stretches the menu row.
    */
   .big-icon-item,
   .big-icon-item .big-icon-icon {
@@ -3061,7 +3061,7 @@ button.locked-button:hover {
   }
 
   .big-icon-scrollbar-hide {
-    padding-top: 12px;
+    padding-top: 0px;
   }
 
   .big-icon-bubble {
