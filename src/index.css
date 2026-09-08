@@ -3412,43 +3412,71 @@ button.locked-button:hover {
   background: rgba(255, 255, 255, 0.04);
 }
 
-/* Match dark date inputs / promo-wins filter selects (Sports|Casino|Jackpot) */
+/* Custom history-type dropdown (Sports|Casino|Jackpot) — native <option>
+   hover/active cannot be purple in Chromium, so this uses a listbox menu. */
+.my-bets-filter-select-wrap {
+  position: relative;
+  width: 100%;
+}
+
 .my-bets-filter-select {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   padding: 0.5rem 2.25rem 0.5rem 0.75rem;
   border-radius: 0.375rem;
   color: #fff;
   outline: none;
   cursor: pointer;
-  color-scheme: dark;
+  text-align: left;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background-color: rgba(0, 0, 0, 0.4);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23ffffff' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 0.9rem;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
 }
 
+.my-bets-filter-select-wrap.is-open .my-bets-filter-select,
 .my-bets-filter-select:focus,
 .my-bets-date-input:focus {
   border-color: rgba(255, 255, 255, 0.35);
 }
 
-.my-bets-filter-select option {
+.my-bets-filter-select-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   background: #151525;
-  color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
 }
 
-/* Selected / hovered option — brand purple where browsers allow option styling */
-.my-bets-filter-select option:hover,
-.my-bets-filter-select option:checked,
-.my-bets-filter-select option:focus,
-.my-bets-filter-select option:checked:hover {
+.my-bets-filter-select-option {
+  display: block;
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.my-bets-filter-select-option:hover,
+.my-bets-filter-select-option:focus,
+.my-bets-filter-select-option.is-active {
   background: #a71f66;
   color: #fff;
+  outline: none;
 }
 
 .my-bets-date-filters {
@@ -3539,7 +3567,7 @@ button.locked-button:hover {
     max-width: 240px;
   }
 
-  .my-bets-filter-select {
+  .my-bets-filter-select-wrap {
     max-width: 280px;
   }
 }

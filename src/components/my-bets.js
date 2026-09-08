@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Context } from '../context/store';
 import makeRequest from './utils/fetch-request';
 import Accordion from 'react-bootstrap/Accordion';
@@ -66,6 +66,12 @@ const formatMoney = (value) => {
 
 const formatPossibleWin = formatMoney;
 
+const BET_FILTER_OPTIONS = [
+    { value: "sports", label: "Sports" },
+    { value: "casino", label: "Casino" },
+    { value: "jackpot", label: "Jackpot" },
+];
+
 const canCancelBet = (bet) =>
     bet?.cancelable == 1 ||
     bet?.can_cancel == 1 ||
@@ -113,11 +119,33 @@ const MyBets = () => {
     const [message, setMessage] = useState(null);
     const [activeKey, setActiveKey] = useState(null);
     const [betsFilter, setBetsFilter] = useState("sports");
+    const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+    const filterSelectRef = useRef(null);
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
     const [sharableBet, setSharableBet] = useState(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [betIdToCancel, setBetIdToCancel] = useState(null);
+
+    useEffect(() => {
+        if (!filterMenuOpen) return undefined;
+        const onPointerDown = (event) => {
+            if (filterSelectRef.current && !filterSelectRef.current.contains(event.target)) {
+                setFilterMenuOpen(false);
+            }
+        };
+        const onKeyDown = (event) => {
+            if (event.key === "Escape") {
+                setFilterMenuOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", onPointerDown);
+        document.addEventListener("keydown", onKeyDown);
+        return () => {
+            document.removeEventListener("mousedown", onPointerDown);
+            document.removeEventListener("keydown", onKeyDown);
+        };
+    }, [filterMenuOpen]);
 
     const filteredSportsBets = (userBets || []).filter((bet) =>
         isBetInDateRange(bet, fromDate, toDate)
@@ -246,7 +274,12 @@ const MyBets = () => {
         setFromDate("");
         setToDate("");
         setBetsFilter("sports");
+        setFilterMenuOpen(false);
     };
+
+    const selectedFilterLabel =
+        BET_FILTER_OPTIONS.find((option) => option.value === betsFilter)?.label ||
+        "Sports";
 
     return (
         <div className="my-bets">
@@ -261,16 +294,49 @@ const MyBets = () => {
             {/* Nested panel: filters + list */}
             <div className="my-bets-panel">
                 <div className="my-bets-filters">
-                    <select
-                        value={betsFilter}
-                        onChange={(e) => setBetsFilter(e.target.value)}
-                        className="my-bets-filter-select"
-                        aria-label="Bet category"
+                    {/* Custom listbox — native <option> hover is not styleable in Chromium */}
+                    <div
+                        className={`my-bets-filter-select-wrap${filterMenuOpen ? " is-open" : ""}`}
+                        ref={filterSelectRef}
                     >
-                        <option value="sports">Sports</option>
-                        <option value="casino">Casino</option>
-                        <option value="jackpot">Jackpot</option>
-                    </select>
+                        <button
+                            type="button"
+                            className="my-bets-filter-select"
+                            aria-label="Bet category"
+                            aria-haspopup="listbox"
+                            aria-expanded={filterMenuOpen}
+                            onClick={() => setFilterMenuOpen((open) => !open)}
+                        >
+                            {selectedFilterLabel}
+                        </button>
+                        {filterMenuOpen && (
+                            <ul
+                                className="my-bets-filter-select-menu"
+                                role="listbox"
+                                aria-label="Bet category"
+                            >
+                                {BET_FILTER_OPTIONS.map((option) => {
+                                    const isActive = betsFilter === option.value;
+                                    return (
+                                        <li key={option.value} role="presentation">
+                                            <button
+                                                type="button"
+                                                role="option"
+                                                aria-selected={isActive}
+                                                className={`my-bets-filter-select-option${isActive ? " is-active" : ""}`}
+                                                onClick={() => {
+                                                    setBetsFilter(option.value);
+                                                    setFilterMenuOpen(false);
+                                                }}
+                                            >
+                                                {option.label}
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        )}
+                    </div>
 
                     <div className="my-bets-date-filters">
                         <input
