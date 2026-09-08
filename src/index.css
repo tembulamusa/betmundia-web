@@ -3504,14 +3504,14 @@ button.locked-button:hover {
   }
 
   .my-bets-mobile-pick {
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    margin-bottom: 3px;
+    border-radius: 3px;
     background: rgba(255, 255, 255, 0.15);
   }
 
   .my-bets-mobile-pick:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .my-bets-mobile-pick-meta {
