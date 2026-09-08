@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
+import { useSearchParams } from "react-router-dom";
 import { JackpotMatchList, JackpotResultsList, JackpotHeader } from './matches/index';
 import makeRequest from "./utils/fetch-request";
 import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.jpeg';
@@ -14,11 +15,33 @@ import Notify from "./utils/Notify";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FaCoins } from "react-icons/fa";
 
+const TYPE_QUERY_PARAM = "type";
+
 const typeKey = (item) =>
     item?.jackpot_event_id ?? item?.id ?? item?.jackpot_type ?? item?.type ?? item?.jackpot_name ?? item?.name;
 
 const typeLabel = (item) =>
     item?.jackpot_name || item?.name || item?.jackpot_type || item?.type || "Jackpot";
+
+const typeParamValue = (item) =>
+    item?.jackpot_type || item?.type || String(typeKey(item) ?? "");
+
+const matchesTypeParam = (item, param) => {
+    if (param == null || param === "") {
+        return false;
+    }
+    const value = String(param);
+    return [
+        item?.jackpot_type,
+        item?.type,
+        item?.jackpot_event_id,
+        item?.id,
+        item?.key,
+        typeKey(item),
+    ]
+        .filter((candidate) => candidate != null && candidate !== "")
+        .some((candidate) => String(candidate) === value);
+};
 
 const normalizeJackpotTypes = (payload) => {
     if (!payload) {
@@ -61,6 +84,8 @@ const Jackpot = (props) => {
     const [isAutoPicking, setIsAutoPicking] = useState(false);
     const [autoPickButtonKey, setAutoPickButtonKey] = useState(0);
     const [, dispatch] = useContext(Context);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const urlTypeParam = searchParams.get(TYPE_QUERY_PARAM);
 
     const resetAutoPickButton = useCallback(() => {
         setIsAutoPicking(false);
@@ -158,8 +183,7 @@ const Jackpot = (props) => {
     useEffect(() => {
         const abortController = new AbortController();
         (async () => {
-            const listed = await fetchJackpotTypes();
-            await fetchMatches(listed?.[0] || null);
+            await fetchJackpotTypes();
             await fetchResults();
         })();
         return () => {
@@ -167,17 +191,62 @@ const Jackpot = (props) => {
             dispatch({ type: "DEL", key: "jackpotdata" });
             abortController.abort();
         };
-    }, [fetchJackpotTypes, fetchMatches, fetchResults, dispatch]);
+    }, [fetchJackpotTypes, fetchResults, dispatch]);
 
-    const selectJackpotType = (type) => {
-        const nextKey = String(typeKey(type));
+    // Keep ?type= in sync once types are known (default / invalid → first type).
+    useEffect(() => {
+        if (!jackpotTypes.length) {
+            return;
+        }
+        const current = searchParams.get(TYPE_QUERY_PARAM);
+        if (current && jackpotTypes.some((item) => matchesTypeParam(item, current))) {
+            return;
+        }
+        const fallback = jackpotTypes[0];
+        const value = String(typeParamValue(fallback));
+        if (current === value) {
+            return;
+        }
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.set(TYPE_QUERY_PARAM, value);
+            return next;
+        }, { replace: true });
+    }, [jackpotTypes, searchParams, setSearchParams]);
+
+    // Selection + matches fetch driven by URL ?type=
+    useEffect(() => {
+        if (!jackpotTypes.length) {
+            return;
+        }
+        const current = searchParams.get(TYPE_QUERY_PARAM);
+        if (!current) {
+            return;
+        }
+
+        const selected =
+            jackpotTypes.find((item) => matchesTypeParam(item, current)) || jackpotTypes[0];
+        const nextKey = String(typeKey(selected));
         if (nextKey === String(activeTypeKey)) {
             return;
         }
+
         setActiveTypeKey(nextKey);
         clearJackpotSlip();
         dispatch({ type: "SET", key: "jackpotbetslip", payload: [] });
-        fetchMatches(type);
+        fetchMatches(selected);
+    }, [searchParams, jackpotTypes, activeTypeKey, fetchMatches, dispatch]);
+
+    const selectJackpotType = (type) => {
+        const value = String(typeParamValue(type));
+        if (value === String(urlTypeParam ?? "")) {
+            return;
+        }
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.set(TYPE_QUERY_PARAM, value);
+            return next;
+        });
     };
 
     const AutoPickAllMatches = async () => {
@@ -258,7 +327,7 @@ const Jackpot = (props) => {
                         {[0, 1].flatMap((copy) =>
                             jackpotTypes.map((type) => {
                                 const key = String(type.key || typeKey(type));
-                                const isActive = key === String(activeTypeKey);
+                                const isActive = matchesTypeParam(type, urlTypeParam);
                                 const isClone = copy === 1;
                                 return (
                                     <button
