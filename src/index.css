@@ -1006,43 +1006,12 @@ tr.my-bets td {
   color: #ffffff;
 }
 
-/* Mobile jackpot type strip — sticky just below fixed header + big-icon nav.
-   Shares elevated surface (#151525) with .big-icon-item--bleed so active Jackpots
-   bleeds into types as one dark tab+subnav block (app --base-color, not brand purple). */
+/* Mobile jackpot type strip — sticky just below fixed header + big-icon nav. */
 .jackpot-types-strip {
   display: none;
 }
 
 @media (max-width: 1199.98px) {
-  /* Active Jackpots tab: dark elevated fill that meets the types strip below */
-  .big-icon-list {
-    align-items: stretch;
-  }
-
-  .big-icon-item--bleed {
-    background: #151525;
-    border-bottom: none;
-    margin-bottom: 0 !important;
-    padding-left: 0.65rem;
-    padding-right: 1.1rem;
-    opacity: 1;
-    align-self: stretch;
-  }
-
-  .big-icon-item--bleed::after {
-    display: none;
-  }
-
-  .big-icon-item--bleed .big-icon-name {
-    color: #ffffff;
-    opacity: 1;
-    font-weight: 700;
-  }
-
-  .big-icon-item--bleed .big-icon-icon img {
-    opacity: 1;
-  }
-
   .jackpot-types-strip {
     display: block;
     position: sticky;
@@ -1051,6 +1020,7 @@ tr.my-bets td {
     background: #151525;
     border-bottom: none;
     margin: 0;
+    overflow: hidden;
   }
 
   body.app-promo-dismissed .jackpot-types-strip {
@@ -1060,10 +1030,38 @@ tr.my-bets td {
   .jackpot-types-strip__scroll {
     display: flex;
     flex-wrap: nowrap;
+    width: max-content;
     gap: 0.55rem;
     padding: 0.6rem 0.5rem 0.55rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: visible;
+    animation: jackpot-types-marquee calc(max(14s, var(--jackpot-types-count, 4) * 3.5s)) linear infinite;
+    will-change: transform;
+  }
+
+  .jackpot-types-strip:hover .jackpot-types-strip__scroll,
+  .jackpot-types-strip:focus-within .jackpot-types-strip__scroll,
+  .jackpot-types-strip:active .jackpot-types-strip__scroll,
+  .jackpot-types-strip.is-paused .jackpot-types-strip__scroll {
+    animation-play-state: paused;
+  }
+
+  @keyframes jackpot-types-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jackpot-types-strip__scroll {
+      animation: none;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      width: auto;
+      max-width: 100%;
+    }
   }
 
   .jackpot-types-strip__item {
@@ -1080,7 +1078,7 @@ tr.my-bets td {
     color: rgba(255, 255, 255, 0.55);
     border-radius: 0;
     padding: calc(0.6rem + 8px) 0.9rem 0.5rem;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 500;
     line-height: 1.15;
     white-space: nowrap;
@@ -1093,7 +1091,7 @@ tr.my-bets td {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     line-height: 1;
     color: inherit;
   }
