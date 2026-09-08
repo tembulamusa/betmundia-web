@@ -562,8 +562,13 @@ const BigIconMenu = () => {
                     {(linkItems || [])
                         .filter((item) => !item.mobileOnly || isMobileViewport)
                         .map((item, idx) => {
-                        const isActive = item.link && !item.external && pathname === item.link;
-                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative${item.mobileOnly ? ' big-icon-item--mobile-only' : ''}`;
+                        const isActive = item.link && !item.external && (
+                            item.link === "/jackpot"
+                                ? (pathname === "/jackpot" || pathname.startsWith("/jackpot/"))
+                                : pathname === item.link
+                        );
+                        const isJackpotsBleed = item.name === "jackpots" && isActive;
+                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative${item.mobileOnly ? ' big-icon-item--mobile-only' : ''}${isJackpotsBleed ? ' big-icon-item--bleed' : ''}`;
                         const iconContent = item.icon ? (
                             <img className="mx-auto" src={getSportImageIcon(item.icon)} alt={item.name} />
                         ) : (

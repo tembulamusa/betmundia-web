@@ -12,6 +12,7 @@ import {
 } from './utils/betslip';
 import Notify from "./utils/Notify";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { FaCoins } from "react-icons/fa";
 
 const typeKey = (item) =>
     item?.jackpot_event_id ?? item?.id ?? item?.jackpot_type ?? item?.type ?? item?.jackpot_name ?? item?.name;
@@ -239,7 +240,12 @@ const Jackpot = (props) => {
                                     onClick={() => selectJackpotType(type)}
                                     aria-pressed={isActive}
                                 >
-                                    {type.label || typeLabel(type)}
+                                    <span className="jackpot-types-strip__icon" aria-hidden="true">
+                                        <FaCoins />
+                                    </span>
+                                    <span className="jackpot-types-strip__label">
+                                        {type.label || typeLabel(type)}
+                                    </span>
                                 </button>
                             );
                         })}
