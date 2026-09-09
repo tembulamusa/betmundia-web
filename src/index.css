@@ -646,15 +646,15 @@ aside.ps-sidebar-root:focus-visible,
     align-items: center;
     justify-content: center;
     min-width: 36px;
-    height: 28px;
-    min-height: 28px;
-    padding: 0 8px;
+    height: 22px;
+    min-height: 22px;
+    padding: 0 6px;
     border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(255, 255, 255, 0.1);
     color: inherit;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1;
     text-decoration: none;
     cursor: pointer;
@@ -669,9 +669,9 @@ aside.ps-sidebar-root:focus-visible,
 
   .mobile-match-action-btn.mobile-match-markets-count {
     min-width: 40px;
-    height: 28px;
-    min-height: 28px;
-    padding: 0 8px;
+    height: 22px;
+    min-height: 22px;
+    padding: 0 6px;
     line-height: 1;
   }
 
