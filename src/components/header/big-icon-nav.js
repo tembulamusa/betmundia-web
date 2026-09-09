@@ -26,6 +26,13 @@ import useMobileViewport from "../../hooks/use-mobile-viewport";
 import { ANDROID_PLAY_STORE_URL, getAppDownloadTarget } from "../utils/app-download";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 import { openLoginWithRedirect } from "../utils/login-redirect";
+import {
+    JACKPOT_PATH,
+    getJackpotTypes,
+    jackpotsPathWithType,
+    refreshJackpotTypes,
+    typeParamValue,
+} from "../utils/jackpot-data";
 
 const EXCLUDED_PROVIDERS = ["unicraft"];
 
@@ -43,6 +50,34 @@ const BigIconMenu = () => {
     const navigate = useNavigate();
     const loc = useLocation();
 
+    const handleJackpotsNavClick = (event) => {
+        // Refresh types on every jackpots menu click; set URL to first type when needed.
+        event.preventDefault();
+        void (async () => {
+            const types = await refreshJackpotTypes(dispatch);
+            const list = types?.length ? types : getJackpotTypes(state);
+            const onJackpots =
+                pathname === JACKPOT_PATH || pathname === "/jackpot";
+            const existing = new URLSearchParams(loc.search).get("type");
+            const existingValid =
+                existing &&
+                list.some((item) =>
+                    [item?.jackpot_type, item?.type, item?.slug, item?.key]
+                        .filter(Boolean)
+                        .some((v) => String(v) === String(existing))
+                );
+
+            if (onJackpots && existingValid) {
+                navigate(jackpotsPathWithType(existing));
+                return;
+            }
+
+            const first = list?.[0];
+            navigate(
+                first ? jackpotsPathWithType(typeParamValue(first)) : JACKPOT_PATH
+            );
+        })();
+    };
     const handleBonanzaOpen = () => setShowBonanza(true);
     const handleBonanzaClose = () => setShowBonanza(false);
     const userRowRef = useRef(null);
@@ -134,7 +169,7 @@ const BigIconMenu = () => {
     const linkItems = [
         // { name: "world cup", icon: "world cup.svg", link: "/sports/competition/matches?id=18585", parentTo: null, bubble: "HOT" },
         { name: "live", icon: "livescore.svg", link: "/live", parentTo: null },
-        { name: "jackpots", icon: "jackpot.svg", link: "/jackpot", parentTo: null, bubble: "HOT" },
+        { name: "jackpots", icon: "jackpot.svg", link: JACKPOT_PATH, parentTo: null, bubble: "HOT" },
         { name: "affiliate", icon: "affiliate.svg", link: "/affiliate", parentTo: null, bubble: "HOT" },
         { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null, bubble: "HOT" },
         { name: "jet x", icon: "jetx.svg", link: "/casino-game/smartsoft/jetx", parentTo: null, bubble: "new" },
@@ -563,8 +598,11 @@ const BigIconMenu = () => {
                         .filter((item) => !item.mobileOnly || isMobileViewport)
                         .map((item, idx) => {
                         const isActive = item.link && !item.external && (
-                            item.link === "/jackpot"
-                                ? (pathname === "/jackpot" || pathname.startsWith("/jackpot/"))
+                            item.link === JACKPOT_PATH
+                                ? (pathname === JACKPOT_PATH ||
+                                    pathname === "/jackpot" ||
+                                    pathname.startsWith(`${JACKPOT_PATH}/`) ||
+                                    pathname.startsWith("/jackpot/"))
                                 : pathname === item.link
                         );
                         const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative${item.mobileOnly ? ' big-icon-item--mobile-only' : ''}`;
@@ -607,7 +645,13 @@ const BigIconMenu = () => {
                                         to={item.link}
                                         title={item.name}
                                         className="big-icon-link"
-                                        onClick={item?.name?.toLowerCase() === "affiliate" ? openAffiliate : undefined}
+                                        onClick={
+                                            item?.name?.toLowerCase() === "affiliate"
+                                                ? openAffiliate
+                                                : item?.name?.toLowerCase() === "jackpots"
+                                                    ? handleJackpotsNavClick
+                                                    : undefined
+                                        }
                                     >
                                         <div className="big-icon-icon">
                                             {iconContent}

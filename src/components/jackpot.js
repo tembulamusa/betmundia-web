@@ -1,6 +1,6 @@
-import React, { useEffect, useCallback, useState, useContext } from "react";
-import { useSearchParams } from "react-router-dom";
-import { JackpotMatchList, JackpotResultsList, JackpotHeader } from './matches/index';
+import React, { useEffect, useCallback, useState, useContext, useMemo } from "react";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { JackpotMatchList, JackpotHeader } from './matches/index';
 import makeRequest from "./utils/fetch-request";
 import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.jpeg';
 import Tab from 'react-bootstrap/Tab';
@@ -14,88 +14,44 @@ import {
 import Notify from "./utils/Notify";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FaCoins } from "react-icons/fa";
+import JackpotArchive from "./jackpot-archive";
+import {
+    JACKPOT_PATH,
+    TYPE_QUERY_PARAM,
+    getJackpotTypes,
+    matchesTypeParam,
+    persistJackpotTypes,
+    refreshJackpotTypes,
+    typeKey,
+    typeLabel,
+    typeParamValue,
+} from "./utils/jackpot-data";
 
-const TYPE_QUERY_PARAM = "type";
-
-const typeKey = (item) =>
-    item?.jackpot_event_id ?? item?.id ?? item?.jackpot_type ?? item?.type ?? item?.jackpot_name ?? item?.name;
-
-const typeLabel = (item) =>
-    item?.jackpot_name || item?.name || item?.jackpot_type || item?.type || "Jackpot";
-
-const typeParamValue = (item) =>
-    item?.jackpot_type || item?.type || String(typeKey(item) ?? "");
-
-const matchesTypeParam = (item, param) => {
-    if (param == null || param === "") {
-        return false;
-    }
-    const value = String(param);
-    return [
-        item?.jackpot_type,
-        item?.type,
-        item?.jackpot_event_id,
-        item?.id,
-        item?.key,
-        typeKey(item),
-    ]
-        .filter((candidate) => candidate != null && candidate !== "")
-        .some((candidate) => String(candidate) === value);
-};
-
-const normalizeJackpotTypes = (payload) => {
-    if (!payload) {
-        return [];
-    }
-
-    const asList = (list) =>
-        (list || [])
-            .filter(Boolean)
-            .map((item) => ({
-                ...item,
-                key: String(typeKey(item)),
-                label: typeLabel(item),
-            }));
-
-    if (Array.isArray(payload)) {
-        return asList(payload);
-    }
-    if (Array.isArray(payload?.jackpots)) {
-        return asList(payload.jackpots);
-    }
-    if (Array.isArray(payload?.types)) {
-        return asList(payload.types);
-    }
-    if (Array.isArray(payload?.data) && (payload.data[0]?.jackpot_name || payload.data[0]?.jackpot_event_id)) {
-        return asList(payload.data);
-    }
-    if (payload?.jackpot_event_id || payload?.jackpot_name || payload?.jackpot_type || payload?.type) {
-        return asList([payload]);
-    }
-
-    return [];
-};
-
-const Jackpot = (props) => {
+const Jackpot = () => {
     const [jackpotData, setJackpotData] = useState(null);
-    const [jackpotTypes, setJackpotTypes] = useState([]);
-    const [activeTypeKey, setActiveTypeKey] = useState(null);
-    const [results, setResults] = useState(null);
     const [isAutoPicking, setIsAutoPicking] = useState(false);
     const [autoPickButtonKey, setAutoPickButtonKey] = useState(0);
-    const [, dispatch] = useContext(Context);
+    const [activeTab, setActiveTab] = useState("games");
+    const [lastFetchedType, setLastFetchedType] = useState(null);
+    const [state, dispatch] = useContext(Context);
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const location = useLocation();
     const urlTypeParam = searchParams.get(TYPE_QUERY_PARAM);
+
+    const jackpotTypes = useMemo(
+        () => getJackpotTypes(state),
+        [state?.jackpotTypes, state]
+    );
 
     const resetAutoPickButton = useCallback(() => {
         setIsAutoPicking(false);
-        // Remount clears sticky :hover/:active/:focus left after touch taps.
         setAutoPickButtonKey((key) => key + 1);
     }, []);
 
     const Float = (equation, precision = 4) => {
         return Math.round(equation * (10 ** precision)) / (10 ** precision);
-    }
+    };
 
     const applyJackpotPayload = useCallback((data) => {
         const now = new Date();
@@ -118,82 +74,28 @@ const Jackpot = (props) => {
         return data;
     }, [dispatch]);
 
-    const fetchMatches = useCallback(async (selectedType = null) => {
-        const eventId = selectedType?.jackpot_event_id ?? selectedType?.id;
-        const typeParam = selectedType?.jackpot_type || selectedType?.type;
-        let matchEndpoint = "/jackpot/matches";
-        const params = new URLSearchParams();
-        if (eventId) {
-            params.set("jackpot_event_id", eventId);
-        } else if (typeParam) {
-            params.set("type", typeParam);
-        }
-        const query = params.toString();
-        if (query) {
-            matchEndpoint = `${matchEndpoint}?${query}`;
-        }
-
-        const [m_status, result] = await makeRequest({ url: matchEndpoint, method: "GET", api_version: 2 });
-
-        if (m_status == 200) {
-            const data = applyJackpotPayload(result?.data);
-            if (data) {
-                const fromMatches = normalizeJackpotTypes(data);
-                setJackpotTypes((prev) => {
-                    if (prev?.length > 1) {
-                        return prev;
-                    }
-                    return fromMatches.length ? fromMatches : prev;
-                });
-                setActiveTypeKey(String(typeKey(selectedType || data)));
-            }
-        }
-
-        let jackpotbetslip = getJackpotBetslip();
-        dispatch({ type: "SET", key: "jackpotbetslip", payload: jackpotbetslip });
-    }, [applyJackpotPayload, dispatch]);
-
-    const fetchJackpotTypes = useCallback(async () => {
-        const [listStatus, listResult] = await makeRequest({
-            url: "/jackpot/list",
-            method: "GET",
-            api_version: 2,
-        });
-
-        if (listStatus == 200) {
-            const types = normalizeJackpotTypes(listResult?.data ?? listResult);
-            if (types.length) {
-                setJackpotTypes(types);
-                return types;
-            }
-        }
-        return null;
-    }, []);
-
-    const fetchResults = useCallback(async () => {
-        const resultsEndpoint = "/jackpot/results";
-        const [r_status, result] = await makeRequest({ url: resultsEndpoint, method: "GET", api_version: 2 });
-        if (r_status == 200) {
-            setResults(result?.data);
-        } else {
-            Notify({ status: 400, message: "Error fetching Jackpot results" })
-        }
-    }, []);
-
+    // Hydrate types from cache; refresh if empty (header usually already fetched).
     useEffect(() => {
-        const abortController = new AbortController();
-        (async () => {
-            await fetchJackpotTypes();
-            await fetchResults();
-        })();
-        return () => {
-            dispatch({ type: "DEL", key: "jackpotbetslip" });
-            dispatch({ type: "DEL", key: "jackpotdata" });
-            abortController.abort();
-        };
-    }, [fetchJackpotTypes, fetchResults, dispatch]);
+        const cached = getJackpotTypes(state);
+        if (cached.length) {
+            persistJackpotTypes(cached, dispatch);
+        } else {
+            void refreshJackpotTypes(dispatch);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    // Keep ?type= in sync once types are known (default / invalid → first type).
+    // Normalize legacy /jackpot → /jackpots while preserving query.
+    useEffect(() => {
+        if (location.pathname === "/jackpot") {
+            navigate(
+                `${JACKPOT_PATH}${location.search || ""}`,
+                { replace: true }
+            );
+        }
+    }, [location.pathname, location.search, navigate]);
+
+    // When types arrive: default URL to first type (e.g. /jackpots?type=last-man-standing).
     useEffect(() => {
         if (!jackpotTypes.length) {
             return;
@@ -214,28 +116,67 @@ const Jackpot = (props) => {
         }, { replace: true });
     }, [jackpotTypes, searchParams, setSearchParams]);
 
-    // Selection + matches fetch driven by URL ?type=
+    const fetchMatchesForType = useCallback(async (typeSlug, selectedType = null) => {
+        const params = new URLSearchParams();
+        if (typeSlug) {
+            params.set("type", typeSlug);
+        }
+        const eventId = selectedType?.jackpot_event_id ?? selectedType?.id;
+        if (eventId && !typeSlug) {
+            params.set("jackpot_event_id", eventId);
+        }
+
+        let matchEndpoint = "/jackpot/matches";
+        const query = params.toString();
+        if (query) {
+            matchEndpoint = `${matchEndpoint}?${query}`;
+        }
+
+        const [m_status, result] = await makeRequest({
+            url: matchEndpoint,
+            method: "GET",
+            api_version: 2,
+        });
+
+        if (m_status == 200) {
+            applyJackpotPayload(result?.data);
+        }
+
+        const jackpotbetslip = getJackpotBetslip();
+        dispatch({ type: "SET", key: "jackpotbetslip", payload: jackpotbetslip });
+    }, [applyJackpotPayload, dispatch]);
+
+    // URL ?type= change → fetch that jackpot.
     useEffect(() => {
-        if (!jackpotTypes.length) {
+        if (!urlTypeParam || !jackpotTypes.length) {
             return;
         }
-        const current = searchParams.get(TYPE_QUERY_PARAM);
-        if (!current) {
+        if (String(lastFetchedType) === String(urlTypeParam)) {
             return;
         }
 
         const selected =
-            jackpotTypes.find((item) => matchesTypeParam(item, current)) || jackpotTypes[0];
-        const nextKey = String(typeKey(selected));
-        if (nextKey === String(activeTypeKey)) {
-            return;
-        }
+            jackpotTypes.find((item) => matchesTypeParam(item, urlTypeParam)) ||
+            null;
 
-        setActiveTypeKey(nextKey);
+        setLastFetchedType(urlTypeParam);
         clearJackpotSlip();
         dispatch({ type: "SET", key: "jackpotbetslip", payload: [] });
-        fetchMatches(selected);
-    }, [searchParams, jackpotTypes, activeTypeKey, fetchMatches, dispatch]);
+        void fetchMatchesForType(urlTypeParam, selected);
+    }, [
+        urlTypeParam,
+        jackpotTypes,
+        lastFetchedType,
+        fetchMatchesForType,
+        dispatch,
+    ]);
+
+    useEffect(() => {
+        return () => {
+            dispatch({ type: "DEL", key: "jackpotbetslip" });
+            dispatch({ type: "DEL", key: "jackpotdata" });
+        };
+    }, [dispatch]);
 
     const selectJackpotType = (type) => {
         const value = String(typeParamValue(type));
@@ -249,6 +190,11 @@ const Jackpot = (props) => {
         });
     };
 
+    const activeJackpotType =
+        jackpotTypes.find((item) => matchesTypeParam(item, urlTypeParam)) ||
+        jackpotTypes[0] ||
+        null;
+
     const AutoPickAllMatches = async () => {
         if (isAutoPicking || !jackpotData?.matches) {
             return;
@@ -257,25 +203,24 @@ const Jackpot = (props) => {
         const clean = (_str) => {
             _str = _str.replace(/[^A-Za-z0-9\-]/g, '');
             return _str.replace(/-+/g, '-');
-        }
+        };
 
         const randomPick = (min, max) => {
             return Math.floor(min + Math.random() * (max - min + 1));
-        }
+        };
 
         setIsAutoPicking(true);
         try {
-            // Yield so loading/disabled paints before sync picks (React batches otherwise).
             await new Promise((resolve) => setTimeout(resolve, 0));
 
             let betslip;
             Object.entries(jackpotData.matches).forEach(([, match]) => {
-                let reference = match.match_id + "_selected";
-                let pick = randomPick(1, 3);
-                let pickedValue = (pick == 1 ? match.home_team : (pick == 2 ? 'draw' : match?.away_team));
-                let oddValue = (pick == 1 ? Float(match.odds["1x2"]['outcomes'][0].odd_value, 2) : (pick == 2 ? Float(match.odds["1x2"]['outcomes'][1].odd_value, 2) : Float(match.odds["1x2"]['outcomes'][2].odd_value, 2)));
-                let cstm = clean(match.match_id + "" + 1 + pickedValue);
-                let slip = {
+                const reference = match.match_id + "_selected";
+                const pick = randomPick(1, 3);
+                const pickedValue = (pick == 1 ? match.home_team : (pick == 2 ? 'draw' : match?.away_team));
+                const oddValue = (pick == 1 ? Float(match.odds["1x2"]['outcomes'][0].odd_value, 2) : (pick == 2 ? Float(match.odds["1x2"]['outcomes'][1].odd_value, 2) : Float(match.odds["1x2"]['outcomes'][2].odd_value, 2)));
+                const cstm = clean(match.match_id + "" + 1 + pickedValue);
+                const slip = {
                     "match_id": match.match_id,
                     "parent_match_id": match.parent_match_id,
                     "special_bet_value": '',
@@ -290,7 +235,7 @@ const Jackpot = (props) => {
                     "live": 0,
                     "ucn": cstm,
                     "market_active": 1,
-                }
+                };
                 betslip = addToJackpotSlip(slip);
 
                 dispatch({ type: "SET", key: reference, payload: cstm });
@@ -301,16 +246,16 @@ const Jackpot = (props) => {
         } finally {
             resetAutoPickButton();
         }
-    }
+    };
 
     useEffect(() => {
-        dispatch({ type: "SET", key: "betslipkey", payload: "jackpotbetslip" })
+        dispatch({ type: "SET", key: "betslipkey", payload: "jackpotbetslip" });
         dispatch({ type: "SET", key: "isjackpot", payload: true });
         return () => {
             dispatch({ type: "DEL", key: "isjackpot" });
-            dispatch({ type: "SET", key: "betslipkey", payload: "betslip" })
-        }
-    }, []);
+            dispatch({ type: "SET", key: "betslipkey", payload: "betslip" });
+        };
+    }, [dispatch]);
 
     return (
         <>
@@ -360,8 +305,13 @@ const Jackpot = (props) => {
                     <JackpotHeader jackpot={jackpotData} />
                 </div>
             </div>
-            <Tabs defaultActiveKey={"matches"} id="jackpot-tabs" className="jackpot-tabs plain-tabs">
-                <Tab eventKey="matches" title="Matches" className="p-3">
+            <Tabs
+                activeKey={activeTab}
+                onSelect={(key) => setActiveTab(key || "games")}
+                id="jackpot-tabs"
+                className="jackpot-tabs plain-tabs"
+            >
+                <Tab eventKey="games" title="Games" className="p-3">
                     {(jackpotData?.status?.toLowerCase() == "active" && jackpotData?.matches?.length == jackpotData?.total_games) && (
                         <div className="row flex flex-col items-center md:flex-row">
                             <div className="col-md-8 !px-3 text-center md:text-left">
@@ -389,7 +339,6 @@ const Jackpot = (props) => {
                         </div>
                     )}
 
-                    {/* If games are available, then show games */}
                     {(jackpotData?.matches?.length > 0 && jackpotData?.total_games) ? (
                         <JackpotMatchList setJackpotData={setJackpotData} matches={jackpotData} />
                     ) : (
@@ -398,14 +347,13 @@ const Jackpot = (props) => {
                         </div>
                     )}
                 </Tab>
-                <Tab eventKey="results" title="Results" className="p-3">
-                    {results ? (
-                        <JackpotResultsList results={results} />
-                    ) : (
-                        <div className={'text-center mt-5'}>
-                            Loading results...
-                        </div>
-                    )}
+                <Tab eventKey="archive" title="Archive" className="p-3">
+                    <JackpotArchive
+                        active={activeTab === "archive"}
+                        jackpotName={jackpotData?.jackpot_name || activeJackpotType?.label}
+                        selectedType={activeJackpotType}
+                        typeSlug={urlTypeParam || typeParamValue(activeJackpotType)}
+                    />
                 </Tab>
             </Tabs>
         </>

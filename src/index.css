@@ -3641,8 +3641,274 @@ button.locked-button:hover {
   margin-bottom: 0;
 }
 
-#jackpot-tabs-tabpane-results {
+#jackpot-tabs-tabpane-results,
+#jackpot-tabs-tabpane-archive,
+#jackpot-tabs-tabpane-games {
   background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Jackpot archive (year/month + draw nav + prizes) */
+.jackpot-archive {
+  --ja-bg: #0d141e;
+  --ja-card: #1c2635;
+  --ja-border: rgba(255, 255, 255, 0.12);
+  --ja-muted: #7a8aa0;
+  --ja-win: #5ec8ff;
+  color: #ffffff;
+  padding: 0.25rem 0 1.25rem;
+}
+
+.jackpot-archive__title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 2.75rem;
+  margin-bottom: 1rem;
+  padding: 0.65rem 2.5rem;
+  background: #0a1018;
+  border-radius: 2px;
+}
+
+.jackpot-archive__ball {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  width: 1.15rem;
+  height: 1.15rem;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #ffffff 0 18%, transparent 19%),
+    radial-gradient(circle at 70% 55%, #1a1a1a 0 42%, #ffffff 43% 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.jackpot-archive__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.jackpot-archive__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.jackpot-archive__filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 140px;
+  flex: 0 1 160px;
+}
+
+.jackpot-archive__filter-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.jackpot-archive__select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 0.55rem 2.1rem 0.55rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--ja-border);
+  background-color: #121a24;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23ffffff' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 0.85rem;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+}
+
+.jackpot-archive__select:focus {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.jackpot-archive__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin: 1.75rem 0 1.5rem;
+}
+
+.jackpot-archive__nav-btn {
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 6px;
+  border: 1px solid var(--ja-border);
+  background: #121a24;
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.jackpot-archive__nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.jackpot-archive__nav-center {
+  text-align: center;
+  min-width: 7.5rem;
+}
+
+.jackpot-archive__date {
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+}
+
+.jackpot-archive__id {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.jackpot-archive__prizes-heading {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.jackpot-archive__demo-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: -0.35rem 0 0.65rem;
+}
+
+.jackpot-archive__card {
+  background: var(--ja-card);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.jackpot-archive__card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem 0.75rem;
+}
+
+.jackpot-archive__card-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.jackpot-archive__card-amount {
+  margin-top: 0.25rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.jackpot-archive__collapse {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jackpot-archive__tiers {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.jackpot-archive__tier {
+  padding: 0.75rem 0.4rem 0.9rem;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.jackpot-archive__tier:last-child {
+  border-right: none;
+}
+
+.jackpot-archive__tier-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 0.45rem;
+}
+
+.jackpot-archive__tier-amount {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ja-muted);
+  word-break: break-word;
+}
+
+.jackpot-archive__tier-amount.is-win {
+  color: var(--ja-win);
+}
+
+.jackpot-archive__empty {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: var(--ja-card);
+  border-radius: 8px;
+}
+
+.jackpot-archive__empty--inline {
+  grid-column: 1 / -1;
+  background: transparent;
+  border-radius: 0;
+}
+
+@media (max-width: 767px) {
+  .jackpot-archive__title {
+    font-size: 0.82rem;
+  }
+
+  .jackpot-archive__filters {
+    gap: 0.55rem;
+  }
+
+  .jackpot-archive__filter {
+    flex: 1 1 calc(50% - 0.55rem);
+    min-width: 0;
+  }
+
+  .jackpot-archive__date {
+    font-size: 1.3rem;
+  }
+
+  .jackpot-archive__tiers {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .jackpot-archive__tier:nth-child(3n) {
+    border-right: none;
+  }
+
+  .jackpot-archive__tier:nth-child(n + 4) {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }
 
 .search-form {

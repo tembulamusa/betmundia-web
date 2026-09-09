@@ -18,6 +18,11 @@ import socket from '../utils/socket-connect';
 import HeaderNav from './header-nav';
 import MobileChat from './mobile-chat';
 import MobileTopBar from './mobile-top-bar';
+import {
+    getJackpotTypes,
+    persistJackpotTypes,
+    refreshJackpotTypes,
+} from '../utils/jackpot-data';
 
 
 const ProfileMenu = React.lazy(() => import('./profile-menu'));
@@ -32,6 +37,17 @@ const Header = (props) => {
 
     useEffect(() => {
         handleTokenRefresh();
+    }, []);
+
+    // Prefetch jackpot types on header load → localStorage + context.
+    useEffect(() => {
+        const cached = getJackpotTypes(state);
+        if (cached.length) {
+            persistJackpotTypes(cached, dispatch);
+        }
+        void refreshJackpotTypes(dispatch);
+        // Intentionally once on header mount.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const updateUserOnHistory = async () => {
