@@ -24,6 +24,15 @@ alwaysApply: true
    - Do **not** delete `dev` or `master`.
    - Keep only a few long-lived branches (e.g. `dev`, maybe `master`); clean up merged topic branches so they do not accumulate.
 
+### Land before starting a new issue
+
+When the user moves on to a **new / unrelated** request:
+
+- **First land the current topic** onto `dev` (commit → merge into `dev` → push `betmundial` + `origin` → delete the topic branch) **before** branching for the new issue — unless the user explicitly says to leave it unmerged, stash it, or continue the same topic branch.
+- Do **not** start a new topic branch while leaving prior finished (or nearly finished) work only in the working tree, an abandoned branch, or an unapplied stash. That is how CSS/UI fixes “disappear.”
+- If work is incomplete and the user insists on switching topics: **commit or stash with a clear message**, note it to the user, and restore/apply it when returning — never silently drop uncommitted changes via `checkout -B` / hard resets.
+- After landing, start the next issue from **up-to-date local `dev`**.
+
 ### Branch continuity
 
 Whenever a **new request** starts concerning something:
@@ -43,8 +52,10 @@ Whenever a **new request** starts concerning something:
 
 ## Agent do / don’t
 
+- Do: **merge (and push) the current topic into `dev` before starting an unrelated new issue.**
 - Do: at the start of a request, choose a new topic branch from up-to-date `dev` **or** continue the related open topic branch when the work is clearly the same feature/fix.
-- Do: branch from `dev`, merge locally into `dev` when asked, push `dev` to both `betmundial` and `origin`, then delete the merged topic branch (local always; remote if it existed).
+- Do: branch from `dev`, merge locally into `dev` when asked (or when finishing a topic before the next issue), push `dev` to both `betmundial` and `origin`, then delete the merged topic branch (local always; remote if it existed).
+- Don’t: abandon uncommitted topic work when switching issues; don’t rely on forgotten stashes.
 - Don’t: pile unrelated changes onto a random open branch, or do feature/fix work directly on `dev`.
 - Don’t: leave merged topic branches hanging locally or on remotes after landing into `dev`.
 - Don’t: treat `master` as the default integration branch for routine work.

@@ -359,7 +359,7 @@ const SideBets = (props) => {
                     to={`/match/${match?.match_id}`}
                     className="mobile-match-action-btn mobile-match-markets-count"
                 >
-                    {match?.sidebets}
+                    {match?.sidebets}+
                 </Link>
             </div>
         )

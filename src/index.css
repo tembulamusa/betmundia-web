@@ -1444,6 +1444,12 @@ input.std-input::placeholder {
   padding-right: 7px;
 }
 
+@media screen and (max-width: 767px) {
+  .betslip-container {
+    margin-top: 12px;
+  }
+}
+
 /* Match detail market rows — equal-height buttons + label/odds layout */
 .matches .top-matches.event-row > .grid {
   align-items: stretch;
