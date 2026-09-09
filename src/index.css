@@ -612,6 +612,8 @@ aside.ps-sidebar-root:focus-visible,
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.15;
+    min-height: 16px;
+    font-weight: 500;
   }
 
   .mobile-match-score {
