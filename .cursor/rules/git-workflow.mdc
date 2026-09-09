@@ -14,7 +14,7 @@ alwaysApply: true
 ## Coding flow
 
 1. Checkout / update `dev` (`git fetch --all`, then merge from remote `dev` as appropriate).
-2. Create a topic branch **from `dev`**: `feature/...`, `fix/...`, `chore/...`, etc.
+2. **Branch appropriately for the request** (see Branch continuity below): create a new topic branch **from `dev`** (`feature/...`, `fix/...`, `chore/...`, etc.), **or** continue the previous related topic branch if this request is clearly the same feature/fix.
 3. Implement and commit on the topic branch.
 4. **Merge on the user’s machine** into `dev` (prefer local merge when the user asks to land work).
 5. Push **`dev`** to **`betmundial` and `origin`** (see `git-push.mdc`). Include **`backup`** only when the user asks for all remotes.
@@ -23,6 +23,15 @@ alwaysApply: true
    - If it was pushed, also delete it on the **remote(s)** where it existed.
    - Do **not** delete `dev` or `master`.
    - Keep only a few long-lived branches (e.g. `dev`, maybe `master`); clean up merged topic branches so they do not accumulate.
+
+### Branch continuity
+
+Whenever a **new request** starts concerning something:
+
+- Consider and **appropriately branch**: either create a **new topic branch from up-to-date `dev`**, **or** **continue the previous related topic branch** if the request is clearly a continuation of the same feature/fix.
+- Goal: when merging to `dev`, history stays **sensible** — related commits together on one topic branch; unrelated work on separate branches.
+- Don’t pile unrelated changes onto a random open branch.
+- Don’t keep working on `dev` directly for feature/fix work.
 
 ## Remotes covered by default for `dev`
 
@@ -34,7 +43,9 @@ alwaysApply: true
 
 ## Agent do / don’t
 
+- Do: at the start of a request, choose a new topic branch from up-to-date `dev` **or** continue the related open topic branch when the work is clearly the same feature/fix.
 - Do: branch from `dev`, merge locally into `dev` when asked, push `dev` to both `betmundial` and `origin`, then delete the merged topic branch (local always; remote if it existed).
+- Don’t: pile unrelated changes onto a random open branch, or do feature/fix work directly on `dev`.
 - Don’t: leave merged topic branches hanging locally or on remotes after landing into `dev`.
 - Don’t: treat `master` as the default integration branch for routine work.
 - Don’t: push a newly invented local-only `dev` unless the user asks (if `dev` is missing on remotes, create local `dev` and report that the user may need to push it once to both remotes).
