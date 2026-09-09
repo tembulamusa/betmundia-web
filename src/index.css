@@ -741,7 +741,8 @@ aside.ps-sidebar-root:focus-visible,
     font-weight: 500;
     line-height: 1.2;
     text-transform: uppercase;
-    opacity: 0.85;
+    color: #ffffff !important;
+    opacity: 0.9;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -752,6 +753,33 @@ aside.ps-sidebar-root:focus-visible,
     font-size: 15px;
     font-weight: 700;
     line-height: 1.2;
+    color: #ffc428 !important;
+  }
+
+  /* Keep market name white; only the odd value stays yellow (button sets yellow on all text). */
+  .mobile-match-card .c-btn-group > .c-btn,
+  .mobile-match-card .c-btn-group > .locked-button {
+    color: #ffffff !important;
+  }
+
+  .mobile-match-card .c-btn-group > .c-btn .theodds,
+  .mobile-match-card .c-btn-group > .locked-button .theodds {
+    color: #ffc428 !important;
+  }
+
+  .mobile-match-card .c-btn-group > .c-btn.picked .theodds,
+  .mobile-match-card .c-btn-group > .c-btn.picked .mobile-odd-label {
+    color: #ffffff !important;
+  }
+
+  .mobile-match-card .c-btn-group > .c-btn:hover .mobile-odd-label,
+  .mobile-match-card .c-btn-group > .c-btn:focus .mobile-odd-label {
+    color: #ffffff !important;
+  }
+
+  .mobile-match-card .c-btn-group > .c-btn:hover .theodds,
+  .mobile-match-card .c-btn-group > .c-btn:focus .theodds {
+    color: #ffc428 !important;
   }
 
   .more-markets-container:not(.mobile-match-actions) {
