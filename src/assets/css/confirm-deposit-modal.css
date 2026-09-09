@@ -1,8 +1,8 @@
 /* Confirm Mpesa Deposit / Check Deposit Status modal */
 
 .confirm-deposit-modal {
-  --cdm-pink: #e91e8c;
-  --cdm-pink-soft: #ff52d4;
+  --cdm-pink: #a71f66;
+  --cdm-pink-soft: #a71f66;
   --cdm-pink-deep: #a71f66;
   --cdm-green: #00c853;
   --cdm-bg: #0f111a;
@@ -12,8 +12,8 @@
   --cdm-border: rgba(255, 255, 255, 0.12);
   --cdm-text: #ffffff;
   --cdm-muted: rgba(255, 255, 255, 0.55);
-  --cdm-radius: 14px;
-  --cdm-radius-sm: 10px;
+  --cdm-radius: 4px;
+  --cdm-radius-sm: 4px;
 }
 
 .confirm-deposit-modal.modal-dialog {
@@ -28,7 +28,7 @@
   border-radius: var(--cdm-radius);
   overflow: hidden;
   color: var(--cdm-text);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+  box-shadow: none;
 }
 
 .confirm-deposit-modal .modal-body {
@@ -46,7 +46,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.95rem 1rem;
-  background: linear-gradient(90deg, var(--cdm-pink-deep) 0%, var(--cdm-pink) 55%, #c2185b 100%);
+  background: var(--cdm-pink-deep);
   border-bottom: none;
 }
 
@@ -189,7 +189,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.18rem;
-  box-shadow: 0 2px 8px rgba(233, 30, 140, 0.35);
+  box-shadow: none;
 }
 
 .cdm-hero-bubble::after {
@@ -224,7 +224,7 @@
   align-items: center;
   justify-content: center;
   border: 2px solid var(--cdm-bg);
-  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.35);
+  box-shadow: none;
 }
 
 .cdm-hero-check svg {
@@ -294,7 +294,7 @@
 }
 
 .cdm-input:focus {
-  border-color: rgba(233, 30, 140, 0.5) !important;
+  border-color: rgba(167, 31, 102, 0.5) !important;
 }
 
 .cdm-input::placeholder {
@@ -350,7 +350,7 @@
   width: 2.35rem;
   height: 2.35rem;
   border-radius: 50%;
-  background: rgba(233, 30, 140, 0.18);
+  background: rgba(167, 31, 102, 0.18);
   color: var(--cdm-pink);
   flex-shrink: 0;
 }
