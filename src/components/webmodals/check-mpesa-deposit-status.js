@@ -5,7 +5,7 @@ import { Formik, Form, Field } from 'formik';
 import StdTable from "../utils/std-table";
 import makeRequest from "../utils/fetch-request";
 import Alert from "../utils/alert";
-import { FaSearch, FaInfoCircle, FaLock, FaCheck, FaClipboard } from "react-icons/fa";
+import { FaSearch, FaInfoCircle, FaCheck, FaClipboard } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import "../../assets/css/confirm-deposit-modal.css";
 
@@ -22,6 +22,8 @@ const CheckMpesaDepositStatus = (props) => {
         const initialValues = { mpesa_code: '' };
         const [message, setMessage] = useState(null);
         const [isSubmitting, setIsSubmitting] = useState(false)
+        const [showCodeHelp, setShowCodeHelp] = useState(false)
+        const codeHelpId = "cdm-code-help-tooltip"
 
         const handleSubmit = (values, { setSubmitting }) => {
             // Validate the code first
@@ -95,10 +97,38 @@ const CheckMpesaDepositStatus = (props) => {
                         )}
 
                         <div className="cdm-field">
-                            <label className="cdm-label" htmlFor="mpesa_code">
-                                MPESA Message Code
-                                <FaInfoCircle aria-hidden="true" title="Confirmation code from your MPESA SMS" />
-                            </label>
+                            <div className="cdm-label">
+                                <label htmlFor="mpesa_code">MPESA Message Code</label>
+                                <span className="cdm-help-wrap">
+                                    <button
+                                        type="button"
+                                        className="cdm-help-trigger"
+                                        aria-label="Where do I find the code?"
+                                        aria-expanded={showCodeHelp}
+                                        aria-describedby={showCodeHelp ? codeHelpId : undefined}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            setShowCodeHelp((v) => !v);
+                                        }}
+                                        onMouseEnter={() => setShowCodeHelp(true)}
+                                        onMouseLeave={() => setShowCodeHelp(false)}
+                                        onFocus={() => setShowCodeHelp(true)}
+                                        onBlur={() => setShowCodeHelp(false)}
+                                    >
+                                        <FaInfoCircle aria-hidden="true" />
+                                    </button>
+                                    {showCodeHelp && (
+                                        <span id={codeHelpId} className="cdm-help-tooltip" role="tooltip">
+                                            <span className="cdm-help-title">Where do I find the code?</span>
+                                            <span className="cdm-help-desc">
+                                                It&apos;s the confirmation code within the MPESA message you received after making the deposit.
+                                            </span>
+                                            <span className="cdm-help-arrow" aria-hidden="true" />
+                                        </span>
+                                    )}
+                                </span>
+                            </div>
                             <div className="cdm-input-wrap">
                                 <Field
                                     id="mpesa_code"
@@ -117,18 +147,6 @@ const CheckMpesaDepositStatus = (props) => {
                                 >
                                     <FaClipboard />
                                 </button>
-                            </div>
-                        </div>
-
-                        <div className="cdm-info-card">
-                            <span className="cdm-info-icon" aria-hidden="true">
-                                <FaLock />
-                            </span>
-                            <div className="cdm-info-copy">
-                                <p className="cdm-info-title">Where do I find the code?</p>
-                                <p className="cdm-info-desc">
-                                    It&apos;s the confirmation code within the MPESA message you received after making the deposit.
-                                </p>
                             </div>
                         </div>
 
