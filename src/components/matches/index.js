@@ -33,6 +33,40 @@ const clean = (_str) => {
     return _str.replace(/-+/g, '-');
 }
 
+const formatMobileMatchMeta = (startTime) => {
+    if (!startTime || startTime === 0 || startTime === '0') {
+        return null;
+    }
+
+    const raw = String(startTime).trim();
+    const parsed = new Date(raw.includes('T') || raw.includes('-') ? raw.replace(' ', 'T') : raw);
+
+    if (!Number.isNaN(parsed.getTime())) {
+        const day = String(parsed.getDate()).padStart(2, '0');
+        const month = String(parsed.getMonth() + 1).padStart(2, '0');
+        const year = String(parsed.getFullYear()).slice(-2);
+        const hours = String(parsed.getHours()).padStart(2, '0');
+        const minutes = String(parsed.getMinutes()).padStart(2, '0');
+        return `${day}/${month}/${year} - ${hours}:${minutes}`;
+    }
+
+    return raw;
+}
+
+const getMobileOddLabel = (match, mkt) => {
+    const key = String(match?.odd_key || '').trim().toLowerCase();
+    const outcomeId = String(match?.outcome_id ?? '').trim();
+    const isThreeWay = !mkt || String(mkt).toLowerCase() === '1x2';
+
+    if (isThreeWay) {
+        if (key === '1' || key === 'home' || outcomeId === '1') return match?.home_team || match?.odd_key;
+        if (key === 'x' || key === 'draw' || outcomeId === '2') return 'DRAW';
+        if (key === '2' || key === 'away' || outcomeId === '3') return match?.away_team || match?.odd_key;
+    }
+
+    return match?.odd_key || '';
+}
+
 const TimeCounter = (props) => {
     const { minutes, seconds } = props;
     const [timer, setTimer] = useState({ mins: props?.minutes, secs: props?.seconds });
@@ -171,7 +205,7 @@ const MatchHeaderRow = (props) => {
                             <div className={'bold hidden md:block'}>
                                 <span>{three_way ? "3 WAY" : "Winner"}</span>
                             </div>
-                            <div className={'mt-3 c-btn-group align-self-end'}>
+                            <div className={'mt-3 c-btn-group align-self-end hidden md:flex'}>
                                 <a className="c-btn-header" href='#/'>1</a>
                                 {three_way && <a className="c-btn-header" href='#/'>X</a>}
                                 <a className="c-btn-header" href='#/'>2</a>
@@ -201,7 +235,7 @@ const MatchHeaderRow = (props) => {
                         ))
                     )}
                     <div
-                        className="bet-fix events-odd pad undefined align-self-center more-markets-container m-lg-2 col-3">
+                        className="bet-fix events-odd pad undefined align-self-center more-markets-container m-lg-2 col-3 hidden md:block">
                         &nbsp;
                     </div>
                 </div>
@@ -303,12 +337,34 @@ const MoreMarketsHeaderRow = (props) => {
 }
 
 const SideBets = (props) => {
-    const { match, live } = props;
+    const { match, live, mobile } = props;
     const [picked,] = useState();
 
     const openLiveStats = (parent_match_id) => {
         window.open(`https://s5.sir.sportradar.com/betmundialsmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
     }
+
+    if (mobile) {
+        return (
+            <div className={`side mobile-match-actions ${picked} more-markets-container`}>
+                <button
+                    type="button"
+                    onClick={() => openLiveStats(match?.parent_match_id)}
+                    className="mobile-match-action-btn"
+                    aria-label="Match statistics"
+                >
+                    <IoIosStats size={18} />
+                </button>
+                <Link
+                    to={`/match/${match?.match_id}`}
+                    className="mobile-match-action-btn mobile-match-markets-count"
+                >
+                    {match?.sidebets}
+                </Link>
+            </div>
+        )
+    }
+
     return (
         <div
             className={`side mt-2 !pl-2 !ml-3 ${picked} align-self-center more-markets-container m-lg-2`}>
@@ -496,9 +552,14 @@ const OddButton = (props) => {
         >
             {!detail &&
                 (
-                    <span className="theodds odd-fix">
-                        {parseFloat(oddValue).toFixed(2)}
-                    </span>
+                    <>
+                        <span className="mobile-odd-label md:hidden">
+                            {getMobileOddLabel(match, mkt)}
+                        </span>
+                        <span className="theodds odd-fix">
+                            {parseFloat(oddValue).toFixed(2)}
+                        </span>
+                    </>
                 )
             }
             {detail &&
@@ -1028,7 +1089,7 @@ const MatchRow = (props) => {
     return (
         <>
             {(updatedMatchStatus?.toLowerCase()?.trim() !== "ended" && !transitioned) &&
-                <div className="top-matches d-flex" key={"match-list-" + match?.match_id}>
+                <div className="top-matches d-flex mobile-match-card" key={"match-list-" + match?.match_id}>
                     <div className="hidden md:flex col-sm-2 col-xs-12 pad left-text" key="21">
                         {updatedLive &&
                             <>
@@ -1064,53 +1125,78 @@ const MatchRow = (props) => {
                         </div>
                     </div>
 
-                    <div className="col-md-2 col-sm-4 col-xs-12 match-detail-container" key="23">
-                        <Link to={(jackpot) ? '#' : `/match/${live ? 'live/' : ""}` + match?.match_id}>
-                            <div className="d-flex flex-column primary-text">
-                                <div className="compt-detail overflow-ellipsis" key="0034">
-                                    <small>{match?.category} | {match?.competition_name}</small>
-                                </div>
-                                <div className="compt-teams d-flex flex-column" key="0035">
-                                    <div className={'bold'}>
-                                        {match?.home_team}
-
-                                    </div>
-                                    <div className={'bold'}>
-                                        {match?.away_team}
-                                    </div>
-                                </div>
+                    <div className="md:hidden mobile-match-meta">
+                        {(live && Date.parse(match?.start_time) > Date.now()) && (
+                            <div className='w-full font-[500]'>
+                                <TimeToLiveStarting starttime={match?.start_time} />
                             </div>
-                        </Link>
+                        )}
+                        {(live && (updatedMatchStatus || match?.match_status || match?.status)) && (
+                            <div className="mobile-match-meta-live">
+                                <small style={{ color: "red" }}>
+                                    {updatedMatchStatus || match?.match_status}
+                                </small>
+                                {(updatedMatchTime?.minutes || match?.match_time) && (
+                                    <span className="ml-2">
+                                        {updatedMatchTime?.minutes == 90
+                                            ? "90:00+"
+                                            : updatedMatchTime?.minutes != null
+                                                ? <TimeCounter minutes={updatedMatchTime?.minutes} seconds={updatedMatchTime?.seconds} />
+                                                : `${match.match_time}'`}
+                                    </span>
+                                )}
+                            </div>
+                        )}
+                        {!(live && (updatedMatchStatus || match?.match_status || match?.status)) && (
+                            <span>
+                                {formatMobileMatchMeta(match?.start_time) || (match?.start_time == 0 ? "NOT STARTED" : match?.start_time)}
+                                {" | ID: "}{match?.game_id}
+                            </span>
+                        )}
+                        {(live && (updatedMatchStatus || match?.match_status || match?.status)) && (
+                            <span className="mobile-match-meta-id">ID: {match?.game_id}</span>
+                        )}
                     </div>
 
-                    {(live) &&
-                        <div className="text-[#FFB200] font-bold mx-3" key="25">
-                            <br />
-                            {teamScore((updatedMatchScore || match?.score), true)}
-                            <br />
-                            {teamScore((updatedMatchScore || match?.score), false)}
+                    <div className="mobile-match-mid md:contents">
+                        <div className="col-md-2 col-sm-4 col-xs-12 match-detail-container" key="23">
+                            <Link to={(jackpot) ? '#' : `/match/${live ? 'live/' : ""}` + match?.match_id}>
+                                <div className="d-flex flex-column primary-text">
+                                    <div className="compt-detail overflow-ellipsis" key="0034">
+                                        <small>{match?.category} | {match?.competition_name}</small>
+                                    </div>
+                                    <div className="compt-teams d-flex flex-column" key="0035">
+                                        <div className={'bold'}>
+                                            {match?.home_team}
+
+                                        </div>
+                                        <div className={'bold'}>
+                                            {match?.away_team}
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
                         </div>
-                    }
+
+                        {(live) &&
+                            <div className="text-[#FFB200] font-bold mx-3 mobile-match-score" key="25">
+                                <br className="hidden md:block" />
+                                {teamScore((updatedMatchScore || match?.score), true)}
+                                <br />
+                                {teamScore((updatedMatchScore || match?.score), false)}
+                            </div>
+                        }
+
+                        {((!jackpot && !(updatedLive && !match?.score))) &&
+                            <div className="md:hidden">
+                                <SideBets match={match} live={updatedLive} mobile />
+                            </div>}
+                    </div>
 
                     <div className={`${jackpot && "is-jackpot"} ${live && 'live-game'} matches-row col block ${match?.sport_name?.toLowerCase() == "soccer" ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
-                        {/* Mobile only datetime */}
-
-                        <div className="md:hidden block">
-                            {(live && Date.parse(match?.start_time) > Date.now()) && <div className='w-full float-right font-[500]'><TimeToLiveStarting starttime={match?.start_time} /></div>}
-                            {(live && match?.status) &&
-                                <div className=''>
-                                    <small style={{ color: "red" }}> {match?.match_status} </small>
-                                </div>
-                            }
-                            <div className="">
-                                <span className={'mr-2 small'}>
-                                    {(live && match?.match_time) ?
-                                        <>{`${match.match_time}'`}</> : match?.start_time}
-                                </span>
-                                <span className=''>ID: {match?.game_id}</span>
-                            </div>
+                        <div className="md:hidden mobile-market-bar">
+                            <span>{three_way ? "3 WAY" : (match?.sport_name?.toLowerCase() == "soccer" ? "3 WAY" : "Winner")}</span>
                         </div>
-
 
                         {
                             // Only soccer has 3 markets
@@ -1209,7 +1295,9 @@ const MatchRow = (props) => {
 
                     {/* Jackpot buttons */}
                     {((!jackpot && !(updatedLive && !match?.score))) &&
-                        <SideBets match={match} live={updatedLive} style={{ d: "inline" }} />}
+                        <div className="hidden md:flex align-self-center">
+                            <SideBets match={match} live={updatedLive} style={{ d: "inline" }} />
+                        </div>}
                 </div>
             }
         </>
