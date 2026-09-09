@@ -686,11 +686,17 @@ aside.ps-sidebar-root:focus-visible,
     background: rgba(0, 0, 0, 0.35);
   }
 
-  .mobile-match-card .c-btn-group {
+  /* Keep desktop-only markets (Double Chance, Over/Under) hidden on mobile:
+     they use Tailwind `hidden md:flex`, which loses to display:!important. */
+  .mobile-match-card .c-btn-group:not(.hidden) {
     display: flex !important;
     width: 100%;
     border-radius: 0 0 6px 6px;
     overflow: hidden;
+  }
+
+  .mobile-match-card .c-btn-group.hidden {
+    display: none !important;
   }
 
   .mobile-match-card .c-btn-group>.c-btn,
