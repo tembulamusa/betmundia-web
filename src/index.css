@@ -536,8 +536,12 @@ aside.ps-sidebar-root:focus-visible,
     font-weight: normal;
     color: #ffffff;
     font-size: 12px;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
     overflow: hidden;
+  }
+
+  .matches .top-matches.mobile-match-card:first-of-type {
+    margin-top: 8px;
   }
 
   .matches .top-matches {
@@ -567,7 +571,7 @@ aside.ps-sidebar-root:focus-visible,
     font-size: 11px;
     line-height: 1.3;
     opacity: 0.85;
-    margin-bottom: 8px;
+    margin-bottom: 2px;
   }
 
   .mobile-match-meta-live,
@@ -601,12 +605,13 @@ aside.ps-sidebar-root:focus-visible,
 
   .mobile-match-card .compt-teams {
     text-transform: uppercase;
-    gap: 2px;
+    gap: 0;
   }
 
   .mobile-match-card .compt-teams .bold {
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.15;
   }
 
   .mobile-match-score {
