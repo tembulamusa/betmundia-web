@@ -31,13 +31,13 @@
   box-sizing: border-box;
 }
 
-/* Magenta gradient header */
+/* Solid brand purple header */
 .cdm-header {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.95rem 1rem;
-  background: var(--cdm-pink-deep);
+  background: #a71f66;
   border-bottom: none;
 }
 
