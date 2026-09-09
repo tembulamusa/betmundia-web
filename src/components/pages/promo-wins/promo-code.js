@@ -391,6 +391,9 @@ export function AffiliateShareModal({ show, onHide, promoCode }) {
 export function AffiliateGetCodeModal({ show, onHide, onCreated }) {
     const user = getFromLocalStorage("user");
     const [state, dispatch] = useContext(Context);
+    const [localPromoCode, setLocalPromoCode] = useState(
+        user?.promo_code || null
+    );
     const [generating, setGenerating] = useState(false);
     const [message, setMessage] = useState(null);
     const [createMode, setCreateMode] = useState("custom"); // "custom" | "auto"
@@ -411,6 +414,7 @@ export function AffiliateGetCodeModal({ show, onHide, onCreated }) {
         setAvailability({ state: "idle", text: "" });
         setMessage(null);
     };
+    const promoCode = localPromoCode || user?.promo_code || null;
 
     useEffect(() => {
         if (!show) return;
