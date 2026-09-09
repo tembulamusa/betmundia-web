@@ -3423,7 +3423,7 @@ button.locked-button:hover {
 
   .big-icon-bubble {
     top: 0;
-    left: 14px;
+    left: 80% !important;
     right: auto;
     transform: translate(-50%, calc(-100% - 2px));
     line-height: 1;
@@ -3686,7 +3686,7 @@ button.locked-button:hover {
 .big-icon-bubble {
   position: absolute;
   top: 0;
-  left: 18px;
+  left: 80% !important;
   right: auto;
   transform: translate(-50%, -45%);
   background: #ff3b3b;
