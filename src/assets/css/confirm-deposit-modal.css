@@ -22,13 +22,15 @@
   margin-right: auto;
 }
 
+/* Outer shell: beat tolkits.css `.modal-content { border-radius: 5px !important }` (≥768px)
+   and base `.modal-content { border-radius: 6px }`. */
 .confirm-deposit-modal .modal-content {
   background: var(--cdm-bg);
-  border: 1px solid var(--cdm-border);
-  border-radius: var(--cdm-radius);
+  border: 1px solid var(--cdm-border) !important;
+  border-radius: 4px !important;
   overflow: hidden;
   color: var(--cdm-text);
-  box-shadow: none;
+  box-shadow: none !important;
 }
 
 .confirm-deposit-modal .modal-body {
