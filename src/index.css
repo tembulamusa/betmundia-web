@@ -1618,7 +1618,7 @@ input.std-input::placeholder {
 .betslip-container {
   /* background: #0f0f1f; */
   color: #ffffff;
-  padding-left: 12px;
+  padding-left: 6px;
   padding-right: 7px;
 }
 
@@ -2736,6 +2736,46 @@ h1.std-title {
   -webkit-box-shadow: 0 0 5px -1px rgba(0, 0, 0, .43);
   border-bottom: 1px solid rgba(255, 255, 255, 0.072);
   color: #ffffff;
+}
+
+.login-password-field {
+  position: relative;
+  width: 100%;
+}
+
+.login-password-field__input {
+  padding-right: 2.75rem !important;
+}
+
+.login-password-field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.65rem;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #000000;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.login-password-field__toggle:hover,
+.login-password-field__toggle:focus,
+.login-password-field__toggle:focus-visible {
+  outline: none;
+  color: #000000;
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .border-gray-200 {
