@@ -19,6 +19,8 @@ import Notify from "../utils/Notify";
 import Alert from '../utils/alert';
 import useInterval from '../../hooks/set-interval.hook';
 import socket from '../utils/socket-connect';
+import BongeBonusCard from './bonge-bonus-card';
+import { buildBongeBonusAdvice } from './bonge-bonus-utils';
 const clean_rep = (str) => {
     str = str.replace(/[^A-Za-z0-9\-]/g, '');
     return str.replace(/-+/g, '-');
@@ -30,7 +32,7 @@ const BetSlip = (props) => {
     const [localJPData, setLocalJPData] = useState(jackpotData);
     const [state, dispatch] = useContext(Context);
     const [betslipKey, setBetslipKey] = useState(
-        () => state?.jackpotbetslip ? "jackpotbestslip" : "bestslip"
+        () => (jackpot || state?.isjackpot) ? "jackpotbetslip" : "betslip"
     );
     const [betslipsData, setBetslipsData] = useState({});
     const [hasBetslip, setHasBetslip] = useState(false);
@@ -51,21 +53,24 @@ const BetSlip = (props) => {
 
 
     useEffect(() => {
-        const formerBetslip = betslipsData;
-        let b = (state?.isjackpot)
-            ? getJackpotBetslip()
-            : getBetslip();
+        const useJackpot = Boolean(jackpot);
+        let b = (useJackpot ? getJackpotBetslip() : getBetslip()) || {};
         setBetslipsData(b);
-        if (b) {
+        if (Object.keys(b).length > 0) {
             setHasBetslip(true);
         } else {
             setHasBetslip(false);
         }
-        setIsJackpot(state?.jackpotbetslip != null);
+        setIsJackpot(useJackpot);
         setLocalJPData(state?.jackpotdata);
-        (!state?.betslip && !state?.jackpotbetslip) && dispatch({ type: "SET", key: state?.jackpotbetslip ? "jackpotbetslip" : "betslip", payload: b })
-
-    }, [state?.betslip, state?.jackpotbetslip]);
+        if (!state?.betslip && !state?.jackpotbetslip && Object.keys(b).length > 0) {
+            dispatch({
+                type: "SET",
+                key: useJackpot ? "jackpotbetslip" : "betslip",
+                payload: b,
+            });
+        }
+    }, [state?.betslip, state?.jackpotbetslip, jackpot, dispatch, state?.jackpotdata]);
 
     useEffect(() => {
         if (state[betslipKey]) {
@@ -88,13 +93,18 @@ const BetSlip = (props) => {
 
 
     const setJackpotSlipkey = useCallback(() => {
-        if (state?.jackpotbetslip) {
+        const useJackpot = Boolean(jackpot);
+        if (useJackpot) {
             setBetslipKey("jackpotbetslip");
+            setIsJackpot(true);
+            dispatch({ type: "SET", key: "isjackpot", payload: true });
+            dispatch({ type: "SET", key: "betslipkey", payload: "jackpotbetslip" });
         } else {
-            setBetslipKey("betslip")
+            setBetslipKey("betslip");
+            setIsJackpot(false);
+            dispatch({ type: "SET", key: "betslipkey", payload: "betslip" });
         }
-        dispatch({ type: "SET", key: "isjackpot", payload: is_jackpot })
-    }, [is_jackpot]);
+    }, [jackpot, dispatch]);
 
     useEffect(() => {
         setJackpotSlipkey();
@@ -233,15 +243,20 @@ const BetSlip = (props) => {
         // let odd = slip.odd_value;
 
         // get the entire betslip
-        const [slip, setSlip] = useState({ ...initialSlip, changeOrigin: "main" });
+        const [slip, setSlip] = useState({ ...(initialSlip || {}), changeOrigin: "main" });
         const [slipKey, setKey] = useState();
         // const [slipChangeOrigin, setSlipChangeOrigin] = useState("original")
 
         const checkUpdateSlipChanges = (market, eventOdd) => {
             setSlip((prevSlip) => {
-                let betslips = getBetslip();
+                const betslips =
+                    (betslipKey === "jackpotbetslip"
+                        ? getJackpotBetslip()
+                        : getBetslip()) || {};
 
-                if (!betslips[match_id]) { return false }
+                if (!betslips[match_id]) {
+                    return prevSlip;
+                }
 
                 if (market.sub_type_id == prevSlip.sub_type_id
                     && market.special_bet_value == prevSlip.special_bet_value) {
@@ -332,11 +347,11 @@ const BetSlip = (props) => {
         useEffect(() => {
             connectBetslipToScket();
             const handleSocketData = (data) => {
-                if (Object.keys(data.event_odds).length > 0) {
+                if (Object.keys(data?.event_odds || {}).length > 0) {
                     Object.values(data.event_odds)?.forEach((evodd, ivg) => {
                         checkUpdateSlipChanges(data.match_market, evodd);
                     });
-                } else {
+                } else if (data?.match_market) {
                     checkUpdateSlipChanges(data.match_market, null);
 
                 }
@@ -450,9 +465,17 @@ const BetSlip = (props) => {
                 </li>
             }
             {hasBetslip && <>
-
-                <div className="flow betslip-slips" style={{ maxHeight: "29vh", overflowY: "auto", overflowX: "hidden", paddingRight: "8px" }}>
-                    <ul style={{ paddingRight: "8px", paddingLeft: "8px" }}>
+                {!is_jackpot && (
+                    <BongeBonusCard
+                        advice={buildBongeBonusAdvice(
+                            betslipsData || state?.betslip,
+                            dbWinMatrix || state?.bonusCentages
+                        )}
+                        slipCount={Object.keys(betslipsData || {}).length}
+                    />
+                )}
+                <div className="flow betslip-slips">
+                    <ul className="betslip-slips__list">
                         {Object.entries(betslipsData ?? {}).map(([match_id, slip]) => (<SlipEntry match_id={match_id} initialSlip={slip} />))
                         }
                     </ul>
@@ -460,7 +483,7 @@ const BetSlip = (props) => {
 
             </>
             }
-            <div className="bottom">
+            <div className="bottom betslip-placebet-sticky">
                 <BetslipSubmitForm
                     dbWinMatrix={dbWinMatrix}
                     jackpotData={localJPData}

@@ -32,6 +32,7 @@ import './assets/css/anti-money-laundering-page.css';
 import './assets/css/promo-wins-page.css';
 import './assets/css/account-drawer.css';
 import './assets/css/site-footer.css';
+import './assets/css/mobile-bottom-nav.css';
 import 'react-toastify/dist/ReactToastify.css'
 import Store from './context/store';
 import Index from './components/index';
@@ -52,7 +53,6 @@ import Deposit from './components/pages/deposit-withraw/Deposit';
 import Signup from './components/pages/signup';
 import ResetPassword from './components/pages/auth/reset-password';
 import VerifyAccount from './components/pages/auth/verify-account';
-import MobileApp from './components/pages/app';
 import ProtectedRoute from './components/utils/protected-route';
 import Promotions from './components/pages/promotions/Promotions';
 import FreeBetPage from './components/pages/freebet';
@@ -64,6 +64,7 @@ import LiveScore from './components/pages/livescore/LiveScore';
 import Right from "./components/right/index";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/header";
+import MobileBottomNav from "./components/header/mobile-bottom-nav";
 import Sidebar from "./components/sidebar/awesome/Sidebar";
 import { Context } from './context/store';
 import Logout from "./components/pages/auth/logout";
@@ -124,6 +125,7 @@ const App = () => {
                                     <Route exact path="/casino-game/:provider/:gameName/sure-popular" element={<CasinoLaunchedGame />} />
                                     <Route exact path="/match/live/:id" element={<MatchAllMarkets live />} />
                                     <Route exact path="/match/:id" element={<MatchAllMarkets />} />
+                                    <Route exact path="/jackpots" element={<Jackpot />} />
                                     <Route exact path="/jackpot" element={<Jackpot />} />
                                     <Route exact path="/live" element={<Live />} />
                                     <Route exact path="/live/:spid/" element={<Live />} />
@@ -141,7 +143,6 @@ const App = () => {
                                     <Route exact path="/reset-password" element={<ResetPassword />} />
                                     <Route exact path="/forgot-password" element={<ForgotPassword />} />
                                     <Route exact path="/verify-account" element={<VerifyAccount />} />
-                                    <Route exact path="/app" element={<MobileApp />} />
                                     <Route exact path="/betslip/share/:code" element={<Index />} />
                                     <Route exact path="/logout" element={<Logout />} />
                                     <Route path="/check-deposit-status" element={<CheckDepositStatus />} />
@@ -177,6 +178,7 @@ const App = () => {
                         </div>
                     </div>
                     {!state?.fullcasinoscreen && <Footer />}
+                    <MobileBottomNav />
                 </Suspense>
             </div>
         </BrowserRouter>

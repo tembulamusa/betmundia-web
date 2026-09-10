@@ -26,6 +26,7 @@ import { TbRefreshAlert } from "react-icons/tb";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
+import { resolveBongeBonusPercent } from './bonge-bonus-utils';
 
 const Float = (equation, precision = 4) => {
     return Math.ceil(equation * (10 ** precision)) / (10 ** precision);
@@ -381,8 +382,8 @@ const BetslipSubmitForm = (props) => {
             if (total_games > max_games) {
                 total_games = max_games;
             }
-            let strConstruct = `sgr_bonus_percent_${total_games}`
-            let centageInt = (parseInt(dbWinMatrix[strConstruct]) / 100) || 0;
+            const bonusPercent = resolveBongeBonusPercent(dbWinMatrix, total_games);
+            let centageInt = bonusPercent / 100;
 
             setTotalGames(Object.keys(state?.[betslipkey] || {}).length);
 
@@ -411,7 +412,7 @@ const BetslipSubmitForm = (props) => {
             setNetWin(nw > Float(500000) ? Float(500000) : nw);
             setPossibleWin(Float(raw_possible_win, 2));
             setWithholdingTax(Float(wint, 2));
-            setBonus(Float(raw_possible_win * (dbWinMatrix[strConstruct] / 100), 2) || 0);
+            setBonus(Float(raw_possible_win * centageInt, 2) || 0);
             dispatch({ type: "SET", key: "totalodds", payload: Float(odds) })
             dispatch({ type: "SET", key: "slipnetwin", payload: Float(nw, 2) })
         } else {
@@ -495,10 +496,11 @@ const BetslipSubmitForm = (props) => {
     }
 
     const SubmitButton = (props) => {
-        const { title, disabled, ...rest } = props;
+        const { title, disabled, className = '', ...rest } = props;
         const { isSubmitting } = useFormikContext();
         return (
-            <button type="submit" {...rest} className={`${disabled ? 'disabled' : ''} place-bet-btn bold`}
+            <button type="submit" {...rest}
+                className={`${disabled ? 'disabled' : ''} place-bet-btn bold ${className}`.trim()}
                 id='place_bet_button'
                 disabled={isSubmitting || disabled}>{isSubmitting ? " WAIT ... " : title}</button>
         );
@@ -543,10 +545,10 @@ const BetslipSubmitForm = (props) => {
                 <>
                     {
                         (((Object.keys(state?.betslip || {}) || []).length > 0) || ((Object.keys(state?.jackpotbetslip || {}) || []).length > 0) || (message?.status)) &&
-                        <FormikForm name="betslip-submit-form">
+                        <FormikForm name="betslip-submit-form" className="betslip-submit-form">
                             {<div className='mx-auto w-[95%]'><Alert /></div>}
-                            <div className='uppercase'>
-                                <table className="bet-table !p-3 border-t border-gray-200 m-auto" style={{ width: "96%", borderTopColor: 'rgba(255, 255, 255, 0.15)' }}>
+                            <div className='betslip-submit-panel uppercase'>
+                                <table className="bet-table betslip-submit-layer !p-3 border-t border-gray-200 m-auto" style={{ width: "96%", borderTopColor: 'rgba(255, 255, 255, 0.15)' }}>
                                     <tbody>
                                         {!jackpot && <tr className="hide-on-affix">
                                             <td className='opacity-60 py-3'>TOTAL ODDS</td>
@@ -640,7 +642,7 @@ const BetslipSubmitForm = (props) => {
                                 {/* the betslip form bottom */}
 
 
-                                <table width={100} className='betslip-placebet-section py-3' style={{ fontWeight: "500", paddingRight: "10px" }}>
+                                <table width={100} className='betslip-placebet-section betslip-submit-layer py-3' style={{ fontWeight: "500", paddingRight: "10px" }}>
                                     <tbody>
                                         {jackpot ? (
                                             ''
@@ -660,18 +662,18 @@ const BetslipSubmitForm = (props) => {
                                             <td className='px-3 text-right py-2'>KSH. <span
                                                 id="net-amount">{formatNumber(jackpot ? jackpotData?.jackpot_amount : parseFloat((netWin + bonus)).toFixed(2))}</span></td>
                                         </tr>
-                                        <tr>
-                                            <td className='w-1/2 px-3 py-3'>
-                                                <button className="place-bet-btn"
+                                        <tr className="betslip-action-row">
+                                            <td className="betslip-action-row__cell">
+                                                <button className="place-bet-btn betslip-action-btn betslip-action-btn--remove"
                                                     type="button"
                                                     onClick={() => handleRemoveAll()}>REMOVE ALL
                                                 </button>
                                             </td>
-                                            <td className='px-3 py-3'>
+                                            <td className="betslip-action-row__cell">
                                                 {(!jackpot || (jackpot && Object.entries(state?.[betslipkey] || []).length == JSON.stringify(jackpotData?.total_games))) &&
                                                     <SubmitButton id="place_bet_button"
                                                         disabled={jackpot && Object.entries(state?.[betslipkey] || []).length != JSON.stringify(jackpotData?.total_games)}
-                                                        className="place-bet-btn bold"
+                                                        className="place-bet-btn bold betslip-action-btn betslip-action-btn--place"
                                                         title="PLACE BET"
                                                     />
                                                 }

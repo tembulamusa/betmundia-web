@@ -1,0 +1,15 @@
+node_modules
+build
+.git
+.cursor
+.idea
+coverage
+*.md
+.env
+.env.*
+!.env.docker
+npm-debug.log*
+yarn-error.log*
+package.json.old
+Aviatrix.svg
+src/Ansible

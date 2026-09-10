@@ -4,11 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../context/store";
 
 import { IoMdLogOut } from "react-icons/io";
-import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins, FaInfoCircle, FaPlus } from "react-icons/fa";
+import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins, FaInfoCircle, FaPlus, FaShareAlt } from "react-icons/fa";
 import { IoListCircleOutline, IoWalletOutline } from "react-icons/io5";
 import { MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
 
 import ComingSoon from "../pages/comingsoon/ComingSoon";
+import {
+  AffiliateGetCodeModal,
+  AffiliateShareModal,
+} from "../pages/promo-wins/promo-code";
 import { formatToFloat } from "../utils/formatters";
 import makeRequest from "../utils/fetch-request";
 import {
@@ -47,7 +51,7 @@ function resolveAffiliateBalance(source) {
 }
 
 function MobileMenu(props) {
-  const { user } = props;
+  const { user, showLabel = false } = props;
 
   const [show, setShow] = useState(false);
   const [state, dispatch] = useContext(Context);
@@ -58,10 +62,18 @@ function MobileMenu(props) {
     user?.promo_code || null
   );
   const [affiliateBalance, setAffiliateBalance] = useState(null);
-  const [generatingCode, setGeneratingCode] = useState(false);
+  const [showGetCodeModal, setShowGetCodeModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  useEffect(() => {
+    if (state?.showaccountdrawer) {
+      setShow(true);
+      dispatch({ type: "DEL", key: "showaccountdrawer" });
+    }
+  }, [state?.showaccountdrawer, dispatch]);
 
   const closeThen = (fn) => () => {
     setShow(false);
@@ -91,12 +103,14 @@ function MobileMenu(props) {
     );
   }, [show, user]);
 
-  const persistAffiliateCode = (code) => {
+  const handleCodeCreated = (code) => {
     setAffiliateCode(code);
+    // AffiliateGetCodeModal already persists user.promo_code; keep local drawer state in sync.
     const storedUser = getFromLocalStorage("user") || user || {};
-    const updatedUser = { ...storedUser, promo_code: code };
-    setLocalStorage("user", updatedUser);
-    if (state?.user) {
+    if (storedUser?.promo_code !== code) {
+      setLocalStorage("user", { ...storedUser, promo_code: code });
+    }
+    if (state?.user && state.user.promo_code !== code) {
       dispatch({
         type: "SET",
         key: "user",
@@ -105,41 +119,33 @@ function MobileMenu(props) {
     }
   };
 
-  const handleGenerateAffiliateCode = (e) => {
+  const openGetCodeModal = (e) => {
     e?.stopPropagation?.();
-    if (generatingCode) return;
-    setGeneratingCode(true);
+    e?.preventDefault?.();
+    setShowGetCodeModal(true);
+  };
 
-    makeRequest({
-      url: "/user/promo-code",
-      method: "POST",
-      api_version: 2,
-    }).then(([status, response]) => {
-      setGeneratingCode(false);
-      const code =
-        response?.promo_code ||
-        response?.data?.promo_code ||
-        response?.code;
-
-      if ((status === 200 || status === 201) && code) {
-        persistAffiliateCode(code);
-        const bal = resolveAffiliateBalance(response?.data ?? response);
-        if (bal != null) setAffiliateBalance(bal);
-      }
-    });
+  const openShareModal = (e) => {
+    e?.stopPropagation?.();
+    e?.preventDefault?.();
+    if (!affiliateCode) return;
+    setShowShareModal(true);
   };
 
   const handleAffiliateSectionClick = () => {
     if (!affiliateCode) {
-      handleGenerateAffiliateCode();
+      setShowGetCodeModal(true);
       return;
     }
     setShow(false);
     navigate("/affiliate");
   };
 
-  const hasAffiliateBalance =
-    affiliateBalance != null && Number(affiliateBalance) > 0;
+  const affiliateBalanceDisplay = formatToFloat(
+    affiliateBalance != null && Number.isFinite(Number(affiliateBalance))
+      ? Number(affiliateBalance)
+      : 0
+  );
 
   return (
     <span className="inline-block" style={{ height: "auto" }}>
@@ -149,7 +155,9 @@ function MobileMenu(props) {
       >
         <FaRegUser className="inline-block user-profile-icon" />
         {user ? (
-          <span className="user-profile-text hidden d-md-inline">Account</span>
+          <span className={`user-profile-text${showLabel ? "" : " hidden d-md-inline"}`}>
+            Account
+          </span>
         ) : (
           <span></span>
         )}
@@ -160,7 +168,6 @@ function MobileMenu(props) {
         show={show}
         onHide={handleClose}
         className="account-drawer"
-        style={{ height: "auto" }}
       >
         <Offcanvas.Body className="account-drawer-body">
           <div className="account-drawer-header">
@@ -261,37 +268,72 @@ function MobileMenu(props) {
               aria-label={
                 affiliateCode
                   ? "Open affiliate page"
-                  : "Generate affiliate code"
+                  : "Get your affiliate code"
               }
             >
               <div className="account-drawer-wallet-grid">
                 <div className="account-drawer-affiliate-code-wrap">
                   <p className="account-drawer-wallet-main-label">Code</p>
                   {affiliateCode ? (
-                    <p className="account-drawer-affiliate-code">{affiliateCode}</p>
+                    <div className="account-drawer-affiliate-code-row">
+                      <button
+                        type="button"
+                        className="account-drawer-affiliate-code"
+                        onClick={openShareModal}
+                        aria-haspopup="dialog"
+                        aria-label={`Share affiliate code ${affiliateCode}`}
+                      >
+                        {affiliateCode}
+                      </button>
+                      <button
+                        type="button"
+                        className="account-drawer-affiliate-share"
+                        onClick={openShareModal}
+                        aria-haspopup="dialog"
+                      >
+                        <FaShareAlt aria-hidden="true" />
+                        Share
+                      </button>
+                    </div>
                   ) : (
                     <button
                       type="button"
                       className="account-drawer-affiliate-generate"
-                      disabled={generatingCode}
-                      onClick={handleGenerateAffiliateCode}
+                      onClick={openGetCodeModal}
                     >
                       <FaPlus aria-hidden="true" />
-                      {generatingCode ? "Generating…" : "Generate code"}
+                      Generate code
                     </button>
                   )}
                 </div>
                 <div className="account-drawer-wallet-divider" aria-hidden="true" />
                 <div className="account-drawer-affiliate-bal">
-                  <p className="account-drawer-wallet-main-label">
-                    Affiliate balance
+                  <p className="account-drawer-affiliate-bal-amount">
+                    <span className="account-drawer-affiliate-bal-prefix">
+                      Balance:
+                    </span>{" "}
+                    {affiliateBalanceDisplay}
                   </p>
-                  {hasAffiliateBalance ? (
-                    <p className="account-drawer-affiliate-bal-amount">
-                      KSh {formatToFloat(affiliateBalance)}
-                    </p>
+                  {affiliateCode ? (
+                    <button
+                      type="button"
+                      className="account-drawer-affiliate-cta"
+                      onClick={openShareModal}
+                      aria-haspopup="dialog"
+                    >
+                      <FaShareAlt aria-hidden="true" />
+                      Promote
+                    </button>
                   ) : (
-                    <p className="account-drawer-affiliate-join">join to earn</p>
+                    <button
+                      type="button"
+                      className="account-drawer-affiliate-cta"
+                      onClick={openGetCodeModal}
+                      aria-haspopup="dialog"
+                    >
+                      <FaPlus aria-hidden="true" />
+                      Join
+                    </button>
                   )}
                 </div>
               </div>
@@ -328,7 +370,7 @@ function MobileMenu(props) {
                 <span className="account-drawer-item-icon" aria-hidden="true">
                   <IoListCircleOutline />
                 </span>
-                <span className="account-drawer-item-label">My Bets</span>
+                <span className="account-drawer-item-label">Bet History</span>
                 <FaChevronRight className="account-drawer-chevron" aria-hidden="true" />
               </Link>
 
@@ -424,6 +466,17 @@ function MobileMenu(props) {
           />
         </Offcanvas.Body>
       </Offcanvas>
+
+      <AffiliateGetCodeModal
+        show={showGetCodeModal}
+        onHide={() => setShowGetCodeModal(false)}
+        onCreated={handleCodeCreated}
+      />
+      <AffiliateShareModal
+        show={showShareModal}
+        onHide={() => setShowShareModal(false)}
+        promoCode={affiliateCode}
+      />
     </span>
   );
 }

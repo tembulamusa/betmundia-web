@@ -172,7 +172,7 @@ const CarouselLoader = (props) => {
             </Carousel.Item> */}
 
             {/* <Carousel.Item >
-                <Link to={"/jackpot"}>
+                <Link to={"/jackpots"}>
                     <img
                         className="d-block w-100"
                         style={{ display: imageLoaded ? 'block' : 'none' }}

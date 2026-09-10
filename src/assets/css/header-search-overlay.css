@@ -310,7 +310,7 @@
   display: block;
 }
 
-/* Mobile (≤1199.98px): same 44×44 box + 34×34 chip as search in tools row */
+/* Mobile (≤1199.98px): same 44×44 box + 34×28 chip in tools row */
 @media (max-width: 1199.98px) {
   .header-affiliate-trigger,
   .mobile-top-bar__tools .header-affiliate-trigger {
@@ -326,7 +326,8 @@
   .header-affiliate-trigger__icon,
   .mobile-top-bar__tools .header-affiliate-trigger__icon {
     width: 34px;
-    height: 34px;
+    height: 28px;
+    border-radius: 4px;
     background: #a71f66;
   }
 }

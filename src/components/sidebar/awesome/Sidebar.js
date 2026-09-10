@@ -1,12 +1,9 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react';
 import {
-    ProSidebar as ProSidebar2,
     Sidebar,
     Menu,
     MenuItem,
     SubMenu,
-    SidebarHeader,
-    //SidebarContent 
 } from 'react-pro-sidebar';
 
 //import 'react-pro-sidebar/dist/css/styles.css';
@@ -237,7 +234,7 @@ const ProSidebar = (props) => {
                         zIndex: 10,
                         top: "100px"
                     }}
-                        className={`vh-100 sticky-top d-none d-md-block up col-md-2 pr-[12px]`}>
+                        className={`vh-100 sticky-top d-none d-md-block up col-md-2 pr-[6px]`}>
 
                         {!competitions &&
                             <>All Sports</>

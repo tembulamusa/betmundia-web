@@ -12,17 +12,52 @@
     background: rgba(0, 12, 36, 1);
   }
 
+  .mobile-top-bar__app-promo-row {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    background: #f5c518;
+  }
+
   .mobile-top-bar__app-promo {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.65rem;
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
     min-height: 44px;
-    padding: 0.55rem 1.1rem;
+    padding: 0.55rem 0.75rem 0.55rem 1.1rem;
     background: #f5c518;
     color: #000000;
     text-decoration: none;
+  }
+
+  .mobile-top-bar__app-promo-dismiss {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #000000;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-top-bar__app-promo-dismiss:hover,
+  .mobile-top-bar__app-promo-dismiss:focus,
+  .mobile-top-bar__app-promo-dismiss:focus-visible,
+  .mobile-top-bar__app-promo-dismiss:active {
+    background: #ffd84d;
+    color: #000000;
+    outline: none !important;
+    box-shadow: none !important;
   }
 
   .mobile-top-bar__app-promo:hover,
@@ -83,9 +118,36 @@
     padding: 0.35rem 0.5rem;
   }
 
-  /* Logged-out: Login + Register fill the auth row evenly */
+  /* Logged-in: Balance + Deposit + Withdraw + Account as one cohesive cluster */
+  .mobile-top-bar__auth-bar:has(.mobile-top-bar__wallet) {
+    justify-content: flex-end;
+    min-height: 52px;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .mobile-top-bar__wallet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex: 0 1 auto;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .mobile-top-bar__wallet-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  /* Logged-out: Login + Register cluster on the right */
   .mobile-top-bar__auth-bar:has(.mobile-top-bar__auth) {
-    justify-content: stretch;
+    justify-content: flex-end;
     min-height: 48px;
     padding: 0.35rem 0.5rem 0.4rem;
   }
@@ -111,56 +173,77 @@
   .mobile-top-bar__balance {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    line-height: 1.1;
+    align-items: flex-start;
+    justify-content: center;
+    line-height: 1;
     min-width: 0;
+    flex: 0 0 auto;
   }
 
   .mobile-top-bar__balance-label {
-    font-size: 0.62rem;
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.04em;
+    line-height: 1.1;
     color: rgba(255, 255, 255, 0.55);
     text-transform: uppercase;
   }
 
+  /* ~1.5× original 0.82rem — prominent but fits the wallet cluster */
   .mobile-top-bar__balance-value {
-    font-size: 0.82rem;
+    font-size: 1.25rem;
     font-weight: 700;
+    line-height: 1.05;
     color: #f5c518;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 72px;
+    max-width: 100%;
   }
 
-  .mobile-top-bar__deposit {
+  /*
+   * Restore Deposit to original .sportpesa-deposit-btn size (tolkits.css).
+   * mobile-top-bar.css loads after tolkits and previously overrode it smaller
+   * (0.68rem / 30px) — that was wrong. Withdraw uses the same dimensions.
+   */
+  .mobile-top-bar__deposit,
+  .mobile-top-bar__deposit.sportpesa-deposit-btn,
+  .mobile-top-bar__withdraw,
+  .mobile-top-bar__withdraw.sportpesa-withdraw-btn {
     display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    min-height: 30px !important;
-    padding: 0.2rem 0.55rem !important;
-    font-size: 0.68rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    white-space: nowrap;
-    border-radius: 4px !important;
-    text-decoration: none;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    box-sizing: border-box;
+    min-height: 32px !important;
+    height: auto !important;
+    padding: 6px 14px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    border-radius: 6px !important;
+    text-decoration: none !important;
+    /* Equal width: fit "Withdraw" at restored type — do not shrink Deposit */
+    /* min-width: 6.75rem; */
+    /* width: 6.75rem; */
   }
 
   .mobile-top-bar__deposit .deposit-coins-icon {
-    font-size: 0.75rem;
+    font-size: 0.95em;
   }
 
   .mobile-top-bar__auth.header-login-links {
     display: flex;
     align-items: stretch;
+    justify-content: flex-end;
     gap: 0.5rem;
-    flex: 1 1 auto;
-    width: 100%;
-    margin: 0;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+    margin: 0 0 0 auto;
   }
 
   .mobile-top-bar__auth.header-login-links .top-item {
@@ -169,13 +252,13 @@
     margin-right: 0 !important;
   }
 
-  /* Wider tap targets — flex to fill row, min 120px each */
+  /* Fixed tap targets — 120px each, right-aligned as a pair */
   .mobile-top-bar__auth.header-login-links .top-login-btn {
-    flex: 1 1 0;
+    flex: 0 0 120px;
     min-width: 120px;
-    width: auto !important;
+    width: 120px !important;
     min-height: 36px !important;
-    max-width: none !important;
+    max-width: 120px !important;
     padding: 0.4rem 0.85rem !important;
     font-size: 1.125rem;
     font-weight: 700;
@@ -190,9 +273,9 @@
 
   .mobile-top-bar__auth.header-login-links .top-login-btn.red-bg,
   .mobile-top-bar__auth.header-login-links .top-login-btn.register-btn-purple {
-    width: auto !important;
+    width: 120px !important;
     min-width: 120px;
-    max-width: none !important;
+    max-width: 120px !important;
     padding-left: 0.85rem !important;
     padding-right: 0.85rem !important;
   }
@@ -237,6 +320,9 @@
   .mobile-top-bar .mobile-top-bar__deposit:focus,
   .mobile-top-bar .mobile-top-bar__deposit:focus-visible,
   .mobile-top-bar .mobile-top-bar__deposit:active,
+  .mobile-top-bar .mobile-top-bar__withdraw:focus,
+  .mobile-top-bar .mobile-top-bar__withdraw:focus-visible,
+  .mobile-top-bar .mobile-top-bar__withdraw:active,
   .mobile-top-bar .mobile-top-bar__logo:focus,
   .mobile-top-bar .mobile-top-bar__logo:focus-visible,
   .mobile-top-bar .mobile-top-bar__logo:active {
@@ -269,8 +355,11 @@
   }
 
   .mobile-top-bar__tools .header-search-float__trigger-icon {
+    box-sizing: border-box;
     width: 34px;
-    height: 34px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid #a71f66;
   }
 
   /* Affiliate: match search trigger box + icon chip (more opaque chip) */
@@ -287,15 +376,17 @@
 
   .mobile-top-bar__tools .header-affiliate-trigger__icon {
     width: 34px;
-    height: 34px;
-    border-radius: 7px;
+    height: 28px;
+    border-radius: 4px;
     background: #a71f66;
     color: #fff;
   }
 
   .mobile-top-bar__tools .mobile-chat-button--inline {
-    min-height: 40px;
-    padding: 0.4rem 0.7rem;
+    box-sizing: border-box;
+    height: 28px;
+    min-height: 28px;
+    padding: 0 0.7rem;
     font-size: 0.9rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -304,17 +395,30 @@
   }
 
   .mobile-top-bar__account .user-profile {
+    box-sizing: border-box;
+    display: inline-flex !important;
     flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
     gap: 0 !important;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0 !important;
+    border-radius: 50%;
+    border: 1.5px solid var(--pw-brand, #a71f66);
+    background: var(--pw-brand, #a71f66);
+    color: #fff;
   }
 
   .mobile-top-bar__account .user-profile-icon {
-    width: 30px !important;
-    height: 30px !important;
-    padding: 5px !important;
+    width: 14px !important;
+    height: 14px !important;
+    padding: 0 !important;
     margin: 0 !important;
-    border-radius: 6px;
-    background: rgba(167, 31, 102, 0.22);
+    border-radius: 0;
+    background: transparent;
     color: #fff;
   }
 
@@ -380,10 +484,19 @@
 
   /* Extra clearance below taller mobile header (promo + brand + auth + icon nav) */
   .amt {
-    margin-top: 188px !important;
+    margin-top: 200px !important;
   }
 
   .no-big-icon-nav .amt {
-    margin-top: 130px !important;
+    margin-top: 142px !important;
+  }
+
+  /* Promo strip (~44px) dismissed — pull main content up to fill the gap */
+  body.app-promo-dismissed .amt {
+    margin-top: 150px !important;
+  }
+
+  body.app-promo-dismissed .no-big-icon-nav .amt {
+    margin-top: 98px !important;
   }
 }

@@ -22,8 +22,17 @@ import { Context } from "../../context/store";
 import DefaultImg from "../../assets/img/colorsvgicons/soccer.svg";
 import logo from "../../assets/img/logo.svg";
 import bonanzaTrophyHero from "../../assets/img/bonanza-trophy-hero.svg";
+import useMobileViewport from "../../hooks/use-mobile-viewport";
+import { ANDROID_PLAY_STORE_URL, getAppDownloadTarget } from "../utils/app-download";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 import { openLoginWithRedirect } from "../utils/login-redirect";
+import {
+    JACKPOT_PATH,
+    getJackpotTypes,
+    jackpotsPathWithType,
+    refreshJackpotTypes,
+    typeParamValue,
+} from "../utils/jackpot-data";
 
 const EXCLUDED_PROVIDERS = ["unicraft"];
 
@@ -36,9 +45,39 @@ const BigIconMenu = () => {
     const [categories, setCategories] = useState([]);
     const [casinoProviders, setCasinoProviders] = useState([]);
     const [showBonanza, setShowBonanza] = useState(false);
+    const [appDownloadHref, setAppDownloadHref] = useState(ANDROID_PLAY_STORE_URL);
+    const isMobileViewport = useMobileViewport();
     const navigate = useNavigate();
     const loc = useLocation();
 
+    const handleJackpotsNavClick = (event) => {
+        // Refresh types on every jackpots menu click; set URL to first type when needed.
+        event.preventDefault();
+        void (async () => {
+            const types = await refreshJackpotTypes(dispatch);
+            const list = types?.length ? types : getJackpotTypes(state);
+            const onJackpots =
+                pathname === JACKPOT_PATH || pathname === "/jackpot";
+            const existing = new URLSearchParams(loc.search).get("type");
+            const existingValid =
+                existing &&
+                list.some((item) =>
+                    [item?.jackpot_type, item?.type, item?.slug, item?.key]
+                        .filter(Boolean)
+                        .some((v) => String(v) === String(existing))
+                );
+
+            if (onJackpots && existingValid) {
+                navigate(jackpotsPathWithType(existing));
+                return;
+            }
+
+            const first = list?.[0];
+            navigate(
+                first ? jackpotsPathWithType(typeParamValue(first)) : JACKPOT_PATH
+            );
+        })();
+    };
     const handleBonanzaOpen = () => setShowBonanza(true);
     const handleBonanzaClose = () => setShowBonanza(false);
     const userRowRef = useRef(null);
@@ -130,7 +169,7 @@ const BigIconMenu = () => {
     const linkItems = [
         // { name: "world cup", icon: "world cup.svg", link: "/sports/competition/matches?id=18585", parentTo: null, bubble: "HOT" },
         { name: "live", icon: "livescore.svg", link: "/live", parentTo: null },
-        { name: "jackpot", icon: "jackpot.svg", link: "/jackpot", parentTo: null },
+        { name: "jackpots", icon: "jackpot.svg", link: JACKPOT_PATH, parentTo: null, bubble: "HOT" },
         { name: "affiliate", icon: "affiliate.svg", link: "/affiliate", parentTo: null, bubble: "HOT" },
         { name: "aviator", icon: "aviator.svg", link: "/casino-game/spribe/aviator", parentTo: null, bubble: "HOT" },
         { name: "jet x", icon: "jetx.svg", link: "/casino-game/smartsoft/jetx", parentTo: null, bubble: "new" },
@@ -145,8 +184,15 @@ const BigIconMenu = () => {
         // { name: "sports", icon: "sports.svg", link: '/sports', parentTo: "sportscategories" },
         // {name: "virtuals", icon:"virtuals.svg", link:"/virtuals", parentTo:null},
         { name: "promotions", icon: "promos.svg", link: "/promotions", parentTo: null },
-        // { name: "app", icon: "app.svg", link: "/app", parentTo: null },
-        { name: "livescore", icon: "livescore.svg", link: "https://statshub.sportradar.com/betmundialsmts/en/sport/1/tournament/17", parentTo: null },
+        {
+            name: "app",
+            icon: "app.svg",
+            link: appDownloadHref,
+            parentTo: null,
+            external: true,
+            mobileOnly: true,
+        },
+        { name: "livescore", icon: "livescore.svg", link: "https://statshub.sportradar.com/betmundialsmts/en/sport/1/tournament/17", parentTo: null, external: true },
         // {name: "basketball", icon:"basketball.svg", link:"/#basketball", parentTo:null},
         // {name: "cricket", icon:"cricket.svg", link:"/#cricket", parentTo:null},
         // {name: "tennis", icon:"tennis.svg", link:"/#tennis", parentTo:null},       
@@ -294,6 +340,10 @@ const BigIconMenu = () => {
         const refCurrent = scrollContainerRef.current;
         refCurrent?.addEventListener('scroll', handleScroll);
         return () => refCurrent?.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        setAppDownloadHref(getAppDownloadTarget().href);
     }, []);
 
     useEffect(() => {
@@ -544,9 +594,18 @@ const BigIconMenu = () => {
                             <div className="big-icon-name">{"Home"}</div>
                         </a>
                     </li>
-                    {(linkItems || []).map((item, idx) => {
-                        const isActive = item.link && pathname === item.link;
-                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative`;
+                    {(linkItems || [])
+                        .filter((item) => !item.mobileOnly || isMobileViewport)
+                        .map((item, idx) => {
+                        const isActive = item.link && !item.external && (
+                            item.link === JACKPOT_PATH
+                                ? (pathname === JACKPOT_PATH ||
+                                    pathname === "/jackpot" ||
+                                    pathname.startsWith(`${JACKPOT_PATH}/`) ||
+                                    pathname.startsWith("/jackpot/"))
+                                : pathname === item.link
+                        );
+                        const itemClasses = `${isActive ? "active" : ''} big-icon-item text-left capitalize relative${item.mobileOnly ? ' big-icon-item--mobile-only' : ''}`;
                         const iconContent = item.icon ? (
                             <img className="mx-auto" src={getSportImageIcon(item.icon)} alt={item.name} />
                         ) : (
@@ -569,37 +628,40 @@ const BigIconMenu = () => {
 
                         return (
                             <li key={idx} className={itemClasses}>
-                                {item?.name.toLowerCase() === "livescore" ? (
+                                {item?.external ? (
                                     <a href={item.link} title={item.name} target="_blank" rel="noopener noreferrer" className="big-icon-link">
-                                        <div className="big-icon-icon relative">
+                                        <div className="big-icon-icon">
                                             {iconContent}
-
-                                            {item?.bubble && (
-                                                <span className="big-icon-bubble">
-                                                    {item.bubble}
-                                                </span>
-                                            )}
                                         </div>
-
                                         <div className="big-icon-name">{item.name}</div>
+                                        {item?.bubble && (
+                                            <span className="big-icon-bubble">
+                                                {item.bubble}
+                                            </span>
+                                        )}
                                     </a>
                                 ) : (
                                     <Link
                                         to={item.link}
                                         title={item.name}
                                         className="big-icon-link"
-                                        onClick={item?.name?.toLowerCase() === "affiliate" ? openAffiliate : undefined}
+                                        onClick={
+                                            item?.name?.toLowerCase() === "affiliate"
+                                                ? openAffiliate
+                                                : item?.name?.toLowerCase() === "jackpots"
+                                                    ? handleJackpotsNavClick
+                                                    : undefined
+                                        }
                                     >
-                                        <div className="big-icon-icon relative">
+                                        <div className="big-icon-icon">
                                             {iconContent}
-
-                                            {item?.bubble && (
-                                                <span className="big-icon-bubble">
-                                                    {item.bubble}
-                                                </span>
-                                            )}
                                         </div>
                                         <div className="big-icon-name">{item.name}</div>
+                                        {item?.bubble && (
+                                            <span className="big-icon-bubble">
+                                                {item.bubble}
+                                            </span>
+                                        )}
                                     </Link>
                                 )}
                             </li>

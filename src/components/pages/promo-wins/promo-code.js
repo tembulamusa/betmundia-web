@@ -385,13 +385,10 @@ export function AffiliateShareModal({ show, onHide, promoCode }) {
     );
 }
 
-const PromoCode = ({
-    commissions,
-    isLoading,
-    onPromoCodeChange,
-    openCustomizeSignal = 0,
-    onOpenShare,
-}) => {
+/**
+ * Get-code modal (Custom / Autogenerate). Shared by Affiliate page and account drawer.
+ */
+export function AffiliateGetCodeModal({ show, onHide, onCreated }) {
     const user = getFromLocalStorage("user");
     const [state, dispatch] = useContext(Context);
     const [localPromoCode, setLocalPromoCode] = useState(
@@ -399,8 +396,6 @@ const PromoCode = ({
     );
     const [generating, setGenerating] = useState(false);
     const [message, setMessage] = useState(null);
-    const [showTerms, setShowTerms] = useState(false);
-    const [showCustomize, setShowCustomize] = useState(false);
     const [createMode, setCreateMode] = useState("custom"); // "custom" | "auto"
     const [customCode, setCustomCode] = useState("");
     const [availability, setAvailability] = useState({
@@ -410,21 +405,22 @@ const PromoCode = ({
 
     const checkTimerRef = useRef(null);
     const checkSeqRef = useRef(0);
-    const lastCustomizeSignalRef = useRef(openCustomizeSignal);
 
-    useEffect(() => {
-        if (commissions?.promo_code) {
-            setLocalPromoCode(commissions.promo_code);
-        }
-    }, [commissions]);
-
+    const resetCustomizeForm = () => {
+        if (checkTimerRef.current) clearTimeout(checkTimerRef.current);
+        checkSeqRef.current += 1;
+        setCreateMode("custom");
+        setCustomCode("");
+        setAvailability({ state: "idle", text: "" });
+        setMessage(null);
+    };
     const promoCode = localPromoCode || user?.promo_code || null;
 
     useEffect(() => {
-        if (typeof onPromoCodeChange === "function") {
-            onPromoCodeChange(promoCode);
-        }
-    }, [promoCode, onPromoCodeChange]);
+        if (!show) return;
+        resetCustomizeForm();
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- reset when opened
+    }, [show]);
 
     useEffect(() => {
         return () => {
@@ -432,25 +428,7 @@ const PromoCode = ({
         };
     }, []);
 
-    useEffect(() => {
-        if (!openCustomizeSignal) return;
-        if (openCustomizeSignal === lastCustomizeSignalRef.current) return;
-        lastCustomizeSignalRef.current = openCustomizeSignal;
-        if (promoCode) return;
-        if (checkTimerRef.current) clearTimeout(checkTimerRef.current);
-        checkSeqRef.current += 1;
-        setCreateMode("custom");
-        setCustomCode("");
-        setAvailability({ state: "idle", text: "" });
-        setMessage(null);
-        setShowCustomize(true);
-    }, [openCustomizeSignal, promoCode]);
-
-    const referrals = resolveReferralCount(commissions);
-    const totalEarnings = resolveTotalEarnings(commissions);
-
     const persistPromoCode = (code) => {
-        setLocalPromoCode(code);
         const updatedUser = { ...(user || {}), promo_code: code };
         setLocalStorage("user", updatedUser);
         if (state?.user) {
@@ -462,23 +440,9 @@ const PromoCode = ({
         }
     };
 
-    const resetCustomizeForm = () => {
-        if (checkTimerRef.current) clearTimeout(checkTimerRef.current);
-        checkSeqRef.current += 1;
-        setCreateMode("custom");
-        setCustomCode("");
-        setAvailability({ state: "idle", text: "" });
-        setMessage(null);
-    };
-
-    const openCustomizeForm = () => {
-        resetCustomizeForm();
-        setShowCustomize(true);
-    };
-
     const closeCustomizeForm = () => {
         if (generating) return;
-        setShowCustomize(false);
+        if (typeof onHide === "function") onHide();
         resetCustomizeForm();
     };
 
@@ -512,7 +476,6 @@ const PromoCode = ({
 
     const scheduleAvailabilityCheck = (value) => {
         if (checkTimerRef.current) clearTimeout(checkTimerRef.current);
-        // Invalidate any in-flight check as soon as input changes
         checkSeqRef.current += 1;
 
         const code = normalizeSuggestedCode(value);
@@ -590,9 +553,9 @@ const PromoCode = ({
 
             if ((status === 200 || status === 201) && created) {
                 persistPromoCode(created);
-                setShowCustomize(false);
+                if (typeof onCreated === "function") onCreated(created);
+                if (typeof onHide === "function") onHide();
                 resetCustomizeForm();
-                setMessage({ type: "success", text: "Affiliate code created." });
             } else {
                 setMessage({
                     type: "error",
@@ -618,6 +581,240 @@ const PromoCode = ({
                 }
             }
         });
+    };
+
+    return (
+        <Modal
+            show={show}
+            onHide={closeCustomizeForm}
+            centered
+            className="promo-wins-customize-modal"
+            contentClassName="promo-wins-customize-modal-content"
+        >
+            <Modal.Header closeButton closeVariant="white">
+                <Modal.Title>Get your affiliate code</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div
+                    className="promo-wins-create-mode"
+                    role="tablist"
+                    aria-label="Code creation mode"
+                >
+                    <button
+                        type="button"
+                        role="tab"
+                        id="affiliate-mode-custom"
+                        aria-selected={createMode === "custom"}
+                        aria-controls="affiliate-mode-panel"
+                        className={`promo-wins-create-mode-btn${
+                            createMode === "custom"
+                                ? " promo-wins-create-mode-btn--active"
+                                : ""
+                        }`}
+                        onClick={() => switchCreateMode("custom")}
+                        disabled={generating}
+                    >
+                        Custom
+                    </button>
+                    <button
+                        type="button"
+                        role="tab"
+                        id="affiliate-mode-auto"
+                        aria-selected={createMode === "auto"}
+                        aria-controls="affiliate-mode-panel"
+                        className={`promo-wins-create-mode-btn${
+                            createMode === "auto"
+                                ? " promo-wins-create-mode-btn--active"
+                                : ""
+                        }`}
+                        onClick={() => switchCreateMode("auto")}
+                        disabled={generating}
+                    >
+                        Autogenerate
+                    </button>
+                </div>
+
+                <div
+                    id="affiliate-mode-panel"
+                    role="tabpanel"
+                    aria-labelledby={
+                        createMode === "auto"
+                            ? "affiliate-mode-auto"
+                            : "affiliate-mode-custom"
+                    }
+                >
+                    {createMode === "custom" ? (
+                        <>
+                            <label
+                                className="promo-wins-customize-label"
+                                htmlFor="affiliate-custom-code"
+                            >
+                                Customize code
+                            </label>
+                            <input
+                                id="affiliate-custom-code"
+                                type="text"
+                                className={`promo-wins-customize-input${
+                                    availability.state === "taken" ||
+                                    availability.state === "invalid"
+                                        ? " promo-wins-customize-input--error"
+                                        : ""
+                                }${
+                                    availability.state === "available"
+                                        ? " promo-wins-customize-input--ok"
+                                        : ""
+                                }`}
+                                placeholder="moses-tembula"
+                                value={customCode}
+                                onChange={handleCustomCodeChange}
+                                onBlur={handleCustomCodeBlur}
+                                autoComplete="off"
+                                autoCapitalize="off"
+                                spellCheck={false}
+                                maxLength={32}
+                                disabled={generating}
+                                aria-describedby="affiliate-code-availability"
+                            />
+                            {availability.text ? (
+                                <p
+                                    id="affiliate-code-availability"
+                                    className={`promo-wins-customize-feedback promo-wins-customize-feedback--${availability.state}`}
+                                    role="status"
+                                    aria-live="polite"
+                                >
+                                    {availability.text}
+                                </p>
+                            ) : (
+                                <p
+                                    id="affiliate-code-availability"
+                                    className="promo-wins-customize-hint"
+                                >
+                                    Pick a unique code friends will remember.
+                                </p>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <p className="promo-wins-customize-hint promo-wins-autogen-copy">
+                                We&apos;ll create a unique affiliate code for you
+                                automatically. You can share it right away once
+                                it&apos;s ready.
+                            </p>
+                            <p
+                                className="promo-wins-autogen-notice"
+                                role="note"
+                            >
+                                Once generated, you won&apos;t be able to update
+                                your code. We recommend creating a custom code
+                                instead.
+                            </p>
+                        </>
+                    )}
+                </div>
+
+                {message?.text ? (
+                    <p
+                        className={`promo-wins-status-msg promo-wins-status-msg--${message.type}`}
+                    >
+                        {message.text}
+                    </p>
+                ) : null}
+            </Modal.Body>
+            <Modal.Footer>
+                <button
+                    type="button"
+                    className="promo-wins-customize-cancel"
+                    onClick={closeCustomizeForm}
+                    disabled={generating}
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    className="promo-wins-customize-generate"
+                    onClick={handleCreatePromo}
+                    disabled={!canGenerate}
+                >
+                    {generating
+                        ? "Creating…"
+                        : createMode === "auto"
+                          ? "Generate"
+                          : "Submit"}
+                </button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+
+const PromoCode = ({
+    commissions,
+    isLoading,
+    onPromoCodeChange,
+    openCustomizeSignal = 0,
+    onOpenShare,
+}) => {
+    const user = getFromLocalStorage("user");
+    const [state, dispatch] = useContext(Context);
+    const [localPromoCode, setLocalPromoCode] = useState(
+        user?.promo_code || null
+    );
+    const [message, setMessage] = useState(null);
+    const [showTerms, setShowTerms] = useState(false);
+    const [showCustomize, setShowCustomize] = useState(false);
+
+    const lastCustomizeSignalRef = useRef(openCustomizeSignal);
+
+    useEffect(() => {
+        if (commissions?.promo_code) {
+            setLocalPromoCode(commissions.promo_code);
+        }
+    }, [commissions]);
+
+    const promoCode = localPromoCode || user?.promo_code || null;
+
+    useEffect(() => {
+        if (typeof onPromoCodeChange === "function") {
+            onPromoCodeChange(promoCode);
+        }
+    }, [promoCode, onPromoCodeChange]);
+
+    useEffect(() => {
+        if (!openCustomizeSignal) return;
+        if (openCustomizeSignal === lastCustomizeSignalRef.current) return;
+        lastCustomizeSignalRef.current = openCustomizeSignal;
+        if (promoCode) return;
+        setMessage(null);
+        setShowCustomize(true);
+    }, [openCustomizeSignal, promoCode]);
+
+    const referrals = resolveReferralCount(commissions);
+    const totalEarnings = resolveTotalEarnings(commissions);
+
+    const persistPromoCode = (code) => {
+        setLocalPromoCode(code);
+        const updatedUser = { ...(user || {}), promo_code: code };
+        setLocalStorage("user", updatedUser);
+        if (state?.user) {
+            dispatch({
+                type: "SET",
+                key: "user",
+                payload: { ...state.user, promo_code: code },
+            });
+        }
+    };
+
+    const openCustomizeForm = () => {
+        setMessage(null);
+        setShowCustomize(true);
+    };
+
+    const closeCustomizeForm = () => {
+        setShowCustomize(false);
+    };
+
+    const handleCodeCreated = (code) => {
+        persistPromoCode(code);
+        setMessage({ type: "success", text: "Affiliate code created." });
     };
 
     const openShare = () => {
@@ -782,165 +979,11 @@ const PromoCode = ({
                 </button>
             </section>
 
-            <Modal
+            <AffiliateGetCodeModal
                 show={showCustomize}
                 onHide={closeCustomizeForm}
-                centered
-                className="promo-wins-customize-modal"
-                contentClassName="promo-wins-customize-modal-content"
-            >
-                <Modal.Header closeButton closeVariant="white">
-                    <Modal.Title>Get your affiliate code</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div
-                        className="promo-wins-create-mode"
-                        role="tablist"
-                        aria-label="Code creation mode"
-                    >
-                        <button
-                            type="button"
-                            role="tab"
-                            id="affiliate-mode-custom"
-                            aria-selected={createMode === "custom"}
-                            aria-controls="affiliate-mode-panel"
-                            className={`promo-wins-create-mode-btn${
-                                createMode === "custom"
-                                    ? " promo-wins-create-mode-btn--active"
-                                    : ""
-                            }`}
-                            onClick={() => switchCreateMode("custom")}
-                            disabled={generating}
-                        >
-                            Custom
-                        </button>
-                        <button
-                            type="button"
-                            role="tab"
-                            id="affiliate-mode-auto"
-                            aria-selected={createMode === "auto"}
-                            aria-controls="affiliate-mode-panel"
-                            className={`promo-wins-create-mode-btn${
-                                createMode === "auto"
-                                    ? " promo-wins-create-mode-btn--active"
-                                    : ""
-                            }`}
-                            onClick={() => switchCreateMode("auto")}
-                            disabled={generating}
-                        >
-                            Autogenerate
-                        </button>
-                    </div>
-
-                    <div
-                        id="affiliate-mode-panel"
-                        role="tabpanel"
-                        aria-labelledby={
-                            createMode === "auto"
-                                ? "affiliate-mode-auto"
-                                : "affiliate-mode-custom"
-                        }
-                    >
-                        {createMode === "custom" ? (
-                            <>
-                                <label
-                                    className="promo-wins-customize-label"
-                                    htmlFor="affiliate-custom-code"
-                                >
-                                    Customize code
-                                </label>
-                                <input
-                                    id="affiliate-custom-code"
-                                    type="text"
-                                    className={`promo-wins-customize-input${
-                                        availability.state === "taken" ||
-                                        availability.state === "invalid"
-                                            ? " promo-wins-customize-input--error"
-                                            : ""
-                                    }${
-                                        availability.state === "available"
-                                            ? " promo-wins-customize-input--ok"
-                                            : ""
-                                    }`}
-                                    placeholder="moses-tembula"
-                                    value={customCode}
-                                    onChange={handleCustomCodeChange}
-                                    onBlur={handleCustomCodeBlur}
-                                    autoComplete="off"
-                                    autoCapitalize="off"
-                                    spellCheck={false}
-                                    maxLength={32}
-                                    disabled={generating}
-                                    aria-describedby="affiliate-code-availability"
-                                />
-                                {availability.text ? (
-                                    <p
-                                        id="affiliate-code-availability"
-                                        className={`promo-wins-customize-feedback promo-wins-customize-feedback--${availability.state}`}
-                                        role="status"
-                                        aria-live="polite"
-                                    >
-                                        {availability.text}
-                                    </p>
-                                ) : (
-                                    <p
-                                        id="affiliate-code-availability"
-                                        className="promo-wins-customize-hint"
-                                    >
-                                        Pick a unique code friends will remember.
-                                    </p>
-                                )}
-                            </>
-                        ) : (
-                            <>
-                                <p className="promo-wins-customize-hint promo-wins-autogen-copy">
-                                    We&apos;ll create a unique affiliate code for you
-                                    automatically. You can share it right away once
-                                    it&apos;s ready.
-                                </p>
-                                <p
-                                    className="promo-wins-autogen-notice"
-                                    role="note"
-                                >
-                                    Once generated, you won&apos;t be able to update
-                                    your code. We recommend creating a custom code
-                                    instead.
-                                </p>
-                            </>
-                        )}
-                    </div>
-
-                    {message?.text ? (
-                        <p
-                            className={`promo-wins-status-msg promo-wins-status-msg--${message.type}`}
-                        >
-                            {message.text}
-                        </p>
-                    ) : null}
-                </Modal.Body>
-                <Modal.Footer>
-                    <button
-                        type="button"
-                        className="promo-wins-customize-cancel"
-                        onClick={closeCustomizeForm}
-                        disabled={generating}
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="button"
-                        className="promo-wins-customize-generate"
-                        onClick={handleCreatePromo}
-                        disabled={!canGenerate}
-                    >
-                        {generating
-                            ? "Creating…"
-                            : createMode === "auto"
-                              ? "Generate"
-                              : "Submit"}
-                    </button>
-                </Modal.Footer>
-            </Modal>
+                onCreated={handleCodeCreated}
+            />
 
             <Modal
                 show={showTerms}

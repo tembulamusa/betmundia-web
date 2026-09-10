@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../../assets/css/mobile-chat.css';
+import { callTawk, ensureTawkScript } from '../utils/tawk-safe';
 
 const MOBILE_MAX_WIDTH = 768;
 const isMobileViewport = () =>
@@ -13,61 +14,44 @@ const MobileChat = () => {
     const scriptLoaded = useRef(false);
 
     useEffect(() => {
-        // inject Tawk embed script once
         if (typeof window === 'undefined') return;
         if (scriptLoaded.current) return;
-        if (window && window.Tawk_API) {
-            scriptLoaded.current = true;
-            return;
-        }
-
-        const s1 = document.createElement('script');
-        s1.async = true;
-        s1.src = 'https://embed.tawk.to/69aeee647f65b51c3392421d/1jj9l6f39';
-        s1.charset = 'UTF-8';
-        s1.setAttribute('crossorigin', '*');
-        s1.onload = () => {
-            scriptLoaded.current = true;
-        };
-        const s0 = document.getElementsByTagName('script')[0];
-        if (s0 && s0.parentNode) s0.parentNode.insertBefore(s1, s0);
+        ensureTawkScript();
+        scriptLoaded.current = true;
     }, []);
 
     useEffect(() => {
+        if (typeof window === 'undefined') return;
+
         const hideTawkOnMobile = () => {
             if (!isMobileViewport()) return;
-            try {
-                if (window?.Tawk_API?.hideWidget) {
-                    window.Tawk_API.hideWidget();
-                }
-            } catch (err) {
-                console.warn('Tawk API hideWidget failed', err);
-            }
+            callTawk('hideWidget');
         };
 
         hideTawkOnMobile();
 
-        const tawkApi = window.Tawk_API || {};
-        const previousOnLoad = tawkApi.onLoad;
-        window.Tawk_API = tawkApi;
-        tawkApi.onLoad = function onTawkLoad() {
-            if (typeof previousOnLoad === 'function') {
-                previousOnLoad();
-            }
-            hideTawkOnMobile();
-        };
+        try {
+            const tawkApi = window.Tawk_API || {};
+            const previousOnLoad = tawkApi.onLoad;
+            window.Tawk_API = tawkApi;
+            tawkApi.onLoad = function onTawkLoad() {
+                try {
+                    if (typeof previousOnLoad === 'function') {
+                        previousOnLoad();
+                    }
+                } catch (_err) {
+                    /* ignore prior onLoad failures */
+                }
+                hideTawkOnMobile();
+            };
+        } catch (_err) {
+            /* ignore Tawk bootstrap races on refresh */
+        }
     }, []);
 
     useEffect(() => {
-        // When modal opens we prefer the contained iframe, so hide the global Tawk widget
         if (!open) return;
-        try {
-            if (window && window.Tawk_API && typeof window.Tawk_API.hideWidget === 'function') {
-                window.Tawk_API.hideWidget();
-            }
-        } catch (err) {
-            console.warn('Tawk API hideWidget failed', err);
-        }
+        callTawk('hideWidget');
     }, [open]);
 
     // prevent body scroll while modal open and preserve scroll position
@@ -78,29 +62,14 @@ const MobileChat = () => {
             scrollY = window.scrollY || window.pageYOffset;
             document.body.dataset.mobileChatScroll = String(scrollY);
             document.body.classList.add('mobile-chat-open');
-            // lock body in place
             document.body.style.top = `-${scrollY}px`;
-            // also hide global widget if present (defensive)
-            try {
-                if (window && window.Tawk_API && typeof window.Tawk_API.hideWidget === 'function') {
-                    window.Tawk_API.hideWidget();
-                }
-            } catch (err) {
-                console.warn('Tawk API hideWidget failed', err);
-            }
+            callTawk('hideWidget');
         } else {
             const stored = document.body.dataset.mobileChatScroll;
             document.body.classList.remove('mobile-chat-open');
             document.body.style.top = '';
-            // restore global widget when closing (desktop only; mobile uses header chat)
             if (!isMobileViewport()) {
-                try {
-                    if (window && window.Tawk_API && typeof window.Tawk_API.showWidget === 'function') {
-                        window.Tawk_API.showWidget();
-                    }
-                } catch (err) {
-                    console.warn('Tawk API showWidget failed', err);
-                }
+                callTawk('showWidget');
             }
             if (stored) {
                 const y = parseInt(stored, 10) || 0;
@@ -112,20 +81,13 @@ const MobileChat = () => {
             document.body.classList.remove('mobile-chat-open');
             document.body.style.top = '';
             if (!isMobileViewport()) {
-                try {
-                    if (window && window.Tawk_API && typeof window.Tawk_API.showWidget === 'function') {
-                        window.Tawk_API.showWidget();
-                    }
-                } catch (err) {
-                    console.warn('Tawk API showWidget failed', err);
-                }
+                callTawk('showWidget');
             }
         };
     }, [open]);
 
     return (
         <>
-            {/* inline header button (appears next to search in header on mobile) */}
             <button className="mobile-chat-button mobile-chat-button--inline" aria-label="Open chat" onClick={() => { setIsLoading(true); setOpen(true); }}>
                 Chat
             </button>
@@ -140,9 +102,7 @@ const MobileChat = () => {
                         >
                             ×
                         </button>
-                        {/* If Tawk script is loaded, open the widget; otherwise show a fallback iframe link */}
                         <div style={{ width: '100%', height: '100%' }}>
-                            {/* Render the Tawk chat inside an iframe so it stays contained in the modal */}
                             <div id="tawk-fallback" style={{ width: '100%', height: '100%', position: 'relative' }}>
                                 {isLoading && (
                                     <div className="mobile-chat-loader" role="status" aria-live="polite">
@@ -158,6 +118,7 @@ const MobileChat = () => {
                                     allow="microphone;camera;geolocation;autoplay;encrypted-media"
                                     allowFullScreen
                                     onLoad={() => setIsLoading(false)}
+                                    onError={() => setIsLoading(false)}
                                 />
                             </div>
                         </div>

@@ -1,80 +1,94 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import '../../assets/css/theme.css';
 
-const SPORT_RADAR_CLIENT_ID = "d9d6a9c373db18dfdf63352e1c1d9321";
-const WIDGET_LOADER_SRC = `https://widgets.sir.sportradar.com/${SPORT_RADAR_CLIENT_ID}/widgetloader`;
+// Client id + options from the last known-working LMT embed (255e985).
+const WIDGET_LOADER_SRC =
+    "https://widgets.sir.sportradar.com/d9d6a9c373db18dfdf63352e1c1d9321/widgetloader";
+// Same CSS selector the working historic widget and Sportradar docs use.
+const WIDGET_SELECTOR = ".sr-widget-1";
+const WIDGET_TYPE = "match.lmtPlus";
 
-let loaderInitialized = false;
+let loaderStarted = false;
 
+/**
+ * Official Sportradar SIR bootstrap (queue stub + async widgetloader).
+ * Written without comma-operator expressions for ESLint.
+ * theme:false so imported theme.css applies.
+ */
 const ensureSirLoader = () => {
-    if (loaderInitialized || window.SIR) {
-        loaderInitialized = true;
+    if (typeof window === "undefined" || loaderStarted) {
+        return;
+    }
+    loaderStarted = true;
+
+    if (typeof window.SIR === "function") {
         return;
     }
 
-    loaderInitialized = true;
-
-    (function (a, b, c, d, e, f) {
-        if (!a[e]) {
-            const i = a[e] = function () {
-                (a[e].q = a[e].q || []).push(arguments);
-            };
-            i.l = 1 * new Date();
-            i.o = f;
-            const g = b.createElement(c);
-            const h = b.getElementsByTagName(c)[0];
-            g.async = 1;
-            g.src = d;
-            g.setAttribute("n", e);
-            h.parentNode.insertBefore(g, h);
-        }
-    })(window, document, "script", WIDGET_LOADER_SRC, "SIR", {
+    const sir = function sir() {
+        (sir.q = sir.q || []).push(arguments);
+    };
+    sir.l = Date.now();
+    sir.o = {
         theme: false,
         language: "en",
-    });
-};
+    };
+    window.SIR = sir;
 
-const toMatchId = (parentMatchId) => {
-    const numericId = Number(parentMatchId);
-    return Number.isFinite(numericId) ? numericId : parentMatchId;
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = WIDGET_LOADER_SRC;
+    script.setAttribute("n", "SIR");
+
+    const firstScript = document.getElementsByTagName("script")[0];
+    if (firstScript && firstScript.parentNode) {
+        firstScript.parentNode.insertBefore(script, firstScript);
+    } else {
+        document.body.appendChild(script);
+    }
 };
 
 const getWidgetConfig = (parentMatchId) => ({
-    matchId: toMatchId(parentMatchId),
+    // Same id the working SideBets openLiveStats popup uses (parent_match_id as-is).
+    matchId: parentMatchId,
     streamToggle: "onPitchButton",
     layout: "double",
     detailedScoreboard: "disable",
     tabsPosition: "top",
 });
 
-const removeWidget = (container) => {
-    if (!window.SIR || !container) {
+const callSir = (method, ...args) => {
+    if (typeof window.SIR !== "function") {
         return;
     }
-
     try {
-        window.SIR("removeWidget", container);
+        window.SIR(method, ...args);
     } catch (error) {
-        // Widget may not have been mounted yet.
+        // Ignore remove/add races while the loader is still booting.
     }
 };
 
+/**
+ * Match-details LMT+. Restores the working historic mount contract:
+ * - selector `.sr-widget-1` (not a DOM node / unique id)
+ * - matchId = parent_match_id string (no Number coercion)
+ * - nested `.widgets > div > .sr-widget.sr-widget-1` markup
+ * Plus the official SIR queue stub so calls before onload still apply.
+ */
 const MatchWidget = ({ parentMatchId }) => {
-    const containerRef = useRef(null);
-
     useEffect(() => {
-        if (!parentMatchId || !containerRef.current) {
+        if (!parentMatchId) {
             return undefined;
         }
 
         ensureSirLoader();
 
-        const container = containerRef.current;
-        removeWidget(container);
-        window.SIR("addWidget", container, "match.lmtPlus", getWidgetConfig(parentMatchId));
+        // useEffect runs after commit, so `.sr-widget-1` is in the document.
+        callSir("removeWidget", WIDGET_SELECTOR);
+        callSir("addWidget", WIDGET_SELECTOR, WIDGET_TYPE, getWidgetConfig(parentMatchId));
 
         return () => {
-            removeWidget(container);
+            callSir("removeWidget", WIDGET_SELECTOR);
         };
     }, [parentMatchId]);
 
@@ -84,7 +98,9 @@ const MatchWidget = ({ parentMatchId }) => {
 
     return (
         <div className="widgets match-widget-container">
-            <div ref={containerRef} className="sr-widget sr-widget-1" />
+            <div>
+                <div className="sr-widget sr-widget-1" />
+            </div>
         </div>
     );
 };
