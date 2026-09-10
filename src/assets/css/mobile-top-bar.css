@@ -145,9 +145,9 @@
     min-width: 0;
   }
 
-  /* Logged-out: Login + Register fill the auth row evenly */
+  /* Logged-out: Login + Register cluster on the right */
   .mobile-top-bar__auth-bar:has(.mobile-top-bar__auth) {
-    justify-content: stretch;
+    justify-content: flex-end;
     min-height: 48px;
     padding: 0.35rem 0.5rem 0.4rem;
   }
@@ -238,10 +238,12 @@
   .mobile-top-bar__auth.header-login-links {
     display: flex;
     align-items: stretch;
+    justify-content: flex-end;
     gap: 0.5rem;
-    flex: 1 1 auto;
-    width: 100%;
-    margin: 0;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+    margin: 0 0 0 auto;
   }
 
   .mobile-top-bar__auth.header-login-links .top-item {
@@ -250,13 +252,13 @@
     margin-right: 0 !important;
   }
 
-  /* Wider tap targets — flex to fill row, min 120px each */
+  /* Fixed tap targets — 120px each, right-aligned as a pair */
   .mobile-top-bar__auth.header-login-links .top-login-btn {
-    flex: 1 1 0;
+    flex: 0 0 120px;
     min-width: 120px;
-    width: auto !important;
+    width: 120px !important;
     min-height: 36px !important;
-    max-width: none !important;
+    max-width: 120px !important;
     padding: 0.4rem 0.85rem !important;
     font-size: 1.125rem;
     font-weight: 700;
@@ -271,9 +273,9 @@
 
   .mobile-top-bar__auth.header-login-links .top-login-btn.red-bg,
   .mobile-top-bar__auth.header-login-links .top-login-btn.register-btn-purple {
-    width: auto !important;
+    width: 120px !important;
     min-width: 120px;
-    max-width: none !important;
+    max-width: 120px !important;
     padding-left: 0.85rem !important;
     padding-right: 0.85rem !important;
   }

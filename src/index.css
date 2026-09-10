@@ -899,14 +899,164 @@ aside.ps-sidebar-root:focus-visible,
   width: 30px;
 }
 
+.bonge-bonus-block {
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.bonge-bonus-wrap {
+  width: auto;
+  margin: 8px 8px 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.bonge-bonus-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin: 8px 0 8px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.bonge-bonus-titlebar__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.bonge-bonus-titlebar__share {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(255, 215, 0, 0.95);
+  color: #101b25;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bonge-bonus-titlebar__share:hover,
+.bonge-bonus-titlebar__share:focus,
+.bonge-bonus-titlebar__share:focus-visible {
+  outline: none;
+  background: #ffd700;
+  color: #101b25;
+}
+
 .bonge-bonus {
-  width: 95%;
-  margin-left: auto;
-  margin-right: auto;
-  background: rgba(15, 26, 63, 0.3);
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 12px 36px 12px 14px;
+  background: #a71f66;
   color: #ffffff;
   border-radius: 4px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.bonge-bonus__dismiss {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bonge-bonus__dismiss:hover,
+.bonge-bonus__dismiss:focus,
+.bonge-bonus__dismiss:focus-visible {
+  outline: none;
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+}
+
+.bonge-bonus__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.bonge-bonus__icon {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  font-size: 1.35rem;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.bonge-bonus__text,
+#bonus-centage-advice {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.bonge-bonus__text strong,
+#bonus-centage-advice strong {
+  font-weight: 700;
+}
+
+.bonge-bonus__nudge {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.bonge-bonus__nudge-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.bonge-bonus__nudge-title {
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.bonge-bonus__nudge-sub {
   font-weight: 400;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  line-height: 1.3;
 }
 
 .is-jackpot-bet-group-btns {
@@ -1470,6 +1620,113 @@ input.std-input::placeholder {
   color: #ffffff;
   padding-left: 12px;
   padding-right: 7px;
+}
+
+/* Desktop rightbar: sticky column must scroll so Place Bet can enter view and stay clickable */
+@media (min-width: 768px) {
+  .betslip-container.sticky-top,
+  .betslip-container {
+    position: sticky !important;
+    top: 100px !important;
+    max-height: calc(100vh - 108px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
+  }
+
+  .betslip-container .betslip-placebet-sticky,
+  .betslip-container .bottom.betslip-placebet-sticky {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: rgba(0, 12, 36, 1);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.18);
+    padding-top: 4px;
+    padding-bottom: 8px;
+  }
+
+  /* Keep slips list shorter so Place Bet isn't trapped below nested scroll alone */
+  .betslip-container .betslip-slips {
+    max-height: min(29vh, 220px) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .betslip-container .betslip-slips__list {
+    padding-left: 8px;
+    padding-right: 8px;
+    margin: 0;
+  }
+}
+
+.betslip-slips {
+  max-height: 29vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.betslip-slips__list {
+  padding-left: 8px;
+  padding-right: 8px;
+  margin: 0;
+}
+
+/* Submit betslip layer stack */
+.betslip-placebet-sticky,
+.bottom.betslip-placebet-sticky {
+  background: rgba(0, 12, 36, 1);
+}
+
+.betslip-submit-panel {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.betslip-submit-panel .betslip-placebet-section {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.betslip-submit-panel .bet-table.betslip-submit-layer {
+  background: transparent;
+}
+
+.betslip-action-row {
+  width: 100%;
+}
+
+.betslip-action-row__cell {
+  width: 50%;
+  padding: 8px 6px !important;
+  vertical-align: middle;
+}
+
+.betslip-action-btn,
+.betslip-placebet-section .betslip-action-btn.place-bet-btn,
+.betslip-placebet-section #place_bet_button.betslip-action-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 10px 6px !important;
+  font-size: 11px !important;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  border-radius: 6px;
+}
+
+.betslip-action-btn--remove {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #fff !important;
 }
 
 @media screen and (max-width: 767px) {
@@ -2625,9 +2882,6 @@ h1.std-title {
 
 
   .modal-dialog.mobile-betslip-modal {
-    /* transform: translate(0, 20%) !important; */
-    /* -moz-transform: translate(0, 20%) !important; */
-    /* -webkit-transform: translate(0, 20%) !important; */
     margin: 0 !important;
     border: none;
     padding: 0 !important;
@@ -2637,14 +2891,40 @@ h1.std-title {
     top: unset;
     border: 0;
     width: 100%;
+    max-height: calc(100vh - 56px - env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-dialog.mobile-betslip-modal .modal-content {
+    max-height: inherit;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .modal-dialog.mobile-betslip-modal .modal-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .modal-dialog.mobile-betslip-modal .betslip-slips {
-    max-height: 35vh !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
-  .mobile-betslip-modal .bottom {
-    max-height: 50vh;
+  .mobile-betslip-modal .bottom,
+  .mobile-betslip-modal .betslip-placebet-sticky {
+    position: sticky;
+    bottom: 0;
+    z-index: 6;
+    max-height: none;
+    background: rgba(0, 12, 36, 1);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.18);
   }
 
   .modal-dialog.mobile-betslip-modal input,
