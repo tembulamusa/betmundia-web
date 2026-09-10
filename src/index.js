@@ -32,6 +32,7 @@ import './assets/css/anti-money-laundering-page.css';
 import './assets/css/promo-wins-page.css';
 import './assets/css/account-drawer.css';
 import './assets/css/site-footer.css';
+import './assets/css/mobile-bottom-nav.css';
 import 'react-toastify/dist/ReactToastify.css'
 import Store from './context/store';
 import Index from './components/index';
@@ -63,6 +64,7 @@ import LiveScore from './components/pages/livescore/LiveScore';
 import Right from "./components/right/index";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/header";
+import MobileBottomNav from "./components/header/mobile-bottom-nav";
 import Sidebar from "./components/sidebar/awesome/Sidebar";
 import { Context } from './context/store';
 import Logout from "./components/pages/auth/logout";
@@ -176,6 +178,7 @@ const App = () => {
                         </div>
                     </div>
                     {!state?.fullcasinoscreen && <Footer />}
+                    <MobileBottomNav />
                 </Suspense>
             </div>
         </BrowserRouter>

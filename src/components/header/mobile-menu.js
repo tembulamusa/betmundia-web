@@ -68,6 +68,13 @@ function MobileMenu(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  useEffect(() => {
+    if (state?.showaccountdrawer) {
+      setShow(true);
+      dispatch({ type: "DEL", key: "showaccountdrawer" });
+    }
+  }, [state?.showaccountdrawer, dispatch]);
+
   const closeThen = (fn) => () => {
     setShow(false);
     if (typeof fn === "function") fn();
