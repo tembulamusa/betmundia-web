@@ -326,10 +326,12 @@ const MoreMarketsHeaderRow = (props) => {
             <div className="match-detail-header panel-header primary-bg pt-3">
                 <span> <a href={"#"} className="opacity-60 hover:opacity-100" onClick={(e) => { e.preventDefault(); navigate(-1); }}> <IoIosArrowBack className="inline-block" /> <span className='' style={{ fontSize: "13px" }}>Back</span></a> {match?.home_team} - {match?.away_team}</span>
             </div>
-            {match?.parent_match_id && (
+            {(match?.parent_match_id || match?.home_team || match?.away_team) && (
                 <MatchWidget
-                    key={match.parent_match_id}
+                    key={match.parent_match_id || match?.match_id}
                     parentMatchId={match.parent_match_id}
+                    homeTeam={match?.home_team}
+                    awayTeam={match?.away_team}
                 />
             )}
         </>
