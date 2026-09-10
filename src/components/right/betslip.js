@@ -19,6 +19,8 @@ import Notify from "../utils/Notify";
 import Alert from '../utils/alert';
 import useInterval from '../../hooks/set-interval.hook';
 import socket from '../utils/socket-connect';
+import BongeBonusCard from './bonge-bonus-card';
+import { buildBongeBonusAdvice } from './bonge-bonus-utils';
 const clean_rep = (str) => {
     str = str.replace(/[^A-Za-z0-9\-]/g, '');
     return str.replace(/-+/g, '-');
@@ -458,9 +460,17 @@ const BetSlip = (props) => {
                 </li>
             }
             {hasBetslip && <>
-
-                <div className="flow betslip-slips" style={{ maxHeight: "29vh", overflowY: "auto", overflowX: "hidden", paddingRight: "8px" }}>
-                    <ul style={{ paddingRight: "8px", paddingLeft: "8px" }}>
+                {!is_jackpot && (
+                    <BongeBonusCard
+                        advice={buildBongeBonusAdvice(
+                            betslipsData || state?.betslip,
+                            dbWinMatrix || state?.bonusCentages
+                        )}
+                        slipCount={Object.keys(betslipsData || {}).length}
+                    />
+                )}
+                <div className="flow betslip-slips">
+                    <ul className="betslip-slips__list">
                         {Object.entries(betslipsData ?? {}).map(([match_id, slip]) => (<SlipEntry match_id={match_id} initialSlip={slip} />))
                         }
                     </ul>
@@ -468,7 +478,7 @@ const BetSlip = (props) => {
 
             </>
             }
-            <div className="bottom">
+            <div className="bottom betslip-placebet-sticky">
                 <BetslipSubmitForm
                     dbWinMatrix={dbWinMatrix}
                     jackpotData={localJPData}
