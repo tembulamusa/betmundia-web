@@ -1635,13 +1635,14 @@ input.std-input::placeholder {
     max-height: none !important;
     overflow: visible !important;
     padding-bottom: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.10);
   }
 
   .betslip-container #betslip,
   .betslip-container .betslip-v2#betslip,
   #betslip {
     position: sticky !important;
-    top: 100px !important; /* match left sidebar inline top */
+    top: 108px !important; /* match left sidebar inline top */
     max-height: calc(100vh - 108px);
     overflow-x: hidden;
     overflow-y: auto;
@@ -1656,10 +1657,11 @@ input.std-input::placeholder {
     position: sticky;
     bottom: 0;
     z-index: 5;
-    background: rgba(0, 12, 36, 1);
+    background: rgb(5, 20, 51);
+    border-right: 1px solid rgba(255, 255, 255, 1) !important;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.18);
     padding-top: 4px;
-    padding-bottom: 8px;
+    padding-bottom: 0;
   }
 
   .betslip-container .betslip-slips,
@@ -1694,7 +1696,7 @@ input.std-input::placeholder {
 /* Submit betslip layer stack */
 .betslip-placebet-sticky,
 .bottom.betslip-placebet-sticky {
-  background: rgba(0, 12, 36, 1);
+  background: rgb(5, 20, 51);
 }
 
 .betslip-submit-panel {
@@ -2979,7 +2981,7 @@ h1.std-title {
     bottom: 0;
     z-index: 6;
     max-height: none;
-    background: rgba(0, 12, 36, 1);
+    background: rgb(5, 20, 51);
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.18);
   }
 
