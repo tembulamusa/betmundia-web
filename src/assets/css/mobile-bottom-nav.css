@@ -15,8 +15,7 @@
   align-items: flex-end;
   justify-content: space-around;
   gap: 0.15rem;
-  min-height: 88px;
-  padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 0px));
+  padding: 0 8px calc(10px + env(safe-area-inset-bottom, 0px));
   background: var(--mbn-bar-bg);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.35);
@@ -110,7 +109,7 @@
 /* Clear content above the bar on mobile */
 @media (max-width: 767.98px) {
   body {
-    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
 
   .site-footer {
