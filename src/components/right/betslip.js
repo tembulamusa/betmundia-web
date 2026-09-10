@@ -54,16 +54,16 @@ const BetSlip = (props) => {
 
     useEffect(() => {
         const useJackpot = Boolean(jackpot);
-        let b = useJackpot ? getJackpotBetslip() : getBetslip();
+        let b = (useJackpot ? getJackpotBetslip() : getBetslip()) || {};
         setBetslipsData(b);
-        if (b) {
+        if (Object.keys(b).length > 0) {
             setHasBetslip(true);
         } else {
             setHasBetslip(false);
         }
         setIsJackpot(useJackpot);
         setLocalJPData(state?.jackpotdata);
-        if (!state?.betslip && !state?.jackpotbetslip && b) {
+        if (!state?.betslip && !state?.jackpotbetslip && Object.keys(b).length > 0) {
             dispatch({
                 type: "SET",
                 key: useJackpot ? "jackpotbetslip" : "betslip",
@@ -243,15 +243,20 @@ const BetSlip = (props) => {
         // let odd = slip.odd_value;
 
         // get the entire betslip
-        const [slip, setSlip] = useState({ ...initialSlip, changeOrigin: "main" });
+        const [slip, setSlip] = useState({ ...(initialSlip || {}), changeOrigin: "main" });
         const [slipKey, setKey] = useState();
         // const [slipChangeOrigin, setSlipChangeOrigin] = useState("original")
 
         const checkUpdateSlipChanges = (market, eventOdd) => {
             setSlip((prevSlip) => {
-                let betslips = getBetslip();
+                const betslips =
+                    (betslipKey === "jackpotbetslip"
+                        ? getJackpotBetslip()
+                        : getBetslip()) || {};
 
-                if (!betslips[match_id]) { return false }
+                if (!betslips[match_id]) {
+                    return prevSlip;
+                }
 
                 if (market.sub_type_id == prevSlip.sub_type_id
                     && market.special_bet_value == prevSlip.special_bet_value) {
@@ -342,11 +347,11 @@ const BetSlip = (props) => {
         useEffect(() => {
             connectBetslipToScket();
             const handleSocketData = (data) => {
-                if (Object.keys(data.event_odds).length > 0) {
+                if (Object.keys(data?.event_odds || {}).length > 0) {
                     Object.values(data.event_odds)?.forEach((evodd, ivg) => {
                         checkUpdateSlipChanges(data.match_market, evodd);
                     });
-                } else {
+                } else if (data?.match_market) {
                     checkUpdateSlipChanges(data.match_market, null);
 
                 }
