@@ -109,7 +109,7 @@
 /* Clear content above the bar on mobile */
 @media (max-width: 767.98px) {
   body {
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
   }
 
   .site-footer {
