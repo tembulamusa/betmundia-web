@@ -185,7 +185,7 @@ const Right = (props) => {
   return (
     <>
       {!state?.nosports && <>
-        <div className="col-md-3 betslip-container sticky-top">
+        <div className="col-md-3 betslip-container">
           <>
             <section id="betslip" className="betslip-v2">
               <div className="bg-[rgba(255,255,255,0.1)]">

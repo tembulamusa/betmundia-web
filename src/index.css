@@ -1622,22 +1622,37 @@ input.std-input::placeholder {
   padding-right: 7px;
 }
 
-/* Desktop rightbar: sticky column must scroll so Place Bet can enter view and stay clickable */
+/*
+ * Desktop rightbar: stick the betslip panel itself (same top as left sidebar),
+ * not the whole column. Overflow lives on #betslip so Place Bet can scroll into view
+ * without nesting a second sticky offset (which pushed the header way down).
+ */
 @media (min-width: 768px) {
   .betslip-container.sticky-top,
   .betslip-container {
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding-bottom: 0;
+  }
+
+  .betslip-container #betslip,
+  .betslip-container .betslip-v2#betslip,
+  #betslip {
     position: sticky !important;
-    top: 100px !important;
+    top: 100px !important; /* match left sidebar inline top */
     max-height: calc(100vh - 108px);
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 12px;
+    z-index: 20;
   }
 
   .betslip-container .betslip-placebet-sticky,
-  .betslip-container .bottom.betslip-placebet-sticky {
+  .betslip-container .bottom.betslip-placebet-sticky,
+  #betslip .betslip-placebet-sticky {
     position: sticky;
     bottom: 0;
     z-index: 5;
@@ -1647,15 +1662,16 @@ input.std-input::placeholder {
     padding-bottom: 8px;
   }
 
-  /* Keep slips list shorter so Place Bet isn't trapped below nested scroll alone */
-  .betslip-container .betslip-slips {
+  .betslip-container .betslip-slips,
+  #betslip .betslip-slips {
     max-height: min(29vh, 220px) !important;
     overflow-x: hidden;
     overflow-y: auto;
     padding-right: 8px;
   }
 
-  .betslip-container .betslip-slips__list {
+  .betslip-container .betslip-slips__list,
+  #betslip .betslip-slips__list {
     padding-left: 8px;
     padding-right: 8px;
     margin: 0;
@@ -4283,11 +4299,11 @@ button.locked-button:hover {
 
 #betslip {
   position: sticky;
-  /* Match left sidebar + .betslip-container sticky top (was 130px → sat ~30px lower) */
+  /* Match left sidebar sticky top (100px) — scroll lives here so Place Bet can enter view */
   top: 100px;
-  max-height: calc(100vh - 10px);
+  max-height: calc(100vh - 108px);
   overflow-y: auto;
-  z-index: 999999;
+  z-index: 20;
   background: rgba(0, 12, 36, 1) !important;
 }
 
