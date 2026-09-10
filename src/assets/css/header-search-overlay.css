@@ -356,6 +356,8 @@
 .header-top-actions {
   justify-self: end;
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .header-mobile-actions {
@@ -364,6 +366,43 @@
 
 .header-top-grid>.logo {
   min-width: 0;
+}
+
+/* Desktop: vertically center search + affiliate with Login/Register */
+@media (min-width: 1200px) {
+  .header-top-grid {
+    align-items: center;
+  }
+
+  .header-search-slot {
+    align-items: center;
+    align-self: center;
+  }
+
+  .header-search-float {
+    min-height: 0;
+    align-items: center;
+  }
+
+  .header-top-actions {
+    align-self: center;
+  }
+
+  /* Drop uneven auth offsets so buttons share the grid center line */
+  .header-top-grid .header-login-links .onboard {
+    margin-top: 0 !important;
+  }
+
+  .header-top-grid .header-login-links .top-item,
+  .header-top-grid .header-login-links .top-login-btn {
+    margin-top: 0 !important;
+  }
+
+  /* Match icon-chip center to Login/Register button center */
+  .header-top-grid .header-search-float__trigger,
+  .header-top-grid .header-affiliate-trigger {
+    margin-top: -3px;
+  }
 }
 
 @media (max-width: 992px) {
