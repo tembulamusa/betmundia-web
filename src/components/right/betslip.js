@@ -30,7 +30,7 @@ const BetSlip = (props) => {
     const [localJPData, setLocalJPData] = useState(jackpotData);
     const [state, dispatch] = useContext(Context);
     const [betslipKey, setBetslipKey] = useState(
-        () => state?.jackpotbetslip ? "jackpotbestslip" : "bestslip"
+        () => (jackpot || state?.isjackpot) ? "jackpotbetslip" : "betslip"
     );
     const [betslipsData, setBetslipsData] = useState({});
     const [hasBetslip, setHasBetslip] = useState(false);
@@ -51,21 +51,24 @@ const BetSlip = (props) => {
 
 
     useEffect(() => {
-        const formerBetslip = betslipsData;
-        let b = (state?.isjackpot)
-            ? getJackpotBetslip()
-            : getBetslip();
+        const useJackpot = Boolean(jackpot);
+        let b = useJackpot ? getJackpotBetslip() : getBetslip();
         setBetslipsData(b);
         if (b) {
             setHasBetslip(true);
         } else {
             setHasBetslip(false);
         }
-        setIsJackpot(state?.jackpotbetslip != null);
+        setIsJackpot(useJackpot);
         setLocalJPData(state?.jackpotdata);
-        (!state?.betslip && !state?.jackpotbetslip) && dispatch({ type: "SET", key: state?.jackpotbetslip ? "jackpotbetslip" : "betslip", payload: b })
-
-    }, [state?.betslip, state?.jackpotbetslip]);
+        if (!state?.betslip && !state?.jackpotbetslip && b) {
+            dispatch({
+                type: "SET",
+                key: useJackpot ? "jackpotbetslip" : "betslip",
+                payload: b,
+            });
+        }
+    }, [state?.betslip, state?.jackpotbetslip, jackpot, dispatch, state?.jackpotdata]);
 
     useEffect(() => {
         if (state[betslipKey]) {
@@ -88,13 +91,18 @@ const BetSlip = (props) => {
 
 
     const setJackpotSlipkey = useCallback(() => {
-        if (state?.jackpotbetslip) {
+        const useJackpot = Boolean(jackpot);
+        if (useJackpot) {
             setBetslipKey("jackpotbetslip");
+            setIsJackpot(true);
+            dispatch({ type: "SET", key: "isjackpot", payload: true });
+            dispatch({ type: "SET", key: "betslipkey", payload: "jackpotbetslip" });
         } else {
-            setBetslipKey("betslip")
+            setBetslipKey("betslip");
+            setIsJackpot(false);
+            dispatch({ type: "SET", key: "betslipkey", payload: "betslip" });
         }
-        dispatch({ type: "SET", key: "isjackpot", payload: is_jackpot })
-    }, [is_jackpot]);
+    }, [jackpot, dispatch]);
 
     useEffect(() => {
         setJackpotSlipkey();

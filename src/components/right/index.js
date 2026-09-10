@@ -81,16 +81,17 @@ const LoadedBetslip = ({ betslipValidationData, jackpotData, dbWinMatrix }) => {
   };
 
   const MobileSlipHeader = () => {
+    const slipCount = state?.isjackpot
+      ? Object.keys(state?.jackpotbetslip || {}).length
+      : Object.keys(state?.betslip || {}).length;
 
     return (
       <>
         {state?.isjackpot ? 'jackpot' : 'Betslip'}
-        {!state?.isjackpot && (
-          <span className="col-sm-2 slip-counter">({Object.keys(state?.betslip || {}).length})</span>
-        )}
+        <span className="col-sm-2 slip-counter">({slipCount})</span>
 
         <div className='float-end'>
-          {Object.keys(state?.betslip || {}).length > 0 && (
+          {!state?.isjackpot && Object.keys(state?.betslip || {}).length > 0 && (
 
             <span className="col-sm-2 yellow-btn font-bold share-btn btn btn-light mr-2"
               style={{ width: 'fit-content' }}
@@ -127,9 +128,9 @@ const LoadedBetslip = ({ betslipValidationData, jackpotData, dbWinMatrix }) => {
 
         <Modal.Body className="bg-dark-bg-secondary px-0 py-0" style={{ backgroundColor: '#0f0f1f', color: '#ffffff' }}>
           <div id="betslip" className="betslip">
-            {Object.keys(state?.betslip || {}).length == 0 && <BongeBetMarkupMessage />}
+            {!state?.isjackpot && Object.keys(state?.betslip || {}).length == 0 && <BongeBetMarkupMessage />}
             <BetSlip
-              jackpot={state?.isjackpot}
+              jackpot={Boolean(state?.isjackpot)}
               betslipValidationData={betslipValidationData}
               jackpotData={jackpotData}
               dbWinMatrix={dbWinMatrix}
