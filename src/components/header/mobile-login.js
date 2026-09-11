@@ -197,23 +197,26 @@ const BodyLogin = (props) => {
                         </div>
                         <div className="px-0">
                             <label className='modal-label'>Password</label>
-                            <div className="relative">
-                                <input type={showPassword ? 'text' : 'password'}
+                            <div className="login-password-field">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
                                     name="password"
-                                    className={`block px-3 py-3 w-full rounded-2xl form-control std-input ${errors.password && 'text-danger'} `}
+                                    className={`block px-3 py-3 w-full rounded-2xl form-control std-input login-password-field__input ${errors.password && 'text-danger'} `}
                                     data-action="grow"
                                     placeholder={errors?.password || "Password"}
                                     onChange={ev => onFieldChanged(ev)}
                                     onKeyPress={handleKeyPress}
                                     value={values.password}
+                                    autoComplete="current-password"
                                 />
-                                <span
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-xl"
+                                <button
+                                    type="button"
+                                    className="login-password-field__toggle"
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                                     onClick={() => setShowPassword(!showPassword)}
-                                    onKeyPress={handleKeyPress}
                                 >
-                                    {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
-                                </span>
+                                    {showPassword ? <FaRegEyeSlash aria-hidden="true" /> : <FaRegEye aria-hidden="true" />}
+                                </button>
                             </div>
                             <br />
                             <input type="hidden" name="ref" value="{props.refURL}" />

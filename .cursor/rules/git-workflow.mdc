@@ -1,0 +1,65 @@
+---
+description: Branching model — base on dev, feature/fix branches, local merge, push, delete topic branch
+alwaysApply: true
+---
+
+# Git workflow (Betmundial)
+
+## Base branch
+
+- Day-to-day base branch is **`dev`** (not `master` / `main`).
+- New work starts from an up-to-date local `dev`.
+- Day-to-day work happens **on / from `dev`**.
+
+## Coding flow
+
+1. Checkout / update `dev` (`git fetch --all`, then merge from remote `dev` as appropriate).
+2. **Branch appropriately for the request** (see Branch continuity below): create a new topic branch **from `dev`** (`feature/...`, `fix/...`, `chore/...`, etc.), **or** continue the previous related topic branch if this request is clearly the same feature/fix.
+3. Implement and commit on the topic branch.
+4. **Merge on the user’s machine** into `dev` (prefer local merge when the user asks to land work).
+5. Push **`dev`** to **`betmundial` and `origin`** (see `git-push.mdc`). Include **`backup`** only when the user asks for all remotes.
+6. **Delete the topic branch after merge**:
+   - Always delete the **local** topic branch.
+   - If it was pushed, also delete it on the **remote(s)** where it existed.
+   - Do **not** delete `dev` or `master`.
+   - Keep only a few long-lived branches (e.g. `dev`, maybe `master`); clean up merged topic branches so they do not accumulate.
+
+### Land before starting a new issue
+
+When the user moves on to a **new / unrelated** request:
+
+- **First land the current topic** onto `dev` (commit → merge into `dev` → push `betmundial` + `origin` → delete the topic branch) **before** branching for the new issue — unless the user explicitly says to leave it unmerged, stash it, or continue the same topic branch.
+- Do **not** start a new topic branch while leaving prior finished (or nearly finished) work only in the working tree, an abandoned branch, or an unapplied stash. That is how CSS/UI fixes “disappear.”
+- If work is incomplete and the user insists on switching topics: **commit or stash with a clear message**, note it to the user, and restore/apply it when returning — never silently drop uncommitted changes via `checkout -B` / hard resets.
+- After landing, start the next issue from **up-to-date local `dev`**.
+
+### Branch continuity
+
+Whenever a **new request** starts concerning something:
+
+- Consider and **appropriately branch**: either create a **new topic branch from up-to-date `dev`**, **or** **continue the previous related topic branch** if the request is clearly a continuation of the same feature/fix.
+- Goal: when merging to `dev`, history stays **sensible** — related commits together on one topic branch; unrelated work on separate branches.
+- Don’t pile unrelated changes onto a random open branch.
+- Don’t keep working on `dev` directly for feature/fix work.
+
+## Remotes covered by default for `dev`
+
+| Remote | Role |
+|--------|------|
+| `betmundial` | Primary project remote — always push `dev` |
+| `origin` | Always push `dev` with betmundial |
+| `backup` | Only when user asks for all remotes |
+
+## Agent do / don’t
+
+- Do: **merge (and push) the current topic into `dev` before starting an unrelated new issue.**
+- Do: at the start of a request, choose a new topic branch from up-to-date `dev` **or** continue the related open topic branch when the work is clearly the same feature/fix.
+- Do: branch from `dev`, merge locally into `dev` when asked (or when finishing a topic before the next issue), push `dev` to both `betmundial` and `origin`, then delete the merged topic branch (local always; remote if it existed).
+- Don’t: abandon uncommitted topic work when switching issues; don’t rely on forgotten stashes.
+- Don’t: pile unrelated changes onto a random open branch, or do feature/fix work directly on `dev`.
+- Don’t: leave merged topic branches hanging locally or on remotes after landing into `dev`.
+- Don’t: treat `master` as the default integration branch for routine work.
+- Don’t: push a newly invented local-only `dev` unless the user asks (if `dev` is missing on remotes, create local `dev` and report that the user may need to push it once to both remotes).
+- Don’t: force-push or rewrite shared history without explicit request.
+- Don’t: mass-delete unrelated remote branches without checking; never delete `dev` or `master`.
+- Don’t: change git config.

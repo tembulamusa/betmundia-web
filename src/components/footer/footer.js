@@ -20,6 +20,7 @@ import { SiTiktok } from 'react-icons/si';
 const TERM_LINKS = [
     { href: '/terms-and-conditions', label: 'Terms and Conditions' },
     { href: '/crash-terms', label: 'Crash Terms' },
+    { href: '/affiliate-terms', label: 'Affiliate Terms' },
     { href: '/responsible-gambling', label: 'Responsible Gambling' },
     { href: '/privacy-policy', label: 'Privacy Policy' },
     { href: '/cookie-policy', label: 'Cookie Policy' },
@@ -28,7 +29,7 @@ const TERM_LINKS = [
 ];
 
 const SOCIAL_LINKS = [
-    { href: 'https://www.facebook.com/kebetmundial', icon: FaFacebook, label: 'Facebook' },
+    { href: 'https://www.facebook.com/betmundialkenya/', icon: FaFacebook, label: 'Facebook' },
     { href: 'https://x.com/Kenya_betmundial', icon: FaXTwitter, label: 'X' },
     { href: 'https://www.youtube.com/@BetMundialKenya', icon: FaYoutube, label: 'YouTube' },
     { href: 'https://www.instagram.com/betmundial_kenya_official', icon: FaInstagram, label: 'Instagram' },

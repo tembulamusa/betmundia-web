@@ -33,8 +33,8 @@ export const addToSlip = (slip) => {
 }
 
 export const removeFromSlip = (match_id) => {
-    let current_slip = getFromLocalStorage('betslip');
-    if (current_slip) {
+    let current_slip = getFromLocalStorage('betslip') || {};
+    if (current_slip[match_id]) {
         let liveCount = getFromLocalStorage("liveCount");
 
         if (current_slip[match_id].bet_type == 1) {
@@ -47,7 +47,6 @@ export const removeFromSlip = (match_id) => {
         delete current_slip[match_id];
         setLocalStorage('betslip', current_slip, 1 * 60 * 60 * 1000);
     }
-
 
     return current_slip;
 }
@@ -75,9 +74,11 @@ export const addToJackpotSlip = (slip) => {
 }
 
 export const removeFromJackpotSlip = (match_id) => {
-    let current_slip = getFromLocalStorage('jackpotbetslip');
-    delete current_slip[match_id];
-    setLocalStorage('jackpotbetslip', current_slip, 1 * 60 * 60 * 1000);
+    let current_slip = getFromLocalStorage('jackpotbetslip') || {};
+    if (current_slip[match_id]) {
+        delete current_slip[match_id];
+        setLocalStorage('jackpotbetslip', current_slip, 1 * 60 * 60 * 1000);
+    }
     return current_slip;
 }
 

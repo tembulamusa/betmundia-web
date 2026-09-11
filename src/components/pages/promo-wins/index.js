@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import Modal from "react-bootstrap/Modal";
 import {
     Cell,
     Legend,
@@ -18,7 +19,6 @@ import {
     FaChevronLeft,
     FaChevronRight,
     FaCoins,
-    FaCopy,
     FaFacebook,
     FaGift,
     FaHeadset,
@@ -37,7 +37,11 @@ import {
     FaChartLine,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import PromoCode from "./promo-code";
+import PromoCode, { AffiliateShareModal } from "./promo-code";
+import {
+    getAffiliateShareUrl,
+    openAffiliateSocialShare,
+} from "./affiliate-share";
 import makeRequest from "../../utils/fetch-request";
 import { formatToFloat } from "../../utils/formatters";
 import { getFromLocalStorage } from "../../utils/local-storage";
@@ -197,16 +201,6 @@ function resolveJoinedAt(item) {
     );
 }
 
-function resolveFirstActivity(item) {
-    return (
-        item?.first_activity ||
-        item?.first_bet_at ||
-        item?.last_activity ||
-        item?.updated_at ||
-        null
-    );
-}
-
 function resolveEarningDate(item) {
     return (
         item?.created_at ||
@@ -215,18 +209,6 @@ function resolveEarningDate(item) {
         item?.paid_at ||
         item?.updated_at ||
         null
-    );
-}
-
-function resolveEarningName(item, index) {
-    return (
-        item?.referred_by ||
-        item?.username ||
-        item?.user_name ||
-        item?.name ||
-        item?.member_name ||
-        item?.msisdn ||
-        `Referral #${index + 1}`
     );
 }
 
@@ -429,13 +411,13 @@ function resolveEarningAmount(item) {
     );
 }
 
-function resolveEarningType(item) {
-    return (
-        item?.type ||
-        item?.commission_type ||
-        item?.earning_type ||
-        "Referral Commission"
-    );
+function resolveEarningMonth(item) {
+    if (item?.month) return String(item.month);
+    const dateValue = resolveEarningDate(item);
+    if (!dateValue) return "—";
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return "—";
+    return `${MONTH_SHORT[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 function isInPeriod(dateValue, period) {
@@ -490,22 +472,115 @@ const OverviewCard = ({ label, value, sub, Icon, tone = "pink" }) => (
     </article>
 );
 
-const HowItWorks = () => (
-    <section className="promo-wins-how" aria-label="How it works">
-        {HOW_IT_WORKS.map(({ id, title, description, Icon }) => (
-            <div className="promo-wins-how-item" key={id}>
-                <span className="promo-wins-how-icon" aria-hidden="true">
-                    <Icon />
-                </span>
-                <h3 className="promo-wins-how-title">{title}</h3>
-                <p className="promo-wins-how-desc">{description}</p>
+const HOW_INTRO =
+    "20000+ fans already earn with Betmundial. Share your code — they play, you win.";
+
+const AffiliateEarnModal = ({ show, onHide, onOpenShare, onOpenEarnings }) => (
+    <Modal
+        show={show}
+        onHide={onHide}
+        centered
+        className="promo-wins-terms-modal promo-wins-earn-modal"
+        contentClassName="promo-wins-terms-modal-content"
+    >
+        <Modal.Header closeButton closeVariant="white">
+            <Modal.Title>How you earn</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <p className="promo-wins-terms-intro">
+                Friends register with your affiliate code, play on Betmundial,
+                and you earn rewards and commissions on their activity.
+            </p>
+            <div className="promo-wins-terms-block">
+                <p>
+                    Share your code, grow your network, and get paid as they
+                    play. The more they bet, the more you earn.
+                </p>
             </div>
-        ))}
+            <p className="promo-wins-terms-note">
+                Payouts follow the affiliate program schedule. See Terms for
+                details.
+            </p>
+            <div className="promo-wins-earn-actions">
+                <button
+                    type="button"
+                    className="promo-wins-earn-cta promo-wins-earn-cta--share"
+                    onClick={onOpenShare}
+                >
+                    Share your code
+                </button>
+                <div className="promo-wins-earn-links">
+                    <Link
+                        to="/affiliate-terms"
+                        className="promo-wins-earn-link"
+                        onClick={onHide}
+                    >
+                        View terms
+                    </Link>
+                    {onOpenEarnings ? (
+                        <button
+                            type="button"
+                            className="promo-wins-earn-link"
+                            onClick={onOpenEarnings}
+                        >
+                            My Earnings
+                        </button>
+                    ) : null}
+                </div>
+            </div>
+        </Modal.Body>
+        <Modal.Footer>
+            <button
+                type="button"
+                className="promo-wins-terms-close"
+                onClick={onHide}
+            >
+                Got it
+            </button>
+        </Modal.Footer>
+    </Modal>
+);
+
+const HowItWorks = ({ onOpenShare, onOpenEarn }) => (
+    <section className="promo-wins-how" aria-label="How it works">
+        <p className="promo-wins-how-intro">{HOW_INTRO}</p>
+        <div className="promo-wins-how-steps">
+            {HOW_IT_WORKS.map(({ id, title, description, Icon }) => {
+                const isShare = id === "share";
+                const isEarn = id === "earn";
+                const isCta = isShare || isEarn;
+
+                return (
+                    <div className="promo-wins-how-item" key={id}>
+                        <span className="promo-wins-how-icon" aria-hidden="true">
+                            <Icon />
+                        </span>
+                        {isCta ? (
+                            <button
+                                type="button"
+                                className="promo-wins-how-title promo-wins-how-title--cta"
+                                onClick={isShare ? onOpenShare : onOpenEarn}
+                                aria-haspopup="dialog"
+                            >
+                                {title}
+                            </button>
+                        ) : (
+                            <h3 className="promo-wins-how-title">{title}</h3>
+                        )}
+                        <p className="promo-wins-how-desc">{description}</p>
+                    </div>
+                );
+            })}
+        </div>
+        <p className="promo-wins-how-terms">
+            <Link to="/affiliate-terms">Terms and conditions apply.</Link>
+        </p>
     </section>
 );
 
 const HowItWorksBrief = () => (
     <section className="promo-wins-how-brief" aria-label="How it works">
+        <p className="promo-wins-how-brief-intro">{HOW_INTRO}</p>
         <h2 className="promo-wins-how-brief-title">How it works</h2>
         <p className="promo-wins-how-brief-lead promo-wins-how-brief-lead--yellow">
             As simple as abc
@@ -517,9 +592,6 @@ const HowItWorksBrief = () => (
                 </li>
             ))}
         </ol>
-        <p className="promo-wins-how-brief-cta">
-            Thousands are earning, so should you.
-        </p>
     </section>
 );
 
@@ -593,6 +665,52 @@ const DUMMY_COUNTY_BREAKDOWN = [
     { name: "Kisumu", value: 14 },
     { name: "Nakuru", value: 12 },
     { name: "Kiambu", value: 10 },
+];
+
+/** Shown when commissions earnings list is empty. */
+const DUMMY_EARNINGS = [
+    {
+        id: "earn-1",
+        created_at: "2026-09-05T09:15:00",
+        status: "paid",
+        amount: 2450,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-2",
+        created_at: "2026-09-04T14:32:00",
+        status: "pending",
+        amount: 875,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-3",
+        created_at: "2026-09-03T11:08:00",
+        status: "paid",
+        amount: 3120,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-4",
+        created_at: "2026-09-02T16:45:00",
+        status: "paid",
+        amount: 1580,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-5",
+        created_at: "2026-09-01T10:20:00",
+        status: "pending",
+        amount: 640,
+        month: "Sep 2026",
+    },
+    {
+        id: "earn-6",
+        created_at: "2026-09-01T08:05:00",
+        status: "paid",
+        amount: 4210,
+        month: "Sep 2026",
+    },
 ];
 
 const DonutChart = ({ title, data, emptyLabel }) => {
@@ -890,9 +1008,6 @@ const LeaderboardPanel = ({ commissions, promoCode, onRequestGetCode }) => {
     );
 };
 
-const AFFILIATE_SHARE_MESSAGE = (code) =>
-    `Use my betmundial affiliate code ${code} and start winning! https://betmundial.com`;
-
 const MarketYourselfCTA = ({ promoCode, onRequestGetCode }) => {
     const [shareOpen, setShareOpen] = useState(false);
     const [shareHint, setShareHint] = useState(null);
@@ -921,34 +1036,8 @@ const MarketYourselfCTA = ({ promoCode, onRequestGetCode }) => {
 
     const handleSocialShare = async (platform) => {
         if (!promoCode) return;
-        const text = AFFILIATE_SHARE_MESSAGE(promoCode);
-        const encoded = encodeURIComponent(text);
-        const urlEncoded = encodeURIComponent("https://betmundial.com");
-        const urls = {
-            whatsapp: `https://wa.me/?text=${encoded}`,
-            facebook: `https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}&quote=${encoded}`,
-            x: `https://twitter.com/intent/tweet?text=${encoded}`,
-            instagram: null,
-        };
-
-        if (platform === "instagram" || platform === "copy") {
-            try {
-                await navigator.clipboard.writeText(text);
-                setShareHint(
-                    platform === "instagram"
-                        ? "Message copied — paste it in Instagram."
-                        : "Share message copied."
-                );
-            } catch (_) {
-                setShareHint("Unable to copy. Please share your code manually.");
-            }
-            return;
-        }
-
-        const shareUrl = urls[platform];
-        if (shareUrl) {
-            window.open(shareUrl, "_blank", "noopener,noreferrer");
-        }
+        const { hint } = await openAffiliateSocialShare(platform, promoCode);
+        if (hint) setShareHint(hint);
     };
 
     return (
@@ -1026,17 +1115,68 @@ const MarketYourselfCTA = ({ promoCode, onRequestGetCode }) => {
                             />
                             <span>Instagram</span>
                         </button>
-                        <button
-                            type="button"
-                            className="promo-wins-social-btn"
-                            onClick={() => handleSocialShare("copy")}
-                        >
-                            <FaCopy
-                                className="promo-wins-social-icon"
-                                aria-hidden="true"
-                            />
-                            <span>Copy link</span>
-                        </button>
+                    </div>
+                    <div
+                        className="promo-wins-social-sep"
+                        role="separator"
+                        aria-hidden="true"
+                    />
+                    <div
+                        className="promo-wins-share-fields"
+                        aria-label="Copy link or code"
+                    >
+                        <div className="promo-wins-share-field">
+                            <label
+                                className="promo-wins-share-field-label"
+                                htmlFor="market-share-link"
+                            >
+                                Link
+                            </label>
+                            <div className="promo-wins-share-field-control">
+                                <input
+                                    id="market-share-link"
+                                    type="text"
+                                    className="promo-wins-share-field-input"
+                                    value={getAffiliateShareUrl(promoCode)}
+                                    readOnly
+                                    onFocus={(e) => e.target.select()}
+                                />
+                                <button
+                                    type="button"
+                                    className="promo-wins-share-field-copy"
+                                    onClick={() => handleSocialShare("copy")}
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        <div className="promo-wins-share-field">
+                            <label
+                                className="promo-wins-share-field-label"
+                                htmlFor="market-share-code"
+                            >
+                                Code
+                            </label>
+                            <div className="promo-wins-share-field-control">
+                                <input
+                                    id="market-share-code"
+                                    type="text"
+                                    className="promo-wins-share-field-input"
+                                    value={promoCode}
+                                    readOnly
+                                    onFocus={(e) => e.target.select()}
+                                />
+                                <button
+                                    type="button"
+                                    className="promo-wins-share-field-copy"
+                                    onClick={() =>
+                                        handleSocialShare("copy-code")
+                                    }
+                                >
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     {shareHint ? (
                         <p className="promo-wins-market-share-status" role="status">
@@ -1060,7 +1200,7 @@ const SupportFooter = () => (
     </div>
 );
 
-const EarningsPanel = ({ commissions, isLoading }) => {
+const EarningsPanel = ({ commissions, isLoading, onOpenShare, promoCode }) => {
     const [period, setPeriod] = useState("this_month");
 
     const earnings = useMemo(() => {
@@ -1075,7 +1215,8 @@ const EarningsPanel = ({ commissions, isLoading }) => {
             "promo_wins",
             "affiliate_wins",
         ]);
-        return list.filter((item) =>
+        const source = list.length ? list : DUMMY_EARNINGS;
+        return source.filter((item) =>
             isInPeriod(resolveEarningDate(item), period)
         );
     }, [commissions, period]);
@@ -1135,24 +1276,20 @@ const EarningsPanel = ({ commissions, isLoading }) => {
         <div className="promo-wins-panel">
             <div className="promo-wins-section-head">
                 <h2 className="promo-wins-section-title">Earnings Overview</h2>
-                <label className="promo-wins-filter promo-wins-filter--period">
-                    <FaCalendarAlt aria-hidden="true" />
-                    <select
-                        value={period}
-                        onChange={(e) => setPeriod(e.target.value)}
-                        aria-label="Earnings period"
+                <div className="promo-wins-section-head-actions">
+                    {promoCode ? (
+                        <span className="promo-wins-earnings-code">{promoCode}</span>
+                    ) : null}
+                    <button
+                        type="button"
+                        className="promo-wins-earnings-share"
+                        onClick={onOpenShare}
+                        aria-haspopup="dialog"
                     >
-                        {PERIOD_OPTIONS.map((opt) => (
-                            <option key={opt.value} value={opt.value}>
-                                {opt.label}
-                            </option>
-                        ))}
-                    </select>
-                    <FaChevronDown
-                        className="promo-wins-filter-chevron"
-                        aria-hidden="true"
-                    />
-                </label>
+                        <FaShareAlt aria-hidden="true" />
+                        <span>Share</span>
+                    </button>
+                </div>
             </div>
 
             <div className="promo-wins-overview-grid" aria-label="Earnings overview">
@@ -1187,65 +1324,64 @@ const EarningsPanel = ({ commissions, isLoading }) => {
             </div>
 
             <section className="promo-wins-table-card" aria-label="Latest earnings">
-                <h2 className="promo-wins-section-title">Latest Earnings</h2>
+                <div className="promo-wins-section-head promo-wins-section-head--table">
+                    <h2 className="promo-wins-section-title">Latest Earnings</h2>
+                    <label className="promo-wins-filter promo-wins-filter--period">
+                        <FaCalendarAlt aria-hidden="true" />
+                        <select
+                            value={period}
+                            onChange={(e) => setPeriod(e.target.value)}
+                            aria-label="Earnings period"
+                        >
+                            {PERIOD_OPTIONS.map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </option>
+                            ))}
+                        </select>
+                        <FaChevronDown
+                            className="promo-wins-filter-chevron"
+                            aria-hidden="true"
+                        />
+                    </label>
+                </div>
 
-                <div className="promo-wins-table-wrap">
-                    <table className="promo-wins-table">
+                <div className="promo-wins-table-wrap promo-wins-table-wrap--earnings">
+                    <table className="promo-wins-table promo-wins-table--earnings">
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Referred By</th>
                                 <th>Status</th>
                                 <th>Amount</th>
-                                <th>Type</th>
-                                <th>Details</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             {earnings.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="promo-wins-table-empty">
+                                    <td colSpan={4} className="promo-wins-table-empty">
                                         No earnings yet. Share your affiliate code to start
                                         earning.
                                     </td>
                                 </tr>
                             ) : (
                                 earnings.map((item, index) => {
-                                    const name = resolveEarningName(item, index);
                                     const status = resolveEarningStatus(item);
                                     return (
                                         <tr
                                             key={
                                                 item?.id ??
-                                                `${name}-${resolveEarningDate(item)}-${index}`
+                                                `${resolveEarningDate(item)}-${index}`
                                             }
                                         >
                                             <td>{formatDisplayDate(resolveEarningDate(item))}</td>
-                                            <td>
-                                                <div className="promo-wins-person">
-                                                    <span
-                                                        className={`promo-wins-avatar promo-wins-avatar--${avatarTone(index)}`}
-                                                        aria-hidden="true"
-                                                    >
-                                                        {getInitials(name)}
-                                                    </span>
-                                                    <span>{name}</span>
-                                                </div>
-                                            </td>
                                             <td>
                                                 <StatusBadge status={status} />
                                             </td>
                                             <td className="promo-wins-table-amount">
                                                 {formatKes(resolveEarningAmount(item))}
                                             </td>
-                                            <td className="promo-wins-table-type">
-                                                {resolveEarningType(item)}
-                                            </td>
-                                            <td>
-                                                <span className="promo-wins-table-link">
-                                                    View &gt;
-                                                </span>
-                                            </td>
+                                            <td>{resolveEarningMonth(item)}</td>
                                         </tr>
                                     );
                                 })
@@ -1449,14 +1585,12 @@ const MembersPanel = ({ commissions, isLoading }) => {
                                 <th>Member</th>
                                 <th>Joined On</th>
                                 <th>Status</th>
-                                <th>First Activity</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {pageItems.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="promo-wins-table-empty">
+                                    <td colSpan={3} className="promo-wins-table-empty">
                                         {members.length === 0
                                             ? "No members yet. Members who join with your affiliate code will appear here."
                                             : "No members match your filters."}
@@ -1499,14 +1633,6 @@ const MembersPanel = ({ commissions, isLoading }) => {
                                             <td>{formatDisplayDate(resolveJoinedAt(item))}</td>
                                             <td>
                                                 <StatusBadge status={status} kind="member" />
-                                            </td>
-                                            <td>
-                                                {formatDisplayDate(resolveFirstActivity(item))}
-                                            </td>
-                                            <td>
-                                                <span className="promo-wins-table-link">
-                                                    View &gt;
-                                                </span>
                                             </td>
                                         </tr>
                                     );
@@ -1593,10 +1719,10 @@ const PromoWins = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [commissions, setCommissions] = useState(null);
     const [activeTab, setActiveTab] = useState(TAB_DETAIL);
-    const [promoCode, setPromoCode] = useState(
-        user?.promo_code || null
-    );
+    const [promoCode, setPromoCode] = useState(user?.promo_code || null);
     const [openCustomizeSignal, setOpenCustomizeSignal] = useState(0);
+    const [shareOpen, setShareOpen] = useState(false);
+    const [earnOpen, setEarnOpen] = useState(false);
 
     const getUserCommision = () => {
         const endpoint = "/user/commissions";
@@ -1620,6 +1746,13 @@ const PromoWins = () => {
         getUserCommision();
     }, []);
 
+    // Once per Affiliate page visit: open get-code modal for users without a code.
+    useEffect(() => {
+        if (promoCode) return;
+        setOpenCustomizeSignal((n) => n + 1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only auto-open
+    }, []);
+
     const handleTabChange = (_event, nextTab) => {
         setActiveTab(nextTab);
     };
@@ -1630,6 +1763,29 @@ const PromoWins = () => {
 
     const handleRequestGetCode = useCallback(() => {
         setOpenCustomizeSignal((n) => n + 1);
+    }, []);
+
+    const handleOpenShare = useCallback(() => {
+        if (!promoCode) {
+            setActiveTab(TAB_DETAIL);
+            setOpenCustomizeSignal((n) => n + 1);
+            return;
+        }
+        setShareOpen(true);
+    }, [promoCode]);
+
+    const handleOpenEarn = useCallback(() => {
+        setEarnOpen(true);
+    }, []);
+
+    const handleEarnOpenShare = useCallback(() => {
+        setEarnOpen(false);
+        handleOpenShare();
+    }, [handleOpenShare]);
+
+    const handleEarnOpenEarnings = useCallback(() => {
+        setEarnOpen(false);
+        setActiveTab(TAB_EARNINGS);
     }, []);
 
     const hasCode = Boolean(promoCode);
@@ -1698,8 +1854,12 @@ const PromoWins = () => {
                                         commissions={commissions}
                                         isLoading={isLoading}
                                         onPromoCodeChange={handlePromoCodeChange}
+                                        onOpenShare={handleOpenShare}
                                     />
-                                    <HowItWorks />
+                                    <HowItWorks
+                                        onOpenShare={handleOpenShare}
+                                        onOpenEarn={handleOpenEarn}
+                                    />
                                     <TrustBar />
                                 </>
                             ) : (
@@ -1711,6 +1871,7 @@ const PromoWins = () => {
                                                 isLoading={isLoading}
                                                 onPromoCodeChange={handlePromoCodeChange}
                                                 openCustomizeSignal={openCustomizeSignal}
+                                                onOpenShare={handleOpenShare}
                                             />
                                         </div>
                                         <div className="promo-wins-nocode-col promo-wins-nocode-col--how">
@@ -1739,6 +1900,8 @@ const PromoWins = () => {
                             <EarningsPanel
                                 commissions={commissions}
                                 isLoading={isLoading}
+                                onOpenShare={handleOpenShare}
+                                promoCode={promoCode}
                             />
                         ) : null}
                     </div>
@@ -1761,6 +1924,18 @@ const PromoWins = () => {
 
                 <SupportFooter />
             </div>
+
+            <AffiliateShareModal
+                show={shareOpen}
+                onHide={() => setShareOpen(false)}
+                promoCode={promoCode}
+            />
+            <AffiliateEarnModal
+                show={earnOpen}
+                onHide={() => setEarnOpen(false)}
+                onOpenShare={handleEarnOpenShare}
+                onOpenEarnings={handleEarnOpenEarnings}
+            />
         </div>
     );
 };

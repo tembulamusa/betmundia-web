@@ -11,6 +11,7 @@ import Notify from '../utils/Notify';
 import { Link } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { getFromLocalStorage } from '../utils/local-storage';
+import { savePendingVerifyAuth } from '../utils/pending-verify-auth';
 
 const Signup = (props) => {
     const [isLoading, setIsLoading] = useState(false)
@@ -25,15 +26,17 @@ const Signup = (props) => {
 
     useEffect(() => {
         dispatch({ type: "SET", key: "fullpagewidth", payload: true });
+        dispatch({ type: "DEL", key: "showloginmodal" });
         return () => {
             dispatch({ type: "DEL", key: "fullpagewidth" });
         };
-    }, []);
+    }, [dispatch]);
 
     const initialValues = {
         msisdn: '',
         password: '',
         password2: '',
+        promo_code: '',
         created_by: "web"
     }
 
@@ -43,17 +46,25 @@ const Signup = (props) => {
         let data = {
             msisdn: values.msisdn,
             password: values.password,
-            promo_code: values.promo_code,
+            promo_code: values.promo_code || undefined,
             app_name: app,
         };
 
         makeRequest({ url: endpoint, method: 'POST', data: data, api_version: 2 }).then(([status, response]) => {
             setMessage(response?.message);
-            dispatch({ type: "SET", key: "regmsisdn", payload: values?.msisdn })
             if ([200, 201, 204].includes(status)) {
-                Notify({ status: 200, message: "Registration successful. Please login to your account" })
-                setTimeout(() => {
-                }, 3000);
+                dispatch({ type: "SET", key: "regmsisdn", payload: values?.msisdn });
+                // In-memory + sessionStorage for auto-login after verify (cleared after login)
+                dispatch({ type: "SET", key: "regpassword", payload: values?.password });
+                savePendingVerifyAuth({
+                    msisdn: values?.msisdn,
+                    password: values?.password,
+                });
+                dispatch({ type: "DEL", key: "showloginmodal" });
+                Notify({
+                    status: 200,
+                    message: "Registration successful. Please verify your account.",
+                });
                 navigate("/verify-account");
             } else {
                 Notify({ status: 400, message: "Error Making registration" })
@@ -78,6 +89,8 @@ const Signup = (props) => {
         if (values.password2 != values.password) {
             errors.password2 = "Passwords don't match";
         }
+
+        // promo_code is optional — never block submit when empty
 
         return errors
     }
@@ -137,7 +150,10 @@ const Signup = (props) => {
                         </div>
                         <div className="form-group row d-flex justify-content-center mt-5">
                             <div className="col-md-12">
-                                <label style={{ color: '#ffffff' }}>Mobile Number <span style={{ color: '#a71f66' }}>(Safaricom Only)</span></label>
+                                <label style={{ color: '#ffffff' }}>
+                                    Mobile Number <span style={{ color: '#ff6b9d' }}>*</span>{' '}
+                                    <span style={{ color: '#a71f66' }}>(Safaricom Only)</span>
+                                </label>
                                 <input
                                     value={values.msisdn}
                                     className="form-control block px-3 py-3 w-full rounded-2xl std-input "
@@ -145,6 +161,7 @@ const Signup = (props) => {
                                     name="msisdn"
                                     type="text"
                                     placeholder='Phone number'
+                                    required
                                     onChange={ev => onFieldChanged(ev)}
                                     onKeyPress={ev => handleKeyPress(ev, submitForm)}
                                 />
@@ -154,7 +171,9 @@ const Signup = (props) => {
 
                         <div className="form-group row d-flex justify-content-center mt-5">
                             <div className="col-md-12 relative">
-                                <label style={{ color: '#ffffff' }}>Password</label>
+                                <label style={{ color: '#ffffff' }}>
+                                    Password <span style={{ color: '#ff6b9d' }}>*</span>
+                                </label>
                                 <div className="relative">
                                     <input
                                         value={values.password}
@@ -163,6 +182,7 @@ const Signup = (props) => {
                                         name="password"
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder='Password'
+                                        required
                                         onChange={ev => onFieldChanged(ev)}
                                         onKeyPress={ev => handleKeyPress(ev, submitForm)}
                                     />
@@ -179,7 +199,9 @@ const Signup = (props) => {
 
                         <div className="form-group row d-flex justify-content-center mt-5">
                             <div className="col-md-12 relative">
-                                <label style={{ color: '#ffffff' }}>Repeat Password</label>
+                                <label style={{ color: '#ffffff' }}>
+                                    Repeat Password <span style={{ color: '#ff6b9d' }}>*</span>
+                                </label>
                                 <div className="relative">
                                     <input
                                         value={values.password2}
@@ -188,6 +210,7 @@ const Signup = (props) => {
                                         name="password2"
                                         type={showPassword2 ? 'text' : 'password'}
                                         placeholder='Repeat password'
+                                        required
                                         onChange={ev => onFieldChanged(ev)}
                                         onKeyPress={ev => handleKeyPress(ev, submitForm)}
                                     />
@@ -202,10 +225,12 @@ const Signup = (props) => {
                             </div>
                         </div>
 
-                        {/* refcode */}
+                        {/* refcode — optional */}
                         <div className="form-group row d-flex justify-content-center mt-5">
                             <div className="col-md-12">
-                                <label style={{ color: '#ffffff' }}>Promo Code</label>
+                                <label style={{ color: '#ffffff' }}>
+                                    <span style={{ color: 'rgba(255,255,255,0.7)' }}>(optional)</span> Promo Code
+                                </label>
                                 <input
                                     ref={promoCodeRef}
                                     value={values.promo_code}

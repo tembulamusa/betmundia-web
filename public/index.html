@@ -5,16 +5,53 @@
   <meta charset="utf-8" />
 
 
-  <!--Start of Tawk.to Script-->
+  <!--Start of Tawk.to Script (fail-safe)-->
   <script type="text/javascript">
-    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
     (function () {
-      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-      s1.async = true;
-      s1.src = 'https://embed.tawk.to/69aeee647f65b51c3392421d/1jj9l6f39';
-      s1.charset = 'UTF-8';
-      s1.setAttribute('crossorigin', '*');
-      s0.parentNode.insertBefore(s1, s0);
+      function isTawkNoise(message, source) {
+        var msg = String(message || '');
+        var src = String(source || '');
+        return /tawk/i.test(msg) || /tawk\.to/i.test(src) || /embed\.tawk/i.test(src) || /twk-/i.test(msg);
+      }
+
+      // Keep Tawk failures from showing as visible page / overlay errors
+      window.addEventListener('error', function (event) {
+        if (isTawkNoise(event && event.message, event && event.filename)) {
+          event.preventDefault();
+          event.stopPropagation();
+          return true;
+        }
+      }, true);
+
+      window.addEventListener('unhandledrejection', function (event) {
+        var reason = event && event.reason;
+        var msg = reason && (reason.message || reason);
+        var stack = reason && reason.stack;
+        if (isTawkNoise(msg, stack)) {
+          event.preventDefault();
+        }
+      });
+
+      try {
+        window.Tawk_API = window.Tawk_API || {};
+        window.Tawk_LoadStart = new Date();
+        var s1 = document.createElement('script');
+        var s0 = document.getElementsByTagName('script')[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/69aeee647f65b51c3392421d/1jj9l6f39';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s1.onerror = function () {
+          window.__tawkLoadFailed = true;
+        };
+        if (s0 && s0.parentNode) {
+          s0.parentNode.insertBefore(s1, s0);
+        } else if (document.head) {
+          document.head.appendChild(s1);
+        }
+      } catch (e) {
+        window.__tawkLoadFailed = true;
+      }
     })();
   </script>
   <!--End of Tawk.to Script-->

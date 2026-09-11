@@ -105,7 +105,7 @@ const LiveSideBar = (props) => {
             zIndex: 10,
             top: "100px"
         }}
-            className={`px-2 vh-100 text-white sticky-top d-none d-md-block up col-md-2 live-sidebar`}>
+            className={`pl-0 pr-[6px] vh-100 text-white sticky-top d-none d-md-block up col-md-2 live-sidebar`}>
             <Sidebar
                 id='live-sidebar-left'
                 style={{ backgroundColor: 'rgba(0, 12, 36, 1)!important' }}

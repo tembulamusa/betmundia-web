@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Betradar LMT+ demo — Betmundial</title>
+  <style>
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: rgb(0, 12, 36);
+      color: #fff;
+      font-family: Segoe UI, system-ui, sans-serif;
+    }
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+    h1 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+    .meta {
+      font-size: 13px;
+      opacity: 0.75;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+    .widgets {
+      width: 100%;
+      min-height: 420px;
+      background: transparent;
+    }
+    .sr-widget {
+      width: 100%;
+      min-height: 420px;
+    }
+    .status {
+      margin-top: 12px;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Betradar widgetloader demo</h1>
+    <div class="meta">
+      client: d9d6a9c373db18dfdf63352e1c1d9321<br />
+      widget: match.lmtPlus<br />
+      matchId: 74165894
+    </div>
+    <div class="widgets">
+      <div>
+        <div class="sr-widget sr-widget-1"></div>
+      </div>
+    </div>
+    <div class="status" id="status">Booting SIR…</div>
+  </div>
+
+  <script>
+    (function (a, b, c, d, e, f, g, h, i) {
+      a[e] || (
+        (i = a[e] = function () {
+          (a[e].q = a[e].q || []).push(arguments);
+        }),
+        (i.l = 1 * new Date()),
+        (i.o = f),
+        (g = b.createElement(c)),
+        (h = b.getElementsByTagName(c)[0]),
+        (g.async = 1),
+        (g.src = d),
+        g.setAttribute("n", e),
+        g.onload = function () {
+          document.getElementById("status").textContent = "widgetloader loaded — mounting LMT+…";
+        },
+        g.onerror = function () {
+          document.getElementById("status").textContent = "widgetloader failed to load (network / allowlist).";
+        },
+        h.parentNode.insertBefore(g, h)
+      );
+    })(
+      window,
+      document,
+      "script",
+      "https://widgets.sir.sportradar.com/d9d6a9c373db18dfdf63352e1c1d9321/widgetloader",
+      "SIR",
+      {
+        theme: false,
+        language: "en"
+      }
+    );
+
+    SIR("addWidget", ".sr-widget-1", "match.lmtPlus", {
+      matchId: 74165894,
+      streamToggle: "onPitchButton",
+      layout: "double",
+      detailedScoreboard: "disable",
+      tabsPosition: "top",
+      silent: true,
+      onTrack: function (eventType, data) {
+        var el = document.getElementById("status");
+        if (eventType === "error" || (eventType === "data_change" && data && data.error)) {
+          el.textContent = "Widget error: " + JSON.stringify(data && data.error ? data.error : data);
+          return;
+        }
+        if (eventType === "data_change") {
+          el.textContent = "LMT+ receiving data for match 74165894.";
+        }
+      }
+    });
+
+    // Surface Sportradar domain licensing (common localhost / domain blocker)
+    fetch("https://widgets.sir.sportradar.com/d9d6a9c373db18dfdf63352e1c1d9321/licensing")
+      .then(function (r) { return r.json(); })
+      .then(function (lic) {
+        var el = document.getElementById("status");
+        if (lic && lic.valid === false) {
+          el.textContent = "Licensing blocked on " + location.hostname + ": " + (lic.emsg || JSON.stringify(lic)) +
+            " — ask Sportradar to allowlist betmundial.com (and www / localhost) for client d9d6a9c373db18dfdf63352e1c1d9321.";
+        } else if (lic && lic.valid) {
+          el.textContent = "Licensing OK for " + location.hostname + " — LMT+ should render.";
+        }
+      })
+      .catch(function () { /* ignore */ });
+  </script>
+</body>
+</html>

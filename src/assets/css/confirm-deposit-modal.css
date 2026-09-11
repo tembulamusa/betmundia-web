@@ -1,8 +1,8 @@
 /* Confirm Mpesa Deposit / Check Deposit Status modal */
 
 .confirm-deposit-modal {
-  --cdm-pink: #e91e8c;
-  --cdm-pink-soft: #ff52d4;
+  --cdm-pink: #a71f66;
+  --cdm-pink-soft: #a71f66;
   --cdm-pink-deep: #a71f66;
   --cdm-green: #00c853;
   --cdm-bg: #0f111a;
@@ -12,23 +12,14 @@
   --cdm-border: rgba(255, 255, 255, 0.12);
   --cdm-text: #ffffff;
   --cdm-muted: rgba(255, 255, 255, 0.55);
-  --cdm-radius: 14px;
-  --cdm-radius-sm: 10px;
+  --cdm-radius: 4px;
+  --cdm-radius-sm: 4px;
 }
 
 .confirm-deposit-modal.modal-dialog {
   max-width: 420px;
   margin-left: auto;
   margin-right: auto;
-}
-
-.confirm-deposit-modal .modal-content {
-  background: var(--cdm-bg);
-  border: 1px solid var(--cdm-border);
-  border-radius: var(--cdm-radius);
-  overflow: hidden;
-  color: var(--cdm-text);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
 }
 
 .confirm-deposit-modal .modal-body {
@@ -40,13 +31,13 @@
   box-sizing: border-box;
 }
 
-/* Magenta gradient header */
+/* Solid brand purple header */
 .cdm-header {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.95rem 1rem;
-  background: linear-gradient(90deg, var(--cdm-pink-deep) 0%, var(--cdm-pink) 55%, #c2185b 100%);
+  background: #a71f66;
   border-bottom: none;
 }
 
@@ -189,7 +180,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.18rem;
-  box-shadow: 0 2px 8px rgba(233, 30, 140, 0.35);
+  box-shadow: none;
 }
 
 .cdm-hero-bubble::after {
@@ -224,7 +215,7 @@
   align-items: center;
   justify-content: center;
   border: 2px solid var(--cdm-bg);
-  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.35);
+  box-shadow: none;
 }
 
 .cdm-hero-check svg {
@@ -265,9 +256,85 @@
   color: rgba(255, 255, 255, 0.65);
 }
 
-.cdm-label svg {
-  font-size: 1.15rem;
+.cdm-label > label {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.cdm-help-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  z-index: 5;
+}
+
+.cdm-help-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
   color: var(--cdm-muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.cdm-help-trigger:hover,
+.cdm-help-trigger:focus-visible {
+  color: var(--cdm-pink);
+  outline: none;
+}
+
+.cdm-help-trigger svg {
+  font-size: 1.15rem;
+}
+
+.cdm-help-tooltip {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 48px));
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 0.85rem;
+  background: var(--cdm-bg);
+  border: 1px solid var(--cdm-border);
+  border-radius: var(--cdm-radius-sm);
+  box-shadow: none;
+  z-index: 20;
+  text-align: left;
+}
+
+.cdm-help-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.25;
+}
+
+.cdm-help-desc {
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--cdm-muted);
+  line-height: 1.4;
+}
+
+.cdm-help-arrow {
+  position: absolute;
+  top: -5px;
+  left: 8px;
+  width: 10px;
+  height: 10px;
+  background: var(--cdm-bg);
+  border-left: 1px solid var(--cdm-border);
+  border-top: 1px solid var(--cdm-border);
+  transform: rotate(45deg);
 }
 
 .cdm-input-wrap {
@@ -294,7 +361,7 @@
 }
 
 .cdm-input:focus {
-  border-color: rgba(233, 30, 140, 0.5) !important;
+  border-color: rgba(167, 31, 102, 0.5) !important;
 }
 
 .cdm-input::placeholder {
@@ -329,55 +396,6 @@
 
 .cdm-paste-btn svg {
   font-size: 1.45rem;
-}
-
-/* Info card */
-.cdm-info-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin: 0 0 1.15rem;
-  padding: 0.85rem 0.9rem;
-  background: var(--cdm-surface);
-  border: 1px solid var(--cdm-border);
-  border-radius: var(--cdm-radius-sm);
-}
-
-.cdm-info-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 50%;
-  background: rgba(233, 30, 140, 0.18);
-  color: var(--cdm-pink);
-  flex-shrink: 0;
-}
-
-.cdm-info-icon svg {
-  font-size: 1.2rem;
-}
-
-.cdm-info-copy {
-  flex: 1;
-  min-width: 0;
-}
-
-.cdm-info-title {
-  margin: 0 0 0.2rem;
-  font-size: 1.32rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.25;
-}
-
-.cdm-info-desc {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: var(--cdm-muted);
-  line-height: 1.4;
 }
 
 /* Submit */
