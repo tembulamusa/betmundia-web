@@ -1788,25 +1788,33 @@ input.std-input::placeholder {
 .matches .top-matches .match-detail > button.home-team .mkt-detail-label {
   flex: 1 1 auto;
   min-width: 0;
+  max-width: none;
   font-weight: 400;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.85) !important;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.matches .top-matches .match-detail > button.home-team .odd-side {
+.matches .top-matches .match-detail > button.home-team .odd-side,
+.matches .top-matches .match-detail > button.home-team .odd-value.odd-side {
   flex: 0 0 auto;
-  width: auto;
+  float: none;
+  width: auto !important;
   min-width: 3.5em;
+  max-width: 40%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-end;
+  text-align: right;
 }
 
 .matches .top-matches .match-detail > button.home-team .odd-value {
   float: none;
-  width: 100%;
-  text-align: center;
+  width: auto;
+  text-align: right;
 }
 
 @media (max-width: 767px) {
