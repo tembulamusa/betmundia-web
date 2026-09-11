@@ -24,6 +24,7 @@ import './assets/css/withdraw-page.css';
 import './assets/css/change-password-page.css';
 import './assets/css/crash-terms-page.css';
 import './assets/css/affiliate-terms-page.css';
+import './assets/css/privacy-policy-page.css';
 import './assets/css/how-to-play-page.css';
 import './assets/css/responsible-gambling-page.css';
 import './assets/css/faqs-page.css';
