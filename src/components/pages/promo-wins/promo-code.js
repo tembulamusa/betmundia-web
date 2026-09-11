@@ -4,7 +4,6 @@ import {
     FaFacebook,
     FaGift,
     FaInstagram,
-    FaPercent,
     FaPlus,
     FaShareAlt,
     FaWhatsapp,
@@ -81,7 +80,7 @@ const AFFILIATE_TERMS = [
 const CODE_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]{2,31}$/;
 const CHECK_DEBOUNCE_MS = 450;
 
-function resolveReferralCount(commissions) {
+export function resolveReferralCount(commissions) {
     if (!commissions) return 0;
     const raw =
         commissions.total_referrals ??
@@ -787,7 +786,6 @@ const PromoCode = ({
         setShowCustomize(true);
     }, [openCustomizeSignal, promoCode]);
 
-    const referrals = resolveReferralCount(commissions);
     const totalEarnings = resolveTotalEarnings(commissions);
 
     const persistPromoCode = (code) => {
@@ -882,24 +880,8 @@ const PromoCode = ({
                     </div>
                 </div>
 
-                <div className="promo-wins-code-stats" aria-label="Affiliate stats">
-                    <div className="promo-wins-code-stat">
-                        <span
-                            className="promo-wins-code-stat-icon promo-wins-code-stat-icon--pink"
-                            aria-hidden="true"
-                        >
-                            <FaPercent />
-                        </span>
-                        <div>
-                            <p className="promo-wins-code-stat-label">
-                                Total Referrals
-                            </p>
-                            <p className="promo-wins-code-stat-value">
-                                {isLoading ? "…" : referrals}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="promo-wins-code-stat">
+                <div className="promo-wins-code-stats" aria-label="Affiliate balance">
+                    <div className="promo-wins-code-stat promo-wins-code-stat--balance">
                         <span
                             className="promo-wins-code-stat-icon promo-wins-code-stat-icon--yellow"
                             aria-hidden="true"
@@ -910,7 +892,7 @@ const PromoCode = ({
                             <p className="promo-wins-code-stat-label">
                                 Balance
                             </p>
-                            <p className="promo-wins-code-stat-value promo-wins-code-stat-value--yellow">
+                            <p className="promo-wins-code-stat-value promo-wins-code-stat-value--yellow promo-wins-code-stat-value--balance">
                                 {isLoading ? (
                                     "…"
                                 ) : (
