@@ -5,6 +5,7 @@ import {
     Navigate,
     Route,
     Routes,
+    useLocation,
 } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,6 +25,7 @@ import './assets/css/withdraw-page.css';
 import './assets/css/change-password-page.css';
 import './assets/css/crash-terms-page.css';
 import './assets/css/affiliate-terms-page.css';
+import './assets/css/privacy-policy-page.css';
 import './assets/css/how-to-play-page.css';
 import './assets/css/responsible-gambling-page.css';
 import './assets/css/faqs-page.css';
@@ -90,8 +92,15 @@ import AffiliateTerms from "./components/pages/affiliate-terms";
 
 const container = document.getElementById("app");
 
-const App = () => {
+const AppShell = () => {
     const [state,] = useContext(Context);
+    const { pathname } = useLocation();
+    const launchedCasino = !!(
+        state?.casinolaunch ||
+        state?.surecoinlaunched ||
+        pathname.startsWith("/casino-game/")
+    );
+    const hideSideChrome = !!(launchedCasino || state?.fullpagewidth);
 
     useIpAddress();
 
@@ -100,20 +109,17 @@ const App = () => {
     }, []);
 
     return (
-        <BrowserRouter>
-            <PageviewTracker />
-            <PromoTracker />
-            <div className={`${(state?.casinolaunch || state?.surecoinlaunched) && "launched-casino-wrapper "} ${state?.hideBigIconNav && 'no-big-icon-nav'}`}>
+            <div className={`${launchedCasino && "launched-casino-wrapper "} ${state?.hideBigIconNav && 'no-big-icon-nav'}`}>
                 <Suspense fallback={<p></p>}>
                     {!state?.fullcasinoscreen && <Header />}
                     <div className={`${state?.fullcasinoscreen && "no-header"} amt `}>
                         <div className={`flex big-icon second-nav ck pc app-navbar app-header-nav`}>
                             {/* <HeaderNav/> */}
                         </div>
-                        <div className={`${state?.casinolaunch ? "" : "diminish-mobile-row row"}`}>
+                        <div className={`${launchedCasino ? "" : "diminish-mobile-row row"}`}>
                             {/* Conditional load live or otherwise */}
-                            {!(state?.casinolaunch || state?.fullpagewidth || state?.surecoinlaunched) && <Sidebar />}
-                            <div className={`${(state?.casinolaunch || state?.fullpagewidth || state?.surecoinlaunched) ? "" : `${state?.nosports ? "col-md-10 mx-auto y-scrollable-window" : "col-md-7 home mx-auto"}`}`}>
+                            {!hideSideChrome && <Sidebar />}
+                            <div className={`${hideSideChrome ? "" : `${state?.nosports ? "col-md-10 mx-auto y-scrollable-window" : "col-md-7 home mx-auto"}`}`}>
                                 <Routes>
                                     <Route exact path="/casino" element={<Casino />} />
                                     <Route exact path="/live-casino" element={<LiveCasino />} />
@@ -174,18 +180,26 @@ const App = () => {
 
                                 </Routes>
                             </div>
-                            {!(state?.casinolaunch || state?.fullpagewidth || state?.surecoinlaunched) && <Right />}
+                            {!hideSideChrome && <Right />}
                         </div>
                     </div>
                     {!state?.fullcasinoscreen && <Footer />}
                     <MobileBottomNav />
                 </Suspense>
             </div>
+    );
+};
+
+const App = () => {
+    return (
+        <BrowserRouter>
+            <PageviewTracker />
+            <PromoTracker />
+            <AppShell />
         </BrowserRouter>
-    )
-
-
+    );
 }
+
 
 
 
