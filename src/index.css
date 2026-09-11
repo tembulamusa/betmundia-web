@@ -696,7 +696,7 @@ aside.ps-sidebar-root:focus-visible,
     letter-spacing: 0.02em;
     padding: 6px 10px;
     border-radius: 4px 4px 0 0;
-    background: rgba(0, 0, 0, 0.25);
+    background: #0A162DB0;
   }
 
   /* Keep desktop-only markets (Double Chance, Over/Under) hidden on mobile:
@@ -1753,46 +1753,75 @@ input.std-input::placeholder {
   }
 }
 
-/* Match detail market rows — equal-height buttons + label/odds layout */
+/* Match detail market rows — listing-style outcome buttons (label over odds) */
+.matches .top-matches.event-row {
+  margin-bottom: 0.65rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.matches .top-matches.event-row > .top-matches.header {
+  margin-bottom: 0;
+  border-radius: 4px 4px 0 0;
+}
+
 .matches .top-matches.event-row > .grid {
   align-items: stretch;
+  gap: 1px !important;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+  margin: 0;
 }
 
 .matches .top-matches .match-detail {
   display: flex;
-  min-height: 40px;
-  margin-bottom: 4px;
+  min-height: 0;
+  margin-bottom: 0;
+  background: transparent;
 }
 
 .matches .top-matches .match-detail > button {
   width: 100%;
   min-width: 100%;
   height: 100%;
-  min-height: 40px;
+  min-height: 52px;
   float: none;
   box-sizing: border-box;
-  margin-bottom: 0;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.15);
+  margin-bottom: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  text-align: center !important;
+  padding: 8px 4px !important;
+  line-height: 1.2 !important;
 }
 
 .matches .top-matches .match-detail > button.home-team {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  justify-content: center;
+  gap: 4px;
 }
 
 .matches .top-matches .match-detail > button.home-team .text-side,
 .matches .top-matches .match-detail > button.home-team .mkt-detail-label {
-  flex: 1 1 auto;
+  float: none;
+  display: block;
+  flex: 0 1 auto;
+  width: 100%;
   min-width: 0;
-  max-width: none;
-  font-weight: 400;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.85) !important;
-  text-align: left;
+  max-width: 100%;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #ffffff !important;
+  opacity: 0.9;
+  text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1803,48 +1832,46 @@ input.std-input::placeholder {
   flex: 0 0 auto;
   float: none;
   width: auto !important;
-  min-width: 3.5em;
-  max-width: 40%;
-  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  display: block;
   align-items: center;
-  justify-content: flex-end;
-  text-align: right;
+  justify-content: center;
+  text-align: center;
 }
 
 .matches .top-matches .match-detail > button.home-team .odd-value {
   float: none;
   width: auto;
-  text-align: right;
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  color: #ffc428 !important;
 }
 
-@media (max-width: 767px) {
-  .matches .top-matches .match-detail > button.home-team {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 2px;
-    height: auto;
-    min-height: 40px;
-    text-align: left;
-  }
+.matches .top-matches .match-detail > button.home-team:hover,
+.matches .top-matches .match-detail > button.home-team:focus {
+  background: #a71f66 !important;
+}
 
-  .matches .top-matches .match-detail > button.home-team .text-side,
-  .matches .top-matches .match-detail > button.home-team .mkt-detail-label {
-    max-width: 100%;
-    width: 100%;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
-    text-wrap: balance;
-  }
+.matches .top-matches .match-detail > button.home-team:hover .mkt-detail-label,
+.matches .top-matches .match-detail > button.home-team:focus .mkt-detail-label,
+.matches .top-matches .match-detail > button.home-team:hover .text-side,
+.matches .top-matches .match-detail > button.home-team:focus .text-side {
+  color: #ffffff !important;
+}
 
-  .matches .top-matches .match-detail > button.home-team .odd-side {
-    width: 100%;
-    min-width: 0;
-    align-self: stretch;
-    justify-content: center;
-    text-align: center;
-  }
+.matches .top-matches .match-detail > button.home-team:hover .odd-value,
+.matches .top-matches .match-detail > button.home-team:focus .odd-value {
+  color: #ffc428 !important;
+}
+
+.matches .top-matches .match-detail > button.home-team.picked .mkt-detail-label,
+.matches .top-matches .match-detail > button.home-team.picked .text-side,
+.matches .top-matches .match-detail > button.home-team.picked .odd-value {
+  color: #ffffff !important;
 }
 
 /* Remove focus/click outline on match rows, game links, and odds buttons */
@@ -2843,7 +2870,7 @@ h1.std-title {
 }
 
 .matches .top-matches.header {
-  background: #0A162D !important;
+  background: #0A162DB0 !important;
 }
 
 .top-matches.header.row .col-9 {
