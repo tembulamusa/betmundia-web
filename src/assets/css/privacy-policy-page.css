@@ -1,0 +1,85 @@
+/* Privacy Policy page — supplements affiliate-terms-page layout */
+
+.privacy-policy-org {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+}
+
+.privacy-policy-intro {
+  margin: 0 0 1.25rem;
+  padding: 1.1rem 1.15rem;
+  border-radius: var(--at-radius-sm, 8px);
+  border: 1px solid var(--at-panel-border, rgba(255, 255, 255, 0.09));
+  background: var(--at-panel, rgba(255, 255, 255, 0.05));
+}
+
+.privacy-policy-intro p {
+  margin: 0;
+  color: var(--at-muted, rgba(255, 255, 255, 0.8));
+  line-height: 1.55;
+}
+
+.privacy-policy-intro p + p {
+  margin-top: 0.85rem;
+}
+
+.privacy-policy-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0.85rem 0 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.privacy-policy-rights-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 28rem;
+  font-size: 1.05rem;
+}
+
+.privacy-policy-rights-table th,
+.privacy-policy-rights-table td {
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  line-height: 1.45;
+}
+
+.privacy-policy-rights-table thead th {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.privacy-policy-rights-table tbody th {
+  width: 32%;
+  color: #fff;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.privacy-policy-rights-table tbody td {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.privacy-policy-rights-table tbody tr:last-child th,
+.privacy-policy-rights-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.privacy-policy-page .affiliate-terms-page-subtitle a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.privacy-policy-page .affiliate-terms-page-subtitle a:hover {
+  color: #ff52d4;
+}
