@@ -614,21 +614,9 @@ const PrivacyPolicy = () => {
                 </button>
 
                 <div className="affiliate-terms-page-heading">
-                    <p className="privacy-policy-org">
-                        Betmundial / AIB Petals Limited
-                    </p>
                     <h1 className="affiliate-terms-page-title">
                         Privacy Policy
                     </h1>
-                    <p className="affiliate-terms-page-subtitle">
-                        <a
-                            href="https://betmundial.com/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            https://betmundial.com/
-                        </a>
-                    </p>
                 </div>
 
                 <span

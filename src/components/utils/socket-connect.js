@@ -44,11 +44,4 @@ if (socket.io && typeof socket.io.on === 'function') {
   });
 }
 
-setInterval(() => {
-  if (!socket.connected) {
-    console.log('[socket] periodic reconnect check: socket is disconnected, attempting reconnect');
-    socket.connect();
-  }
-}, 5 * 60 * 1000);
-
 export default socket;
