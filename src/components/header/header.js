@@ -78,6 +78,14 @@ const Header = (props) => {
         }
     }, user ? 1000 * 60 : null);
 
+    // Every 2 minutes: if the socket dropped, reconnect from the main header.
+    useInterval(() => {
+        if (!socket.connected) {
+            console.log('[socket] header reconnect check: disconnected, connecting again');
+            socket.connect();
+        }
+    }, 1000 * 60 * 2);
+
     useInterval(async () => {
         const checkIfExpired = () => {
             try {

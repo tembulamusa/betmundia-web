@@ -23,7 +23,11 @@ const MobileBottomNav = () => {
     }, [onJackpotPage, state?.betslip, state?.jackpotbetslip]);
 
     const hideChrome =
-        state?.casinolaunch || state?.fullpagewidth || state?.surecoinlaunched || state?.fullcasinoscreen;
+        state?.casinolaunch ||
+        state?.fullpagewidth ||
+        state?.surecoinlaunched ||
+        state?.fullcasinoscreen ||
+        pathname.startsWith("/casino-game/");
 
     if (hideChrome) {
         return null;

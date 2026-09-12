@@ -37,7 +37,10 @@ import {
     FaChartLine,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import PromoCode, { AffiliateShareModal } from "./promo-code";
+import PromoCode, {
+    AffiliateShareModal,
+    resolveReferralCount,
+} from "./promo-code";
 import {
     getAffiliateShareUrl,
     openAffiliateSocialShare,
@@ -541,9 +544,28 @@ const AffiliateEarnModal = ({ show, onHide, onOpenShare, onOpenEarnings }) => (
     </Modal>
 );
 
-const HowItWorks = ({ onOpenShare, onOpenEarn }) => (
+const HowItWorks = ({ onOpenShare, onOpenEarn, referrals, isLoading }) => (
     <section className="promo-wins-how" aria-label="How it works">
-        <p className="promo-wins-how-intro">{HOW_INTRO}</p>
+        <div className="promo-wins-how-hero">
+            <p className="promo-wins-how-referrals">
+                <span className="promo-wins-how-referrals-label">
+                    Total Referrals
+                </span>
+                <span className="promo-wins-how-referrals-value">
+                    {isLoading ? "…" : referrals}
+                </span>
+            </p>
+            <button
+                type="button"
+                className="promo-wins-how-share"
+                onClick={onOpenShare}
+                aria-haspopup="dialog"
+            >
+                <FaShareAlt aria-hidden="true" />
+                <span>Promote / Share</span>
+            </button>
+            <p className="promo-wins-how-intro">{HOW_INTRO}</p>
+        </div>
         <div className="promo-wins-how-steps">
             {HOW_IT_WORKS.map(({ id, title, description, Icon }) => {
                 const isShare = id === "share";
@@ -1778,6 +1800,11 @@ const PromoWins = () => {
         setEarnOpen(true);
     }, []);
 
+    const totalReferrals = useMemo(
+        () => resolveReferralCount(commissions),
+        [commissions]
+    );
+
     const handleEarnOpenShare = useCallback(() => {
         setEarnOpen(false);
         handleOpenShare();
@@ -1856,9 +1883,16 @@ const PromoWins = () => {
                                         onPromoCodeChange={handlePromoCodeChange}
                                         onOpenShare={handleOpenShare}
                                     />
+                                    <LeaderboardPanel
+                                        commissions={commissions}
+                                        promoCode={promoCode}
+                                        onRequestGetCode={handleRequestGetCode}
+                                    />
                                     <HowItWorks
                                         onOpenShare={handleOpenShare}
                                         onOpenEarn={handleOpenEarn}
+                                        referrals={totalReferrals}
+                                        isLoading={isLoading}
                                     />
                                     <TrustBar />
                                 </>

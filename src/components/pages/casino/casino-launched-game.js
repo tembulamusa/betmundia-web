@@ -108,6 +108,11 @@ const CasinoLaunchedGame = (props) => {
 
     useEffect(() => {
         dispatch({ type: "SET", key: "iscasinopage", payload: true });
+        // Keep launched shell alive across game-to-game navigations so sidebars never remount.
+        const existingShell =
+            state?.casinolaunch || getFromLocalStorage("casinolaunch") || { game: "", url: "" };
+        dispatch({ type: "SET", key: "casinolaunch", payload: existingShell });
+
         if (surePopular) {
             const gameId = findGameId(provider, gameName);
             if (gameId) {
@@ -138,8 +143,18 @@ const CasinoLaunchedGame = (props) => {
             }
         }
 
-        // Cleanup function
+        // Cleanup: only unload the launched shell when leaving casino-game routes entirely.
+        // Game-to-game navigation must keep casinolaunch / iscasinopage so sidebars do not flicker.
         return () => {
+            const stillOnCasinoGame = window.location.pathname.startsWith("/casino-game/");
+            if (stillOnCasinoGame) {
+                setBitvilleGame(false);
+                setNoStateGame(null);
+                dispatch({ type: "DEL", key: "bitvilleGame" });
+                removeItem("bitvilleGame");
+                return;
+            }
+
             dispatch({ type: "DEL", key: "iscasinopage" });
             dispatch({ type: "DEL", key: "fullcasinoscreen" });
             dispatch({ type: "DEL", key: "casinolaunch" });
@@ -148,7 +163,6 @@ const CasinoLaunchedGame = (props) => {
             removeItem("bitvilleGame");
             setBitvilleGame(false);
             setNoStateGame(null);
-
         };
     }, [provider, gameName, surePopular, state?.casinofilters?.games, location.pathname]);
 

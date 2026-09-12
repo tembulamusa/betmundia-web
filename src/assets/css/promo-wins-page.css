@@ -2190,9 +2190,21 @@
   color: var(--pw-brand);
 }
 
+.promo-wins-code-stat-value--balance {
+  font-size: 2.35rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+.promo-wins-code-stat--balance {
+  align-items: flex-start;
+}
+
 .promo-wins-code-stat-withdraw {
   color: #fff;
   font-weight: 500;
+  font-size: 1.05rem;
   text-decoration: underline;
   text-underline-offset: 0.12em;
 }
@@ -2328,6 +2340,66 @@
   border-radius: var(--pw-radius);
   border: 1px solid var(--pw-border-soft);
   background: var(--pw-card-soft);
+}
+
+.promo-wins-how-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  text-align: center;
+}
+
+.promo-wins-how-referrals {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  margin: 0;
+}
+
+.promo-wins-how-referrals-label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--pw-muted);
+  letter-spacing: 0.02em;
+}
+
+.promo-wins-how-referrals-value {
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--pw-yellow);
+}
+
+.promo-wins-how-share {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid rgba(255, 196, 40, 0.45);
+  border-radius: 6px;
+  background: rgba(255, 196, 40, 0.14);
+  color: var(--pw-yellow);
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.promo-wins-how-share svg {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.promo-wins-how-share:hover {
+  color: #ffe08a;
+  background: rgba(255, 196, 40, 0.22);
+  border-color: rgba(255, 196, 40, 0.6);
 }
 
 .promo-wins-how-intro {
@@ -2587,6 +2659,14 @@
 
   .promo-wins-how-intro {
     font-size: 1.3rem;
+  }
+
+  .promo-wins-how-referrals-value {
+    font-size: 1.85rem;
+  }
+
+  .promo-wins-code-stat-value--balance {
+    font-size: 2rem;
   }
 
   .promo-wins-how-brief-intro {
