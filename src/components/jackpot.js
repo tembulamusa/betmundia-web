@@ -347,7 +347,7 @@ const Jackpot = () => {
                         </div>
                     )}
                 </Tab>
-                <Tab eventKey="archive" title="Archive" className="p-3">
+                <Tab eventKey="archive" title="Winning History" className="p-3">
                     <JackpotArchive
                         active={activeTab === "archive"}
                         jackpotName={jackpotData?.jackpot_name || activeJackpotType?.label}

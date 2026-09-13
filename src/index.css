@@ -4066,7 +4066,7 @@ button.locked-button:hover {
 /* Jackpot archive (year/month + draw nav + prizes) */
 .jackpot-archive {
   --ja-bg: #0d141e;
-  --ja-card: #1c2635;
+  --ja-card: rgba(255, 255, 255, 0.1);
   --ja-border: rgba(255, 255, 255, 0.12);
   --ja-muted: #7a8aa0;
   --ja-win: #5ec8ff;
@@ -4077,12 +4077,12 @@ button.locked-button:hover {
 .jackpot-archive__title-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   position: relative;
   min-height: 2.75rem;
   margin-bottom: 1rem;
   padding: 0.65rem 2.5rem;
-  background: #0a1018;
+  /* background: rgba(255,255,255,0.1); */
   border-radius: 2px;
 }
 
@@ -4125,7 +4125,6 @@ button.locked-button:hover {
 }
 
 .jackpot-archive__filter-label {
-  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -4136,7 +4135,7 @@ button.locked-button:hover {
   padding: 0.55rem 2.1rem 0.55rem 0.75rem;
   border-radius: 4px;
   border: 1px solid var(--ja-border);
-  background-color: #121a24;
+  background-color: rgba(255, 255, 255, 0.1);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23ffffff' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.7rem center;
@@ -4144,6 +4143,11 @@ button.locked-button:hover {
   color: #fff;
   outline: none;
   cursor: pointer;
+}
+
+.jackpot-archive__select option {
+  background-color: rgba(0, 12, 36, 1);
+  color: #fff;
 }
 
 .jackpot-archive__select:focus {
@@ -4209,7 +4213,7 @@ button.locked-button:hover {
 
 .jackpot-archive__card {
   background: var(--ja-card);
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   overflow: hidden;
 }
@@ -4287,7 +4291,7 @@ button.locked-button:hover {
   padding: 1.5rem 1rem;
   color: rgba(255, 255, 255, 0.7);
   background: var(--ja-card);
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .jackpot-archive__empty--inline {
