@@ -93,16 +93,7 @@ const normalizePrizes = (payload, totalGames) => {
         }));
     }
 
-    // Default tier ladder ending at full hit (matches common JP archive UI).
-    const start = Math.max(total - 5, 1);
-    return Array.from({ length: total - start + 1 }, (_, i) => {
-        const correct = start + i;
-        return {
-            key: `${correct}/${total}`,
-            label: `${correct}/${total}`,
-            amount: 0,
-        };
-    });
+    return [];
 };
 
 const normalizeArchive = (payload) => {
@@ -155,28 +146,6 @@ const buildYearOptions = (fromApi) => {
     return Array.from({ length: 6 }, (_, i) => current - i);
 };
 
-const DEMO_ARCHIVE = {
-    id: 192,
-    draw_date: "27/07/26",
-    jackpot_name: "MEGA Jackpot Pro",
-    total_games: 17,
-    jackpot_amount: 129484042.55,
-    has_prev: true,
-    has_next: true,
-    prev_id: 191,
-    next_id: 193,
-    year: 2026,
-    month: 7,
-    prizes: [
-        { correct: 12, amount: 4240.2 },
-        { correct: 13, amount: 16428.1 },
-        { correct: 14, amount: 115586.7 },
-        { correct: 15, amount: 0 },
-        { correct: 16, amount: 0 },
-        { correct: 17, amount: 0 },
-    ],
-};
-
 const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug }) => {
     const [, dispatch] = useContext(Context);
     const now = useMemo(() => new Date(), []);
@@ -188,17 +157,12 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [prizesOpen, setPrizesOpen] = useState(true);
-    const [usingDemo, setUsingDemo] = useState(false);
     const requestSeq = useRef(0);
-    const drawIdRef = useRef(null);
     const selectedTypeRef = useRef(selectedType);
-    const jackpotNameRef = useRef(jackpotName);
     const typeSlugRef = useRef(typeSlug);
     const hasFetchedForTab = useRef(false);
 
-    drawIdRef.current = drawId;
     selectedTypeRef.current = selectedType;
-    jackpotNameRef.current = jackpotName;
     typeSlugRef.current =
         typeSlug || typeParamValue(selectedType) || "default";
 
@@ -213,10 +177,9 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
     ).toUpperCase();
 
     const storeArchive = useCallback(
-        (payload, isDemo = false) => {
+        (payload) => {
             const stored = {
                 ...payload,
-                _demo: isDemo,
                 year,
                 month,
                 fetchedAt: Date.now(),
@@ -228,7 +191,7 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
     );
 
     const applyNormalized = useCallback(
-        (normalized, isDemo = false) => {
+        (normalized) => {
             if (!normalized) {
                 return;
             }
@@ -239,8 +202,7 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
             if (normalized.years?.length) {
                 setYearOptions(buildYearOptions(normalized.years));
             }
-            setUsingDemo(isDemo);
-            storeArchive(normalized, isDemo);
+            storeArchive(normalized);
         },
         [storeArchive]
     );
@@ -282,39 +244,22 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
             if (status === 200) {
                 const normalized = normalizeArchive(result);
                 if (normalized?.id != null || normalized?.prizes?.length) {
-                    applyNormalized(normalized, false);
+                    applyNormalized(normalized);
                     return;
                 }
+                setArchive(null);
+                setDrawId(null);
+                setError("No archive data found for this selection.");
+                return;
             }
 
-            // API not ready yet — keep archive chrome reviewable with sample draw.
-            let nextId = DEMO_ARCHIVE.id;
-            if (id != null && id !== "") {
-                nextId = Number(id);
-            } else if (direction === "prev") {
-                nextId = Number(drawIdRef.current ?? DEMO_ARCHIVE.id) - 1;
-            } else if (direction === "next") {
-                nextId = Number(drawIdRef.current ?? DEMO_ARCHIVE.id) + 1;
-            }
-
-            const day = Number(m) === 7 ? 27 : 15;
-            const name =
-                jackpotNameRef.current ||
-                selected?.jackpot_name ||
-                selected?.label ||
-                DEMO_ARCHIVE.jackpot_name;
-            const demo = normalizeArchive({
-                ...DEMO_ARCHIVE,
-                id: nextId,
-                prev_id: nextId - 1,
-                next_id: nextId + 1,
-                draw_date: `${pad2(day)}/${pad2(m)}/${String(y).slice(-2)}`,
-                jackpot_name: name,
-                year: y,
-                month: m,
-            });
-            applyNormalized(demo, true);
-            setError(null);
+            setArchive(null);
+            setDrawId(null);
+            setError(
+                status
+                    ? `Unable to load archive (status ${status}).`
+                    : "Unable to load archive. Please try again."
+            );
         },
         [applyNormalized]
     );
@@ -328,12 +273,16 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
 
         if (!hasFetchedForTab.current) {
             const cached = readStoredJackpotArchive(resolvedTypeSlug);
-            if (cached?.prizes || cached?.dateLabel || cached?.id != null) {
+            // Ignore any previously stored demo payloads — API only.
+            if (
+                cached &&
+                !cached._demo &&
+                (cached?.prizes || cached?.dateLabel || cached?.id != null)
+            ) {
                 setArchive(cached);
                 if (cached.id != null) setDrawId(cached.id);
                 if (cached.year) setYear(Number(cached.year));
                 if (cached.month) setMonth(Number(cached.month));
-                setUsingDemo(Boolean(cached._demo));
             }
             hasFetchedForTab.current = true;
         }
@@ -454,11 +403,6 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
             </div>
 
             <div className="jackpot-archive__prizes-heading">Prizes</div>
-            {usingDemo && (
-                <div className="jackpot-archive__demo-note">
-                    Showing sample archive until the API is available.
-                </div>
-            )}
 
             {error && !archive ? (
                 <div className="jackpot-archive__empty">{error}</div>
