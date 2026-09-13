@@ -249,17 +249,13 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
                 }
                 setArchive(null);
                 setDrawId(null);
-                setError("No archive data found for this selection.");
+                setError("Could not find records");
                 return;
             }
 
             setArchive(null);
             setDrawId(null);
-            setError(
-                status
-                    ? `Unable to load archive (status ${status}).`
-                    : "Unable to load archive. Please try again."
-            );
+            setError("Could not find records");
         },
         [applyNormalized]
     );
@@ -334,7 +330,7 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
         <div className="jackpot-archive">
             <div className="jackpot-archive__title-bar">
                 <span className="jackpot-archive__ball" aria-hidden="true" />
-                <h2 className="jackpot-archive__title">{titleName} ARCHIVE</h2>
+                <h2 className="jackpot-archive__title">{titleName} WINNING HISTORY</h2>
             </div>
 
             <div className="jackpot-archive__filters">
