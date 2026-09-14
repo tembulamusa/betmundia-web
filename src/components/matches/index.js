@@ -175,7 +175,7 @@ const MatchHeaderRow = (props) => {
 
 
     return (
-        first_match && <Container className={`${live && 'live'} full-mobile sticky-top`} style={{ position: "sticky", paddingLeft: "0", paddingRight: "0" }}>
+        first_match && <div className={`${live && 'live'} full-mobile sticky-top`} style={{ position: "sticky", paddingLeft: "0", paddingRight: "0" }}>
             <div className={`${jackpot && 'jackpot-zero-top'} top-matches d-flex position-sticky sticky-top `}
                 style={{ opacity: "1", top: "100px", height: "" }}>
 
@@ -240,7 +240,7 @@ const MatchHeaderRow = (props) => {
                     </div>
                 </div>
             </div>
-        </Container>
+        </div>
     )
 }
 
@@ -1571,7 +1571,7 @@ const MatchList = (props) => {
                 subTypes={subTypes}
             />
 
-            <Container className="web-element match-list" style={{ paddingLeft: "0", paddingRight: "0" }}>
+            <div className="web-element match-list" style={{ paddingLeft: "0", paddingRight: "0" }}>
                 {matches &&
                     Object.entries(matches).map(([key, match]) => (
                         match?.match_status?.toLowerCase() !== "ended" &&
@@ -1593,7 +1593,7 @@ const MatchList = (props) => {
                 }
 
 
-            </Container>
+            </div>
             {(((matches || []).length) == 0 && !fetching) &&
                 <NoEvents message={"Matches Not Found"} />
             }
