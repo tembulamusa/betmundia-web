@@ -2303,6 +2303,11 @@ events-header {
     text-transform: uppercase !important;
 }
 
+.compt-teams.d-flex.flex-column,
+.compt-teams.d-flex.flex-column .bold {
+    font-weight: 500 !important;
+}
+
 .matches .top-matches button {
     height: 30px;
     margin-right: 2px;

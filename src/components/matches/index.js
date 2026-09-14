@@ -57,6 +57,8 @@ const getMobileOddLabel = (match, mkt) => {
     const key = String(match?.odd_key || '').trim().toLowerCase();
     const outcomeId = String(match?.outcome_id ?? '').trim();
     const isThreeWay = !mkt || String(mkt).toLowerCase() === '1x2';
+    const marketName = String(mkt || match?.name || match?.market_name || '').toLowerCase();
+    const subTypeId = Number(match?.sub_type_id);
 
     if (isThreeWay) {
         if (key === '1' || key === 'home' || outcomeId === '1') return match?.home_team || match?.odd_key;
@@ -64,7 +66,35 @@ const getMobileOddLabel = (match, mkt) => {
         if (key === '2' || key === 'away' || outcomeId === '3') return match?.away_team || match?.odd_key;
     }
 
+    if (subTypeId === 18 || marketName.includes('total') || marketName.includes('over')) {
+        const line = match?.special_bet_value || '2.5';
+        const lineFmt = Number.isFinite(Number(line)) ? Number(line).toFixed(2) : line;
+        if (key.includes('over') || outcomeId === '12') return `OVER ${lineFmt}`;
+        if (key.includes('under') || outcomeId === '13') return `UNDER ${lineFmt}`;
+    }
+
+    if (subTypeId === 10 || marketName.includes('double')) {
+        if (key === '1x' || key === '1 or x') return '1 OR X';
+        if (key === 'x2' || key === 'x or 2') return 'X OR 2';
+        if (key === '12' || key === '1 or 2') return '1 OR 2';
+    }
+
+    if (subTypeId === 29 || marketName.includes('both') || marketName.includes('gg')) {
+        if (key === 'yes' || key === 'gg' || key.includes('yes') || outcomeId === '74') return 'YES (GG)';
+        if (key === 'no' || key === 'ng' || key.includes('no') || outcomeId === '76') return 'NO (NG)';
+    }
+
     return match?.odd_key || '';
+}
+
+const findOddsMarketKey = (odds, subTypeId, fallbackName) => {
+    if (!odds || typeof odds !== 'object') {
+        return fallbackName;
+    }
+    const found = Object.keys(odds).find(
+        (key) => Number(odds[key]?.sub_type_id) === Number(subTypeId)
+    );
+    return found || fallbackName;
 }
 
 const TimeCounter = (props) => {
@@ -555,7 +585,7 @@ const OddButton = (props) => {
             {!detail &&
                 (
                     <>
-                        <span className="mobile-odd-label md:hidden">
+                        <span className="mobile-odd-label">
                             {getMobileOddLabel(match, mkt)}
                         </span>
                         <span className="theodds odd-fix">
@@ -1000,6 +1030,7 @@ const MatchRow = (props) => {
     const [betStop, setBetStop] = useState({});
     const [updatedLive, setUpdatedLive] = useState(live);
     const [transitioned, setTransitioned] = useState(false);
+    const isSoccer = initialMatch?.sport_name?.toLowerCase() == "soccer";
     const updateMatchTimeMinutesAndSeconds = (match_time) => {
         setUpdatedMatchTime((prevTime) => {
             if (match_time) {
@@ -1092,7 +1123,7 @@ const MatchRow = (props) => {
         <>
             {(updatedMatchStatus?.toLowerCase()?.trim() !== "ended" && !transitioned) &&
                 <div className="top-matches d-flex mobile-match-card" key={"match-list-" + match?.match_id}>
-                    <div className="hidden md:flex col-sm-2 col-xs-12 pad left-text" key="21">
+                    <div className="match-time-desktop col-sm-2 col-xs-12 pad left-text" key="21">
                         {updatedLive &&
                             <>
                                 <small style={{ color: "red" }}> { } </small>
@@ -1127,7 +1158,7 @@ const MatchRow = (props) => {
                         </div>
                     </div>
 
-                    <div className="md:hidden mobile-match-meta">
+                    <div className="match-meta-compact mobile-match-meta">
                         {(live && Date.parse(match?.start_time) > Date.now()) && (
                             <div className='w-full font-[500]'>
                                 <TimeToLiveStarting starttime={match?.start_time} />
@@ -1160,7 +1191,7 @@ const MatchRow = (props) => {
                         )}
                     </div>
 
-                    <div className="mobile-match-mid md:contents">
+                    <div className="mobile-match-mid match-mid-compact">
                         <div className="col-md-2 col-sm-4 col-xs-12 match-detail-container" key="23">
                             <Link to={(jackpot) ? '#' : `/match/${live ? 'live/' : ""}` + match?.match_id}>
                                 <div className="d-flex flex-column primary-text">
@@ -1182,7 +1213,7 @@ const MatchRow = (props) => {
 
                         {(live) &&
                             <div className="text-[#FFB200] font-bold mx-3 mobile-match-score" key="25">
-                                <br className="hidden md:block" />
+                                <br className="match-score-desktop-break" />
                                 {teamScore((updatedMatchScore || match?.score), true)}
                                 <br />
                                 {teamScore((updatedMatchScore || match?.score), false)}
@@ -1190,87 +1221,95 @@ const MatchRow = (props) => {
                         }
 
                         {((!jackpot && !(updatedLive && !match?.score))) &&
-                            <div className="md:hidden">
+                            <div className="match-sidebets-compact">
                                 <SideBets match={match} live={updatedLive} mobile />
                             </div>}
                     </div>
 
-                    <div className={`${jackpot && "is-jackpot"} ${live && 'live-game'} matches-row col block ${match?.sport_name?.toLowerCase() == "soccer" ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
-                        <div className="md:hidden mobile-market-bar">
-                            <span>{three_way ? "3 WAY" : (match?.sport_name?.toLowerCase() == "soccer" ? "3 WAY" : "Winner")}</span>
-                        </div>
-
+                    <div className={`${jackpot && "is-jackpot"} ${live && 'live-game'} matches-row col block ${isSoccer ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
                         {
-                            // Only soccer has 3 markets
-                            // hence a control for the soccer
-                            initialMatch?.sport_name?.toLowerCase() == "soccer" &&
+                            isSoccer &&
                             <>
-                                <div className={`${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${(live && (match?.score == "-" || match?.score == null))} ${live && 'live-group-buttons'} c-btn-group align-self-center ${jackpot && "is-jackpot-bet-group-btns"} ${match?.outcome && "is-outcome"}`} key="222">
-                                    <MatchMarket
-                                        initialMatch={match}
-                                        marketName={"1x2"}
-                                        marketId={1}
-                                        buttonCount={3}
-                                        special_bet_value=""
-                                        jackpot={jackpot}
-                                        jackpotstatus={jackpotstatus}
-                                        live={updatedLive}
-                                        transitioned={transitioned}
-                                        setTransitioned={setTransitioned}
-                                        betStop={betStop}
-                                        producers={producers}
-                                        availableMarkets={availableMarkets}
-                                    />
-                                    {(jackpot && jackpotstatus == "INACTIVE") && <>{match?.outcome || "--"} </>}
+                                <div className={`tablet-market-panel tablet-market-full ${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${(live && (match?.score == "-" || match?.score == null))} ${live && 'live-group-buttons'} ${jackpot && "is-jackpot-bet-group-btns"} ${match?.outcome && "is-outcome"}`} key="222">
+                                    <div className="mobile-market-bar">
+                                        <span>{three_way ? "3 WAY" : "3 WAY"}</span>
+                                    </div>
+                                    <div className="c-btn-group align-self-center">
+                                        <MatchMarket
+                                            initialMatch={match}
+                                            marketName={"1x2"}
+                                            marketId={1}
+                                            buttonCount={3}
+                                            special_bet_value=""
+                                            jackpot={jackpot}
+                                            jackpotstatus={jackpotstatus}
+                                            live={updatedLive}
+                                            transitioned={transitioned}
+                                            setTransitioned={setTransitioned}
+                                            betStop={betStop}
+                                            producers={producers}
+                                            availableMarkets={availableMarkets}
+                                        />
+                                        {(jackpot && jackpotstatus == "INACTIVE") && <>{match?.outcome || "--"} </>}
+                                    </div>
                                 </div>
 
-                                <div className={`${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} hidden md:flex c-btn-group align-self-center`} key="223">
-                                    <MatchMarket
-                                        initialMatch={match}
-                                        marketName={"Double Chance"}
-                                        marketId={10}
-                                        buttonCount={3}
-                                        betStop={betStop}
-                                        special_bet_value=""
-                                        jackpot={jackpot}
-                                        transitioned={transitioned}
-                                        setTransitioned={setTransitioned}
-                                        jackpotstatus={jackpotstatus}
-                                        live={updatedLive}
-                                        producers={producers}
-                                        availableMarkets={availableMarkets}
+                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra hidden md:flex`} key="223">
+                                    <div className="mobile-market-bar tablet-market-bar">
+                                        <span>DOUBLE CHANCE</span>
+                                    </div>
+                                    <div className="c-btn-group align-self-center">
+                                        <MatchMarket
+                                            initialMatch={match}
+                                            marketName={"Double Chance"}
+                                            marketId={10}
+                                            buttonCount={3}
+                                            betStop={betStop}
+                                            special_bet_value=""
+                                            jackpot={jackpot}
+                                            transitioned={transitioned}
+                                            setTransitioned={setTransitioned}
+                                            jackpotstatus={jackpotstatus}
+                                            live={updatedLive}
+                                            producers={producers}
+                                            availableMarkets={availableMarkets}
 
-                                    />
+                                        />
+                                    </div>
                                 </div>
 
-                                <div className={`${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} hidden md:flex c-btn-group align-self-center`} key="224">
-                                    <MatchMarket
-                                        initialMatch={match}
-                                        marketName={"Total"}
-                                        buttonCount={2}
-                                        marketId={18}
-                                        transitioned={transitioned}
-                                        setTransitioned={setTransitioned}
-                                        special_bet_value="2.5"
-                                        buttonCount={2}
-                                        jackpot={jackpot}
-                                        jackpotstatus={jackpotstatus}
-                                        live={updatedLive}
-                                        betStop={betStop}
-                                        producers={producers}
-                                        availableMarkets={availableMarkets}
+                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra hidden md:flex`} key="224">
+                                    <div className="mobile-market-bar tablet-market-bar">
+                                        <span>OVER/UNDER 2.5</span>
+                                    </div>
+                                    <div className="c-btn-group align-self-center">
+                                        <MatchMarket
+                                            initialMatch={match}
+                                            marketName={"Total"}
+                                            buttonCount={2}
+                                            marketId={18}
+                                            transitioned={transitioned}
+                                            setTransitioned={setTransitioned}
+                                            special_bet_value="2.5"
+                                            jackpot={jackpot}
+                                            jackpotstatus={jackpotstatus}
+                                            live={updatedLive}
+                                            betStop={betStop}
+                                            producers={producers}
+                                            availableMarkets={availableMarkets}
 
-                                    />
+                                        />
+                                    </div>
                                 </div>
                             </>
                         }
 
                         {
 
-                            initialMatch?.sport_name?.toLowerCase() !== "soccer" &&
+                            !isSoccer &&
                             Object.keys(match?.odds || [])?.map((odd, idx) => {
                                 return (
-                                    <div className={`${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${(live && (match?.score == "-" || match?.score == null))} ${live && 'live-group-buttons'} c-btn-group align-self-center ${jackpot && "is-jackpot-bet-group-btns"} ${match?.outcome && "is-outcome"}`} key="222">
+                                    <div className={`${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${(live && (match?.score == "-" || match?.score == null))} ${live && 'live-group-buttons'} c-btn-group align-self-center ${jackpot && "is-jackpot-bet-group-btns"} ${match?.outcome && "is-outcome"}`} key={`non-soccer-${idx}`}>
                                         <MatchMarket
                                             initialMatch={match}
                                             marketName={odd}
@@ -1295,9 +1334,9 @@ const MatchRow = (props) => {
 
                     </div>
 
-                    {/* Jackpot buttons */}
+                    {/* Desktop side bets */}
                     {((!jackpot && !(updatedLive && !match?.score))) &&
-                        <div className="hidden md:flex align-self-center">
+                        <div className="match-sidebets-desktop align-self-center">
                             <SideBets match={match} live={updatedLive} style={{ d: "inline" }} />
                         </div>}
                 </div>

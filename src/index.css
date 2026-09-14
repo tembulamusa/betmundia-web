@@ -531,17 +531,13 @@ aside.ps-sidebar-root:focus-visible,
     padding-bottom: 8px;
     padding-left: 8px;
     padding-right: 8px !important;
-    margin: 0 8px 8px;
+    margin: 0 0 8px;
     position: relative;
     font-weight: normal;
     color: #ffffff;
     font-size: 12px;
     border-radius: 0 0 5px 5px;
     overflow: hidden;
-  }
-
-  .matches .top-matches.mobile-match-card:first-of-type {
-    margin-top: 8px;
   }
 
   .matches .top-matches {
@@ -687,6 +683,17 @@ aside.ps-sidebar-root:focus-visible,
     flex-direction: column;
   }
 
+  .mobile-match-card .tablet-market-panel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-match-card .match-market-extra,
+  .mobile-match-card .tablet-only-market {
+    display: none !important;
+  }
+
   .mobile-market-bar {
     width: 100%;
     text-align: left;
@@ -706,6 +713,8 @@ aside.ps-sidebar-root:focus-visible,
     width: 100%;
     border-radius: 0 0 6px 6px;
     overflow: hidden;
+    gap: 1px;
+    background: #0A162D;
   }
 
   .mobile-match-card .c-btn-group.hidden {
@@ -727,7 +736,8 @@ aside.ps-sidebar-root:focus-visible,
     gap: 4px;
     padding: 4px;
     border-radius: 0 !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-right: none !important;
+    margin: 0 !important;
   }
 
   .mobile-match-card .c-btn-group>.c-btn:last-child,
@@ -4931,4 +4941,345 @@ button.locked-button:hover {
   font-weight: 700;
   font-size: 16px;
   opacity: 0.85;
+}
+
+/* Match list section: left edge mirrors the right (betslip) divider under 1210.
+   Inset spacing comes from section/list padding so the border runs full height. */
+@media screen and (max-width: 1210px) {
+  .matches.full-width:has(> .web-element.match-list) {
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    min-height: 100%;
+    align-self: stretch;
+    background: rgba(255, 255, 255, 0.07);
+    margin: 0;
+    padding: 8px 8px 8px 8px;
+  }
+
+  .matches.full-width:has(> .web-element.match-list) > .web-element.match-list {
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Cards only stack with bottom gap — no side/top margin fighting the border */
+  .matches.full-width:has(> .web-element.match-list) .top-matches.mobile-match-card {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .matches.full-width:has(> .web-element.match-list) .top-matches.mobile-match-card:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Unused tablet-only market slot (kept hidden if present) */
+.tablet-only-market {
+  display: none !important;
+}
+
+/* Compact match chrome (meta + mobile-style sidebets) by default;
+   wide desktop (>1210) switches to the horizontal row layout. */
+.match-time-desktop,
+.match-sidebets-desktop {
+  display: none !important;
+}
+
+.match-score-desktop-break {
+  display: none !important;
+}
+
+.match-mid-compact {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.match-sidebets-compact {
+  display: block;
+  flex-shrink: 0;
+}
+
+.match-sidebets-compact .mobile-match-actions {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  position: static !important;
+  right: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+}
+
+/* Odd labels: mobile + tablet only; wide desktop keeps odds-only buttons */
+@media screen and (min-width: 1211px) {
+  .mobile-odd-label {
+    display: none !important;
+  }
+
+  .tablet-market-bar,
+  .mobile-match-card .mobile-market-bar {
+    display: none !important;
+  }
+
+  .match-time-desktop {
+    display: flex !important;
+  }
+
+  .match-sidebets-desktop {
+    display: flex !important;
+  }
+
+  .match-meta-compact,
+  .match-sidebets-compact {
+    display: none !important;
+  }
+
+  .match-mid-compact {
+    display: contents;
+  }
+
+  .match-score-desktop-break {
+    display: block !important;
+  }
+
+  .tablet-market-panel {
+    display: flex;
+    align-self: center;
+  }
+
+  .tablet-market-panel.match-market-extra {
+    display: flex !important;
+  }
+
+  .tablet-market-panel .c-btn-group {
+    display: flex;
+    width: auto;
+  }
+}
+
+/*
+ * Tablet / mid widths (768–1210): keep left + right sidebars,
+ * but render soccer matches as stacked cards with a 2×2 odds grid
+ * (3 WAY full width / Double Chance + Over-Under). Boosted odds ignored.
+ */
+@media screen and (min-width: 768px) and (max-width: 1210px) {
+  .matches > .full-mobile.sticky-top {
+    display: none !important;
+  }
+
+  .matches .top-matches.mobile-match-card {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 12px 10px;
+    margin: 0 0 10px;
+    position: relative;
+    font-weight: normal;
+    color: #ffffff;
+    font-size: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .mobile-match-card .match-time-desktop,
+  .mobile-match-card .match-sidebets-desktop {
+    display: none !important;
+  }
+
+  .mobile-match-card .match-meta-compact,
+  .mobile-match-card .mobile-match-meta {
+    display: block !important;
+    width: 100%;
+    text-align: left;
+    font-size: 11px;
+    line-height: 1.3;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+
+  .mobile-match-card .match-mid-compact,
+  .mobile-match-card .mobile-match-mid {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .mobile-match-card .match-detail-container {
+    width: auto !important;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-right: 0;
+  }
+
+  .mobile-match-card .compt-detail {
+    display: none;
+  }
+
+  .mobile-match-card .compt-teams {
+    text-transform: uppercase;
+    gap: 2px;
+  }
+
+  .mobile-match-card .compt-teams .bold {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-match-card .match-sidebets-compact {
+    display: block !important;
+    flex-shrink: 0;
+    align-self: center;
+    margin: 0;
+  }
+
+  .mobile-match-card .match-sidebets-compact .mobile-match-actions {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    position: static !important;
+    right: auto !important;
+    bottom: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+  }
+
+  .mobile-match-card .mobile-match-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 22px;
+    min-height: 22px;
+    max-height: 22px;
+    padding: 0 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .mobile-match-card .matches-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0 !important;
+    margin: 0;
+  }
+
+  .mobile-match-card .tablet-market-panel,
+  .mobile-match-card .tablet-market-panel.match-market-extra {
+    display: flex !important;
+    flex-direction: column;
+    min-width: 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  .mobile-match-card .tablet-market-full {
+    grid-column: 1 / -1;
+  }
+
+  .mobile-match-card .mobile-market-bar,
+  .mobile-match-card .tablet-market-bar {
+    display: block !important;
+    width: 100%;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 6px 10px;
+    border-radius: 4px 4px 0 0;
+    background: #0a162d;
+    color: #ffffff;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group {
+    display: flex !important;
+    width: 100%;
+    margin: 0 !important;
+    border-radius: 0 0 4px 4px;
+    overflow: hidden;
+    gap: 1px;
+    background: #0A162D;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .locked-button {
+    flex: 1 1 0;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px !important;
+    border-radius: 0 !important;
+    border-right: none !important;
+    margin: 0 !important;
+    color: #ffffff !important;
+  }
+
+  .mobile-match-card .mobile-odd-label {
+    display: block !important;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: #ffffff !important;
+    opacity: 1;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-match-card .theodds {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #ffc428 !important;
+  }
+
+  .mobile-match-card .c-btn-group > .c-btn.picked .mobile-odd-label,
+  .mobile-match-card .c-btn-group > .c-btn:hover .mobile-odd-label,
+  .mobile-match-card .c-btn-group > .c-btn:focus .mobile-odd-label {
+    color: #ffffff !important;
+  }
+
+  .mobile-match-card .match-score-desktop-break {
+    display: none !important;
+  }
 }
