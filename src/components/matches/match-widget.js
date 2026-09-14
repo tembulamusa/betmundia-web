@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../../assets/css/theme.css';
 
-// Client id provided for Betmundial Sportradar SIR.
+// Client id for Betmundial — replace `sportradar` in the docs URL with this.
 const WIDGET_CLIENT_ID = "d9d6a9c373db18dfdf63352e1c1d9321";
 const WIDGET_LOADER_SRC =
     `https://widgets.sir.sportradar.com/${WIDGET_CLIENT_ID}/widgetloader`;
-// Same CSS selector the working historic widget and Sportradar docs use.
-const WIDGET_SELECTOR = ".sr-widget-1";
+const WIDGET_SELECTOR = "#sr-widget";
 const WIDGET_TYPE = "match.lmtPlus";
 const LOAD_TIMEOUT_MS = 15000;
 
@@ -15,7 +14,7 @@ let loaderPromise = null;
 
 /**
  * Official Sportradar SIR bootstrap (queue stub + async widgetloader).
- * theme:false so imported theme.css applies.
+ * Mirrors: widgets.sir.sportradar.com/{clientId}/widgetloader with language: 'en'.
  */
 const ensureSirLoader = () => {
     if (typeof window === "undefined") {
@@ -23,7 +22,6 @@ const ensureSirLoader = () => {
     }
 
     if (typeof window.SIR === "function" && window.SIR.l && document.querySelector(`script[src*="widgetloader"]`)) {
-        // Real loader already present (or stub that will flush).
         return Promise.resolve(window.SIR);
     }
 
@@ -43,8 +41,8 @@ const ensureSirLoader = () => {
         };
         sir.l = Date.now();
         sir.o = {
-            theme: false,
             language: "en",
+            theme: false,
         };
         window.SIR = sir;
 
@@ -74,13 +72,9 @@ const ensureSirLoader = () => {
 };
 
 const getWidgetConfig = (matchId, onError) => ({
-    // Sportradar docs type matchId as number; coerce when possible.
     matchId: Number.isFinite(Number(matchId)) ? Number(matchId) : matchId,
-    streamToggle: "onPitchButton",
-    layout: "double",
-    detailedScoreboard: "disable",
-    tabsPosition: "top",
-    silent: true,
+    enableVirtualised: true,
+    vlmtForce2d: false,
     onTrack: (eventType, data) => {
         if (
             eventType === "error" ||
@@ -115,7 +109,7 @@ const widgetHasContent = (rootEl) => {
 };
 
 /**
- * Match-details LMT+.
+ * Match-details LMT+ (SIR addWidget match.lmtPlus).
  * Falls back to bold home/away names if the widget never mounts.
  */
 const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
@@ -154,7 +148,6 @@ const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
                     return;
                 }
 
-                // Fail fast when this host is not on the Sportradar domain allowlist.
                 try {
                     const licRes = await fetch(
                         `https://widgets.sir.sportradar.com/${WIDGET_CLIENT_ID}/licensing`,
@@ -196,8 +189,9 @@ const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
         <div className="widgets match-widget-container">
             <div>
                 <div
+                    id="sr-widget"
                     ref={widgetRootRef}
-                    className="sr-widget sr-widget-1"
+                    className="sr-widget"
                     hidden={showFallback}
                 />
                 {showFallback && (
