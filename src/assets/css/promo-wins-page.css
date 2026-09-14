@@ -1893,9 +1893,15 @@
   font-weight: 500;
 }
 
-.promo-wins-customize-input:focus {
-  border-color: rgba(167, 31, 102, 0.85);
-  box-shadow: 0 0 0 2px rgba(167, 31, 102, 0.25);
+.promo-wins-customize-input:focus,
+.promo-wins-customize-input:focus-visible,
+.promo-wins-customize-input--ok:focus,
+.promo-wins-customize-input--ok:focus-visible,
+.promo-wins-customize-input--error:focus,
+.promo-wins-customize-input--error:focus-visible {
+  border-color: #a71f66 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(167, 31, 102, 0.45) !important;
 }
 
 .promo-wins-customize-input--ok {

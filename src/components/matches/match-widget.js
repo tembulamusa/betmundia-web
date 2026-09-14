@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../../assets/css/theme.css';
 
-// Client id provided for Betmundial Sportradar SIR.
+/**
+ * LMT Premium uses the same widget name `match.lmtPlus` as base LMT.
+ * Docs: https://apidocs.sportradar.com/resources/widgets/docs/lmt/lmt-premium
+ *
+ * Replace docs placeholder `sportradar` in the loader URL with our client id.
+ */
 const WIDGET_CLIENT_ID = "d9d6a9c373db18dfdf63352e1c1d9321";
 const WIDGET_LOADER_SRC =
     `https://widgets.sir.sportradar.com/${WIDGET_CLIENT_ID}/widgetloader`;
-// Same CSS selector the working historic widget and Sportradar docs use.
-const WIDGET_SELECTOR = ".sr-widget-1";
+const WIDGET_SELECTOR = "#sr-widget";
 const WIDGET_TYPE = "match.lmtPlus";
 const LOAD_TIMEOUT_MS = 15000;
 
@@ -14,8 +18,8 @@ let loaderStarted = false;
 let loaderPromise = null;
 
 /**
- * Official Sportradar SIR bootstrap (queue stub + async widgetloader).
- * theme:false so imported theme.css applies.
+ * Official SIR bootstrap (queue stub + async widgetloader).
+ * Programmatic API is recommended for SPAs; declarative data-sr-* attrs stay in sync.
  */
 const ensureSirLoader = () => {
     if (typeof window === "undefined") {
@@ -23,7 +27,6 @@ const ensureSirLoader = () => {
     }
 
     if (typeof window.SIR === "function" && window.SIR.l && document.querySelector(`script[src*="widgetloader"]`)) {
-        // Real loader already present (or stub that will flush).
         return Promise.resolve(window.SIR);
     }
 
@@ -43,8 +46,8 @@ const ensureSirLoader = () => {
         };
         sir.l = Date.now();
         sir.o = {
-            theme: false,
             language: "en",
+            theme: false,
         };
         window.SIR = sir;
 
@@ -56,6 +59,7 @@ const ensureSirLoader = () => {
         }
 
         const script = document.createElement("script");
+        script.type = "application/javascript";
         script.async = true;
         script.src = WIDGET_LOADER_SRC;
         script.setAttribute("n", "SIR");
@@ -73,14 +77,15 @@ const ensureSirLoader = () => {
     return loaderPromise;
 };
 
+/**
+ * LMT Premium sample props (enableVirtualised / vlmtForce2d) + SPA onTrack.
+ * enableDataStream defaults true with an LMT Premium license.
+ */
 const getWidgetConfig = (matchId, onError) => ({
-    // Sportradar docs type matchId as number; coerce when possible.
     matchId: Number.isFinite(Number(matchId)) ? Number(matchId) : matchId,
-    streamToggle: "onPitchButton",
-    layout: "double",
-    detailedScoreboard: "disable",
-    tabsPosition: "top",
-    silent: true,
+    enableVirtualised: true,
+    vlmtForce2d: false,
+    enableDataStream: true,
     onTrack: (eventType, data) => {
         if (
             eventType === "error" ||
@@ -115,13 +120,16 @@ const widgetHasContent = (rootEl) => {
 };
 
 /**
- * Match-details LMT+.
- * Falls back to bold home/away names if the widget never mounts.
+ * Match-details LMT Premium (`match.lmtPlus`).
+ * Markup matches Sportradar declarative HTML; mount via SIR for SPA remounts.
  */
 const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
     const [showFallback, setShowFallback] = useState(false);
     const widgetRootRef = useRef(null);
     const failedRef = useRef(false);
+    const matchIdAttr = parentMatchId != null && parentMatchId !== ""
+        ? String(parentMatchId)
+        : "";
 
     useEffect(() => {
         if (!parentMatchId) {
@@ -133,18 +141,21 @@ const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
         failedRef.current = false;
         setShowFallback(false);
 
-        const markFailed = () => {
+        const markFailed = (reason) => {
             if (cancelled || failedRef.current) {
                 return;
             }
             failedRef.current = true;
+            if (reason && typeof console !== "undefined") {
+                console.warn("[MatchWidget]", reason);
+            }
             setShowFallback(true);
             callSir("removeWidget", WIDGET_SELECTOR);
         };
 
         const timeoutId = window.setTimeout(() => {
             if (!widgetHasContent(widgetRootRef.current)) {
-                markFailed();
+                markFailed("Widget did not render content in time");
             }
         }, LOAD_TIMEOUT_MS);
 
@@ -154,7 +165,7 @@ const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
                     return;
                 }
 
-                // Fail fast when this host is not on the Sportradar domain allowlist.
+                // Domain must be on this client id's Sportradar license allowlist.
                 try {
                     const licRes = await fetch(
                         `https://widgets.sir.sportradar.com/${WIDGET_CLIENT_ID}/licensing`,
@@ -162,7 +173,10 @@ const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
                     );
                     const lic = await licRes.json();
                     if (lic && lic.valid === false) {
-                        markFailed();
+                        markFailed(
+                            lic.emsg ||
+                            `Domain not licensed for client ${WIDGET_CLIENT_ID}`
+                        );
                         return;
                     }
                 } catch (_err) {
@@ -174,11 +188,11 @@ const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
                     "addWidget",
                     WIDGET_SELECTOR,
                     WIDGET_TYPE,
-                    getWidgetConfig(parentMatchId, markFailed)
+                    getWidgetConfig(parentMatchId, () => markFailed("Widget onTrack error"))
                 );
             })
             .catch(() => {
-                markFailed();
+                markFailed("Failed to load Sportradar widgetloader");
             });
 
         return () => {
@@ -195,9 +209,19 @@ const MatchWidget = ({ parentMatchId, homeTeam, awayTeam }) => {
     return (
         <div className="widgets match-widget-container">
             <div>
+                {/*
+                  LMT Premium declarative HTML (docs):
+                  data-sr-widget / data-sr-match-id / data-sr-enable-virtualised / data-sr-vlmt-force-2d
+                */}
                 <div
+                    id="sr-widget"
                     ref={widgetRootRef}
-                    className="sr-widget sr-widget-1"
+                    className="sr-widget"
+                    data-sr-widget={WIDGET_TYPE}
+                    data-sr-match-id={matchIdAttr}
+                    data-sr-enable-virtualised="true"
+                    data-sr-vlmt-force-2d="false"
+                    data-sr-enable-data-stream="true"
                     hidden={showFallback}
                 />
                 {showFallback && (
