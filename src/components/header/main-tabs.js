@@ -221,10 +221,12 @@ const MainTabs = (props) => {
                             to={`/sports/competition/matches?id=${competition.competition_id}`}
                             className={`mx-3 main-tabs-submenu item ${(queryParamValue == competition.competition_id) && 'active'}`} style={{ fontSize: "13px" }}
                         >
-                            <img style={{ borderRadius: '1px', height: '13px', width: "13px", marginTop: "-7px" }}
+                            <img
                                 src={getSportImageIcon(competition?.flag_icon, 'img/flags-1-1', true)}
-                                alt='' className='inline-block mr-2' />
-                            <span className='top-competitions-title inline-block leading-0'>{competition?.competition_name}</span>
+                                alt=''
+                                className='main-tabs-submenu-flag'
+                            />
+                            <span className='top-competitions-title'>{competition?.competition_name}</span>
                         </Link>
                     </>
                 ))}

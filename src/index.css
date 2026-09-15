@@ -460,9 +460,14 @@ aside.ps-sidebar-root:focus-visible,
 
   .main-tabs-submenu {
     text-wrap: nowrap;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     margin: 0px;
     width: auto;
+  }
+
+  .main-tabs-submenu.item img {
+    margin-top: 0 !important;
   }
 
   .c-btn-group {
@@ -564,7 +569,7 @@ aside.ps-sidebar-root:focus-visible,
   .mobile-match-meta {
     width: 100%;
     text-align: left;
-    font-size: 11px;
+    font-size: 10px;
     line-height: 1.3;
     opacity: 0.85;
     margin-bottom: 2px;
@@ -1679,7 +1684,7 @@ input.std-input::placeholder {
     max-height: min(29vh, 220px) !important;
     overflow-x: hidden;
     overflow-y: auto;
-    padding-right: 8px;
+    padding-right: 0;
   }
 
   .betslip-container .betslip-slips__list,
@@ -1937,12 +1942,38 @@ input.std-input::placeholder {
 
 .main-tabs-submenu {
   border-bottom: 3px solid transparent;
-  padding: 7px 0;
+  padding: 10px 0;
   font-weight: 500;
   transition: all ease-in 0.4s;
   -moz-transition: all ease-in 0.4s;
   -webkit-transition: all ease-in 0.4s;
   color: #ffffff;
+}
+
+.main-tabs-submenu.item {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 0.35rem;
+  vertical-align: middle;
+}
+
+.main-tabs-submenu.item img {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  margin: 0 !important;
+  vertical-align: middle;
+  border-radius: 1px;
+  object-fit: cover;
+}
+
+.main-tabs-submenu.item .top-competitions-title {
+  display: inline-block;
+  line-height: 1.2;
+  vertical-align: middle;
 }
 
 .main-tabs-submenu.active,
@@ -2242,6 +2273,18 @@ li.bet-option {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0 4px;
   color: #ffffff;
+}
+
+/* Desktop: hide popular games; hide whole highlights board unless user has a freebet */
+@media screen and (min-width: 768px) {
+  .highlights-popular-mobile-only {
+    display: none !important;
+  }
+
+  .popular-highlight-games.no-freebet,
+  .highlights-board:has(.popular-highlight-games.no-freebet) {
+    display: none !important;
+  }
 }
 
 .highlights .marquee-card {
@@ -4972,6 +5015,11 @@ button.locked-button:hover {
   .matches.full-width:has(> .web-element.match-list) .top-matches.mobile-match-card:last-child {
     margin-bottom: 0 !important;
   }
+
+  .mobile-match-card .match-meta-compact,
+  .mobile-match-card .mobile-match-meta {
+    font-size: 10px;
+  }
 }
 
 /* Unused tablet-only market slot (kept hidden if present) */
@@ -5087,6 +5135,7 @@ button.locked-button:hover {
     border-radius: 6px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.061);
   }
 
   .mobile-match-card .match-time-desktop,
@@ -5099,7 +5148,7 @@ button.locked-button:hover {
     display: block !important;
     width: 100%;
     text-align: left;
-    font-size: 11px;
+    font-size: 10px;
     line-height: 1.3;
     opacity: 0.85;
     margin-bottom: 6px;
@@ -5133,7 +5182,7 @@ button.locked-button:hover {
   }
 
   .mobile-match-card .compt-teams .bold {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 500;
     line-height: 1.2;
     letter-spacing: 0.02em;
@@ -5248,6 +5297,15 @@ button.locked-button:hover {
     border-radius: 0 !important;
     border-right: none !important;
     margin: 0 !important;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.picked,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.home-team.picked,
+  .matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > button.picked,
+  .matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > button.home-team.picked {
+    background: #a71f66 !important;
     color: #ffffff !important;
   }
 
