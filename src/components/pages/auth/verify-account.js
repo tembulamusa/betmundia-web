@@ -14,15 +14,13 @@ import {
 import { setLocalStorage } from '../../utils/local-storage';
 
 const BRAND = '#a71f66';
-const OTP_REFRESH_MS = 30 * 60 * 1000;
+const OTP_CHANNEL = 'sms';
 
 /**
  * Assumed socket contract (mirrors user.match.listen / socket-io# patterns):
  * - emit `user.otp.listen` with { device_id, msisdn, channel }
- * - emit `user.otp.channel` when switching channel { device_id, msisdn, channel }
  * - listen on `socket-io#otp#${device_id}` (and fallback `user#otp#${device_id}`)
  * Message shapes accepted:
- * - WhatsApp available: { type|event|action: 'whatsapp_available'|'enable_whatsapp', channel: 'whatsapp' }
  * - OTP: { type: 'otp'|'verification_code', code|otp|verification_code, source? }
  */
 
@@ -55,42 +53,10 @@ const isBetmundialOtpPayload = (data) => {
     return Boolean(extractOtpCode(data));
 };
 
-const isWhatsAppAvailableMessage = (data) => {
-    if (!data || typeof data !== 'object') return false;
-    const type = String(
-        data.type || data.event || data.action || data.status || ''
-    ).toLowerCase();
-    const channel = String(data.channel || data.otp_channel || '').toLowerCase();
-    if (channel === 'whatsapp' && (type.includes('available') || type.includes('enable') || data.enable === true)) {
-        return true;
-    }
-    return (
-        type === 'whatsapp_available' ||
-        type === 'enable_whatsapp' ||
-        type === 'whatsapp_enabled' ||
-        data.whatsapp_available === true ||
-        data.enable_whatsapp === true
-    );
-};
-
-const channelButtonStyle = (active) => ({
-    flex: 1,
-    padding: '10px 12px',
-    borderRadius: '12px',
-    border: active ? `2px solid ${BRAND}` : '1px solid rgba(255,255,255,0.25)',
-    background: active ? 'rgba(167, 31, 102, 0.25)' : 'rgba(0,0,0,0.2)',
-    color: '#ffffff',
-    fontWeight: 600,
-    cursor: 'pointer',
-});
-
 const VerifyAccount = () => {
     const [message, setMessage] = useState({});
     const [isLoading, setIsLoading] = useState(false);
-    const [otpChannel, setOtpChannel] = useState('sms');
-    const [whatsappEnabled, setWhatsappEnabled] = useState(false);
     const verifyRef = useRef();
-    const autoSubmitRef = useRef(false);
     const otpAbortRef = useRef(null);
     const [state, dispatch] = useContext(Context);
     const navigate = useNavigate();
@@ -121,72 +87,33 @@ const VerifyAccount = () => {
         };
     }, [dispatch, state?.regmsisdn, state?.regpassword]);
 
-    // Request OTP on mount and whenever channel changes — not on every sendOTP identity change
-    const sendOTPRef = useRef(null);
-
-    const applyOtpCode = useCallback((code, { autoSubmit = true } = {}) => {
+    // Prefill OTP from socket / Web OTP — never auto-submit; user must click Verify
+    const applyOtpCode = useCallback((code) => {
         if (!code || !verifyRef.current) return;
         verifyRef.current.setFieldValue('code', code);
-        if (autoSubmit && !autoSubmitRef.current && code.length >= 4) {
-            autoSubmitRef.current = true;
-            // Allow Formik field update to settle before submit
-            setTimeout(() => {
-                verifyRef.current?.submitForm?.();
-            }, 150);
-        }
     }, []);
 
-    const emitOtpListen = useCallback((channel) => {
+    const emitOtpListen = useCallback(() => {
         if (!deviceId.current || !msisdn) return;
         const payload = {
             device_id: deviceId.current,
             msisdn,
-            channel: channel || otpChannel,
+            channel: OTP_CHANNEL,
         };
         if (socket.connected) {
-            socket.emit('user.otp.listen', payload);
-        }
-    }, [msisdn, otpChannel]);
-
-    const emitOtpChannel = useCallback((channel) => {
-        if (!deviceId.current || !msisdn) return;
-        const payload = {
-            device_id: deviceId.current,
-            msisdn,
-            channel,
-        };
-        if (socket.connected) {
-            socket.emit('user.otp.channel', payload);
             socket.emit('user.otp.listen', payload);
         }
     }, [msisdn]);
 
-    const selectChannel = useCallback((channel) => {
-        setOtpChannel(channel);
-        emitOtpChannel(channel);
-    }, [emitOtpChannel]);
-
     const handleSocketMessage = useCallback((data) => {
         if (!data) return;
-
-        if (isWhatsAppAvailableMessage(data)) {
-            setWhatsappEnabled(true);
-            setOtpChannel((prev) => {
-                if (prev !== 'whatsapp') {
-                    emitOtpChannel('whatsapp');
-                    return 'whatsapp';
-                }
-                return prev;
-            });
-        }
-
         if (isBetmundialOtpPayload(data)) {
             const code = extractOtpCode(data);
             if (code) {
                 applyOtpCode(code);
             }
         }
-    }, [applyOtpCode, emitOtpChannel]);
+    }, [applyOtpCode]);
 
     // Socket subscribe + listen
     useEffect(() => {
@@ -195,9 +122,9 @@ const VerifyAccount = () => {
         const eventPrimary = `socket-io#otp#${deviceId.current}`;
         const eventFallback = `user#otp#${deviceId.current}`;
 
-        const onConnect = () => emitOtpListen(otpChannel);
+        const onConnect = () => emitOtpListen();
 
-        emitOtpListen(otpChannel);
+        emitOtpListen();
         socket.on(eventPrimary, handleSocketMessage);
         socket.on(eventFallback, handleSocketMessage);
         socket.on('connect', onConnect);
@@ -207,9 +134,9 @@ const VerifyAccount = () => {
             socket.off(eventFallback, handleSocketMessage);
             socket.off('connect', onConnect);
         };
-    }, [msisdn, otpChannel, emitOtpListen, handleSocketMessage]);
+    }, [msisdn, emitOtpListen, handleSocketMessage]);
 
-    // Web OTP API (SMS autofill in supporting browsers) — not native SMS/WhatsApp readers
+    // Web OTP API (SMS autofill in supporting browsers)
     useEffect(() => {
         if (typeof window === 'undefined') return undefined;
         if (!('OTPCredential' in window) || !navigator.credentials?.get) {
@@ -303,7 +230,7 @@ const VerifyAccount = () => {
             data: {
                 msisdn: values.msisdn || msisdn,
                 code: values.code,
-                channel: otpChannel,
+                channel: OTP_CHANNEL,
             },
             api_version: 2,
         }).then(([status, response]) => {
@@ -312,14 +239,12 @@ const VerifyAccount = () => {
                     Notify({ status: 200, message: "Account verified successfully." });
                     autoLogin(values.msisdn || msisdn);
                 } else {
-                    autoSubmitRef.current = false;
                     setMessage({
                         status: 400,
                         message: response?.message || response?.result || "Code invalid",
                     });
                 }
             } else {
-                autoSubmitRef.current = false;
                 setMessage({
                     status: status,
                     message: response?.error?.message || response?.message || "Verification failed",
@@ -327,7 +252,6 @@ const VerifyAccount = () => {
             }
             setIsLoading(false);
         }).catch(() => {
-            autoSubmitRef.current = false;
             setMessage({ status: 400, message: "Verification failed. Please try again." });
             setIsLoading(false);
         });
@@ -345,69 +269,31 @@ const VerifyAccount = () => {
         return errors;
     };
 
-    const sendOTP = useCallback((opts = {}) => {
-        const { silent = false } = opts;
+    // Only called from "Click Resend Code" — no mount/interval/focus auto-send
+    const sendOTP = useCallback(() => {
         if (!msisdn) return;
         const endpoint = '/auth/verification-code';
         const values = {
             msisdn,
-            channel: otpChannel,
+            channel: OTP_CHANNEL,
             device_id: deviceId.current,
         };
         makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
             if ([200, 201].includes(status)) {
                 if (response?.status == 200 || response?.status == 201 || response?.success) {
-                    if (!silent) {
-                        Notify({
-                            status: 200,
-                            message: otpChannel === 'whatsapp'
-                                ? "Verification code sent via WhatsApp"
-                                : "Verification code sent to phone",
-                        });
-                    }
-                } else if (!silent) {
+                    Notify({
+                        status: 200,
+                        message: "Verification code sent to phone",
+                    });
+                } else {
                     setMessage({ status: 400, message: "Error fetching code" });
                 }
-            } else if (!silent) {
+            } else {
                 setMessage({ status: status, message: "Error fetching code" });
             }
         });
-        emitOtpListen(otpChannel);
-    }, [msisdn, otpChannel, emitOtpListen]);
-
-    sendOTPRef.current = sendOTP;
-
-    // Initial OTP + re-request when channel switches
-    useEffect(() => {
-        sendOTPRef.current?.();
-    }, [msisdn, otpChannel]);
-
-    // Refresh OTP every 30 minutes while on this screen
-    useEffect(() => {
-        const timer = setInterval(() => {
-            sendOTPRef.current?.({ silent: true });
-        }, OTP_REFRESH_MS);
-        return () => clearInterval(timer);
-    }, [msisdn]);
-
-    // Refresh when user returns to the app / tab
-    useEffect(() => {
-        let lastResumeAt = Date.now();
-        const refreshOnResume = () => {
-            if (document.visibilityState !== 'visible') return;
-            const now = Date.now();
-            // Skip initial load / rapid focus+visibility pairs
-            if (now - lastResumeAt < 2000) return;
-            lastResumeAt = now;
-            sendOTPRef.current?.({ silent: true });
-        };
-        document.addEventListener('visibilitychange', refreshOnResume);
-        window.addEventListener('focus', refreshOnResume);
-        return () => {
-            document.removeEventListener('visibilitychange', refreshOnResume);
-            window.removeEventListener('focus', refreshOnResume);
-        };
-    }, [msisdn]);
+        emitOtpListen();
+    }, [msisdn, emitOtpListen]);
 
     const handleKeyPress = (event, submitFn) => {
         if (event.key === 'Enter') {
@@ -420,19 +306,8 @@ const VerifyAccount = () => {
         const { errors, values, setFieldValue, handleSubmit: formSubmit } = props;
 
         const onFieldChanged = (ev) => {
-            const field = ev.target.name;
-            const value = ev.target.value;
-            setFieldValue(field, value);
-            if (field === 'code' && /^\d{4,8}$/.test(String(value).trim()) && !autoSubmitRef.current) {
-                autoSubmitRef.current = true;
-                setTimeout(() => formSubmit(), 100);
-            }
+            setFieldValue(ev.target.name, ev.target.value);
         };
-
-        const channelHint =
-            otpChannel === 'whatsapp'
-                ? 'Has been sent via WhatsApp'
-                : 'Has been sent to your phone (SMS)';
 
         return (
             <form onReset={props.handleReset} onSubmit={formSubmit}>
@@ -447,46 +322,6 @@ const VerifyAccount = () => {
 
                         <div className='col-md-12 col-sm-12 mt-4'>
                             {message && <Alert message={message} />}
-                        </div>
-
-                        <div className="form-group row d-flex justify-content-center mt-4">
-                            <div className="col-md-12">
-                                <label style={{ color: '#ffffff' }}>OTP channel</label>
-                                <div className="d-flex gap-2 mt-2" style={{ gap: '10px' }}>
-                                    <button
-                                        type="button"
-                                        style={channelButtonStyle(otpChannel === 'sms')}
-                                        onClick={() => selectChannel('sms')}
-                                    >
-                                        SMS
-                                    </button>
-                                    <button
-                                        type="button"
-                                        style={{
-                                            ...channelButtonStyle(otpChannel === 'whatsapp'),
-                                            opacity: whatsappEnabled ? 1 : 0.55,
-                                            cursor: whatsappEnabled ? 'pointer' : 'not-allowed',
-                                        }}
-                                        disabled={!whatsappEnabled}
-                                        onClick={() => selectChannel('whatsapp')}
-                                        title={
-                                            whatsappEnabled
-                                                ? 'Receive OTP via WhatsApp'
-                                                : 'WhatsApp becomes available when the server enables it on this device'
-                                        }
-                                    >
-                                        WhatsApp
-                                        {!whatsappEnabled ? (
-                                            <span style={{ opacity: 0.85, fontWeight: 400 }}> (waiting)</span>
-                                        ) : null}
-                                    </button>
-                                </div>
-                                {whatsappEnabled && otpChannel === 'whatsapp' ? (
-                                    <p className="mt-2 mb-0" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' }}>
-                                        WhatsApp verification selected — waiting for your Betmundial code.
-                                    </p>
-                                ) : null}
-                            </div>
                         </div>
 
                         <div className="form-group row d-flex justify-content-center mt-5">
@@ -510,7 +345,7 @@ const VerifyAccount = () => {
                                 <label style={{ color: '#ffffff' }}>
                                     Code (OTP){' '}
                                     <span className='alert alert-warning py-1 font-[500] italic font-small'>
-                                        {channelHint}
+                                        Has been sent to your phone (SMS)
                                     </span>
                                 </label>
                                 <input
@@ -533,10 +368,7 @@ const VerifyAccount = () => {
                             <div className="col-12">
                                 <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Didn't receive code?</span>
                                 <button
-                                    onClick={() => {
-                                        autoSubmitRef.current = false;
-                                        sendOTP();
-                                    }}
+                                    onClick={sendOTP}
                                     type={"button"}
                                     className='btn text-white ml-2 btn-sm hover:opacity-70'
                                     style={{ backgroundColor: BRAND }}

@@ -1,15 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUsers } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import { getFromLocalStorage } from "../utils/local-storage";
 import CasinoBannerMain from "../../assets/img/backgrounds/main_casino_banner.jpeg";
 import defaultCasinoThumb from "../../assets/img/casino/casino-default-thumbnail.jpeg";
 
-const formatKSh = (value) =>
-    `KSh ${Number(value).toLocaleString("en-KE", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1,
+const formatKES = (value) =>
+    `KES ${Number(value).toLocaleString("en-KE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
     })}`;
+
+/** Masked phone-style label matching the leading-bet card mock (e.g. 0***2). */
+const maskUserLabel = (seed) => {
+    const n = Math.abs(Number(seed) || 0);
+    const first = String(n % 10);
+    const last = String(Math.floor(n / 10) % 10);
+    return `${first}***${last}`;
+};
 
 const resolveGameImage = (url) => {
     if (typeof url === "string" && url.trim()) return url.trim();
@@ -17,12 +25,12 @@ const resolveGameImage = (url) => {
 };
 
 const fallbackLeadingBets = [
-    { id: "lb-1", game: "Aviator", amount: formatKSh(1123456.2), players: "2,451", image: defaultCasinoThumb, link: "/casino/providers/spribe", requiresAuth: false },
-    { id: "lb-2", game: "JetX", amount: formatKSh(856432.5), players: "1,832", image: defaultCasinoThumb, link: "/casino-game/smartsoft/jetx", requiresAuth: false },
-    { id: "lb-3", game: "Aviatrix", amount: formatKSh(974210.8), players: "3,104", image: defaultCasinoThumb, link: "/casino-game/aviatrix/aviatrix", requiresAuth: false },
-    { id: "lb-4", game: "Spaceman", amount: formatKSh(642891.3), players: "1,567", image: defaultCasinoThumb, link: "/casino/providers/pragmatic", requiresAuth: false },
-    { id: "lb-5", game: "Mundial League", amount: formatKSh(1287654.9), players: "4,220", image: defaultCasinoThumb, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
-    { id: "lb-6", game: "Live Casino", amount: formatKSh(731045.6), players: "2,018", image: defaultCasinoThumb, link: "/casino/categories/livegames", requiresAuth: false },
+    { id: "lb-1", game: "Aviator", amount: formatKES(37920), user: "0***2", image: defaultCasinoThumb, link: "/casino/providers/spribe", requiresAuth: false },
+    { id: "lb-2", game: "JetX", amount: formatKES(856432.5), user: "7***1", image: defaultCasinoThumb, link: "/casino-game/smartsoft/jetx", requiresAuth: false },
+    { id: "lb-3", game: "Aviatrix", amount: formatKES(974210.8), user: "2***4", image: defaultCasinoThumb, link: "/casino-game/aviatrix/aviatrix", requiresAuth: false },
+    { id: "lb-4", game: "Spaceman", amount: formatKES(642891.3), user: "5***8", image: defaultCasinoThumb, link: "/casino/providers/pragmatic", requiresAuth: false },
+    { id: "lb-5", game: "Mundial League", amount: formatKES(1287654.9), user: "1***6", image: defaultCasinoThumb, link: "/casino-game/unicraft/mundial-league", requiresAuth: true },
+    { id: "lb-6", game: "Live Casino", amount: formatKES(731045.6), user: "9***3", image: defaultCasinoThumb, link: "/casino/categories/livegames", requiresAuth: false },
 ];
 
 const CasinoCarousel = () => {
@@ -36,16 +44,15 @@ const CasinoCarousel = () => {
             .filter((game) => game?.game_name && game?.provider_name)
             .slice(0, 8)
             .map((game, index) => {
-                const amounts = [1123456.2, 856432.5, 974210.8, 642891.3, 1287654.9, 731045.6, 905120.4, 1188340.7];
-                const playerCounts = [2451, 1832, 3104, 1567, 4220, 2018, 2789, 1643];
+                const amounts = [37920, 856432.5, 974210.8, 642891.3, 1287654.9, 731045.6, 905120.4, 1188340.7];
                 const providerSlug = game.provider_name.split(" ").join("-").toLowerCase();
                 const gameSlug = game.game_name.split(" ").join("-").toLowerCase();
 
                 return {
                     id: `game-${game.game_id || index}`,
                     game: game.game_name,
-                    amount: formatKSh(amounts[index % amounts.length]),
-                    players: playerCounts[index % playerCounts.length].toLocaleString("en-KE"),
+                    amount: formatKES(amounts[index % amounts.length]),
+                    user: maskUserLabel(game.game_id ?? index * 17 + 3),
                     image: resolveGameImage(game.image_url),
                     link: `/casino-game/${providerSlug}/${gameSlug}`,
                     requiresAuth: false,
@@ -82,23 +89,22 @@ const CasinoCarousel = () => {
                                 type="button"
                                 className="casino-leading-bet-item"
                                 onClick={() => handleNavigation(item)}
+                                aria-label={`${item.game}: ${item.amount}, play`}
                             >
                                 <img
                                     className="casino-leading-bet-thumb"
                                     src={item.image}
-                                    alt={item.game}
+                                    alt=""
                                     loading="lazy"
                                 />
                                 <span className="casino-leading-bet-info">
                                     <span className="casino-leading-bet-amount">{item.amount}</span>
-                                    <span className="casino-leading-bet-meta">
-                                        <span className="casino-leading-bet-players">
-                                            <FaUsers aria-hidden="true" className="casino-leading-bet-players-icon" />
-                                            <span>{item.players}</span>
-                                        </span>
-                                        <span className="casino-leading-bet-play">PLAY</span>
+                                    <span className="casino-leading-bet-user">
+                                        <FaUser aria-hidden="true" className="casino-leading-bet-user-icon" />
+                                        <span>{item.user}</span>
                                     </span>
                                 </span>
+                                <span className="casino-leading-bet-play" aria-hidden="true">PLAY</span>
                             </button>
                         ))}
                     </div>
