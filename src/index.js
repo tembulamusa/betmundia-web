@@ -40,6 +40,7 @@ import Store from './context/store';
 import Index from './components/index';
 import MatchAllMarkets from './components/all-markets';
 import Jackpot from './components/jackpot';
+import Survivor from './components/survivor';
 import Live from './components/live';
 import MyBets from './components/my-bets';
 import HowToPlay from './components/pages/HowToPlay';
@@ -133,6 +134,8 @@ const AppShell = () => {
                                     <Route exact path="/match/:id" element={<MatchAllMarkets />} />
                                     <Route exact path="/jackpots" element={<Jackpot />} />
                                     <Route exact path="/jackpot" element={<Jackpot />} />
+                                    <Route exact path="/survivor" element={<Survivor />} />
+                                    <Route exact path="/survivor/:id" element={<Survivor />} />
                                     <Route exact path="/live" element={<Live />} />
                                     <Route exact path="/live/:spid/" element={<Live />} />
                                     <Route exact path="/privacy-policy" element={<PrivacyPolicy />} />
