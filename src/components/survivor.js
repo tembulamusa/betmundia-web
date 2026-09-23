@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Notify from "./utils/notify";
+import Notify from "./utils/Notify";
 import {
     fetchSurvivorChallenge,
     fetchSurvivorChallenges,
