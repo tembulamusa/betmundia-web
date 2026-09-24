@@ -2247,6 +2247,33 @@ input.std-input::placeholder {
   width: 100%;
 }
 
+.jackpot-empty-state {
+  padding: 2.75rem 1.25rem 3rem;
+  border-radius: 16px;
+}
+
+.jackpot-empty-illustration {
+  display: block;
+  width: 220px;
+  max-width: 65vw;
+  height: auto;
+  margin: 0 auto 1.25rem;
+}
+
+.jackpot-empty-title {
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.35rem;
+  margin: 0 0 0.5rem;
+}
+
+.jackpot-empty-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
 li.bet-option {
   /* border-bottom: 1px dashed rgba(255, 255, 255, 0.15); */
   padding-top: 0px;

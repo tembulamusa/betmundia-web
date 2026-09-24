@@ -118,3 +118,84 @@
   font-family: arial;
   font-weight: 900 !important;
 }
+
+/* Jackpots left sidebar (Sportpesa-style type list on /jackpots) */
+.jackpot-sidebar {
+  width: 100%;
+  min-height: 100%;
+  background: rgba(0, 12, 36, 1);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 2rem;
+}
+
+.jackpot-sidebar__title {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.jackpot-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0.35rem 0;
+}
+
+.jackpot-sidebar__empty {
+  padding: 0.85rem 1rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.92rem;
+}
+
+.jackpot-sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.88);
+  text-align: left;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.jackpot-sidebar__item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.jackpot-sidebar__item.active {
+  background: rgba(167, 31, 102, 0.22);
+  border-left-color: #a71f66;
+  color: #ffffff;
+}
+
+.jackpot-sidebar__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  color: #a71f66;
+  flex-shrink: 0;
+}
+
+.jackpot-sidebar__item.active .jackpot-sidebar__icon {
+  color: #ffc428;
+}
+
+.jackpot-sidebar__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

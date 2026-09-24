@@ -1,15 +1,18 @@
 import makeRequest from "./fetch-request";
-import { getFromLocalStorage, setLocalStorage } from "./local-storage";
+import { getFromLocalStorage, setLocalStorage, removeItem } from "./local-storage";
 
 export const JACKPOT_TYPES_STORAGE_KEY = "jackpotTypes";
 export const JACKPOT_ARCHIVE_STORAGE_KEY = "jackpotArchive";
+export const JACKPOT_GAMES_STORAGE_KEY = "jackpotGames";
 export const TYPE_QUERY_PARAM = "type";
 export const JACKPOT_PATH = "/jackpots";
 
 const TYPES_TTL_MS = 24 * 60 * 60 * 1000;
 const ARCHIVE_TTL_MS = 60 * 60 * 1000;
+const GAMES_TTL_MS = 4 * 60 * 60 * 1000;
 
 export const typeKey = (item) =>
+    item?.jackpot_type_id ??
     item?.jackpot_event_id ??
     item?.id ??
     item?.jackpot_type ??
@@ -24,13 +27,39 @@ export const typeLabel = (item) =>
     item?.type ||
     "Jackpot";
 
-/** Slug used in `/jackpots?type=` (e.g. last-man-standing). */
+/** Slug used in `/jackpots?type=` (e.g. 1x2). */
 export const typeParamValue = (item) => {
     const slug = item?.jackpot_type || item?.type || item?.slug || item?.key;
     if (slug != null && slug !== "") {
         return String(slug);
     }
     return String(typeKey(item) ?? "");
+};
+
+/** Numeric/string id used when requesting /jackpot/matches?id= */
+export const resolveJackpotTypeId = (item) => {
+    if (!item) return null;
+    const id =
+        item.jackpot_event_id ??
+        item.jackpot_type_id ??
+        item.id ??
+        item.key;
+    if (id == null || id === "") return null;
+    return id;
+};
+
+/**
+ * Resolve which stored jackpot type the browser URL refers to.
+ * Match ?type= against localStorage/context list; otherwise use the first entry.
+ */
+export const resolveJackpotTypeFromParam = (types, param) => {
+    const list = Array.isArray(types) ? types.filter(Boolean) : [];
+    if (!list.length) return null;
+    if (param != null && param !== "") {
+        const matched = list.find((item) => matchesTypeParam(item, param));
+        if (matched) return matched;
+    }
+    return list[0];
 };
 
 export const matchesTypeParam = (item, param) => {
@@ -42,6 +71,7 @@ export const matchesTypeParam = (item, param) => {
         item?.jackpot_type,
         item?.type,
         item?.slug,
+        item?.jackpot_type_id,
         item?.jackpot_event_id,
         item?.id,
         item?.key,
@@ -65,8 +95,18 @@ export const normalizeJackpotTypes = (payload) => {
                 label: typeLabel(item),
             }));
 
+    // API: { status, result, data: [ { jackpot_type_id, name, jackpot_name, type, ... } ] }
     if (Array.isArray(payload)) {
         return asList(payload);
+    }
+    if (Array.isArray(payload?.data)) {
+        return asList(payload.data);
+    }
+    if (Array.isArray(payload?.content)) {
+        return asList(payload.content);
+    }
+    if (Array.isArray(payload?.data?.content)) {
+        return asList(payload.data.content);
     }
     if (Array.isArray(payload?.jackpots)) {
         return asList(payload.jackpots);
@@ -74,17 +114,19 @@ export const normalizeJackpotTypes = (payload) => {
     if (Array.isArray(payload?.types)) {
         return asList(payload.types);
     }
-    if (
-        Array.isArray(payload?.data) &&
-        (payload.data[0]?.jackpot_name || payload.data[0]?.jackpot_event_id)
-    ) {
-        return asList(payload.data);
+    if (Array.isArray(payload?.results)) {
+        return asList(payload.results);
+    }
+    if (Array.isArray(payload?.items)) {
+        return asList(payload.items);
     }
     if (
+        payload?.jackpot_type_id ||
         payload?.jackpot_event_id ||
         payload?.jackpot_name ||
         payload?.jackpot_type ||
-        payload?.type
+        payload?.type ||
+        payload?.name
     ) {
         return asList([payload]);
     }
@@ -116,8 +158,9 @@ export const persistJackpotTypes = (types, dispatch) => {
 };
 
 /**
- * Fetch jackpot types from API, update localStorage + context.
- * Falls back to cached types when the request fails.
+ * Fetch jackpot type list for the jackpots header strip.
+ * GET /jackpot/list → { status, result, data: [ { jackpot_type_id, name, ... } ] }
+ * Does not change /jackpots page route or /jackpot/matches.
  */
 export const refreshJackpotTypes = async (dispatch) => {
     const [status, result] = await makeRequest({
@@ -126,8 +169,8 @@ export const refreshJackpotTypes = async (dispatch) => {
         api_version: 2,
     });
 
-    if (status == 200) {
-        const types = normalizeJackpotTypes(result?.data ?? result);
+    if (status == 200 || String(result?.status) === "200") {
+        const types = normalizeJackpotTypes(result);
         if (types.length) {
             return persistJackpotTypes(types, dispatch);
         }
@@ -167,6 +210,28 @@ export const persistJackpotArchive = (typeSlug, archivePayload, dispatch) => {
         });
     }
     return archivePayload;
+};
+
+/** localStorage key for cached /jackpot/matches games, per jackpot type id. */
+export const gamesStorageKeyForId = (typeId) =>
+    `${JACKPOT_GAMES_STORAGE_KEY}:${typeId != null && typeId !== "" ? String(typeId) : "default"}`;
+
+export const readStoredJackpotGames = (typeId) => {
+    if (typeId == null || typeId === "") return null;
+    return getFromLocalStorage(gamesStorageKeyForId(typeId));
+};
+
+export const persistJackpotGames = (typeId, gamesPayload) => {
+    if (typeId == null || typeId === "" || !gamesPayload) {
+        return gamesPayload;
+    }
+    setLocalStorage(gamesStorageKeyForId(typeId), gamesPayload, GAMES_TTL_MS);
+    return gamesPayload;
+};
+
+export const clearStoredJackpotGames = (typeId) => {
+    if (typeId == null || typeId === "") return;
+    removeItem(gamesStorageKeyForId(typeId));
 };
 
 export const jackpotsPathWithType = (typeSlug) => {
