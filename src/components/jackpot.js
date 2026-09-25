@@ -118,12 +118,14 @@ const Jackpot = () => {
 
     const fetchMatchesForType = useCallback(async (typeSlug, selectedType = null) => {
         const params = new URLSearchParams();
-        if (typeSlug) {
-            params.set("type", typeSlug);
-        }
-        const eventId = selectedType?.jackpot_event_id ?? selectedType?.id;
-        if (eventId && !typeSlug) {
+        const eventId =
+            selectedType?.jackpot_event_id ??
+            selectedType?.jackpot_id ??
+            selectedType?.id;
+        if (eventId) {
             params.set("jackpot_event_id", eventId);
+        } else if (typeSlug) {
+            params.set("type", typeSlug);
         }
 
         let matchEndpoint = "/jackpot/matches";
