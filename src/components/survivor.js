@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { Modal } from "react-bootstrap";
 import { Context } from "../context/store";
 import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
@@ -31,6 +32,11 @@ const rememberJoinedChallenge = (id) => {
         setLocalStorage(SURVIVOR_JOINED_STORAGE_KEY, [...list, id], 1000 * 60 * 60 * 24 * 30);
     }
 };
+
+/** Status strings come back in whatever case the backend feels like
+ * ("ACTIVE"/"active"/"Active", etc.) — always compare downcased. */
+const statusIs = (value, expected) =>
+    String(value ?? "").toLowerCase() === String(expected).toLowerCase();
 
 const formatMoney = (value) =>
     `KSh ${Number(value || 0).toLocaleString("en-KE", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
@@ -138,7 +144,7 @@ const SurvivorChallengesList = () => {
                                 <span>Entry {formatMoney(challenge.entry_stake)}</span>
                             </div>
                             <div className="survivor-challenge-card-time">
-                                {challenge.status === "OPEN"
+                                {statusIs(challenge.status, "OPEN")
                                     ? `Entries close ${formatDateTime(challenge.registration_closes_at)}`
                                     : `Started ${formatDateTime(challenge.start_at)}`}
                             </div>
@@ -168,6 +174,7 @@ const SurvivorChallengeDetail = ({ id }) => {
     const [fetching, setFetching] = useState(true);
     const [isJoining, setIsJoining] = useState(false);
     const [pendingGame, setPendingGame] = useState(null);
+    const [showBlockReason, setShowBlockReason] = useState(false);
 
     const loadAll = useCallback(async () => {
         setFetching(true);
@@ -215,7 +222,7 @@ const SurvivorChallengeDetail = ({ id }) => {
             openLoginWithRedirect(dispatch, `/survivor/${id}`);
             return;
         }
-        if (!isActiveParticipant) {
+        if (!canBetOnChallenge) {
             Notify({ status: 400, message: "You cannot place a bet on this challenge" });
             return;
         }
@@ -249,14 +256,71 @@ const SurvivorChallengeDetail = ({ id }) => {
         (progress?.predictions || []).map((p) => [p.game_number, p])
     );
 
-    const isEliminated = progress?.participant_status === "ELIMINATED";
+    const participantStatus = progress?.participant_status;
+    const isEliminated = statusIs(participantStatus, "ELIMINATED");
     const isEnrolled = !!progress?.enrolled;
-    // "Active" here = still a live participant in THIS challenge (joined
-    // and not eliminated) — governs whether scheduled/active games show
-    // pickable 1X2 buttons at all, separate from per-game OPEN_FOR_PICKS.
-    const isActiveParticipant = isEnrolled && !isEliminated;
-    const nonSettledGames = (challenge.games || []).filter((g) => g.status !== "SETTLED");
-    const settledGames = (challenge.games || []).filter((g) => g.status === "SETTLED");
+    // progress carries its own `status` for the challenge (per the
+    // /progress example response) — prefer it, fall back to the challenge
+    // detail's own status field.
+    const challengeStatus = progress?.status ?? challenge?.status;
+    const isChallengeActive = statusIs(challengeStatus, "ACTIVE");
+    const isParticipantActive = statusIs(participantStatus, "ALIVE");
+    // Odds buttons are only live when BOTH the challenge itself is active
+    // AND this user is still an active (alive) participant in it.
+    const canBetOnChallenge = isChallengeActive && isParticipantActive;
+    const nonSettledGames = (challenge.games || []).filter((g) => !statusIs(g.status, "SETTLED"));
+    const settledGames = (challenge.games || []).filter((g) => statusIs(g.status, "SETTLED"));
+
+    /** First game the user got wrong, for the "you lost at game N" modal
+     * copy — falls back to games_survived + 1 when predictions aren't
+     * available to inspect directly. */
+    const resolveLostAtGame = () => {
+        const predictions = progress?.predictions || [];
+        const incorrect = predictions.find((p) => statusIs(p.result_status, "INCORRECT"));
+        if (incorrect) return incorrect.game_number;
+        if (progress?.games_survived != null) return progress.games_survived + 1;
+        return progress?.current_game_number ?? null;
+    };
+
+    /** Why the odds buttons are replaced with a reason link, and what the
+     * modal behind it should say. Only meaningful when !canBetOnChallenge. */
+    const resolveBlockReason = () => {
+        if (!isChallengeActive) {
+            return {
+                key: "closed",
+                label: "Challenge closed",
+                title: "Challenge closed",
+                body: "This challenge isn't currently active, so no bets can be placed on its games right now.",
+            };
+        }
+        if (isEliminated) {
+            const lostAtGame = resolveLostAtGame();
+            return {
+                key: "lost",
+                label: "Not allowed (You lost)",
+                title: "You lost",
+                body: lostAtGame
+                    ? `You lost at game ${lostAtGame}.`
+                    : "You were eliminated from this challenge.",
+            };
+        }
+        if (statusIs(participantStatus, "WINNER")) {
+            return {
+                key: "winner",
+                label: "Not allowed",
+                title: "Challenge complete",
+                body: "This challenge is complete — congratulations, you won!",
+            };
+        }
+        return {
+            key: "not_enrolled",
+            label: "Not allowed",
+            title: "Not allowed",
+            body: "You're not part of this challenge, so you can't place bets on its games.",
+        };
+    };
+
+    const blockReason = canBetOnChallenge ? null : resolveBlockReason();
 
     return (
         <div className="survivor-page">
@@ -305,11 +369,11 @@ const SurvivorChallengeDetail = ({ id }) => {
 
             {/* Join button hidden per request; handleJoin/isJoining kept in
                 place so it can be re-enabled by uncommenting this block. */}
-            {false && !isEnrolled && challenge.status !== "COMPLETED" && (
+            {false && !isEnrolled && !statusIs(challenge.status, "COMPLETED") && (
                 <button
                     type="button"
                     className="survivor-join-btn"
-                    disabled={isJoining || challenge.status === "COMPLETED"}
+                    disabled={isJoining || statusIs(challenge.status, "COMPLETED")}
                     onClick={handleJoin}
                 >
                     {isJoining ? "Joining…" : `Join for ${formatMoney(challenge.entry_stake)}`}
@@ -317,15 +381,21 @@ const SurvivorChallengeDetail = ({ id }) => {
             )}
 
             <div className="survivor-games-list">
-                {nonSettledGames.length > 0 && !isActiveParticipant && (
+                {nonSettledGames.length > 0 && blockReason && (
                     <div className="survivor-game-row survivor-game-blocked">
-                        <p className="survivor-blocked-message">You cannot place a bet on this challenge</p>
+                        <button
+                            type="button"
+                            className="survivor-blocked-link"
+                            onClick={() => setShowBlockReason(true)}
+                        >
+                            {blockReason.label}
+                        </button>
                     </div>
                 )}
 
-                {isActiveParticipant && nonSettledGames.map((game) => {
+                {canBetOnChallenge && nonSettledGames.map((game) => {
                     const mine = predictionByGame.get(game.game_number);
-                    const canPick = game.status === "OPEN_FOR_PICKS";
+                    const canPick = statusIs(game.status, "OPEN_FOR_PICKS");
                     return (
                         <div key={game.game_number} className="survivor-game-row">
                             <div className="survivor-game-row-top">
@@ -381,6 +451,32 @@ const SurvivorChallengeDetail = ({ id }) => {
                     );
                 })}
             </div>
+
+            <Modal
+                show={showBlockReason}
+                onHide={() => setShowBlockReason(false)}
+                centered
+                className="survivor-block-modal"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>{blockReason?.title}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>{blockReason?.body}</p>
+                    {blockReason?.key === "lost" && (
+                        <button
+                            type="button"
+                            className="survivor-blocked-history-link"
+                            onClick={() => {
+                                setShowBlockReason(false);
+                                navigate("/my-bets");
+                            }}
+                        >
+                            Back to betting history
+                        </button>
+                    )}
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };
