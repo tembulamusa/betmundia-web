@@ -546,7 +546,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                                 ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
                             </div>
                             <div className="survivor-game-time">
-                                Kicks off {formatDateTime(game.scheduled_at)} · picks lock {formatDateTime(game.lock_at)}
+                                Active until {formatDateTime(game.lock_at)}
                             </div>
 
                             {canPick && (
@@ -601,7 +601,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                                 ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
                             </div>
                             <div className="survivor-game-time">
-                                Kicks off {formatDateTime(game.scheduled_at)} · picks lock {formatDateTime(game.lock_at)}
+                                Active until {formatDateTime(game.lock_at)}
                             </div>
 
                             {(isEnrolled || mine) && (
