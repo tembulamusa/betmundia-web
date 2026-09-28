@@ -17,6 +17,7 @@ import {
     readStoredSurvivorChallenges,
     persistSurvivorChallenges,
     normalizeSelection,
+    caseInsensitiveLabel,
     SURVIVOR_STATUS_LABELS,
     GAME_STATUS_LABELS,
     PARTICIPANT_STATUS_LABELS,
@@ -78,7 +79,7 @@ const formatDateTime = (value) => {
 
 const StatusPill = ({ status, labels }) => (
     <span className={`survivor-status-pill survivor-status-${String(status || "").toLowerCase()}`}>
-        {labels?.[status] || status || "—"}
+        {(labels && caseInsensitiveLabel(labels, status)) || status || "—"}
     </span>
 );
 
@@ -320,7 +321,11 @@ const SurvivorChallengeDetail = ({ id }) => {
     // detail's own status field.
     const challengeStatus = progress?.status ?? challenge?.status;
     const isChallengeActive = statusIs(challengeStatus, "ACTIVE");
-    const isParticipantActive = statusIs(participantStatus, "ALIVE");
+    // Some environments' /progress send "ACTIVE" for a still-in
+    // participant instead of "ALIVE" — accept either, case-insensitively,
+    // as "still in the game".
+    const isParticipantActive =
+        statusIs(participantStatus, "ALIVE") || statusIs(participantStatus, "ACTIVE");
     // Odds buttons are only live when BOTH the challenge itself is active
     // AND this user is still an active (alive) participant in it.
     const canBetOnChallenge = isChallengeActive && isParticipantActive;
@@ -418,7 +423,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                     <span>
                         {isEliminated
                             ? `You were eliminated after surviving ${progress.games_survived} game(s).`
-                            : `You're ${PARTICIPANT_STATUS_LABELS[progress.participant_status]?.toLowerCase() || "still in"} — ${progress.games_survived} game(s) survived so far.`}
+                            : `You're ${caseInsensitiveLabel(PARTICIPANT_STATUS_LABELS, progress.participant_status)?.toLowerCase() || "still in"} — ${progress.games_survived} game(s) survived so far.`}
                     </span>
                 </div>
             )}
