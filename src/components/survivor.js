@@ -166,6 +166,16 @@ const SurvivorChallengeGames = ({ id }) => {
     // "Place bet" is pressed for that game.
     const [draftPicks, setDraftPicks] = useState({});
 
+    // Once this panel has finished its first load, scroll the current/
+    // latest game (it's the one rendered last, per orderedNonSettledGames
+    // below) into view - on the lobby this is what actually needs
+    // attention right after expanding a challenge's accordion row, rather
+    // than leaving the user to scroll past every earlier game to reach
+    // it. Only fires once per mount (a fresh expand), not on every
+    // reload after placing a bet.
+    const currentGameRowRef = useRef(null);
+    const hasScrolledToCurrentGameRef = useRef(false);
+
     const loadAll = useCallback(async () => {
         setFetching(true);
         const detail = await fetchSurvivorChallenge(id);
@@ -185,6 +195,13 @@ const SurvivorChallengeGames = ({ id }) => {
     useEffect(() => {
         void loadAll();
     }, [loadAll]);
+
+    useEffect(() => {
+        if (hasScrolledToCurrentGameRef.current) return;
+        if (fetching || !currentGameRowRef.current) return;
+        hasScrolledToCurrentGameRef.current = true;
+        currentGameRowRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
 
     const handleJoin = async () => {
         if (!user) {
@@ -421,7 +438,11 @@ const SurvivorChallengeGames = ({ id }) => {
                     const isLockedOut = statusIs(game.status, "LOCKED") && !canBetOnChallenge;
                     const canBetOnThisGame = canPick && canBetOnChallenge;
                     return (
-                        <div key={game.game_number} className="survivor-game-row">
+                        <div
+                            key={game.game_number}
+                            className="survivor-game-row"
+                            ref={isCurrentGame ? currentGameRowRef : undefined}
+                        >
                             <div className="survivor-game-row-top">
                                 {isCurrentGame ? (
                                     <span
