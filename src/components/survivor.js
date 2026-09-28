@@ -551,19 +551,21 @@ const SurvivorChallengeDetail = ({ id }) => {
                                         disabled={pendingGame === game.game_number}
                                         onPick={setDraftPick}
                                     />
-                                    <button
-                                        type="button"
-                                        className="survivor-place-btn"
-                                        disabled={
-                                            !draftPicks[game.game_number] ||
-                                            pendingGame === game.game_number
-                                        }
-                                        onClick={() =>
-                                            requestPick(game.game_number, draftPicks[game.game_number])
-                                        }
-                                    >
-                                        Place
-                                    </button>
+                                    <div className="survivor-place-btn-row">
+                                        <button
+                                            type="button"
+                                            className="survivor-place-btn"
+                                            disabled={
+                                                !draftPicks[game.game_number] ||
+                                                pendingGame === game.game_number
+                                            }
+                                            onClick={() =>
+                                                requestPick(game.game_number, draftPicks[game.game_number])
+                                            }
+                                        >
+                                            Place
+                                        </button>
+                                    </div>
                                 </>
                             )}
 
