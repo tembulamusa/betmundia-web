@@ -538,6 +538,13 @@ const SurvivorChallengeDetail = ({ id }) => {
                                 <span className="survivor-game-number">Game {game.game_number}</span>
                                 <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
                             </div>
+                            <div className="survivor-game-teams">
+                                {/* The survivor game payload has no home_team/away_team yet (only
+                                    parent_match_id) - shows the literal placeholder for now, and
+                                    will pick up real names automatically once the backend adds
+                                    them, same fallback convention as betPickForSelection. */}
+                                ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
+                            </div>
                             <div className="survivor-game-time">
                                 Kicks off {formatDateTime(game.scheduled_at)} · picks lock {formatDateTime(game.lock_at)}
                             </div>
@@ -585,6 +592,13 @@ const SurvivorChallengeDetail = ({ id }) => {
                             <div className="survivor-game-row-top">
                                 <span className="survivor-game-number">Game {game.game_number}</span>
                                 <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
+                            </div>
+                            <div className="survivor-game-teams">
+                                {/* The survivor game payload has no home_team/away_team yet (only
+                                    parent_match_id) - shows the literal placeholder for now, and
+                                    will pick up real names automatically once the backend adds
+                                    them, same fallback convention as betPickForSelection. */}
+                                ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
                             </div>
                             <div className="survivor-game-time">
                                 Kicks off {formatDateTime(game.scheduled_at)} · picks lock {formatDateTime(game.lock_at)}
