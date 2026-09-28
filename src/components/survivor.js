@@ -251,6 +251,38 @@ const SurvivorChallengeDetail = ({ id }) => {
     // "Place" is pressed for that game.
     const [draftPicks, setDraftPicks] = useState({});
 
+    // The "All challenges" back-link is now two dropdowns: a status
+    // filter, and a challenge picker built from that same locally-stored
+    // list the /survivor lobby caches (readStoredSurvivorChallenges /
+    // persistSurvivorChallenges) - only the Refresh button below actually
+    // calls the API again; otherwise this just reads what's already
+    // stored, hydrating once from the network if nothing was cached yet
+    // (e.g. this challenge was opened directly, without visiting the
+    // lobby first).
+    const [allChallenges, setAllChallenges] = useState(() => readStoredSurvivorChallenges() || []);
+    const [challengeNavFilter, setChallengeNavFilter] = useState("all");
+    const [refreshingChallenges, setRefreshingChallenges] = useState(false);
+
+    useEffect(() => {
+        if (allChallenges.length > 0) return;
+        let cancelled = false;
+        fetchSurvivorChallenges().then((list) => {
+            if (!cancelled) {
+                setAllChallenges(list);
+                persistSurvivorChallenges(list);
+            }
+        });
+        return () => { cancelled = true; };
+    }, [allChallenges.length]);
+
+    const handleRefreshChallenges = async () => {
+        setRefreshingChallenges(true);
+        const list = await fetchSurvivorChallenges();
+        setAllChallenges(list);
+        persistSurvivorChallenges(list);
+        setRefreshingChallenges(false);
+    };
+
     const loadAll = useCallback(async () => {
         setFetching(true);
         const [detail, aggregate] = await Promise.all([
@@ -475,11 +507,53 @@ const SurvivorChallengeDetail = ({ id }) => {
         });
     };
 
+    const filteredChallengeNavOptions = allChallenges.filter((c) =>
+        challengeMatchesFilter(c, challengeNavFilter)
+    );
+
     return (
         <div className="survivor-page">
-            <button type="button" className="survivor-back-link" onClick={() => navigate("/survivor")}>
-                ← All challenges
-            </button>
+            <div className="survivor-detail-nav">
+                <select
+                    className="survivor-lobby-filter-select survivor-detail-nav-status"
+                    value={challengeNavFilter}
+                    onChange={(e) => setChallengeNavFilter(e.target.value)}
+                >
+                    {SURVIVOR_LOBBY_FILTERS.map((filter) => (
+                        <option key={filter.key} value={filter.key}>
+                            {filter.label}
+                        </option>
+                    ))}
+                </select>
+
+                <select
+                    className="survivor-lobby-filter-select survivor-detail-nav-challenge"
+                    value={String(id)}
+                    onChange={(e) => {
+                        if (!e.target.value) {
+                            navigate("/survivor");
+                        } else {
+                            navigate(`/survivor/${e.target.value}`);
+                        }
+                    }}
+                >
+                    <option value="">← All challenges</option>
+                    {filteredChallengeNavOptions.map((c) => (
+                        <option key={c.id} value={String(c.id)}>
+                            {c.name}
+                        </option>
+                    ))}
+                </select>
+
+                <button
+                    type="button"
+                    className="survivor-detail-nav-refresh"
+                    disabled={refreshingChallenges}
+                    onClick={handleRefreshChallenges}
+                >
+                    {refreshingChallenges ? "Refreshing…" : "Refresh"}
+                </button>
+            </div>
 
             <div className="survivor-detail-header">
                 <div className="survivor-detail-header-top">

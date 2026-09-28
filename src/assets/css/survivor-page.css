@@ -349,19 +349,42 @@
   background: #8c1a55;
 }
 
-.survivor-back-link {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.85rem;
-  padding: 0;
+.survivor-detail-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
   margin-bottom: 1rem;
-  cursor: pointer;
 }
 
-.survivor-back-link:hover {
+.survivor-detail-nav-status {
+  min-width: 8rem;
+}
+
+.survivor-detail-nav-challenge {
+  min-width: 12rem;
+  flex: 1 1 auto;
+}
+
+.survivor-detail-nav-refresh {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
-  text-decoration: underline;
+  border-radius: 8px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.survivor-detail-nav-refresh:hover:not(:disabled) {
+  border-color: rgba(167, 31, 102, 0.6);
+}
+
+.survivor-detail-nav-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .survivor-detail-header {
