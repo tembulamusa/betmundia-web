@@ -694,7 +694,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                         className="survivor-pick-confirm-ok"
                         onClick={confirmPendingPick}
                     >
-                        Confirm pick
+                        Place bet
                     </button>
                 </Modal.Footer>
             </Modal>
