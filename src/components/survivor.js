@@ -289,7 +289,9 @@ const SurvivorChallengeDetail = ({ id }) => {
                 </div>
             )}
 
-            {!isEnrolled && challenge.status !== "COMPLETED" && (
+            {/* Join button hidden per request; handleJoin/isJoining kept in
+                place so it can be re-enabled by uncommenting this block. */}
+            {false && !isEnrolled && challenge.status !== "COMPLETED" && (
                 <button
                     type="button"
                     className="survivor-join-btn"
