@@ -532,14 +532,12 @@
   text-transform: uppercase;
   color: #ffffff;
   background: #a71f66;
-  padding: 0.3rem 0.75rem;
+  padding: 0.3rem 1.4rem;
   border-radius: 6px;
-  box-shadow: 0 0 0 2px rgba(167, 31, 102, 0.35);
 }
 
 .survivor-current-game-badge.survivor-current-game-blocked {
   background: #a855f7;
-  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.35);
 }
 
 .survivor-game-number {
