@@ -22,6 +22,28 @@ export const isSurvivorSuccess = (httpStatus, response) =>
     SUCCESS_STATUSES.includes(httpStatus) &&
     SUCCESS_STATUSES.includes(response?.status);
 
+/**
+ * The lobby list is cached to localStorage every time it loads
+ * successfully, so the status filter on that page can show right away
+ * from "earlier saved" data (and still work for a moment offline) while
+ * a fresh fetch runs in the background.
+ */
+export const SURVIVOR_CHALLENGES_CACHE_KEY = "survivorChallengesList";
+const CHALLENGES_CACHE_TTL_MS = 60 * 60 * 1000;
+
+export const readStoredSurvivorChallenges = () => {
+    const stored = getFromLocalStorage(SURVIVOR_CHALLENGES_CACHE_KEY);
+    return Array.isArray(stored) ? stored : null;
+};
+
+export const persistSurvivorChallenges = (list) => {
+    if (!Array.isArray(list)) {
+        return list;
+    }
+    setLocalStorage(SURVIVOR_CHALLENGES_CACHE_KEY, list, CHALLENGES_CACHE_TTL_MS);
+    return list;
+};
+
 /** GET /survivor/challenges — public list of challenges (lobby). */
 export const fetchSurvivorChallenges = async () => {
     const [httpStatus, response] = await makeRequest({
