@@ -501,30 +501,57 @@
   margin-bottom: 0.6rem;
 }
 
+/* Same look and click-feel as the shared prematch 1X2 odds buttons:
+   home/draw/away are each colored per the app's own convention
+   (home-team gold-on-white-tint, draw navy, away crimson — see
+   .home-team/.draw/.away-team in tolkits.css), hover previews the same
+   brand-pink used for a confirmed pick there, and a fresh click lights
+   up instantly (the .pending state below) the same way their "picked"
+   toggle does, ahead of anything being confirmed. The survivor betting
+   flow itself (confirm modal -> placeSurvivorGameBet) is unchanged —
+   only the appearance and click feedback are matched here. */
 .survivor-pick-buttons {
   display: flex;
-  gap: 0.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .survivor-pick-btn {
   flex: 1 1 0;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border-radius: 8px;
-  padding: 0.5rem 0;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffc428;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.survivor-pick-btn:last-child {
+  border-right: none;
+}
+
+.survivor-pick-btn.pick-x {
+  background: #1e2d36;
+  color: #ffffff;
+}
+
+.survivor-pick-btn.pick-2 {
+  background: #c91d56;
+  color: #ffffff;
 }
 
 .survivor-pick-btn:hover:not(:disabled) {
-  border-color: rgba(167, 31, 102, 0.6);
+  background: #a71f66;
+  color: #ffffff;
 }
 
+.survivor-pick-btn.pending,
 .survivor-pick-btn.selected {
   background: #a71f66;
-  border-color: #a71f66;
+  color: #ffffff;
 }
 
 .survivor-pick-btn:disabled {

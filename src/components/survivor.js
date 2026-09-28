@@ -84,7 +84,7 @@ const StatusPill = ({ status, labels }) => (
     </span>
 );
 
-const PickButtons = ({ game, currentSelection, disabled, onPick }) => {
+const PickButtons = ({ game, currentSelection, pendingSelection, disabled, onPick }) => {
     const options = [
         { value: "1", label: "1" },
         { value: "X", label: "X" },
@@ -94,11 +94,17 @@ const PickButtons = ({ game, currentSelection, disabled, onPick }) => {
         <div className="survivor-pick-buttons">
             {options.map((opt) => {
                 const isSelected = normalizeSelection(currentSelection) === opt.value;
+                // Highlighted the instant it's clicked — before confirmation —
+                // the same immediate click-feel as the shared prematch odds
+                // buttons toggling their own "picked" state.
+                const isPending = normalizeSelection(pendingSelection) === opt.value;
                 return (
                     <button
                         key={opt.value}
                         type="button"
-                        className={`survivor-pick-btn${isSelected ? " selected" : ""}`}
+                        className={`survivor-pick-btn pick-${opt.value.toLowerCase()}${
+                            isSelected ? " selected" : ""
+                        }${isPending ? " pending" : ""}`}
                         disabled={disabled}
                         onClick={() => onPick(game.game_number, opt.value)}
                     >
@@ -522,6 +528,11 @@ const SurvivorChallengeDetail = ({ id }) => {
                                 <PickButtons
                                     game={game}
                                     currentSelection={mine?.selection}
+                                    pendingSelection={
+                                        pendingPick?.gameNumber === game.game_number
+                                            ? pendingPick.selection
+                                            : null
+                                    }
                                     disabled={pendingGame === game.game_number}
                                     onPick={requestPick}
                                 />
