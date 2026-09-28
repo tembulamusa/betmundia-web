@@ -501,14 +501,11 @@
   margin-bottom: 0.6rem;
 }
 
-/* Same look and click-feel as the shared prematch 1X2 odds buttons:
-   home/draw/away are each colored per the app's own convention
-   (home-team gold-on-white-tint, draw navy, away crimson — see
-   .home-team/.draw/.away-team in tolkits.css), each shows its (arbitrary,
-   see SURVIVOR_ARBITRARY_ODD) odd value the same way .theodds does, and
-   clicking one turns it purple straight away (a local draft) the same
-   way their own "picked" toggle does — nothing is sent to the server
-   until "Place" below is pressed and the confirmation modal accepted. */
+/* Same click-feel as the shared prematch 1X2 odds buttons (clicking one
+   turns it purple straight away — a local draft — the same way their own
+   "picked" toggle does; nothing is sent to the server until "Place"
+   below is pressed and the confirmation modal accepted), but all three
+   buttons share one neutral look until picked — no per-outcome coloring. */
 .survivor-pick-buttons {
   display: flex;
   border-radius: 4px;
@@ -526,7 +523,7 @@
   background: rgba(255, 255, 255, 0.1);
   border: none;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
-  color: #ffc428;
+  color: #ffffff;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
@@ -534,16 +531,6 @@
 
 .survivor-pick-btn:last-child {
   border-right: none;
-}
-
-.survivor-pick-btn.pick-x {
-  background: #1e2d36;
-  color: #ffffff;
-}
-
-.survivor-pick-btn.pick-2 {
-  background: #c91d56;
-  color: #ffffff;
 }
 
 .survivor-pick-odd {
@@ -569,15 +556,22 @@
   cursor: not-allowed;
 }
 
-.survivor-place-btn {
-  display: block;
-  width: 100%;
+/* Small button anchored bottom-right of the pick buttons on desktop,
+   same breakpoint the rest of this app uses for its mobile layout (see
+   the 767px home-team override in tolkits.css) — full width on mobile
+   so it's an easy thumb target there. */
+.survivor-place-btn-row {
+  display: flex;
+  justify-content: flex-end;
   margin-top: 0.6rem;
+}
+
+.survivor-place-btn {
   background: #a71f66;
   border: none;
   color: #ffffff;
   border-radius: 8px;
-  padding: 0.55rem 0;
+  padding: 0.5rem 1.4rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s ease, opacity 0.15s ease;
@@ -590,6 +584,16 @@
 .survivor-place-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+@media screen and (max-width: 767px) {
+  .survivor-place-btn-row {
+    justify-content: stretch;
+  }
+
+  .survivor-place-btn {
+    width: 100%;
+  }
 }
 
 .survivor-game-outcome {
