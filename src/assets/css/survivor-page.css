@@ -524,7 +524,12 @@
   border: none;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   color: #ffffff;
-  font-weight: 700;
+  /* Same as the shared prematch odds buttons' own label/.theodds text -
+     that text is unstyled beyond font:inherit + .theodds's own 15px/400
+     (see application.css), not bold, so match that exactly rather than
+     the heavier 700 weight used here before. */
+  font-size: 14px;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -535,10 +540,10 @@
 
 .survivor-pick-odd {
   display: block;
-  font-size: 0.66rem;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 400;
   margin-top: 2px;
-  opacity: 0.85;
+  color: inherit;
 }
 
 .survivor-pick-btn:hover:not(:disabled) {
