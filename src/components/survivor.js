@@ -624,18 +624,19 @@ const SurvivorChallengeDetail = ({ id }) => {
                     return (
                         <div key={game.game_number} className="survivor-game-row">
                             <div className="survivor-game-row-top">
-                                <span className="survivor-game-number">
-                                    Game {game.game_number}
-                                    {isCurrentGame && (
-                                        <span
-                                            className={`survivor-current-game-badge${
-                                                isLockedOut ? " survivor-current-game-blocked" : ""
-                                            }`}
-                                        >
-                                            {isLockedOut ? "Not Allowed to Place bet." : "Today's Game"}
-                                        </span>
-                                    )}
-                                </span>
+                                {isCurrentGame ? (
+                                    <span
+                                        className={`survivor-current-game-badge${
+                                            isLockedOut ? " survivor-current-game-blocked" : ""
+                                        }`}
+                                    >
+                                        {isLockedOut
+                                            ? "Not Allowed to Place bet."
+                                            : `Today's Game ${game.game_number}`}
+                                    </span>
+                                ) : (
+                                    <span className="survivor-game-number">Game {game.game_number}</span>
+                                )}
                                 <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
                             </div>
                             <div className="survivor-game-teams">
