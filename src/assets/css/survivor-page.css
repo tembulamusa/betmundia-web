@@ -492,18 +492,18 @@
 
 .survivor-game-number {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1.05rem;
 }
 
 .survivor-game-teams {
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 0.2rem;
 }
 
 .survivor-game-time {
-  font-size: 0.78rem;
+  font-size: 0.92rem;
   color: rgba(255, 255, 255, 0.5);
   margin-bottom: 0.6rem;
 }
