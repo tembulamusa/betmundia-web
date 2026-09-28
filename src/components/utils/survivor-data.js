@@ -284,9 +284,24 @@ export const GAME_STATUS_LABELS = {
 };
 
 export const PARTICIPANT_STATUS_LABELS = {
+    // Some environments send "ACTIVE" for a still-in participant instead
+    // of "ALIVE" — accept both (case-insensitive lookup is done at the
+    // call site via caseInsensitiveLabel()).
     ALIVE: "Still alive",
+    ACTIVE: "Still alive",
     ELIMINATED: "Eliminated",
     WINNER: "Winner",
+};
+
+/** Case-insensitive lookup into a STATUS_LABELS map — backend status
+ * strings show up in whatever case ("ACTIVE"/"active"/"Active"), so a
+ * plain labels[status] lookup silently misses anything not upper-case. */
+export const caseInsensitiveLabel = (labels, status) => {
+    if (status == null) return undefined;
+    const key = Object.keys(labels || {}).find(
+        (k) => k.toLowerCase() === String(status).toLowerCase()
+    );
+    return key ? labels[key] : undefined;
 };
 
 /** "X" and "x" are the same pick — normalize so UI comparisons are simple. */
