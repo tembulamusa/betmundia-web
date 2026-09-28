@@ -10,7 +10,7 @@
   --acc-border: rgba(255, 255, 255, 0.08);
   --acc-muted: #9a9aa8;
   --acc-text: rgba(255, 255, 255, 0.8);
-  --acc-radius: 0.85rem;
+  --acc-radius: 0.5rem;
   --acc-radius-sm: 0.55rem;
   width: min(380px, 100vw) !important;
   height: 100%;
