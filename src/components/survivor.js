@@ -376,6 +376,15 @@ const SurvivorChallengeDetail = ({ id }) => {
     const nonSettledGames = (challenge.games || []).filter((g) => !isGameSettled(g));
     const settledGames = (challenge.games || []).filter((g) => isGameSettled(g));
 
+    // "Today's game" - the one the user actually needs to act on next.
+    // Prefer the real current_game_number from /progress when it's there;
+    // otherwise fall back to the last game still in nonSettledGames (in
+    // practice there's normally only one game open at a time anyway).
+    const todaysGame =
+        nonSettledGames.find(
+            (g) => progress?.current_game_number != null && g.game_number === progress.current_game_number
+        ) || nonSettledGames[nonSettledGames.length - 1] || null;
+
     /** First game the user got wrong, for the "you lost at game N" modal
      * copy — falls back to games_survived + 1 when predictions aren't
      * available to inspect directly. */
@@ -517,27 +526,32 @@ const SurvivorChallengeDetail = ({ id }) => {
             )}
 
             <div className="survivor-games-list">
-                {nonSettledGames.length > 0 && blockReason && (
-                    <div className="survivor-game-row survivor-game-blocked">
-                        <button
-                            type="button"
-                            className="survivor-blocked-link"
-                            onClick={() => setShowBlockReason(true)}
-                        >
-                            {blockReason.label}
-                        </button>
-                    </div>
-                )}
-
-                {canBetOnChallenge && nonSettledGames.map((game) => {
+                {nonSettledGames.map((game) => {
                     const mine = predictionFor(game);
                     const canPick = isGamePickable(game);
+                    const isTodaysGame = todaysGame?.game_number === game.game_number;
+                    // Locked (picks closed) but betting on the challenge as a
+                    // whole isn't currently allowed (challenge closed, user
+                    // eliminated, or already won) - the specific case this
+                    // row's controls need to reflect, rather than hiding the
+                    // whole games list behind one summary row.
+                    const isLockedOut = statusIs(game.status, "LOCKED") && !canBetOnChallenge;
+                    const canBetOnThisGame = canPick && canBetOnChallenge;
                     return (
                         <div key={game.game_number} className="survivor-game-row">
                             <div className="survivor-game-row-top">
                                 <span className="survivor-game-number">Game {game.game_number}</span>
                                 <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
                             </div>
+                            {isTodaysGame && (
+                                <div
+                                    className={`survivor-todays-game-label${
+                                        isLockedOut ? " survivor-todays-game-blocked" : ""
+                                    }`}
+                                >
+                                    {isLockedOut ? "Not Allowed to Place bet." : "Today's Game"}
+                                </div>
+                            )}
                             <div className="survivor-game-teams">
                                 {/* The survivor game payload has no home_team/away_team yet (only
                                     parent_match_id) - shows the literal placeholder for now, and
@@ -549,7 +563,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                                 Active until {formatDateTime(game.lock_at)}
                             </div>
 
-                            {canPick && (
+                            {canBetOnThisGame && (
                                 <>
                                     <PickButtons
                                         game={game}
@@ -576,7 +590,17 @@ const SurvivorChallengeDetail = ({ id }) => {
                                 </>
                             )}
 
-                            {!canPick && (
+                            {!canBetOnThisGame && isLockedOut && (
+                                <button
+                                    type="button"
+                                    className="survivor-blocked-link"
+                                    onClick={() => setShowBlockReason(true)}
+                                >
+                                    Locked out
+                                </button>
+                            )}
+
+                            {!canBetOnThisGame && !isLockedOut && (
                                 <div className="survivor-game-outcome">
                                     <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "—"}</b></span>
                                 </div>
