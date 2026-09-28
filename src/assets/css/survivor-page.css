@@ -265,6 +265,95 @@
   filter: invert(1);
 }
 
+/* Pick confirmation modal — same dark-modal pattern as the block-reason
+   modal, but branded with the app's pick/join accent color rather than
+   the purple used for the "blocked" reason link. */
+.survivor-pick-confirm-modal.modal-dialog {
+  max-width: 380px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.survivor-pick-confirm-modal .modal-content {
+  background: #0f111a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #ffffff;
+}
+
+.survivor-pick-confirm-modal .modal-header,
+.survivor-pick-confirm-modal .modal-footer {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.survivor-pick-confirm-modal .modal-title {
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.survivor-pick-confirm-modal .btn-close {
+  filter: invert(1);
+}
+
+.survivor-pick-confirm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.92rem;
+}
+
+.survivor-pick-confirm-row:last-of-type {
+  border-bottom: none;
+}
+
+.survivor-pick-confirm-row span {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.survivor-pick-confirm-warning {
+  margin: 0.9rem 0 0;
+  padding: 0.7rem 0.8rem;
+  background: rgba(167, 31, 102, 0.12);
+  border: 1px solid rgba(167, 31, 102, 0.35);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.survivor-pick-confirm-cancel {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: 8px;
+  padding: 0.5rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.survivor-pick-confirm-cancel:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+
+.survivor-pick-confirm-ok {
+  background: #a71f66;
+  border: none;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.survivor-pick-confirm-ok:hover {
+  background: #8c1a55;
+}
+
 .survivor-back-link {
   background: none;
   border: none;

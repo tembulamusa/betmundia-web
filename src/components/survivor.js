@@ -14,6 +14,7 @@ import {
     joinSurvivorChallenge,
     fetchSurvivorProgress,
     placeSurvivorGameBet,
+    SURVIVOR_ARBITRARY_ODD,
     readStoredSurvivorChallenges,
     persistSurvivorChallenges,
     normalizeSelection,
@@ -232,6 +233,9 @@ const SurvivorChallengeDetail = ({ id }) => {
     const [isJoining, setIsJoining] = useState(false);
     const [pendingGame, setPendingGame] = useState(null);
     const [showBlockReason, setShowBlockReason] = useState(false);
+    // The pick the user clicked but hasn't confirmed yet — clicking 1/X/2
+    // opens a confirmation modal instead of placing the bet immediately.
+    const [pendingPick, setPendingPick] = useState(null);
 
     const loadAll = useCallback(async () => {
         setFetching(true);
@@ -411,6 +415,25 @@ const SurvivorChallengeDetail = ({ id }) => {
 
     const blockReason = canBetOnChallenge ? null : resolveBlockReason();
 
+    /** Clicking 1/X/2 opens a confirmation modal first — it surfaces more
+     * insight (game number, pick, stake, possible win) and, when this game
+     * already has an earlier pick recorded, warns the user before they
+     * finalize a new one. The actual placebet only fires from
+     * confirmPendingPick below, never directly from the buttons. */
+    const requestPick = (gameNumber, selection) => {
+        const game = (challenge.games || []).find((g) => g.game_number === gameNumber);
+        setPendingPick({ gameNumber, selection, existing: predictionFor(game) });
+    };
+
+    const cancelPendingPick = () => setPendingPick(null);
+
+    const confirmPendingPick = async () => {
+        if (!pendingPick) return;
+        const { gameNumber, selection } = pendingPick;
+        setPendingPick(null);
+        await handlePick(gameNumber, selection);
+    };
+
     return (
         <div className="survivor-page">
             <button type="button" className="survivor-back-link" onClick={() => navigate("/survivor")}>
@@ -500,7 +523,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                                     game={game}
                                     currentSelection={mine?.selection}
                                     disabled={pendingGame === game.game_number}
-                                    onPick={handlePick}
+                                    onPick={requestPick}
                                 />
                             )}
 
@@ -565,6 +588,59 @@ const SurvivorChallengeDetail = ({ id }) => {
                         </button>
                     )}
                 </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={!!pendingPick}
+                onHide={cancelPendingPick}
+                centered
+                className="survivor-pick-confirm-modal"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm your pick</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="survivor-pick-confirm-row">
+                        <span>Game</span>
+                        <b>Game {pendingPick?.gameNumber}</b>
+                    </div>
+                    <div className="survivor-pick-confirm-row">
+                        <span>Your pick</span>
+                        <b>{normalizeSelection(pendingPick?.selection)}</b>
+                    </div>
+                    <div className="survivor-pick-confirm-row">
+                        <span>Entry stake</span>
+                        <b>{formatMoney(challenge.entry_stake)}</b>
+                    </div>
+                    <div className="survivor-pick-confirm-row">
+                        <span>Possible win</span>
+                        <b>{formatMoney((challenge.entry_stake || 0) * SURVIVOR_ARBITRARY_ODD)}</b>
+                    </div>
+                    {pendingPick?.existing?.selection && (
+                        <p className="survivor-pick-confirm-warning">
+                            Heads up — you already have a pick recorded for game{" "}
+                            {pendingPick.gameNumber} (<b>{normalizeSelection(pendingPick.existing.selection)}</b>).
+                            Confirming will submit a new bet for this game with your updated
+                            selection, <b>{normalizeSelection(pendingPick?.selection)}</b>.
+                        </p>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <button
+                        type="button"
+                        className="survivor-pick-confirm-cancel"
+                        onClick={cancelPendingPick}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        className="survivor-pick-confirm-ok"
+                        onClick={confirmPendingPick}
+                    >
+                        Confirm pick
+                    </button>
+                </Modal.Footer>
             </Modal>
         </div>
     );
