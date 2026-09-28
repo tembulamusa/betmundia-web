@@ -147,6 +147,17 @@
   color: rgba(255, 255, 255, 0.65);
 }
 
+.survivor-game-blocked {
+  text-align: center;
+  padding: 1.4rem 1rem;
+}
+
+.survivor-blocked-message {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.92rem;
+}
+
 .survivor-back-link {
   background: none;
   border: none;
