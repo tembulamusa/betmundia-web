@@ -80,27 +80,50 @@
   text-align: center;
 }
 
-.survivor-challenge-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+.survivor-challenge-accordion {
+  display: flex;
+  flex-direction: column;
   gap: 0.9rem;
 }
 
-.survivor-challenge-card {
-  display: block;
+.survivor-challenge-accordion .accordion-item {
   background: rgb(38, 48, 69);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding: 1rem 1.1rem;
-  text-decoration: none;
-  color: #ffffff;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  overflow: hidden;
 }
 
-.survivor-challenge-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(167, 31, 102, 0.5);
+.survivor-challenge-accordion .accordion-header {
+  margin: 0;
+}
+
+.survivor-challenge-accordion .accordion-button {
+  display: block;
+  width: 100%;
+  background: transparent !important;
+  border: none;
+  padding: 1rem 1.1rem;
   color: #ffffff;
+  text-align: left;
+  text-decoration: none;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease;
+}
+
+.survivor-challenge-accordion .accordion-button:hover,
+.survivor-challenge-accordion .accordion-button:focus {
+  border-color: rgba(167, 31, 102, 0.5);
+}
+
+/* The default bootstrap chevron is a dark SVG meant for a light theme -
+   invert it so it shows up against this app's dark accordion rows. */
+.survivor-challenge-accordion .accordion-button::after {
+  filter: invert(1);
+}
+
+.survivor-challenge-accordion .accordion-body {
+  padding: 0 1.1rem 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .survivor-challenge-card-top {

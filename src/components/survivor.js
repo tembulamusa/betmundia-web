@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { Modal } from "react-bootstrap";
+import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Modal, Accordion } from "react-bootstrap";
 import { Context } from "../context/store";
 import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
@@ -119,124 +119,22 @@ const PickButtons = ({ game, currentSelection, draftSelection, disabled, onPick 
     );
 };
 
-/** /survivor — the lobby: every open/active/completed challenge. */
-const SurvivorChallengesList = () => {
-    // Hydrate instantly from whatever was saved on the last visit, then
-    // refresh from the network in the background — the status filter and
-    // its counts work immediately from "earlier saved" data either way.
-    const [challenges, setChallenges] = useState(() => readStoredSurvivorChallenges());
-    const [fetching, setFetching] = useState(() => !readStoredSurvivorChallenges());
-    const [statusFilter, setStatusFilter] = useState("all");
-
-    useEffect(() => {
-        let cancelled = false;
-        fetchSurvivorChallenges().then((list) => {
-            if (!cancelled) {
-                setChallenges(list);
-                persistSurvivorChallenges(list);
-                setFetching(false);
-            }
-        });
-        return () => { cancelled = true; };
-    }, []);
-
-    const filterCounts = SURVIVOR_LOBBY_FILTERS.reduce((acc, filter) => {
-        acc[filter.key] = (challenges || []).filter((c) => challengeMatchesFilter(c, filter.key)).length;
-        return acc;
-    }, {});
-
-    const filteredChallenges = (challenges || []).filter((c) => challengeMatchesFilter(c, statusFilter));
-
-    return (
-        <div className="survivor-page">
-            <div className="survivor-lobby-header">
-                <FaShieldAlt className="survivor-lobby-icon" aria-hidden="true" />
-                <div>
-                    <h1 className="survivor-lobby-title">Survivor Challenge</h1>
-                    <p className="survivor-lobby-subtitle">
-                        Pick one 1X2 result per game. One wrong pick and you're out —
-                        last player standing takes the pool.
-                    </p>
-                </div>
-            </div>
-
-            {challenges && challenges.length > 0 && (
-                <div className="survivor-lobby-filter-bar">
-                    <label className="survivor-lobby-filter-label" htmlFor="survivor-status-filter">
-                        Filter by status
-                    </label>
-                    <select
-                        id="survivor-status-filter"
-                        className="survivor-lobby-filter-select"
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                        {SURVIVOR_LOBBY_FILTERS.map((filter) => (
-                            <option key={filter.key} value={filter.key}>
-                                {filter.label} ({filterCounts[filter.key]})
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            )}
-
-            {fetching && !challenges && <div className="survivor-loading">Loading challenges…</div>}
-
-            {!fetching && (!challenges || challenges.length < 1) && (
-                <NoEvents message="No survivor challenges are open right now. Check back later!" />
-            )}
-
-            {challenges && challenges.length > 0 && filteredChallenges.length < 1 && (
-                <NoEvents message="No challenges match this filter right now." />
-            )}
-
-            {challenges && filteredChallenges.length > 0 && (
-                <div className="survivor-challenge-grid">
-                    {filteredChallenges.map((challenge) => (
-                        <Link
-                            key={challenge.id}
-                            to={`/survivor/${challenge.id}`}
-                            className="survivor-challenge-card"
-                        >
-                            <div className="survivor-challenge-card-top">
-                                <span className="survivor-challenge-name">{challenge.name}</span>
-                                <StatusPill status={challenge.status} labels={SURVIVOR_STATUS_LABELS} />
-                            </div>
-                            <div className="survivor-challenge-card-pool">
-                                {formatMoney(challenge.current_prize_pool)}
-                                <span className="survivor-challenge-card-pool-label">prize pool</span>
-                            </div>
-                            <div className="survivor-challenge-card-meta">
-                                <span><FaUsers aria-hidden="true" /> {challenge.participant_count} playing</span>
-                                <span>Entry {formatMoney(challenge.entry_stake)}</span>
-                            </div>
-                            <div className="survivor-challenge-card-time">
-                                {statusIs(challenge.status, "OPEN")
-                                    ? `Entries close ${formatDateTime(challenge.registration_closes_at)}`
-                                    : `Started ${formatDateTime(challenge.start_at)}`}
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-};
-
-/** /survivor/:id — one challenge: games, picks, join, progress. */
-const SurvivorChallengeDetail = ({ id }) => {
+/** Reusable "join + progress + games list" panel for one challenge — shared
+ * between the standalone /survivor/:id page (SurvivorChallengeDetail below)
+ * and each row of the lobby's challenges accordion, so expanding a challenge
+ * inline shows the exact same games/picks UI as visiting its own page. It
+ * deliberately fetches its own challenge/progress data (rather than being
+ * handed it as props) so it can be dropped into either place with just an
+ * id — the lobby accordion only mounts this for whichever row is currently
+ * expanded, so it doesn't fire a request per challenge in the list, only
+ * for the one actually opened. */
+const SurvivorChallengeGames = ({ id }) => {
     const [, dispatch] = useContext(Context);
     const navigate = useNavigate();
     const user = getFromLocalStorage("user");
-    // NOTE: getFromLocalStorage() re-parses JSON on every call, so `user` is a
-    // brand-new object reference each render. Depending on it directly below
-    // would recreate loadAll -> re-run the effect -> re-render -> new `user`
-    // reference -> forever, hammering /progress. Depend on a stable boolean
-    // instead so loadAll only changes when sign-in state actually changes.
     const isSignedIn = !!user;
 
     const [challenge, setChallenge] = useState(null);
-    const [results, setResults] = useState(null);
     const [progress, setProgress] = useState(null);
     const [fetching, setFetching] = useState(true);
     const [isJoining, setIsJoining] = useState(false);
@@ -248,49 +146,13 @@ const SurvivorChallengeDetail = ({ id }) => {
     // Local, unsubmitted picks per game (gameNumber -> "1"/"X"/"2") — set
     // by clicking 1/X/2, cleared once that game's pick is confirmed (or
     // the confirm attempt finishes). Nothing is sent to the server until
-    // "Place" is pressed for that game.
+    // "Place bet" is pressed for that game.
     const [draftPicks, setDraftPicks] = useState({});
-
-    // The "All challenges" back-link is now two dropdowns: a status
-    // filter, and a challenge picker built from that same locally-stored
-    // list the /survivor lobby caches (readStoredSurvivorChallenges /
-    // persistSurvivorChallenges) - only the Refresh button below actually
-    // calls the API again; otherwise this just reads what's already
-    // stored, hydrating once from the network if nothing was cached yet
-    // (e.g. this challenge was opened directly, without visiting the
-    // lobby first).
-    const [allChallenges, setAllChallenges] = useState(() => readStoredSurvivorChallenges() || []);
-    const [challengeNavFilter, setChallengeNavFilter] = useState("all");
-    const [refreshingChallenges, setRefreshingChallenges] = useState(false);
-
-    useEffect(() => {
-        if (allChallenges.length > 0) return;
-        let cancelled = false;
-        fetchSurvivorChallenges().then((list) => {
-            if (!cancelled) {
-                setAllChallenges(list);
-                persistSurvivorChallenges(list);
-            }
-        });
-        return () => { cancelled = true; };
-    }, [allChallenges.length]);
-
-    const handleRefreshChallenges = async () => {
-        setRefreshingChallenges(true);
-        const list = await fetchSurvivorChallenges();
-        setAllChallenges(list);
-        persistSurvivorChallenges(list);
-        setRefreshingChallenges(false);
-    };
 
     const loadAll = useCallback(async () => {
         setFetching(true);
-        const [detail, aggregate] = await Promise.all([
-            fetchSurvivorChallenge(id),
-            fetchSurvivorResults(id),
-        ]);
+        const detail = await fetchSurvivorChallenge(id);
         setChallenge(detail);
-        setResults(aggregate);
         if (isSignedIn) {
             const mine = await fetchSurvivorProgress(id);
             setProgress(mine);
@@ -348,15 +210,11 @@ const SurvivorChallengeDetail = ({ id }) => {
     };
 
     if (fetching && !challenge) {
-        return <div className="survivor-page"><div className="survivor-loading">Loading challenge…</div></div>;
+        return <div className="survivor-loading">Loading challenge…</div>;
     }
 
     if (!challenge) {
-        return (
-            <div className="survivor-page">
-                <NoEvents message="This survivor challenge could not be found." />
-            </div>
-        );
+        return <NoEvents message="This survivor challenge could not be found." />;
     }
 
     // A game object may carry its own selection/result_status directly
@@ -507,84 +365,8 @@ const SurvivorChallengeDetail = ({ id }) => {
         });
     };
 
-    const filteredChallengeNavOptions = allChallenges.filter((c) =>
-        challengeMatchesFilter(c, challengeNavFilter)
-    );
-
     return (
-        <div className="survivor-page">
-            <div className="survivor-detail-nav">
-                <select
-                    className="survivor-lobby-filter-select survivor-detail-nav-status"
-                    value={challengeNavFilter}
-                    onChange={(e) => setChallengeNavFilter(e.target.value)}
-                >
-                    {SURVIVOR_LOBBY_FILTERS.map((filter) => (
-                        <option key={filter.key} value={filter.key}>
-                            {filter.label}
-                        </option>
-                    ))}
-                </select>
-
-                <div className="survivor-detail-nav-challenge-group">
-                    <select
-                        className="survivor-lobby-filter-select survivor-detail-nav-challenge"
-                        value={String(id)}
-                        onChange={(e) => {
-                            if (!e.target.value) {
-                                navigate("/survivor");
-                            } else {
-                                navigate(`/survivor/${e.target.value}`);
-                            }
-                        }}
-                    >
-                        <option value="">← All challenges</option>
-                        {filteredChallengeNavOptions.map((c) => (
-                            <option key={c.id} value={String(c.id)}>
-                                {c.name}
-                            </option>
-                        ))}
-                    </select>
-
-                    <button
-                        type="button"
-                        className="survivor-detail-nav-refresh"
-                        disabled={refreshingChallenges}
-                        onClick={handleRefreshChallenges}
-                    >
-                        {refreshingChallenges ? "Refreshing…" : "Refresh"}
-                    </button>
-                </div>
-            </div>
-
-            <div className="survivor-detail-header">
-                <div className="survivor-detail-header-top">
-                    <h1 className="survivor-detail-title">{challenge.name}</h1>
-                    <StatusPill status={challenge.status} labels={SURVIVOR_STATUS_LABELS} />
-                </div>
-                {challenge.description && (
-                    <p className="survivor-detail-description">{challenge.description}</p>
-                )}
-                <div className="survivor-detail-stats">
-                    <div className="survivor-stat">
-                        <span className="survivor-stat-value">{formatMoney(challenge.current_prize_pool)}</span>
-                        <span className="survivor-stat-label">Prize pool</span>
-                    </div>
-                    <div className="survivor-stat">
-                        <span className="survivor-stat-value">{results?.survivors_remaining ?? "—"}</span>
-                        <span className="survivor-stat-label">Survivors left</span>
-                    </div>
-                    <div className="survivor-stat">
-                        <span className="survivor-stat-value">{challenge.participant_count}</span>
-                        <span className="survivor-stat-label">Players</span>
-                    </div>
-                    <div className="survivor-stat">
-                        <span className="survivor-stat-value">{formatMoney(challenge.entry_stake)}</span>
-                        <span className="survivor-stat-label">Entry stake</span>
-                    </div>
-                </div>
-            </div>
-
+        <>
             {isEnrolled && (
                 <div className={`survivor-progress-banner${isEliminated ? " eliminated" : ""}`}>
                     {isEliminated ? <FaSkullCrossbones aria-hidden="true" /> : <FaTrophy aria-hidden="true" />}
@@ -809,6 +591,299 @@ const SurvivorChallengeDetail = ({ id }) => {
                     </button>
                 </Modal.Footer>
             </Modal>
+        </>
+    );
+};
+
+/** Which accordion row should start open on the lobby: the challenge this
+ * browser most recently joined (survivorJoinedChallenges is appended to,
+ * so its last entry is the latest), if it's in the given list at all. */
+const defaultActiveKeyFor = (list) => {
+    const joined = getFromLocalStorage(SURVIVOR_JOINED_STORAGE_KEY);
+    const joinedList = Array.isArray(joined) ? joined : [];
+    const latestJoinedId = joinedList.length > 0 ? joinedList[joinedList.length - 1] : null;
+    if (latestJoinedId == null) return null;
+    const match = (list || []).find((c) => String(c.id) === String(latestJoinedId));
+    return match ? String(match.id) : null;
+};
+
+/** /survivor — the lobby: every open/active/completed challenge, as an
+ * accordion — one row per challenge, collapsed to the same summary the
+ * card used to show, expanding in place to the same games/picks panel the
+ * challenge's own page shows (SurvivorChallengeGames above). */
+const SurvivorChallengesList = () => {
+    // Hydrate instantly from whatever was saved on the last visit, then
+    // refresh from the network in the background — the status filter and
+    // its counts work immediately from "earlier saved" data either way.
+    const [challenges, setChallenges] = useState(() => readStoredSurvivorChallenges());
+    const [fetching, setFetching] = useState(() => !readStoredSurvivorChallenges());
+    const [statusFilter, setStatusFilter] = useState("all");
+
+    // Which challenge's row is expanded. Defaults to the most recently
+    // joined challenge so a returning player lands with their own
+    // challenge already open — everything else starts collapsed. Computed
+    // once from whatever's cached, and again once the network fetch below
+    // lands if nothing was cached yet — but never after that, so it never
+    // clobbers the user's own manual toggling.
+    const [activeKey, setActiveKey] = useState(() => defaultActiveKeyFor(readStoredSurvivorChallenges()));
+    const appliedDefaultActiveKeyRef = useRef(activeKey != null);
+
+    useEffect(() => {
+        let cancelled = false;
+        fetchSurvivorChallenges().then((list) => {
+            if (!cancelled) {
+                setChallenges(list);
+                persistSurvivorChallenges(list);
+                setFetching(false);
+                if (!appliedDefaultActiveKeyRef.current) {
+                    appliedDefaultActiveKeyRef.current = true;
+                    const defaultKey = defaultActiveKeyFor(list);
+                    if (defaultKey != null) setActiveKey(defaultKey);
+                }
+            }
+        });
+        return () => { cancelled = true; };
+    }, []);
+
+    const filterCounts = SURVIVOR_LOBBY_FILTERS.reduce((acc, filter) => {
+        acc[filter.key] = (challenges || []).filter((c) => challengeMatchesFilter(c, filter.key)).length;
+        return acc;
+    }, {});
+
+    const filteredChallenges = (challenges || []).filter((c) => challengeMatchesFilter(c, statusFilter));
+
+    return (
+        <div className="survivor-page">
+            <div className="survivor-lobby-header">
+                <FaShieldAlt className="survivor-lobby-icon" aria-hidden="true" />
+                <div>
+                    <h1 className="survivor-lobby-title">Survivor Challenge</h1>
+                    <p className="survivor-lobby-subtitle">
+                        Pick one 1X2 result per game. One wrong pick and you're out —
+                        last player standing takes the pool.
+                    </p>
+                </div>
+            </div>
+
+            {challenges && challenges.length > 0 && (
+                <div className="survivor-lobby-filter-bar">
+                    <label className="survivor-lobby-filter-label" htmlFor="survivor-status-filter">
+                        Filter by status
+                    </label>
+                    <select
+                        id="survivor-status-filter"
+                        className="survivor-lobby-filter-select"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        {SURVIVOR_LOBBY_FILTERS.map((filter) => (
+                            <option key={filter.key} value={filter.key}>
+                                {filter.label} ({filterCounts[filter.key]})
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
+
+            {fetching && !challenges && <div className="survivor-loading">Loading challenges…</div>}
+
+            {!fetching && (!challenges || challenges.length < 1) && (
+                <NoEvents message="No survivor challenges are open right now. Check back later!" />
+            )}
+
+            {challenges && challenges.length > 0 && filteredChallenges.length < 1 && (
+                <NoEvents message="No challenges match this filter right now." />
+            )}
+
+            {challenges && filteredChallenges.length > 0 && (
+                <Accordion
+                    activeKey={activeKey}
+                    onSelect={(k) => setActiveKey(k)}
+                    className="survivor-challenge-accordion"
+                >
+                    {filteredChallenges.map((challenge) => {
+                        const key = String(challenge.id);
+                        return (
+                            <Accordion.Item key={challenge.id} eventKey={key}>
+                                <Accordion.Header>
+                                    <div className="survivor-challenge-card-top">
+                                        <span className="survivor-challenge-name">{challenge.name}</span>
+                                        <StatusPill status={challenge.status} labels={SURVIVOR_STATUS_LABELS} />
+                                    </div>
+                                    <div className="survivor-challenge-card-pool">
+                                        {formatMoney(challenge.current_prize_pool)}
+                                        <span className="survivor-challenge-card-pool-label">prize pool</span>
+                                    </div>
+                                    <div className="survivor-challenge-card-meta">
+                                        <span><FaUsers aria-hidden="true" /> {challenge.participant_count} playing</span>
+                                        <span>Entry {formatMoney(challenge.entry_stake)}</span>
+                                    </div>
+                                    <div className="survivor-challenge-card-time">
+                                        {statusIs(challenge.status, "OPEN")
+                                            ? `Entries close ${formatDateTime(challenge.registration_closes_at)}`
+                                            : `Started ${formatDateTime(challenge.start_at)}`}
+                                    </div>
+                                </Accordion.Header>
+                                <Accordion.Body>
+                                    {/* Only the expanded row actually fetches/renders its games —
+                                        mounting SurvivorChallengeGames for every challenge in the
+                                        list at once would fire one request per challenge. */}
+                                    {activeKey === key && <SurvivorChallengeGames id={challenge.id} />}
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        );
+                    })}
+                </Accordion>
+            )}
+        </div>
+    );
+};
+
+/** /survivor/:id — one challenge's own page: nav (status filter + challenge
+ * switcher + refresh), header stats, then the same games/picks panel the
+ * lobby's accordion rows show inline (SurvivorChallengeGames above). */
+const SurvivorChallengeDetail = ({ id }) => {
+    const navigate = useNavigate();
+
+    const [challenge, setChallenge] = useState(null);
+    const [results, setResults] = useState(null);
+    const [fetching, setFetching] = useState(true);
+
+    // The "All challenges" back-link is now two dropdowns: a status
+    // filter, and a challenge picker built from that same locally-stored
+    // list the /survivor lobby caches (readStoredSurvivorChallenges /
+    // persistSurvivorChallenges) - only the Refresh button below actually
+    // calls the API again; otherwise this just reads what's already
+    // stored, hydrating once from the network if nothing was cached yet
+    // (e.g. this challenge was opened directly, without visiting the
+    // lobby first).
+    const [allChallenges, setAllChallenges] = useState(() => readStoredSurvivorChallenges() || []);
+    const [challengeNavFilter, setChallengeNavFilter] = useState("all");
+    const [refreshingChallenges, setRefreshingChallenges] = useState(false);
+
+    useEffect(() => {
+        if (allChallenges.length > 0) return;
+        let cancelled = false;
+        fetchSurvivorChallenges().then((list) => {
+            if (!cancelled) {
+                setAllChallenges(list);
+                persistSurvivorChallenges(list);
+            }
+        });
+        return () => { cancelled = true; };
+    }, [allChallenges.length]);
+
+    const handleRefreshChallenges = async () => {
+        setRefreshingChallenges(true);
+        const list = await fetchSurvivorChallenges();
+        setAllChallenges(list);
+        persistSurvivorChallenges(list);
+        setRefreshingChallenges(false);
+    };
+
+    useEffect(() => {
+        let cancelled = false;
+        setFetching(true);
+        Promise.all([fetchSurvivorChallenge(id), fetchSurvivorResults(id)]).then(([detail, aggregate]) => {
+            if (cancelled) return;
+            setChallenge(detail);
+            setResults(aggregate);
+            setFetching(false);
+        });
+        return () => { cancelled = true; };
+    }, [id]);
+
+    if (fetching && !challenge) {
+        return <div className="survivor-page"><div className="survivor-loading">Loading challenge…</div></div>;
+    }
+
+    if (!challenge) {
+        return (
+            <div className="survivor-page">
+                <NoEvents message="This survivor challenge could not be found." />
+            </div>
+        );
+    }
+
+    const filteredChallengeNavOptions = allChallenges.filter((c) =>
+        challengeMatchesFilter(c, challengeNavFilter)
+    );
+
+    return (
+        <div className="survivor-page">
+            <div className="survivor-detail-nav">
+                <select
+                    className="survivor-lobby-filter-select survivor-detail-nav-status"
+                    value={challengeNavFilter}
+                    onChange={(e) => setChallengeNavFilter(e.target.value)}
+                >
+                    {SURVIVOR_LOBBY_FILTERS.map((filter) => (
+                        <option key={filter.key} value={filter.key}>
+                            {filter.label}
+                        </option>
+                    ))}
+                </select>
+
+                <div className="survivor-detail-nav-challenge-group">
+                    <select
+                        className="survivor-lobby-filter-select survivor-detail-nav-challenge"
+                        value={String(id)}
+                        onChange={(e) => {
+                            if (!e.target.value) {
+                                navigate("/survivor");
+                            } else {
+                                navigate(`/survivor/${e.target.value}`);
+                            }
+                        }}
+                    >
+                        <option value="">← All challenges</option>
+                        {filteredChallengeNavOptions.map((c) => (
+                            <option key={c.id} value={String(c.id)}>
+                                {c.name}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button
+                        type="button"
+                        className="survivor-detail-nav-refresh"
+                        disabled={refreshingChallenges}
+                        onClick={handleRefreshChallenges}
+                    >
+                        {refreshingChallenges ? "Refreshing…" : "Refresh"}
+                    </button>
+                </div>
+            </div>
+
+            <div className="survivor-detail-header">
+                <div className="survivor-detail-header-top">
+                    <h1 className="survivor-detail-title">{challenge.name}</h1>
+                    <StatusPill status={challenge.status} labels={SURVIVOR_STATUS_LABELS} />
+                </div>
+                {challenge.description && (
+                    <p className="survivor-detail-description">{challenge.description}</p>
+                )}
+                <div className="survivor-detail-stats">
+                    <div className="survivor-stat">
+                        <span className="survivor-stat-value">{formatMoney(challenge.current_prize_pool)}</span>
+                        <span className="survivor-stat-label">Prize pool</span>
+                    </div>
+                    <div className="survivor-stat">
+                        <span className="survivor-stat-value">{results?.survivors_remaining ?? "—"}</span>
+                        <span className="survivor-stat-label">Survivors left</span>
+                    </div>
+                    <div className="survivor-stat">
+                        <span className="survivor-stat-value">{challenge.participant_count}</span>
+                        <span className="survivor-stat-label">Players</span>
+                    </div>
+                    <div className="survivor-stat">
+                        <span className="survivor-stat-value">{formatMoney(challenge.entry_stake)}</span>
+                        <span className="survivor-stat-label">Entry stake</span>
+                    </div>
+                </div>
+            </div>
+
+            <SurvivorChallengeGames id={id} />
         </div>
     );
 };
