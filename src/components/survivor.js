@@ -556,7 +556,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                                                 isLockedOut ? " survivor-current-game-blocked" : ""
                                             }`}
                                         >
-                                            {isLockedOut ? "Not Allowed to Place bet." : "Current Game"}
+                                            {isLockedOut ? "Not Allowed to Place bet." : "Today's Game"}
                                         </span>
                                     )}
                                 </span>
