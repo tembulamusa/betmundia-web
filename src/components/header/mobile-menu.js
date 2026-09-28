@@ -52,7 +52,7 @@ function resolveAffiliateBalance(source) {
 }
 
 function MobileMenu(props) {
-  const { user, showLabel = false } = props;
+  const { user } = props;
 
   const [show, setShow] = useState(false);
   const [state, dispatch] = useContext(Context);
@@ -164,15 +164,9 @@ function MobileMenu(props) {
       <span
         className="font-[500] cursor-pointer user-profile"
         onClick={handleShow}
+        aria-label="Account"
       >
-        <FaRegUser className="inline-block user-profile-icon" />
-        {user ? (
-          <span className={`user-profile-text${showLabel ? "" : " hidden d-md-inline"}`}>
-            Account
-          </span>
-        ) : (
-          <span></span>
-        )}
+        <FaRegUser className="inline-block user-profile-icon" aria-hidden="true" />
       </span>
 
       <Offcanvas
@@ -283,6 +277,7 @@ function MobileMenu(props) {
                   : "Get your affiliate code"
               }
             >
+              <div className="account-drawer-affiliate-label">Affiliate</div>
               <div className="account-drawer-wallet-grid">
                 <div className="account-drawer-affiliate-code-wrap">
                   <p className="account-drawer-wallet-main-label">Code</p>

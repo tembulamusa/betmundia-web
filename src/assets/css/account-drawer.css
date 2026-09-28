@@ -299,6 +299,15 @@
   outline: none;
 }
 
+.account-drawer-affiliate-label {
+  margin: 0 0 0.65rem;
+  color: var(--acc-muted);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .account-drawer-affiliate:hover {
   background: rgba(255, 255, 255, 0.03);
 }
@@ -325,7 +334,7 @@
   border: none;
   background: transparent;
   color: rgba(255, 215, 0);
-  font-size: 1.35rem;
+  font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   word-break: break-all;
@@ -386,7 +395,7 @@
 .account-drawer-affiliate-bal-amount {
   margin: 0;
   color: rgba(255, 215, 0);
-  font-size: 1.45rem;
+  font-size: 1.7rem;
   font-weight: 700;
   line-height: 1.15;
   white-space: nowrap;
@@ -394,7 +403,7 @@
 
 .account-drawer-affiliate-bal-prefix {
   color: var(--acc-muted);
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 600;
 }
 
