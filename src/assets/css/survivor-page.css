@@ -34,49 +34,43 @@
 
 .survivor-lobby-filter-bar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.6rem;
   margin-bottom: 1.1rem;
 }
 
-.survivor-lobby-filter-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.75);
-  border-radius: 999px;
-  padding: 0.4rem 0.85rem;
+.survivor-lobby-filter-label {
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.survivor-lobby-filter-select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.45rem 2rem 0.45rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23ffffff' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  background-size: 0.75rem;
 }
 
-.survivor-lobby-filter-btn:hover {
-  border-color: rgba(167, 31, 102, 0.5);
+.survivor-lobby-filter-select:hover,
+.survivor-lobby-filter-select:focus {
+  border-color: rgba(167, 31, 102, 0.6);
+  outline: none;
+}
+
+.survivor-lobby-filter-select option {
+  background: #1a1d2b;
   color: #ffffff;
-}
-
-.survivor-lobby-filter-btn.active {
-  background: #a71f66;
-  border-color: #a71f66;
-  color: #ffffff;
-}
-
-.survivor-lobby-filter-count {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 999px;
-  padding: 0.05rem 0.45rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  min-width: 1.4rem;
-  text-align: center;
-}
-
-.survivor-lobby-filter-btn.active .survivor-lobby-filter-count {
-  background: rgba(255, 255, 255, 0.25);
 }
 
 .survivor-loading {

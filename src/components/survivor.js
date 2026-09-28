@@ -150,20 +150,22 @@ const SurvivorChallengesList = () => {
             </div>
 
             {challenges && challenges.length > 0 && (
-                <div className="survivor-lobby-filter-bar" role="tablist" aria-label="Filter challenges by status">
-                    {SURVIVOR_LOBBY_FILTERS.map((filter) => (
-                        <button
-                            key={filter.key}
-                            type="button"
-                            role="tab"
-                            aria-selected={statusFilter === filter.key}
-                            className={`survivor-lobby-filter-btn${statusFilter === filter.key ? " active" : ""}`}
-                            onClick={() => setStatusFilter(filter.key)}
-                        >
-                            {filter.label}
-                            <span className="survivor-lobby-filter-count">{filterCounts[filter.key]}</span>
-                        </button>
-                    ))}
+                <div className="survivor-lobby-filter-bar">
+                    <label className="survivor-lobby-filter-label" htmlFor="survivor-status-filter">
+                        Filter by status
+                    </label>
+                    <select
+                        id="survivor-status-filter"
+                        className="survivor-lobby-filter-select"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        {SURVIVOR_LOBBY_FILTERS.map((filter) => (
+                            <option key={filter.key} value={filter.key}>
+                                {filter.label} ({filterCounts[filter.key]})
+                            </option>
+                        ))}
+                    </select>
                 </div>
             )}
 
