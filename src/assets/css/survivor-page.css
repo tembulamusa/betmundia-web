@@ -515,9 +515,7 @@
    buttons share one neutral look until picked — no per-outcome coloring. */
 .survivor-pick-buttons {
   display: flex;
-  border-radius: 4px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0.4rem;
 }
 
 .survivor-pick-btn {
@@ -528,8 +526,8 @@
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
   color: #ffffff;
   /* Same as the shared prematch odds buttons' own label/.theodds text -
      that text is unstyled beyond font:inherit + .theodds's own 15px/400
@@ -539,10 +537,6 @@
   font-weight: 400;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
-}
-
-.survivor-pick-btn:last-child {
-  border-right: none;
 }
 
 .survivor-pick-odd {
@@ -560,11 +554,13 @@
 
 .survivor-pick-btn:hover:not(:disabled) {
   background: #a71f66;
+  border-color: #a71f66;
   color: #ffffff;
 }
 
 .survivor-pick-btn.selected {
   background: #a71f66;
+  border-color: #a71f66;
   color: #ffffff;
 }
 
