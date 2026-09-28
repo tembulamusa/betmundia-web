@@ -623,20 +623,19 @@ const SurvivorChallengeDetail = ({ id }) => {
                     const canBetOnThisGame = canPick && canBetOnChallenge;
                     return (
                         <div key={game.game_number} className="survivor-game-row">
+                            {isCurrentGame && (
+                                <div
+                                    className={`survivor-current-game-banner${
+                                        isLockedOut ? " survivor-current-game-blocked" : ""
+                                    }`}
+                                >
+                                    {isLockedOut
+                                        ? "Not Allowed to Place bet."
+                                        : `Today's Game ${game.game_number}`}
+                                </div>
+                            )}
                             <div className="survivor-game-row-top">
-                                {isCurrentGame ? (
-                                    <span
-                                        className={`survivor-current-game-badge${
-                                            isLockedOut ? " survivor-current-game-blocked" : ""
-                                        }`}
-                                    >
-                                        {isLockedOut
-                                            ? "Not Allowed to Place bet."
-                                            : `Today's Game ${game.game_number}`}
-                                    </span>
-                                ) : (
-                                    <span className="survivor-game-number">Game {game.game_number}</span>
-                                )}
+                                <span className="survivor-game-number">Game {game.game_number}</span>
                                 <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
                             </div>
                             <div className="survivor-game-teams">
