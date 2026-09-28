@@ -152,10 +152,76 @@
   padding: 1.4rem 1rem;
 }
 
-.survivor-blocked-message {
+.survivor-blocked-link {
+  background: none;
+  border: none;
+  padding: 0;
   margin: 0;
-  color: rgba(255, 255, 255, 0.65);
+  color: #a855f7;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.survivor-blocked-link:hover,
+.survivor-blocked-link:focus {
+  color: #c084fc;
+}
+
+.survivor-blocked-history-link {
+  display: inline-block;
+  margin-top: 0.9rem;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #a855f7;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.survivor-blocked-history-link:hover,
+.survivor-blocked-history-link:focus {
+  color: #c084fc;
+}
+
+/* Reason modal — same dark-modal pattern as confirm-deposit-modal.css */
+.survivor-block-modal.modal-dialog {
+  max-width: 380px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.survivor-block-modal .modal-content {
+  background: #0f111a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #ffffff;
+}
+
+.survivor-block-modal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.survivor-block-modal .modal-title {
+  color: #a855f7;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.survivor-block-modal .modal-body {
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.survivor-block-modal .btn-close {
+  filter: invert(1);
 }
 
 .survivor-back-link {

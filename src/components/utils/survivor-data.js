@@ -129,14 +129,13 @@ const cleanUcn = (value) =>
  */
 export const SURVIVOR_PLACEBET_TYPE = "10";
 
-const outcomeIndexForSelection = (selection) => {
-    switch (normalizeSelection(selection)) {
-        case "1": return 0;
-        case "X": return 1;
-        case "2": return 2;
-        default: return null;
-    }
-};
+// TODO: no real per-game odds from the API yet — a survivor game only
+// carries game_number/status/scheduled_at/lock_at/result, no match_id,
+// team names, or odds. Using one arbitrary odd value for every 1X2
+// outcome for now, per instruction, until the backend adds real match/odds
+// data to each game. Swap this out for game.odds["1x2"].outcomes[i] once
+// that's available.
+export const SURVIVOR_ARBITRARY_ODD = 2.0;
 
 const betPickForSelection = (game, selection) => {
     switch (normalizeSelection(selection)) {
@@ -156,20 +155,14 @@ const betPickForSelection = (game, selection) => {
  * challenge's entry_stake as a normal bet.
  *
  * NOTE: this assumes each `game` carries real match data (match_id,
- * home_team, away_team, sport_name, odds["1x2"].outcomes) the same shape
- * jackpot.js's matches use — the survivor game object as currently wired
- * up (game_number/status/scheduled_at/lock_at/result only) does not expose
- * these yet, so the backend/data layer needs to add them for this to place
- * a valid bet. Falls back gracefully (empty/1.00 odds) rather than throwing
- * if they're missing, but the resulting bet won't be valid until they're in.
+ * home_team, away_team, sport_name) the same shape jackpot.js's matches
+ * use — the survivor game object as currently wired up
+ * (game_number/status/scheduled_at/lock_at/result only) does not expose
+ * these yet, so the backend/data layer needs to add them for a fully
+ * valid bet. Odds are arbitrary for now (see SURVIVOR_ARBITRARY_ODD).
  */
 export const placeSurvivorGameBet = async (challenge, game, selection) => {
-    const outcomeIndex = outcomeIndexForSelection(selection);
-    const outcomes = game?.odds?.["1x2"]?.outcomes || [];
-    const oddValue = Float(
-        parseFloat(outcomeIndex != null ? outcomes[outcomeIndex]?.odd_value : null) || 1,
-        2
-    );
+    const oddValue = Float(SURVIVOR_ARBITRARY_ODD, 2);
     const betPick = betPickForSelection(game, selection);
     const subTypeId = game?.sub_type_id ?? 1;
 
