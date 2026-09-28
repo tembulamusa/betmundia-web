@@ -515,6 +515,9 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 10px;
   padding: 0.8rem 0.9rem;
+  /* so the current-game banner below can bleed flush to this row's own
+     rounded edges (negative margins) without poking past them */
+  overflow: hidden;
 }
 
 .survivor-game-row-top {
@@ -524,19 +527,25 @@
   margin-bottom: 0.3rem;
 }
 
-.survivor-current-game-badge {
-  display: inline-block;
+.survivor-current-game-banner {
+  display: block;
+  /* bleeds through .survivor-game-row's own padding (0.8rem 0.9rem) to
+     run flush edge-to-edge along the top of the card - .survivor-game-
+     row's overflow:hidden clips this back to its own rounded corners. */
+  width: calc(100% + 1.8rem);
+  margin: -0.8rem -0.9rem 0.6rem -0.9rem;
+  padding: 0.5rem 0.9rem;
   font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  text-align: center;
   color: #ffffff;
   background: #a71f66;
-  padding: 0.3rem 1.4rem;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
-.survivor-current-game-badge.survivor-current-game-blocked {
+.survivor-current-game-banner.survivor-current-game-blocked {
   background: #a855f7;
 }
 
