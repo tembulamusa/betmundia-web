@@ -1,4 +1,6 @@
 import makeRequest from "./fetch-request";
+import { getFromLocalStorage, setLocalStorage } from "./local-storage";
+import { getStoredIpAddress } from "./ip-address";
 
 /**
  * Survivor Challenge API helpers.
@@ -106,6 +108,137 @@ export const submitSurvivorPrediction = async (id, gameNumber, selection) => {
         success: isSurvivorSuccess(httpStatus, response),
         httpStatus,
         message: response?.result,
+        data: response?.data || null,
+    };
+};
+
+const Float = (equation, precision = 4) =>
+    Math.ceil(equation * (10 ** precision)) / (10 ** precision);
+
+const cleanUcn = (value) =>
+    String(value).replace(/[^A-Za-z0-9-]/g, "").replace(/-+/g, "-");
+
+/**
+ * bet_type tag for a survivor-challenge pick placed through the regular
+ * placebet flow. This app's existing convention (see betslip-submit-form.js
+ * / jackpot.js) already overloads bet_type as a context tag rather than a
+ * pure prematch/live flag: "0" prematch, "1" live, "3" share-existing bet,
+ * "9" jackpot. Nothing is reserved for survivor yet, so "10" is used here —
+ * confirm with backend and change this one constant if a different code is
+ * expected.
+ */
+export const SURVIVOR_PLACEBET_TYPE = "10";
+
+const outcomeIndexForSelection = (selection) => {
+    switch (normalizeSelection(selection)) {
+        case "1": return 0;
+        case "X": return 1;
+        case "2": return 2;
+        default: return null;
+    }
+};
+
+const betPickForSelection = (game, selection) => {
+    switch (normalizeSelection(selection)) {
+        case "1": return game?.home_team;
+        case "2": return game?.away_team;
+        default: return "Draw";
+    }
+};
+
+/**
+ * Places a real bet for one survivor-challenge game pick, through the same
+ * placebet endpoint every other bet in this app uses (not the challenge's
+ * own /prediction endpoint) — so a survivor pick is a genuine, tracked bet.
+ *
+ * Reuses a freebet automatically when the user has one available, the same
+ * way src/components/highlights/free-bet.js does, otherwise stakes the
+ * challenge's entry_stake as a normal bet.
+ *
+ * NOTE: this assumes each `game` carries real match data (match_id,
+ * home_team, away_team, sport_name, odds["1x2"].outcomes) the same shape
+ * jackpot.js's matches use — the survivor game object as currently wired
+ * up (game_number/status/scheduled_at/lock_at/result only) does not expose
+ * these yet, so the backend/data layer needs to add them for this to place
+ * a valid bet. Falls back gracefully (empty/1.00 odds) rather than throwing
+ * if they're missing, but the resulting bet won't be valid until they're in.
+ */
+export const placeSurvivorGameBet = async (challenge, game, selection) => {
+    const outcomeIndex = outcomeIndexForSelection(selection);
+    const outcomes = game?.odds?.["1x2"]?.outcomes || [];
+    const oddValue = Float(
+        parseFloat(outcomeIndex != null ? outcomes[outcomeIndex]?.odd_value : null) || 1,
+        2
+    );
+    const betPick = betPickForSelection(game, selection);
+    const subTypeId = game?.sub_type_id ?? 1;
+
+    const slip = {
+        match_id: String(game?.match_id ?? ""),
+        parent_match_id: String(game?.parent_match_id ?? game?.match_id ?? ""),
+        special_bet_value: "",
+        sub_type_id: String(subTypeId),
+        away_team: game?.away_team,
+        bet_pick: betPick,
+        bet_type: SURVIVOR_PLACEBET_TYPE,
+        home_team: game?.home_team,
+        live: 0,
+        market_active: 1,
+        odd_type: game?.odd_type || "1x2",
+        odd_value: oddValue.toFixed(2),
+        producer_id: String(game?.producer_id || "3"),
+        sport_name: game?.sport_name || "Soccer",
+        ucn: cleanUcn(`${game?.match_id ?? ""}${subTypeId}${betPick ?? ""}`),
+    };
+
+    const user = getFromLocalStorage("user");
+    const hasFreebet = !!user?.has_freebet;
+    const stakeAmount = challenge?.entry_stake ?? 0;
+
+    const payload = {
+        bet_string: "web",
+        app_name: "web",
+        channel_id: "web",
+        possible_win: Float(stakeAmount * oddValue, 2),
+        stake_amount: stakeAmount,
+        amount: stakeAmount,
+        bet_total_odds: oddValue,
+        ip_address: String(getStoredIpAddress() || ""),
+        slip: [slip],
+        profile_id: user?.profile_id,
+        account: 1,
+        msisdn: user?.msisdn,
+        accept_all_odds_change: 1,
+        bet_type: SURVIVOR_PLACEBET_TYPE,
+        // Lets the backend attribute this placebet to the survivor
+        // challenge/game it came from, on top of the bet_type tag above.
+        placebet_type: "survivor_challenge",
+        survivor_challenge_id: challenge?.id,
+        survivor_game_number: game?.game_number,
+    };
+
+    // Same URL every other bet in this app posts to — not a dedicated
+    // survivor endpoint. Freebet, when the user has one, goes through its
+    // own dedicated endpoint instead, same as free-bet.js.
+    const endpoint = hasFreebet ? "/user/place-free-bet" : "/user/place-bet";
+
+    const [httpStatus, response] = await makeRequest({
+        url: endpoint,
+        method: "POST",
+        data: payload,
+        api_version: 2,
+    });
+
+    const success = isSurvivorSuccess(httpStatus, response) || [200, 201, 204].includes(httpStatus);
+
+    if (success && hasFreebet) {
+        setLocalStorage("user", { ...user, has_freebet: 0 });
+    }
+
+    return {
+        success,
+        httpStatus,
+        message: response?.result || response?.message,
         data: response?.data || null,
     };
 };
