@@ -173,8 +173,8 @@
 }
 
 .survivor-status-active {
-  background: rgba(0, 200, 83, 0.35);
-  color: #00e676;
+  background: #00e676;
+  color: #04240f;
 }
 
 .survivor-status-completed {
