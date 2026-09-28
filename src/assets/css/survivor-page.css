@@ -49,8 +49,8 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
-  border-radius: 8px;
-  padding: 0.45rem 2rem 0.45rem 0.85rem;
+  border-radius: 5px;
+  padding: 0.7rem 2.1rem 0.7rem 0.85rem;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -358,20 +358,21 @@
 }
 
 .survivor-detail-nav-status {
-  min-width: 8rem;
+  width: auto;
+  max-width: 7.5rem;
 }
 
 .survivor-detail-nav-challenge {
-  min-width: 12rem;
-  flex: 1 1 auto;
+  width: auto;
+  max-width: 11rem;
 }
 
 .survivor-detail-nav-refresh {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
-  border-radius: 8px;
-  padding: 0.45rem 0.9rem;
+  border-radius: 5px;
+  padding: 0.7rem 0.9rem;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
