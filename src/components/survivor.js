@@ -309,28 +309,54 @@ const SurvivorChallengeDetail = ({ id }) => {
         );
     }
 
+    // A game object may carry its own selection/result_status directly
+    // (as returned by /survivor/challenges/{id}), separate from — and not
+    // always mirrored by — progress.predictions. Prefer the progress
+    // entry when there is one, otherwise fall back to the game's own
+    // fields so a pick still shows up.
     const predictionByGame = new Map(
         (progress?.predictions || []).map((p) => [p.game_number, p])
     );
+    const predictionFor = (game) =>
+        predictionByGame.get(game.game_number) ||
+        (game.selection != null
+            ? { selection: game.selection, result_status: game.result_status }
+            : null);
+
+    // A game counts as settled once it has a result, regardless of the
+    // exact status string used ("SETTLED"/"COMPLETED"/"FINISHED" — real
+    // responses seen so far only use SCHEDULED/LOCKED and never actually
+    // reach a terminal status string, so `result` is the reliable signal).
+    const isGameSettled = (g) =>
+        g?.result != null ||
+        statusIs(g?.status, "SETTLED") ||
+        statusIs(g?.status, "COMPLETED") ||
+        statusIs(g?.status, "FINISHED");
+    // A game is pickable while it's scheduled and not yet locked/settled.
+    // Real data uses "SCHEDULED" (not "OPEN_FOR_PICKS" as originally
+    // assumed from the API spec) — keep both for safety.
+    const isGamePickable = (g) =>
+        !isGameSettled(g) &&
+        !statusIs(g?.status, "LOCKED") &&
+        (statusIs(g?.status, "SCHEDULED") || statusIs(g?.status, "OPEN_FOR_PICKS"));
 
     const participantStatus = progress?.participant_status;
     const isEliminated = statusIs(participantStatus, "ELIMINATED");
+    const isWinner = statusIs(participantStatus, "WINNER");
     const isEnrolled = !!progress?.enrolled;
     // progress carries its own `status` for the challenge (per the
     // /progress example response) — prefer it, fall back to the challenge
     // detail's own status field.
     const challengeStatus = progress?.status ?? challenge?.status;
     const isChallengeActive = statusIs(challengeStatus, "ACTIVE");
-    // Some environments' /progress send "ACTIVE" for a still-in
-    // participant instead of "ALIVE" — accept either, case-insensitively,
-    // as "still in the game".
-    const isParticipantActive =
-        statusIs(participantStatus, "ALIVE") || statusIs(participantStatus, "ACTIVE");
-    // Odds buttons are only live when BOTH the challenge itself is active
-    // AND this user is still an active (alive) participant in it.
-    const canBetOnChallenge = isChallengeActive && isParticipantActive;
-    const nonSettledGames = (challenge.games || []).filter((g) => !statusIs(g.status, "SETTLED"));
-    const settledGames = (challenge.games || []).filter((g) => statusIs(g.status, "SETTLED"));
+    // Betting is allowed whenever the challenge itself is active and this
+    // user hasn't been knocked out of it (or already won it) — there is
+    // no separate "must already be an enrolled/active participant"
+    // requirement: placing a pick through the regular placebet flow IS
+    // the entry action now, since the explicit join button is hidden.
+    const canBetOnChallenge = isChallengeActive && !isEliminated && !isWinner;
+    const nonSettledGames = (challenge.games || []).filter((g) => !isGameSettled(g));
+    const settledGames = (challenge.games || []).filter((g) => isGameSettled(g));
 
     /** First game the user got wrong, for the "you lost at game N" modal
      * copy — falls back to games_survived + 1 when predictions aren't
@@ -365,7 +391,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                     : "You were eliminated from this challenge.",
             };
         }
-        if (statusIs(participantStatus, "WINNER")) {
+        if (isWinner) {
             return {
                 key: "winner",
                 label: "Not allowed",
@@ -373,11 +399,13 @@ const SurvivorChallengeDetail = ({ id }) => {
                 body: "This challenge is complete — congratulations, you won!",
             };
         }
+        // Shouldn't be reachable given canBetOnChallenge above, but keeps
+        // the reason link/modal from ever rendering blank.
         return {
-            key: "not_enrolled",
+            key: "unavailable",
             label: "Not allowed",
             title: "Not allowed",
-            body: "You're not part of this challenge, so you can't place bets on its games.",
+            body: "Betting isn't available on this challenge right now.",
         };
     };
 
@@ -455,8 +483,8 @@ const SurvivorChallengeDetail = ({ id }) => {
                 )}
 
                 {canBetOnChallenge && nonSettledGames.map((game) => {
-                    const mine = predictionByGame.get(game.game_number);
-                    const canPick = statusIs(game.status, "OPEN_FOR_PICKS");
+                    const mine = predictionFor(game);
+                    const canPick = isGamePickable(game);
                     return (
                         <div key={game.game_number} className="survivor-game-row">
                             <div className="survivor-game-row-top">
@@ -486,7 +514,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                 })}
 
                 {settledGames.map((game) => {
-                    const mine = predictionByGame.get(game.game_number);
+                    const mine = predictionFor(game);
                     return (
                         <div key={game.game_number} className="survivor-game-row">
                             <div className="survivor-game-row-top">
@@ -497,7 +525,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                                 Kicks off {formatDateTime(game.scheduled_at)} · picks lock {formatDateTime(game.lock_at)}
                             </div>
 
-                            {isEnrolled && (
+                            {(isEnrolled || mine) && (
                                 <div className="survivor-game-outcome">
                                     <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "—"}</b></span>
                                     {game.result && <span>Result: <b>{normalizeSelection(game.result)}</b></span>}
