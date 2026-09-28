@@ -570,7 +570,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                                                 requestPick(game.game_number, draftPicks[game.game_number])
                                             }
                                         >
-                                            Place
+                                            Place bet
                                         </button>
                                     </div>
                                 </>
