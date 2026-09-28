@@ -188,11 +188,6 @@
   color: rgba(255, 255, 255, 0.65);
 }
 
-.survivor-game-blocked {
-  text-align: center;
-  padding: 1.4rem 1rem;
-}
-
 .survivor-blocked-link {
   background: none;
   border: none;
@@ -488,6 +483,19 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.3rem;
+}
+
+.survivor-todays-game-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #a71f66;
+  margin-bottom: 0.3rem;
+}
+
+.survivor-todays-game-blocked {
+  color: #a855f7;
 }
 
 .survivor-game-number {
