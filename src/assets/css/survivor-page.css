@@ -1,0 +1,357 @@
+.survivor-page {
+  padding: 1rem 0.75rem 3rem;
+  color: #ffffff;
+}
+
+.survivor-lobby-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.survivor-lobby-icon {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  color: #a71f66;
+  margin-top: 0.2rem;
+}
+
+.survivor-lobby-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0 0 0.3rem;
+  color: #ffffff;
+}
+
+.survivor-lobby-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.92rem;
+  max-width: 560px;
+}
+
+.survivor-loading {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.survivor-challenge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.9rem;
+}
+
+.survivor-challenge-card {
+  display: block;
+  background: rgb(38, 48, 69);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  text-decoration: none;
+  color: #ffffff;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.survivor-challenge-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(167, 31, 102, 0.5);
+  color: #ffffff;
+}
+
+.survivor-challenge-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.survivor-challenge-name {
+  font-weight: 700;
+  font-size: 1.02rem;
+}
+
+.survivor-challenge-card-pool {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffd54a;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.survivor-challenge-card-pool-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.survivor-challenge-card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.5rem;
+}
+
+.survivor-challenge-card-meta svg {
+  margin-right: 0.3rem;
+  position: relative;
+  top: -1px;
+}
+
+.survivor-challenge-card-time {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.survivor-status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.survivor-status-open,
+.survivor-status-open_for_picks {
+  background: rgba(25, 188, 84, 0.18);
+  color: #4fe08a;
+}
+
+.survivor-status-active {
+  background: rgba(0, 168, 250, 0.18);
+  color: #4fc3ff;
+}
+
+.survivor-status-completed {
+  background: rgba(153, 153, 158, 0.2);
+  color: #c8c8ce;
+}
+
+.survivor-status-locked,
+.survivor-status-settled {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.survivor-back-link {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  padding: 0;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.survivor-back-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.survivor-detail-header {
+  background: rgb(38, 48, 69);
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.survivor-detail-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.survivor-detail-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+  color: #ffffff;
+}
+
+.survivor-detail-description {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.88rem;
+  margin: 0.5rem 0 0;
+}
+
+.survivor-detail-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.survivor-stat {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+}
+
+.survivor-stat-value {
+  display: block;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #ffffff;
+}
+
+.survivor-stat-label {
+  display: block;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-top: 0.15rem;
+}
+
+.survivor-progress-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(25, 188, 84, 0.12);
+  border: 1px solid rgba(25, 188, 84, 0.3);
+  color: #4fe08a;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+}
+
+.survivor-progress-banner.eliminated {
+  background: rgba(217, 60, 60, 0.12);
+  border-color: rgba(217, 60, 60, 0.35);
+  color: #ff8a8a;
+}
+
+.survivor-join-btn {
+  display: block;
+  width: 100%;
+  background: #a71f66;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.survivor-join-btn:hover:not(:disabled) {
+  background: #8c1a55;
+}
+
+.survivor-join-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.survivor-games-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.survivor-game-row {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 0.8rem 0.9rem;
+}
+
+.survivor-game-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.survivor-game-number {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.survivor-game-time {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.6rem;
+}
+
+.survivor-pick-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.survivor-pick-btn {
+  flex: 1 1 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.survivor-pick-btn:hover:not(:disabled) {
+  border-color: rgba(167, 31, 102, 0.6);
+}
+
+.survivor-pick-btn.selected {
+  background: #a71f66;
+  border-color: #a71f66;
+}
+
+.survivor-pick-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.survivor-game-outcome {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.survivor-result-status {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+}
+
+.survivor-result-correct {
+  background: rgba(25, 188, 84, 0.18);
+  color: #4fe08a;
+}
+
+.survivor-result-incorrect {
+  background: rgba(217, 60, 60, 0.18);
+  color: #ff8a8a;
+}
+
+.survivor-result-pending {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+}
