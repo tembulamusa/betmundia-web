@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import Modal from "react-bootstrap/Modal";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../context/store";
 
 import { IoMdLogOut } from "react-icons/io";
-import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins, FaInfoCircle, FaPlus, FaShareAlt } from "react-icons/fa";
+import { FaGifts, FaRegUser, FaUser, FaCheckCircle, FaGift, FaChevronRight, FaBullhorn, FaShieldAlt, FaCoins, FaInfoCircle, FaPlus, FaShareAlt, FaStar } from "react-icons/fa";
 import { IoListCircleOutline, IoWalletOutline } from "react-icons/io5";
 import { MdOutlineFileUpload, MdLockOutline, MdPhoneIphone } from "react-icons/md";
 
@@ -58,6 +59,7 @@ function MobileMenu(props) {
   const navigate = useNavigate();
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [showBonusTooltip, setShowBonusTooltip] = useState(false);
+  const [showLoyaltyModal, setShowLoyaltyModal] = useState(false);
   const [affiliateCode, setAffiliateCode] = useState(
     user?.promo_code || null
   );
@@ -82,6 +84,16 @@ function MobileMenu(props) {
 
   const balance = formatToFloat(user?.balance || 0);
   const bonus = formatToFloat(user?.bonus || user?.bonus_balance || 0);
+  const loyaltyPointsRaw =
+    user?.loyalty_points ??
+    user?.loyaltyPoints ??
+    user?.loyalty ??
+    user?.points ??
+    0;
+  const loyaltyPoints = Number.isFinite(Number(loyaltyPointsRaw))
+    ? Math.max(0, Math.round(Number(loyaltyPointsRaw)))
+    : 0;
+  const loyaltyPointsDisplay = `${loyaltyPoints.toLocaleString("en-KE")} pts`;
 
   useEffect(() => {
     setAffiliateCode(user?.promo_code || null);
@@ -338,6 +350,29 @@ function MobileMenu(props) {
                 </div>
               </div>
             </div>
+
+            <div className="account-drawer-loyalty">
+              <div className="account-drawer-loyalty-left">
+                <span className="account-drawer-loyalty-icon" aria-hidden="true">
+                  <FaStar />
+                </span>
+                <span className="account-drawer-loyalty-label">Loyalty Points</span>
+              </div>
+              <div className="account-drawer-loyalty-right">
+                <button
+                  type="button"
+                  className="account-drawer-loyalty-info"
+                  aria-label="Loyalty points guide"
+                  aria-haspopup="dialog"
+                  onClick={() => setShowLoyaltyModal(true)}
+                >
+                  <FaInfoCircle aria-hidden="true" />
+                </button>
+                <span className="account-drawer-loyalty-amount">
+                  {loyaltyPointsDisplay}
+                </span>
+              </div>
+            </div>
           </div>
 
           <div className="account-drawer-actions">
@@ -477,6 +512,61 @@ function MobileMenu(props) {
         onHide={() => setShowShareModal(false)}
         promoCode={affiliateCode}
       />
+      <Modal
+        show={showLoyaltyModal}
+        onHide={() => setShowLoyaltyModal(false)}
+        centered
+        className="account-drawer-loyalty-modal"
+      >
+        <Modal.Header closeButton closeVariant="white">
+          <Modal.Title>
+            <span className="account-drawer-loyalty-modal-title-icon" aria-hidden="true">
+              <FaStar />
+            </span>
+            Loyalty Points Guide
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="account-drawer-loyalty-modal-intro">
+            Loyalty points reward your activity on Betmundial. Track your balance in
+            the wallet, then use points toward available rewards.
+          </p>
+
+          <section className="account-drawer-loyalty-modal-section">
+            <h3>How to earn points</h3>
+            <ul>
+              <li>Place eligible sports and casino bets with your cash balance.</li>
+              <li>Complete qualifying deposits and account milestones when offered.</li>
+              <li>Join promotions and campaigns that list loyalty points as a reward.</li>
+              <li>Points are credited after bets settle or after the promotion rules are met.</li>
+            </ul>
+          </section>
+
+          <section className="account-drawer-loyalty-modal-section">
+            <h3>How to use points</h3>
+            <ul>
+              <li>Redeem points for bonuses, free bets, or rewards shown in Promotions.</li>
+              <li>Open the Promotions page to see current redemption options and costs.</li>
+              <li>Points are not cash and cannot be withdrawn directly.</li>
+              <li>Some rewards may require a minimum points balance or active account status.</li>
+            </ul>
+          </section>
+
+          <p className="account-drawer-loyalty-modal-note">
+            Offer details can change. Check each promotion for exact earn rates, expiry,
+            and redemption rules.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            type="button"
+            className="account-drawer-loyalty-modal-close"
+            onClick={() => setShowLoyaltyModal(false)}
+          >
+            Got it
+          </button>
+        </Modal.Footer>
+      </Modal>
     </span>
   );
 }
