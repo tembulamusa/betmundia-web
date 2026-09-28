@@ -84,6 +84,23 @@ const StatusPill = ({ status, labels }) => (
     </span>
 );
 
+/** A nicer stand-in for the old plain "Loading…" text — a small spinning
+ * ring plus the word itself with an animated ellipsis, instead of flat
+ * dark text sitting on the dark page. */
+const SurvivorLoading = ({ label }) => (
+    <div className="survivor-loading">
+        <span className="survivor-spinner" aria-hidden="true" />
+        <span className="survivor-loading-text">
+            {label}
+            <span className="survivor-loading-dots" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </span>
+    </div>
+);
+
 const PickButtons = ({ game, currentSelection, draftSelection, disabled, onPick }) => {
     const options = [
         { value: "1", label: "1" },
@@ -210,7 +227,7 @@ const SurvivorChallengeGames = ({ id }) => {
     };
 
     if (fetching && !challenge) {
-        return <div className="survivor-loading">Loading challenge…</div>;
+        return <SurvivorLoading label="Loading challenge" />;
     }
 
     if (!challenge) {
@@ -685,7 +702,7 @@ const SurvivorChallengesList = () => {
                 </div>
             )}
 
-            {fetching && !challenges && <div className="survivor-loading">Loading challenges…</div>}
+            {fetching && !challenges && <SurvivorLoading label="Loading challenges" />}
 
             {!fetching && (!challenges || challenges.length < 1) && (
                 <NoEvents message="No survivor challenges are open right now. Check back later!" />
@@ -794,7 +811,7 @@ const SurvivorChallengeDetail = ({ id }) => {
     }, [id]);
 
     if (fetching && !challenge) {
-        return <div className="survivor-page"><div className="survivor-loading">Loading challenge…</div></div>;
+        return <div className="survivor-page"><SurvivorLoading label="Loading challenge" /></div>;
     }
 
     if (!challenge) {
