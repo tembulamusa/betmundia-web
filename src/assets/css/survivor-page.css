@@ -543,7 +543,12 @@
   font-size: 15px;
   font-weight: 400;
   margin-top: 2px;
-  color: inherit;
+  /* The app's established odds-yellow accent (#ffc428 / rgba(255,215,0),
+     used the same way for odds/highlighted-value text across the app —
+     see .theodds/.home-team in tolkits.css, free-bet.js, betslip-submit-
+     form.js) - this was missed in the last pass, which left it inheriting
+     the button's own (now uniform) white text color instead. */
+  color: #ffc428;
 }
 
 .survivor-pick-btn:hover:not(:disabled) {
@@ -553,6 +558,14 @@
 
 .survivor-pick-btn.selected {
   background: #a71f66;
+  color: #ffffff;
+}
+
+/* Same as .picked .theodds in tolkits.css: once picked (or previewed on
+   hover), the odd switches to white for contrast against the purple
+   background rather than staying yellow. */
+.survivor-pick-btn:hover:not(:disabled) .survivor-pick-odd,
+.survivor-pick-btn.selected .survivor-pick-odd {
   color: #ffffff;
 }
 
