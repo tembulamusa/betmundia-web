@@ -84,7 +84,7 @@ const StatusPill = ({ status, labels }) => (
     </span>
 );
 
-const PickButtons = ({ game, currentSelection, pendingSelection, disabled, onPick }) => {
+const PickButtons = ({ game, currentSelection, draftSelection, disabled, onPick }) => {
     const options = [
         { value: "1", label: "1" },
         { value: "X", label: "X" },
@@ -94,21 +94,24 @@ const PickButtons = ({ game, currentSelection, pendingSelection, disabled, onPic
         <div className="survivor-pick-buttons">
             {options.map((opt) => {
                 const isSelected = normalizeSelection(currentSelection) === opt.value;
-                // Highlighted the instant it's clicked — before confirmation —
-                // the same immediate click-feel as the shared prematch odds
-                // buttons toggling their own "picked" state.
-                const isPending = normalizeSelection(pendingSelection) === opt.value;
+                // Turns purple the instant it's clicked, same click-feel as
+                // the shared prematch odds buttons' own "picked" toggle —
+                // this is only a local draft, though, until "Place" is
+                // pressed and the confirmation modal is accepted.
+                const isDraft = normalizeSelection(draftSelection) === opt.value;
+                const isPicked = isSelected || isDraft;
                 return (
                     <button
                         key={opt.value}
                         type="button"
                         className={`survivor-pick-btn pick-${opt.value.toLowerCase()}${
-                            isSelected ? " selected" : ""
-                        }${isPending ? " pending" : ""}`}
+                            isPicked ? " selected" : ""
+                        }`}
                         disabled={disabled}
                         onClick={() => onPick(game.game_number, opt.value)}
                     >
                         {opt.label}
+                        <span className="survivor-pick-odd">{SURVIVOR_ARBITRARY_ODD.toFixed(2)}</span>
                     </button>
                 );
             })}
@@ -242,6 +245,11 @@ const SurvivorChallengeDetail = ({ id }) => {
     // The pick the user clicked but hasn't confirmed yet — clicking 1/X/2
     // opens a confirmation modal instead of placing the bet immediately.
     const [pendingPick, setPendingPick] = useState(null);
+    // Local, unsubmitted picks per game (gameNumber -> "1"/"X"/"2") — set
+    // by clicking 1/X/2, cleared once that game's pick is confirmed (or
+    // the confirm attempt finishes). Nothing is sent to the server until
+    // "Place" is pressed for that game.
+    const [draftPicks, setDraftPicks] = useState({});
 
     const loadAll = useCallback(async () => {
         setFetching(true);
@@ -426,7 +434,12 @@ const SurvivorChallengeDetail = ({ id }) => {
      * already has an earlier pick recorded, warns the user before they
      * finalize a new one. The actual placebet only fires from
      * confirmPendingPick below, never directly from the buttons. */
+    const setDraftPick = (gameNumber, selection) => {
+        setDraftPicks((prev) => ({ ...prev, [gameNumber]: selection }));
+    };
+
     const requestPick = (gameNumber, selection) => {
+        if (!selection) return;
         const game = (challenge.games || []).find((g) => g.game_number === gameNumber);
         setPendingPick({ gameNumber, selection, existing: predictionFor(game) });
     };
@@ -438,6 +451,11 @@ const SurvivorChallengeDetail = ({ id }) => {
         const { gameNumber, selection } = pendingPick;
         setPendingPick(null);
         await handlePick(gameNumber, selection);
+        setDraftPicks((prev) => {
+            const next = { ...prev };
+            delete next[gameNumber];
+            return next;
+        });
     };
 
     return (
@@ -525,17 +543,28 @@ const SurvivorChallengeDetail = ({ id }) => {
                             </div>
 
                             {canPick && (
-                                <PickButtons
-                                    game={game}
-                                    currentSelection={mine?.selection}
-                                    pendingSelection={
-                                        pendingPick?.gameNumber === game.game_number
-                                            ? pendingPick.selection
-                                            : null
-                                    }
-                                    disabled={pendingGame === game.game_number}
-                                    onPick={requestPick}
-                                />
+                                <>
+                                    <PickButtons
+                                        game={game}
+                                        currentSelection={mine?.selection}
+                                        draftSelection={draftPicks[game.game_number]}
+                                        disabled={pendingGame === game.game_number}
+                                        onPick={setDraftPick}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="survivor-place-btn"
+                                        disabled={
+                                            !draftPicks[game.game_number] ||
+                                            pendingGame === game.game_number
+                                        }
+                                        onClick={() =>
+                                            requestPick(game.game_number, draftPicks[game.game_number])
+                                        }
+                                    >
+                                        Place
+                                    </button>
+                                </>
                             )}
 
                             {!canPick && (

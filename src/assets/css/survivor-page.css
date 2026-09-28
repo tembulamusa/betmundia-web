@@ -504,12 +504,11 @@
 /* Same look and click-feel as the shared prematch 1X2 odds buttons:
    home/draw/away are each colored per the app's own convention
    (home-team gold-on-white-tint, draw navy, away crimson — see
-   .home-team/.draw/.away-team in tolkits.css), hover previews the same
-   brand-pink used for a confirmed pick there, and a fresh click lights
-   up instantly (the .pending state below) the same way their "picked"
-   toggle does, ahead of anything being confirmed. The survivor betting
-   flow itself (confirm modal -> placeSurvivorGameBet) is unchanged —
-   only the appearance and click feedback are matched here. */
+   .home-team/.draw/.away-team in tolkits.css), each shows its (arbitrary,
+   see SURVIVOR_ARBITRARY_ODD) odd value the same way .theodds does, and
+   clicking one turns it purple straight away (a local draft) the same
+   way their own "picked" toggle does — nothing is sent to the server
+   until "Place" below is pressed and the confirmation modal accepted. */
 .survivor-pick-buttons {
   display: flex;
   border-radius: 4px;
@@ -520,6 +519,10 @@
 .survivor-pick-btn {
   flex: 1 1 0;
   height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 255, 255, 0.1);
   border: none;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
@@ -543,12 +546,19 @@
   color: #ffffff;
 }
 
+.survivor-pick-odd {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  margin-top: 2px;
+  opacity: 0.85;
+}
+
 .survivor-pick-btn:hover:not(:disabled) {
   background: #a71f66;
   color: #ffffff;
 }
 
-.survivor-pick-btn.pending,
 .survivor-pick-btn.selected {
   background: #a71f66;
   color: #ffffff;
@@ -556,6 +566,29 @@
 
 .survivor-pick-btn:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.survivor-place-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.6rem;
+  background: #a71f66;
+  border: none;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.55rem 0;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.survivor-place-btn:hover:not(:disabled) {
+  background: #8c1a55;
+}
+
+.survivor-place-btn:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
