@@ -12,7 +12,7 @@ import {
     fetchSurvivorResults,
     joinSurvivorChallenge,
     fetchSurvivorProgress,
-    submitSurvivorPrediction,
+    placeSurvivorGameBet,
     normalizeSelection,
     SURVIVOR_STATUS_LABELS,
     GAME_STATUS_LABELS,
@@ -215,13 +215,21 @@ const SurvivorChallengeDetail = ({ id }) => {
             openLoginWithRedirect(dispatch, `/survivor/${id}`);
             return;
         }
+        if (!isActiveParticipant) {
+            Notify({ status: 400, message: "You cannot place a bet on this challenge" });
+            return;
+        }
+        const game = (challenge.games || []).find((g) => g.game_number === gameNumber);
         setPendingGame(gameNumber);
-        const outcome = await submitSurvivorPrediction(id, gameNumber, selection);
+        // Real placebet, not the challenge's own /prediction endpoint — see
+        // placeSurvivorGameBet in utils/survivor-data.js.
+        const outcome = await placeSurvivorGameBet(challenge, game, selection);
         setPendingGame(null);
         if (outcome.success) {
+            Notify({ status: 200, message: "Bet placed." });
             void loadAll();
         } else {
-            Notify({ status: 400, message: outcome.message || "Could not save your pick." });
+            Notify({ status: 400, message: outcome.message || "Could not place bet." });
         }
     };
 
@@ -243,6 +251,12 @@ const SurvivorChallengeDetail = ({ id }) => {
 
     const isEliminated = progress?.participant_status === "ELIMINATED";
     const isEnrolled = !!progress?.enrolled;
+    // "Active" here = still a live participant in THIS challenge (joined
+    // and not eliminated) — governs whether scheduled/active games show
+    // pickable 1X2 buttons at all, separate from per-game OPEN_FOR_PICKS.
+    const isActiveParticipant = isEnrolled && !isEliminated;
+    const nonSettledGames = (challenge.games || []).filter((g) => g.status !== "SETTLED");
+    const settledGames = (challenge.games || []).filter((g) => g.status === "SETTLED");
 
     return (
         <div className="survivor-page">
@@ -303,9 +317,15 @@ const SurvivorChallengeDetail = ({ id }) => {
             )}
 
             <div className="survivor-games-list">
-                {(challenge.games || []).map((game) => {
+                {nonSettledGames.length > 0 && !isActiveParticipant && (
+                    <div className="survivor-game-row survivor-game-blocked">
+                        <p className="survivor-blocked-message">You cannot place a bet on this challenge</p>
+                    </div>
+                )}
+
+                {isActiveParticipant && nonSettledGames.map((game) => {
                     const mine = predictionByGame.get(game.game_number);
-                    const canPick = isEnrolled && !isEliminated && game.status === "OPEN_FOR_PICKS";
+                    const canPick = game.status === "OPEN_FOR_PICKS";
                     return (
                         <div key={game.game_number} className="survivor-game-row">
                             <div className="survivor-game-row-top">
@@ -325,7 +345,28 @@ const SurvivorChallengeDetail = ({ id }) => {
                                 />
                             )}
 
-                            {!canPick && isEnrolled && (
+                            {!canPick && (
+                                <div className="survivor-game-outcome">
+                                    <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "—"}</b></span>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+
+                {settledGames.map((game) => {
+                    const mine = predictionByGame.get(game.game_number);
+                    return (
+                        <div key={game.game_number} className="survivor-game-row">
+                            <div className="survivor-game-row-top">
+                                <span className="survivor-game-number">Game {game.game_number}</span>
+                                <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
+                            </div>
+                            <div className="survivor-game-time">
+                                Kicks off {formatDateTime(game.scheduled_at)} · picks lock {formatDateTime(game.lock_at)}
+                            </div>
+
+                            {isEnrolled && (
                                 <div className="survivor-game-outcome">
                                     <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "—"}</b></span>
                                     {game.result && <span>Result: <b>{normalizeSelection(game.result)}</b></span>}
