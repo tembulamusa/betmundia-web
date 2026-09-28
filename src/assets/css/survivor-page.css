@@ -41,17 +41,18 @@
 
 .survivor-lobby-filter-label {
   color: rgba(255, 255, 255, 0.6);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
 .survivor-lobby-filter-select {
+  height: 46px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
   border-radius: 5px;
-  padding: 0.7rem 2.1rem 0.7rem 0.85rem;
-  font-size: 0.9rem;
+  padding: 0 2.1rem 0 0.85rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   appearance: none;
@@ -359,24 +360,38 @@
 
 .survivor-detail-nav-status {
   width: auto;
-  max-width: 7.5rem;
+  max-width: 8.5rem;
+}
+
+.survivor-detail-nav-challenge-group {
+  display: flex;
+  align-items: stretch;
 }
 
 .survivor-detail-nav-challenge {
   width: auto;
-  max-width: 11rem;
+  max-width: 18rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
 }
 
 .survivor-detail-nav-refresh {
+  height: 46px;
+  display: flex;
+  align-items: center;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
   border-radius: 5px;
-  padding: 0.7rem 0.9rem;
-  font-size: 0.85rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0 1rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.15s ease;
+  white-space: nowrap;
 }
 
 .survivor-detail-nav-refresh:hover:not(:disabled) {

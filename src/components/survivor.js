@@ -526,33 +526,35 @@ const SurvivorChallengeDetail = ({ id }) => {
                     ))}
                 </select>
 
-                <select
-                    className="survivor-lobby-filter-select survivor-detail-nav-challenge"
-                    value={String(id)}
-                    onChange={(e) => {
-                        if (!e.target.value) {
-                            navigate("/survivor");
-                        } else {
-                            navigate(`/survivor/${e.target.value}`);
-                        }
-                    }}
-                >
-                    <option value="">← All challenges</option>
-                    {filteredChallengeNavOptions.map((c) => (
-                        <option key={c.id} value={String(c.id)}>
-                            {c.name}
-                        </option>
-                    ))}
-                </select>
+                <div className="survivor-detail-nav-challenge-group">
+                    <select
+                        className="survivor-lobby-filter-select survivor-detail-nav-challenge"
+                        value={String(id)}
+                        onChange={(e) => {
+                            if (!e.target.value) {
+                                navigate("/survivor");
+                            } else {
+                                navigate(`/survivor/${e.target.value}`);
+                            }
+                        }}
+                    >
+                        <option value="">← All challenges</option>
+                        {filteredChallengeNavOptions.map((c) => (
+                            <option key={c.id} value={String(c.id)}>
+                                {c.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <button
-                    type="button"
-                    className="survivor-detail-nav-refresh"
-                    disabled={refreshingChallenges}
-                    onClick={handleRefreshChallenges}
-                >
-                    {refreshingChallenges ? "Refreshing…" : "Refresh"}
-                </button>
+                    <button
+                        type="button"
+                        className="survivor-detail-nav-refresh"
+                        disabled={refreshingChallenges}
+                        onClick={handleRefreshChallenges}
+                    >
+                        {refreshingChallenges ? "Refreshing…" : "Refresh"}
+                    </button>
+                </div>
             </div>
 
             <div className="survivor-detail-header">
