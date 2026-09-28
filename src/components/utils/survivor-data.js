@@ -151,18 +151,19 @@ const cleanUcn = (value) =>
  */
 export const SURVIVOR_PLACEBET_TYPE = "10";
 
-// TODO: no real per-game odds from the API yet — a survivor game only
-// carries game_number/status/scheduled_at/lock_at/result, no match_id,
-// team names, or odds. Using one arbitrary odd value for every 1X2
-// outcome for now, per instruction, until the backend adds real match/odds
-// data to each game. Swap this out for game.odds["1x2"].outcomes[i] once
-// that's available.
+// TODO: still no real per-game odds or team names from the API — a
+// survivor game (per /survivor/challenges/{id}) carries game_number,
+// parent_match_id, status, scheduled_at, lock_at, result, selection,
+// result_status, but no home_team/away_team/sport_name/odds. Using one
+// arbitrary odd value for every 1X2 outcome for now, per instruction,
+// until the backend adds real match/odds data to each game. Swap this
+// out for game.odds["1x2"].outcomes[i] once that's available.
 export const SURVIVOR_ARBITRARY_ODD = 2.0;
 
 const betPickForSelection = (game, selection) => {
     switch (normalizeSelection(selection)) {
-        case "1": return game?.home_team;
-        case "2": return game?.away_team;
+        case "1": return game?.home_team || "Home";
+        case "2": return game?.away_team || "Away";
         default: return "Draw";
     }
 };
@@ -176,21 +177,23 @@ const betPickForSelection = (game, selection) => {
  * way src/components/highlights/free-bet.js does, otherwise stakes the
  * challenge's entry_stake as a normal bet.
  *
- * NOTE: this assumes each `game` carries real match data (match_id,
- * home_team, away_team, sport_name) the same shape jackpot.js's matches
- * use — the survivor game object as currently wired up
- * (game_number/status/scheduled_at/lock_at/result only) does not expose
- * these yet, so the backend/data layer needs to add them for a fully
- * valid bet. Odds are arbitrary for now (see SURVIVOR_ARBITRARY_ODD).
+ * NOTE: game.parent_match_id is the real match reference (confirmed from
+ * /survivor/challenges/{id}) and is used for both match_id and
+ * parent_match_id below since no separate child match_id is exposed.
+ * home_team/away_team/sport_name still aren't in the game object, so
+ * bet_pick falls back to "Home"/"Draw"/"Away" rather than real team
+ * names — swap in real names once the backend adds them. Odds are
+ * arbitrary for now (see SURVIVOR_ARBITRARY_ODD).
  */
 export const placeSurvivorGameBet = async (challenge, game, selection) => {
     const oddValue = Float(SURVIVOR_ARBITRARY_ODD, 2);
     const betPick = betPickForSelection(game, selection);
     const subTypeId = game?.sub_type_id ?? 1;
 
+    const matchId = game?.parent_match_id ?? game?.match_id;
     const slip = {
-        match_id: String(game?.match_id ?? ""),
-        parent_match_id: String(game?.parent_match_id ?? game?.match_id ?? ""),
+        match_id: String(matchId ?? ""),
+        parent_match_id: String(matchId ?? ""),
         special_bet_value: "",
         sub_type_id: String(subTypeId),
         away_team: game?.away_team,
@@ -203,7 +206,7 @@ export const placeSurvivorGameBet = async (challenge, game, selection) => {
         odd_value: oddValue.toFixed(2),
         producer_id: String(game?.producer_id || "3"),
         sport_name: game?.sport_name || "Soccer",
-        ucn: cleanUcn(`${game?.match_id ?? ""}${subTypeId}${betPick ?? ""}`),
+        ucn: cleanUcn(`${matchId ?? ""}${subTypeId}${betPick ?? ""}`),
     };
 
     const user = getFromLocalStorage("user");
@@ -278,9 +281,14 @@ export const SURVIVOR_STATUS_LABELS = {
 };
 
 export const GAME_STATUS_LABELS = {
+    // Real responses use SCHEDULED, not OPEN_FOR_PICKS as originally
+    // assumed from the API spec — keep both mapped, harmless either way.
+    SCHEDULED: "Pick now",
     OPEN_FOR_PICKS: "Pick now",
     LOCKED: "Locked",
     SETTLED: "Settled",
+    COMPLETED: "Settled",
+    FINISHED: "Settled",
 };
 
 export const PARTICIPANT_STATUS_LABELS = {
