@@ -439,10 +439,15 @@ const SurvivorChallengeGames = ({ id }) => {
             )}
 
             <div className="survivor-games-list">
-                {orderedNonSettledGames.map((game) => {
+                {orderedNonSettledGames.map((game, gameIndex) => {
                     const mine = predictionFor(game);
                     const canPick = isGamePickable(game);
                     const isCurrentGame = currentGame?.game_number === game.game_number;
+                    // Position of this game within the currently-shown list
+                    // (1-based), distinct from game.game_number - this is
+                    // what "your game number" next to the current-game badge
+                    // refers to, per explicit product decision.
+                    const yourGameNumber = gameIndex + 1;
                     // Locked (picks closed) but betting on the challenge as a
                     // whole isn't currently allowed (challenge closed, user
                     // eliminated, or already won) - the specific case this
@@ -469,6 +474,11 @@ const SurvivorChallengeGames = ({ id }) => {
                                     </span>
                                 ) : (
                                     <span className="survivor-game-number">Game {game.game_number}</span>
+                                )}
+                                {isCurrentGame && (
+                                    <span className="survivor-your-game-number">
+                                        your game number {yourGameNumber}
+                                    </span>
                                 )}
                                 <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
                             </div>
