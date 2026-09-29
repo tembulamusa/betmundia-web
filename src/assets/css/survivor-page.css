@@ -833,10 +833,12 @@
   flex-wrap: wrap;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.7rem;
 }
 
 .survivor-your-pick {
   font-weight: 700;
+  font-size: 1.05rem;
 }
 
 .survivor-your-pick b {
@@ -897,6 +899,7 @@
 
 .survivor-next-prize {
   color: rgba(255, 255, 255, 0.8);
+  font-size: 1.05rem;
 }
 
 .survivor-terms-link {
