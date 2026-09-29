@@ -646,15 +646,16 @@ const SurvivorChallengeGames = ({ id }) => {
     );
 };
 
-/** Which accordion row should start open on the lobby: the challenge this
- * browser most recently joined (survivorJoinedChallenges is appended to,
- * so its last entry is the latest), if it's in the given list at all. */
+/** Which accordion row should start open on the lobby: the first
+ * challenge (in the list's own order) this browser has actually joined
+ * (survivorJoinedChallenges) - or, if it hasn't joined any of them, just
+ * the first challenge in the list, so a row is always open by default. */
 const defaultActiveKeyFor = (list) => {
+    const challenges = list || [];
+    if (challenges.length === 0) return null;
     const joinedIds = getJoinedChallengeIds();
-    const latestJoinedId = joinedIds.length > 0 ? joinedIds[joinedIds.length - 1] : null;
-    if (latestJoinedId == null) return null;
-    const match = (list || []).find((c) => String(c.id) === latestJoinedId);
-    return match ? String(match.id) : null;
+    const firstJoined = challenges.find((c) => joinedIds.includes(String(c.id)));
+    return String((firstJoined || challenges[0]).id);
 };
 
 /** /survivor — the lobby: every open/active/completed challenge, as an
