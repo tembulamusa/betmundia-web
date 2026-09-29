@@ -524,7 +524,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                     />
                                     {(draftPicks[game.game_number] || mine?.selection) && (
                                         <div className="survivor-game-outcome">
-                                            <span>
+                                            <span className="survivor-your-pick">
                                                 Your pick:{" "}
                                                 <b>
                                                     {normalizeSelection(
@@ -535,6 +535,9 @@ const SurvivorChallengeGames = ({ id }) => {
                                         </div>
                                     )}
                                     <div className="survivor-place-btn-row">
+                                        <span className="survivor-place-amount">
+                                            Amount: <b>{formatMoney(challenge.entry_stake)}</b>
+                                        </span>
                                         <button
                                             type="button"
                                             className="survivor-place-btn"
@@ -564,7 +567,7 @@ const SurvivorChallengeGames = ({ id }) => {
 
                             {!canBetOnThisGame && !isLockedOut && (
                                 <div className="survivor-game-outcome">
-                                    <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b></span>
+                                    <span className="survivor-your-pick">Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b></span>
                                     {mine?.selection && (
                                         <span className="survivor-result-status survivor-result-pending">
                                             Pending
@@ -601,7 +604,7 @@ const SurvivorChallengeGames = ({ id }) => {
 
                             {(isEnrolled || mine) && (
                                 <div className="survivor-game-outcome">
-                                    <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b></span>
+                                    <span className="survivor-your-pick">Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b></span>
                                     {mine?.result_status && (
                                         <span className="survivor-outcome-line">
                                             Outcome: <OutcomeBadge resultStatus={mine.result_status} />
@@ -818,7 +821,6 @@ const SurvivorChallengesList = () => {
                                     </div>
                                     <div className="survivor-challenge-card-meta">
                                         <span className="survivor-challenge-card-meta-item"><FaUsers aria-hidden="true" /> {challenge.participant_count} playing</span>
-                                        <span>Entry {formatMoney(challenge.entry_stake)}</span>
                                     </div>
                                     <div className="survivor-challenge-card-time">
                                         {statusIs(challenge.status, "OPEN")
