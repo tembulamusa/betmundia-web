@@ -547,6 +547,15 @@ const SurvivorChallengeGames = ({ id }) => {
                                                     )}
                                                 </b>
                                             </span>
+                                            {mine?.selection && (
+                                                <span className="survivor-result-status survivor-result-pending">
+                                                    Pending
+                                                </span>
+                                            )}
+                                            <span className="survivor-next-prize">
+                                                Next prize will be: <b>—</b>
+                                            </span>
+                                            <span className="survivor-terms-link">Terms</span>
                                         </div>
                                     )}
                                     <div className="survivor-place-btn-row">
