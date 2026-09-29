@@ -769,15 +769,16 @@
 .survivor-place-btn-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.8rem;
   margin-top: 0.6rem;
 }
 
 .survivor-place-amount {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .survivor-place-btn {
@@ -803,6 +804,10 @@
 @media screen and (max-width: 767px) {
   .survivor-place-btn-row {
     justify-content: space-between;
+  }
+
+  .survivor-place-amount {
+    font-size: 1rem;
   }
 
   .survivor-place-btn {
