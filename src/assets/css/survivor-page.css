@@ -226,8 +226,8 @@
 .survivor-challenge-card-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 1.3rem;
-  color: #ffffff;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255);
   margin-bottom: 0.5rem;
 }
 
@@ -238,8 +238,8 @@
 }
 
 .survivor-challenge-card-time {
-  font-size: 1.15rem;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255);
 }
 
 .survivor-status-pill {
