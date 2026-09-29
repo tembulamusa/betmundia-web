@@ -270,8 +270,8 @@
   color: #04240f;
   /* Taller and bigger-text than the other status badges specifically,
      with a smaller radius than the shared pill - all per request. */
-  padding: 0.65rem 20px;
-  font-size: 1.1rem;
+  padding: 0.85rem 20px;
+  font-size: 1.3rem;
   border-radius: 1px;
 }
 
@@ -611,7 +611,7 @@
   scroll-behavior: smooth;
   padding: 0.7rem 0.4rem 0.7rem 0.7rem;
   background: rgba(0, 12, 36, 0.4);
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 .survivor-games-list::-webkit-scrollbar {
