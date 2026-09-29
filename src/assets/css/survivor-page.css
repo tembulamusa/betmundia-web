@@ -216,9 +216,9 @@
 }
 
 .survivor-challenge-card-pool-label {
-  font-size: 1.15rem;
+  font-size: 0.7rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
