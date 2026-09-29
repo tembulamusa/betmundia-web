@@ -200,9 +200,10 @@
 }
 
 .survivor-challenge-name {
-  font-weight: 700;
+  font-weight: 600;
+  text-transform: uppercase;
   font-size: 1.5rem;
-  color: #ffffff !important;
+  color: white;
 }
 
 .survivor-challenge-card-pool {
