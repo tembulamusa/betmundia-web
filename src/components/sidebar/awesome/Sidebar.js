@@ -20,6 +20,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-do
 import gameCategories from '../../utils/static-data';
 import Notify from '../../utils/Notify';
 import CasinoSidebar from '../../pages/casino/casino-sidebar';
+import JackpotSidebar from '../jackpot-sidebar';
 
 const ProSidebar = (props) => {
 
@@ -36,6 +37,17 @@ const ProSidebar = (props) => {
     // const []
     const excludeSidebar = ["/login", "/signup", '/livescore', '/forgot-password', '/verify-account']
     const navigate = useNavigate()
+
+    const isJackpotsPage =
+        location.pathname === "/jackpots" ||
+        location.pathname === "/jackpot" ||
+        location.pathname.startsWith("/jackpots/") ||
+        location.pathname.startsWith("/jackpot/");
+    const isCasinoPage = location.pathname.includes("casino");
+    const showSportsSidebar =
+        !excludeSidebar.includes(location.pathname) &&
+        !isCasinoPage &&
+        !isJackpotsPage;
 
     useEffect(() => {
         setLoc(location?.pathname)
@@ -225,8 +237,12 @@ const ProSidebar = (props) => {
 
     return (
         <>
+            {isJackpotsPage && !excludeSidebar.includes(location.pathname) && (
+                <JackpotSidebar />
+            )}
+
             {
-                !(excludeSidebar.includes(location.pathname) || location.pathname.includes("casino")) &&
+                showSportsSidebar &&
                 (loc.includes("live") ? <LiveSideBar /> :
                     <div style={{
                         display: 'flex',
@@ -343,7 +359,7 @@ const ProSidebar = (props) => {
             }
 
             {
-                (!excludeSidebar.includes(location.pathname) && location.pathname.includes("casino")) &&
+                (!excludeSidebar.includes(location.pathname) && isCasinoPage) &&
 
                 <div className={`d-none d-md-block col-md-2 bg-[rgba(255,255,255,0.02)]`}>
                     <div>

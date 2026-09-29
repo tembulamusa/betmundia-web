@@ -10,7 +10,7 @@
   --acc-border: rgba(255, 255, 255, 0.08);
   --acc-muted: #9a9aa8;
   --acc-text: rgba(255, 255, 255, 0.8);
-  --acc-radius: 0.85rem;
+  --acc-radius: 0.5rem;
   --acc-radius-sm: 0.55rem;
   width: min(380px, 100vw) !important;
   height: 100%;
@@ -299,6 +299,15 @@
   outline: none;
 }
 
+.account-drawer-affiliate-label {
+  margin: 0 0 0.65rem;
+  color: var(--acc-muted);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .account-drawer-affiliate:hover {
   background: rgba(255, 255, 255, 0.03);
 }
@@ -325,7 +334,7 @@
   border: none;
   background: transparent;
   color: rgba(255, 215, 0);
-  font-size: 1.35rem;
+  font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   word-break: break-all;
@@ -386,7 +395,7 @@
 .account-drawer-affiliate-bal-amount {
   margin: 0;
   color: rgba(255, 215, 0);
-  font-size: 1.45rem;
+  font-size: 1.7rem;
   font-weight: 700;
   line-height: 1.15;
   white-space: nowrap;
@@ -394,8 +403,192 @@
 
 .account-drawer-affiliate-bal-prefix {
   color: var(--acc-muted);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* Loyalty points row (inside wallet) */
+.account-drawer-loyalty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.account-drawer-loyalty-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.account-drawer-loyalty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 50%;
+  background: var(--acc-pink);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.account-drawer-loyalty-icon svg {
+  font-size: 0.95rem;
+}
+
+.account-drawer-loyalty-label {
+  color: var(--acc-muted);
   font-size: 1.05rem;
   font-weight: 600;
+  line-height: 1.2;
+}
+
+.account-drawer-loyalty-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.account-drawer-loyalty-info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: var(--acc-pink);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.account-drawer-loyalty-amount {
+  color: rgba(255, 215, 0);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+/* Loyalty points guide modal */
+.account-drawer-loyalty-modal .modal-content {
+  background: #0f0f1f;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.account-drawer-loyalty-modal .modal-header {
+  background: #151525;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px 10px 0 0;
+}
+
+.account-drawer-loyalty-modal .modal-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.account-drawer-loyalty-modal-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: #a71f66;
+  color: #fff;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.account-drawer-loyalty-modal .modal-body {
+  background: #0f0f1f;
+  color: #fff;
+  padding: 1.15rem 1.25rem 1.25rem;
+  max-height: min(70vh, 32rem);
+  overflow-y: auto;
+}
+
+.account-drawer-loyalty-modal-intro,
+.account-drawer-loyalty-modal-note {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.account-drawer-loyalty-modal-intro {
+  margin-bottom: 1.1rem;
+}
+
+.account-drawer-loyalty-modal-note {
+  margin-top: 0.85rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.account-drawer-loyalty-modal-section {
+  margin: 0 0 1rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.account-drawer-loyalty-modal-section h3 {
+  margin: 0 0 0.55rem;
+  color: #ffc428;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.account-drawer-loyalty-modal-section ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.account-drawer-loyalty-modal-section li + li {
+  margin-top: 0.4rem;
+}
+
+.account-drawer-loyalty-modal .modal-footer {
+  background: #0f0f1f;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 10px 10px;
+}
+
+.account-drawer-loyalty-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6rem;
+  padding: 0.55rem 1.25rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: #a71f66;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.account-drawer-loyalty-modal-close:hover {
+  background: #8e1a56;
 }
 
 /* Deposit / Withdraw */
