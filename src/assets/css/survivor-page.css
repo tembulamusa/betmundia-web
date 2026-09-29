@@ -232,10 +232,14 @@
   margin-bottom: 0.5rem;
 }
 
+.survivor-challenge-card-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .survivor-challenge-card-meta svg {
-  margin-right: 0.3rem;
-  position: relative;
-  top: -1px;
+  flex-shrink: 0;
 }
 
 .survivor-challenge-card-time {
