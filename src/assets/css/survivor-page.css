@@ -830,6 +830,35 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+.survivor-outcome-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.survivor-outcome-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  color: #ffffff;
+}
+
+.survivor-outcome-won {
+  background: #19bc54;
+}
+
+.survivor-outcome-lost {
+  background: #d93c3c;
+}
+
+.survivor-outcome-cancelled {
+  background: rgba(255, 255, 255, 0.3);
+}
+
 .survivor-next-prize {
   color: rgba(255, 255, 255, 0.8);
 }

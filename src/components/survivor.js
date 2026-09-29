@@ -6,7 +6,7 @@ import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
 import Notify from "./utils/Notify";
 import NoEvents from "./utils/no-events";
-import { FaShieldAlt, FaSkullCrossbones, FaTrophy, FaUsers } from "react-icons/fa";
+import { FaShieldAlt, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
 import {
     fetchSurvivorChallenges,
     fetchSurvivorChallenge,
@@ -113,6 +113,26 @@ const SurvivorLoading = ({ label }) => (
         </span>
     </div>
 );
+
+/** Circular won/lost/cancelled indicator shown next to "Your pick" once a
+ * game is settled - green check when the pick was correct, red cross when
+ * incorrect, grey dash for anything else (e.g. a voided/cancelled game). */
+const OutcomeBadge = ({ resultStatus }) => {
+    if (!resultStatus) return null;
+    const isWon = statusIs(resultStatus, "CORRECT");
+    const isLost = statusIs(resultStatus, "INCORRECT");
+    const variant = isWon ? "won" : isLost ? "lost" : "cancelled";
+    return (
+        <span
+            className={`survivor-outcome-badge survivor-outcome-${variant}`}
+            title={resultStatus}
+        >
+            {isWon && <FaCheck aria-hidden="true" />}
+            {isLost && <FaTimes aria-hidden="true" />}
+            {!isWon && !isLost && <FaMinus aria-hidden="true" />}
+        </span>
+    );
+};
 
 const PickButtons = ({ game, currentSelection, draftSelection, disabled, onPick }) => {
     const options = [
@@ -582,12 +602,12 @@ const SurvivorChallengeGames = ({ id }) => {
                             {(isEnrolled || mine) && (
                                 <div className="survivor-game-outcome">
                                     <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b></span>
-                                    {game.result && <span>Result: <b>{normalizeSelection(game.result)}</b></span>}
                                     {mine?.result_status && (
-                                        <span className={`survivor-result-status survivor-result-${mine.result_status.toLowerCase()}`}>
-                                            {mine.result_status}
+                                        <span className="survivor-outcome-line">
+                                            Outcome: <OutcomeBadge resultStatus={mine.result_status} />
                                         </span>
                                     )}
+                                    {game.result && <span>Result: <b>{normalizeSelection(game.result)}</b></span>}
                                 </div>
                             )}
                         </div>
