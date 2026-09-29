@@ -245,12 +245,9 @@
 .survivor-status-pill {
   display: inline-flex;
   align-items: center;
-  /* Border-radius/height match the "Today's Game" badge
-     (.survivor-current-game-badge below) rather than the old fully-
-     rounded 999px pill - a small rounded rectangle, same padding. */
-  padding: 0.3rem 12px;
-  border-radius: 4px;
-  font-size: 0.95rem;
+  padding: 0.81rem 14px !important;
+  border-radius: 3px;
+  font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
