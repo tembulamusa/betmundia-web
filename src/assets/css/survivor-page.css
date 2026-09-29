@@ -899,11 +899,12 @@
 
 .survivor-next-prize {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 1.05rem;
+  font-size: 1.2rem;
 }
 
 .survivor-terms-link {
-  color: rgba(255, 255, 255, 0.6);
+  color: #a71f66;
+  font-size: 1.2rem;
   text-decoration: underline dotted;
   text-underline-offset: 3px;
   cursor: pointer;
