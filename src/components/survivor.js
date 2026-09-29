@@ -97,6 +97,20 @@ const StatusPill = ({ status, labels }) => (
     </span>
 );
 
+/** Challenge-level status badge only (not used for game rows) - enrolled
+ * takes priority over everything else (blue), then an active challenge
+ * (green), then a plain grey badge for anything else (open/completed/
+ * unknown), per explicit product decision. Label text is unaffected -
+ * only the color/variant changes. */
+const ChallengeStatusPill = ({ status, labels, enrolled }) => {
+    const variant = enrolled ? "enrolled" : statusIs(status, "ACTIVE") ? "active" : "grey";
+    return (
+        <span className={`survivor-status-pill survivor-status-${variant}`}>
+            {(labels && caseInsensitiveLabel(labels, status)) || status || "—"}
+        </span>
+    );
+};
+
 /** A nicer stand-in for the old plain "Loading…" text — a small spinning
  * ring plus the word itself with an animated ellipsis, instead of flat
  * dark text sitting on the dark page. */
@@ -813,7 +827,11 @@ const SurvivorChallengesList = () => {
                                 <Accordion.Header>
                                     <div className="survivor-challenge-card-top">
                                         <span className="survivor-challenge-name">{challenge.name}</span>
-                                        <StatusPill status={challenge.status} labels={SURVIVOR_STATUS_LABELS} />
+                                        <ChallengeStatusPill
+                                            status={challenge.status}
+                                            labels={SURVIVOR_STATUS_LABELS}
+                                            enrolled={getJoinedChallengeIds().includes(String(challenge.id))}
+                                        />
                                     </div>
                                     <div className="survivor-challenge-card-pool">
                                         {formatMoney(challenge.current_prize_pool)}
@@ -962,7 +980,11 @@ const SurvivorChallengeDetail = ({ id }) => {
             <div className="survivor-detail-header">
                 <div className="survivor-detail-header-top">
                     <h1 className="survivor-detail-title">{challenge.name}</h1>
-                    <StatusPill status={challenge.status} labels={SURVIVOR_STATUS_LABELS} />
+                    <ChallengeStatusPill
+                        status={challenge.status}
+                        labels={SURVIVOR_STATUS_LABELS}
+                        enrolled={getJoinedChallengeIds().includes(String(challenge.id))}
+                    />
                 </div>
                 {challenge.description && (
                     <p className="survivor-detail-description">{challenge.description}</p>

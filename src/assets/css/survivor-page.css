@@ -274,8 +274,20 @@
   background: #00e676;
   color: #04240f;
   padding: 1rem 14px !important;
-  border-radius: 2px;
+  border-radius: 999px;
   font-size: 1rem;
+}
+
+.survivor-status-enrolled {
+  background: #2f6fed;
+  color: #ffffff;
+  border-radius: 999px;
+}
+
+.survivor-status-grey {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
 }
 
 .survivor-status-completed {
