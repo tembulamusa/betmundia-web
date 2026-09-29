@@ -544,7 +544,7 @@ const SurvivorChallengeGames = ({ id }) => {
 
                             {!canBetOnThisGame && !isLockedOut && (
                                 <div className="survivor-game-outcome">
-                                    <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "—"}</b></span>
+                                    <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b></span>
                                     {mine?.selection && (
                                         <span className="survivor-result-status survivor-result-pending">
                                             Pending
@@ -581,7 +581,7 @@ const SurvivorChallengeGames = ({ id }) => {
 
                             {(isEnrolled || mine) && (
                                 <div className="survivor-game-outcome">
-                                    <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "—"}</b></span>
+                                    <span>Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b></span>
                                     {game.result && <span>Result: <b>{normalizeSelection(game.result)}</b></span>}
                                     {mine?.result_status && (
                                         <span className={`survivor-result-status survivor-result-${mine.result_status.toLowerCase()}`}>
