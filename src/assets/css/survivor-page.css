@@ -236,10 +236,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  line-height: 1;
 }
 
 .survivor-challenge-card-meta svg {
   flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
 }
 
 .survivor-challenge-card-time {
@@ -765,8 +768,16 @@
    so it's an easy thumb target there. */
 .survivor-place-btn-row {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
   margin-top: 0.6rem;
+}
+
+.survivor-place-amount {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .survivor-place-btn {
@@ -791,7 +802,7 @@
 
 @media screen and (max-width: 767px) {
   .survivor-place-btn-row {
-    justify-content: stretch;
+    justify-content: space-between;
   }
 
   .survivor-place-btn {
@@ -805,6 +816,14 @@
   flex-wrap: wrap;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.survivor-your-pick {
+  font-weight: 700;
+}
+
+.survivor-your-pick b {
+  font-weight: 800;
 }
 
 .survivor-result-status {
