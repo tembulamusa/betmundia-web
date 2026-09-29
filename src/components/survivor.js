@@ -213,7 +213,7 @@ const SurvivorChallengeGames = ({ id }) => {
         if (hasScrolledToCurrentGameRef.current) return;
         if (fetching || !currentGameRowRef.current) return;
         hasScrolledToCurrentGameRef.current = true;
-        currentGameRowRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        currentGameRowRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     });
 
     const handleJoin = async () => {
