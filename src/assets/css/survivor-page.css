@@ -244,8 +244,11 @@
 .survivor-status-pill {
   display: inline-flex;
   align-items: center;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
+  /* Border-radius/height match the "Today's Game" badge
+     (.survivor-current-game-badge below) rather than the old fully-
+     rounded 999px pill - a small rounded rectangle, same padding. */
+  padding: 0.3rem 12px;
+  border-radius: 4px;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -264,10 +267,8 @@
 .survivor-status-active {
   background: #00e676;
   color: #04240f;
-  /* Shape-only change from the shared pill (border-radius: 999px) - a
-     rounded rectangle instead of a fully-rounded pill, everything else
-     (color, padding, font) untouched. */
-  border-radius: 5px;
+  /* Taller than the other status badges specifically, per request. */
+  padding: 0.45rem 12px;
 }
 
 .survivor-status-completed {
@@ -604,7 +605,11 @@
   max-height: 380px;
   overflow-y: auto;
   scroll-behavior: smooth;
-  padding-right: 0.4rem;
+  padding: 0.7rem 0.4rem 0.7rem 0.7rem;
+  /* A slightly darker shade of the accordion-item's own secondary
+     background (rgb(38, 48, 69)) so the games nest visually inside it. */
+  background: #1e2738;
+  border-radius: 10px;
 }
 
 .survivor-games-list::-webkit-scrollbar {
@@ -627,7 +632,7 @@
 .survivor-game-row {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 0.8rem 0.9rem;
 }
 
