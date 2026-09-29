@@ -757,8 +757,8 @@ const SurvivorChallengesList = () => {
                             <Accordion.Item key={challenge.id} eventKey={key}>
                                 <Accordion.Header>
                                     <div className="survivor-challenge-card-top">
-                                        <span className="survivor-challenge-name">{challenge.name}</span>
                                         <StatusPill status={challenge.status} labels={SURVIVOR_STATUS_LABELS} />
+                                        <span className="survivor-challenge-name">{challenge.name}</span>
                                     </div>
                                     <div className="survivor-challenge-card-pool">
                                         {formatMoney(challenge.current_prize_pool)}

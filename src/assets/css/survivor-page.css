@@ -193,9 +193,9 @@
 
 .survivor-challenge-card-top {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
   margin-bottom: 0.6rem;
 }
 
@@ -267,8 +267,11 @@
 .survivor-status-active {
   background: #00e676;
   color: #04240f;
-  /* Taller than the other status badges specifically, per request. */
+  /* Taller and bigger-text than the other status badges specifically,
+     with a smaller radius than the shared pill - all per request. */
   padding: 0.45rem 12px;
+  font-size: 0.85rem;
+  border-radius: 2px;
 }
 
 .survivor-status-completed {
