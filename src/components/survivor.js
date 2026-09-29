@@ -37,6 +37,15 @@ const rememberJoinedChallenge = (id) => {
     }
 };
 
+/** The challenge ids this browser has recorded as joined (see above),
+ * as strings so callers can compare against challenge.id without
+ * worrying about number/string mismatches. */
+const getJoinedChallengeIds = () => {
+    const joined = getFromLocalStorage(SURVIVOR_JOINED_STORAGE_KEY);
+    const list = Array.isArray(joined) ? joined : [];
+    return list.map((entry) => String(entry));
+};
+
 /** Status strings come back in whatever case the backend feels like
  * ("ACTIVE"/"active"/"Active", etc.) — always compare downcased. */
 const statusIs = (value, expected) =>
@@ -50,6 +59,7 @@ const statusIs = (value, expected) =>
  */
 const SURVIVOR_LOBBY_FILTERS = [
     { key: "all", label: "All" },
+    { key: "mine", label: "Mine" },
     { key: "active", label: "Active", matchesStatus: "ACTIVE" },
     { key: "ended", label: "Ended", matchesStatus: "COMPLETED" },
     { key: "inactive", label: "Inactive", matchesStatus: "OPEN" },
@@ -57,6 +67,9 @@ const SURVIVOR_LOBBY_FILTERS = [
 
 const challengeMatchesFilter = (challenge, filterKey) => {
     if (filterKey === "all") return true;
+    if (filterKey === "mine") {
+        return getJoinedChallengeIds().includes(String(challenge?.id));
+    }
     const filter = SURVIVOR_LOBBY_FILTERS.find((f) => f.key === filterKey);
     return filter ? statusIs(challenge?.status, filter.matchesStatus) : true;
 };
@@ -637,11 +650,10 @@ const SurvivorChallengeGames = ({ id }) => {
  * browser most recently joined (survivorJoinedChallenges is appended to,
  * so its last entry is the latest), if it's in the given list at all. */
 const defaultActiveKeyFor = (list) => {
-    const joined = getFromLocalStorage(SURVIVOR_JOINED_STORAGE_KEY);
-    const joinedList = Array.isArray(joined) ? joined : [];
-    const latestJoinedId = joinedList.length > 0 ? joinedList[joinedList.length - 1] : null;
+    const joinedIds = getJoinedChallengeIds();
+    const latestJoinedId = joinedIds.length > 0 ? joinedIds[joinedIds.length - 1] : null;
     if (latestJoinedId == null) return null;
-    const match = (list || []).find((c) => String(c.id) === String(latestJoinedId));
+    const match = (list || []).find((c) => String(c.id) === latestJoinedId);
     return match ? String(match.id) : null;
 };
 
