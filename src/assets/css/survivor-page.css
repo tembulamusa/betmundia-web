@@ -201,11 +201,11 @@
 
 .survivor-challenge-name {
   font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 1.2rem;
 }
 
 .survivor-challenge-card-pool {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: #ffd54a;
   display: flex;
@@ -215,7 +215,7 @@
 }
 
 .survivor-challenge-card-pool-label {
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.55);
   text-transform: uppercase;
@@ -225,7 +225,7 @@
 .survivor-challenge-card-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.75);
   margin-bottom: 0.5rem;
 }
@@ -237,7 +237,7 @@
 }
 
 .survivor-challenge-card-time {
-  font-size: 0.78rem;
+  font-size: 0.92rem;
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -249,7 +249,7 @@
      rounded 999px pill - a small rounded rectangle, same padding. */
   padding: 0.3rem 12px;
   border-radius: 4px;
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -270,7 +270,7 @@
   /* Taller and bigger-text than the other status badges specifically,
      with a smaller radius than the shared pill - all per request. */
   padding: 0.45rem 12px;
-  font-size: 0.85rem;
+  font-size: 1rem;
   border-radius: 2px;
 }
 
