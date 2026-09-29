@@ -609,9 +609,7 @@
   overflow-y: auto;
   scroll-behavior: smooth;
   padding: 0.7rem 0.4rem 0.7rem 0.7rem;
-  /* A slightly darker shade of the accordion-item's own secondary
-     background (rgb(38, 48, 69)) so the games nest visually inside it. */
-  background: #1e2738;
+  background: rgba(0, 12, 36, 0.4);
   border-radius: 10px;
 }
 
@@ -633,7 +631,7 @@
 }
 
 .survivor-game-row {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 6px;
   padding: 0.8rem 0.9rem;
