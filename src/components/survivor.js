@@ -97,13 +97,14 @@ const StatusPill = ({ status, labels }) => (
     </span>
 );
 
-/** Challenge-level status badge only (not used for game rows) - enrolled
- * takes priority over everything else (blue), then an active challenge
- * (green), then a plain grey badge for anything else (open/completed/
- * unknown), per explicit product decision. Label text is unaffected -
- * only the color/variant changes. */
-const ChallengeStatusPill = ({ status, labels, enrolled }) => {
-    const variant = enrolled ? "enrolled" : statusIs(status, "ACTIVE") ? "active" : "grey";
+/** Challenge-level status badge only (not used for game rows). "Active"
+ * here is the USER's own participant status in this challenge (still
+ * alive), not the challenge's own ACTIVE status - green when the user is
+ * enrolled and still active, blue when enrolled but not currently active
+ * (eliminated/winner/unknown), grey when not enrolled at all. Label text
+ * is unaffected - only the color/variant changes. */
+const ChallengeStatusPill = ({ status, labels, enrolled, participantActive }) => {
+    const variant = !enrolled ? "grey" : participantActive ? "active" : "enrolled";
     return (
         <span className={`survivor-status-pill survivor-status-${variant}`}>
             {(labels && caseInsensitiveLabel(labels, status)) || status || "—"}
@@ -764,6 +765,37 @@ const SurvivorChallengesList = () => {
         return () => { cancelled = true; };
     }, []);
 
+    // One /progress call per challenge shown, purely so the status badge
+    // can reflect the USER's own enrolled/active state (not just the
+    // locally-cached "joined" record) - independent of which row is
+    // expanded. Only fetches ids it doesn't already have, so this never
+    // loops or re-fetches once populated.
+    const [progressByChallenge, setProgressByChallenge] = useState({});
+    useEffect(() => {
+        const idsToFetch = (challenges || [])
+            .map((c) => c.id)
+            .filter((cid) => !(cid in progressByChallenge));
+        if (idsToFetch.length === 0) return;
+        let cancelled = false;
+        Promise.all(
+            idsToFetch.map((cid) =>
+                fetchSurvivorProgress(cid)
+                    .then((p) => [cid, p])
+                    .catch(() => [cid, null])
+            )
+        ).then((results) => {
+            if (cancelled) return;
+            setProgressByChallenge((prev) => {
+                const next = { ...prev };
+                results.forEach(([cid, p]) => {
+                    next[cid] = p;
+                });
+                return next;
+            });
+        });
+        return () => { cancelled = true; };
+    }, [challenges, progressByChallenge]);
+
     const filterCounts = SURVIVOR_LOBBY_FILTERS.reduce((acc, filter) => {
         acc[filter.key] = (challenges || []).filter((c) => challengeMatchesFilter(c, filter.key)).length;
         return acc;
@@ -822,6 +854,16 @@ const SurvivorChallengesList = () => {
                 >
                     {filteredChallenges.map((challenge) => {
                         const key = String(challenge.id);
+                        // Prefer the real /progress fetch for this challenge once it
+                        // lands - falls back to the locally-cached "joined" record so
+                        // the badge still shows something sensible before it resolves.
+                        const challengeProgress = progressByChallenge[challenge.id];
+                        const isEnrolled = challengeProgress
+                            ? !!challengeProgress.enrolled
+                            : getJoinedChallengeIds().includes(String(challenge.id));
+                        const isParticipantActive =
+                            statusIs(challengeProgress?.participant_status, "ALIVE") ||
+                            statusIs(challengeProgress?.participant_status, "ACTIVE");
                         return (
                             <Accordion.Item key={challenge.id} eventKey={key}>
                                 <Accordion.Header>
@@ -830,7 +872,8 @@ const SurvivorChallengesList = () => {
                                         <ChallengeStatusPill
                                             status={challenge.status}
                                             labels={SURVIVOR_STATUS_LABELS}
-                                            enrolled={getJoinedChallengeIds().includes(String(challenge.id))}
+                                            enrolled={isEnrolled}
+                                            participantActive={isParticipantActive}
                                         />
                                     </div>
                                     <div className="survivor-challenge-card-pool">
@@ -869,6 +912,7 @@ const SurvivorChallengeDetail = ({ id }) => {
 
     const [challenge, setChallenge] = useState(null);
     const [results, setResults] = useState(null);
+    const [progress, setProgress] = useState(null);
     const [fetching, setFetching] = useState(true);
 
     // The "All challenges" back-link is now two dropdowns: a status
@@ -906,10 +950,15 @@ const SurvivorChallengeDetail = ({ id }) => {
     useEffect(() => {
         let cancelled = false;
         setFetching(true);
-        Promise.all([fetchSurvivorChallenge(id), fetchSurvivorResults(id)]).then(([detail, aggregate]) => {
+        Promise.all([
+            fetchSurvivorChallenge(id),
+            fetchSurvivorResults(id),
+            fetchSurvivorProgress(id).catch(() => null),
+        ]).then(([detail, aggregate, progressData]) => {
             if (cancelled) return;
             setChallenge(detail);
             setResults(aggregate);
+            setProgress(progressData);
             setFetching(false);
         });
         return () => { cancelled = true; };
@@ -983,7 +1032,15 @@ const SurvivorChallengeDetail = ({ id }) => {
                     <ChallengeStatusPill
                         status={challenge.status}
                         labels={SURVIVOR_STATUS_LABELS}
-                        enrolled={getJoinedChallengeIds().includes(String(challenge.id))}
+                        enrolled={
+                            progress
+                                ? !!progress.enrolled
+                                : getJoinedChallengeIds().includes(String(challenge.id))
+                        }
+                        participantActive={
+                            statusIs(progress?.participant_status, "ALIVE") ||
+                            statusIs(progress?.participant_status, "ACTIVE")
+                        }
                     />
                 </div>
                 {challenge.description && (
