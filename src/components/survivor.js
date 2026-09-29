@@ -766,7 +766,7 @@ const SurvivorChallengesList = () => {
                                         <span className="survivor-challenge-card-pool-label">prize pool</span>
                                     </div>
                                     <div className="survivor-challenge-card-meta">
-                                        <span><FaUsers aria-hidden="true" /> {challenge.participant_count} playing</span>
+                                        <span className="survivor-challenge-card-meta-item"><FaUsers aria-hidden="true" /> {challenge.participant_count} playing</span>
                                         <span>Entry {formatMoney(challenge.entry_stake)}</span>
                                     </div>
                                     <div className="survivor-challenge-card-time">
