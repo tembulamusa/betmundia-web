@@ -114,7 +114,7 @@ const MobileTopBar = ({ user }) => {
                                 Withdraw
                             </Link>
                             <div className="mobile-top-bar__account">
-                                <MobileMenu user={user} showLabel />
+                                <MobileMenu user={user} />
                             </div>
                         </div>
                     </div>

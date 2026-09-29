@@ -1813,6 +1813,13 @@ input.std-input::placeholder {
   line-height: 1.2 !important;
 }
 
+@media screen and (max-width: 767px) {
+  .matches .top-matches .match-detail > button.home-team,
+  .home-team {
+    background: rgba(255, 255, 255, 0.25) !important;
+  }
+}
+
 .matches .top-matches .match-detail > button.home-team {
   display: flex;
   flex-direction: column;
@@ -2245,6 +2252,33 @@ input.std-input::placeholder {
 
 .jackpot-tabs button {
   width: 100%;
+}
+
+.jackpot-empty-state {
+  padding: 2.75rem 1.25rem 3rem;
+  border-radius: 16px;
+}
+
+.jackpot-empty-illustration {
+  display: block;
+  width: 220px;
+  max-width: 65vw;
+  height: auto;
+  margin: 0 auto 1.25rem;
+}
+
+.jackpot-empty-title {
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.35rem;
+  margin: 0 0 0.5rem;
+}
+
+.jackpot-empty-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  font-size: 0.95rem;
+  margin: 0;
 }
 
 li.bet-option {
@@ -3105,14 +3139,12 @@ h1.std-title {
     margin-top: 6px;
   }
 
-  /* stack and center the account icon and label on mobile */
+  /* Account control stays icon-only (label is not shown) */
   .user-profile {
-    display: flex !important;
-    flex-direction: column;
+    display: inline-flex !important;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    text-align: center;
   }
 
   .user-profile-icon {
@@ -3121,12 +3153,6 @@ h1.std-title {
     padding: 6px;
     display: inline-block;
     margin: 0;
-  }
-
-  .user-profile span,
-  .user-profile>* {
-    display: block !important;
-    text-align: center !important;
   }
 }
 

@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { JackpotMatchList, JackpotHeader } from './matches/index';
 import makeRequest from "./utils/fetch-request";
 import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.jpeg';
+import jackpotEmptyBall from '../assets/img/backgrounds/jackpot-empty-ball.png';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { Context } from '../context/store';
@@ -18,10 +19,15 @@ import JackpotArchive from "./jackpot-archive";
 import {
     JACKPOT_PATH,
     TYPE_QUERY_PARAM,
+    clearStoredJackpotGames,
     getJackpotTypes,
     matchesTypeParam,
+    persistJackpotGames,
     persistJackpotTypes,
+    readStoredJackpotGames,
     refreshJackpotTypes,
+    resolveJackpotTypeFromParam,
+    resolveJackpotTypeId,
     typeKey,
     typeLabel,
     typeParamValue,
@@ -53,7 +59,7 @@ const Jackpot = () => {
         return Math.round(equation * (10 ** precision)) / (10 ** precision);
     };
 
-    const applyJackpotPayload = useCallback((data) => {
+    const applyJackpotPayload = useCallback((data, typeId = null) => {
         const now = new Date();
         const matches = data?.matches;
         const hasStarted = matches
@@ -66,22 +72,27 @@ const Jackpot = () => {
         if (hasStarted || !data) {
             setJackpotData(null);
             dispatch({ type: "DEL", key: "jackpotdata" });
+            if (typeId != null) {
+                clearStoredJackpotGames(typeId);
+            }
             return null;
         }
 
         setJackpotData(data);
         dispatch({ type: "SET", key: "jackpotdata", payload: data });
+        if (typeId != null) {
+            persistJackpotGames(typeId, data);
+        }
         return data;
     }, [dispatch]);
 
-    // Hydrate types from cache; refresh if empty (header usually already fetched).
+    // Load jackpot list for the header strip from /jackpot/list (keep page URL /jackpots).
     useEffect(() => {
         const cached = getJackpotTypes(state);
         if (cached.length) {
             persistJackpotTypes(cached, dispatch);
-        } else {
-            void refreshJackpotTypes(dispatch);
         }
+        void refreshJackpotTypes(dispatch);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -95,17 +106,17 @@ const Jackpot = () => {
         }
     }, [location.pathname, location.search, navigate]);
 
-    // When types arrive: default URL to first type (e.g. /jackpots?type=last-man-standing).
+    // When types arrive: sync URL ?type= to a stored jackpot (match URL, else first).
     useEffect(() => {
         if (!jackpotTypes.length) {
             return;
         }
-        const current = searchParams.get(TYPE_QUERY_PARAM);
-        if (current && jackpotTypes.some((item) => matchesTypeParam(item, current))) {
+        const selected = resolveJackpotTypeFromParam(jackpotTypes, searchParams.get(TYPE_QUERY_PARAM));
+        if (!selected) {
             return;
         }
-        const fallback = jackpotTypes[0];
-        const value = String(typeParamValue(fallback));
+        const value = String(typeParamValue(selected));
+        const current = searchParams.get(TYPE_QUERY_PARAM);
         if (current === value) {
             return;
         }
@@ -116,21 +127,24 @@ const Jackpot = () => {
         }, { replace: true });
     }, [jackpotTypes, searchParams, setSearchParams]);
 
-    const fetchMatchesForType = useCallback(async (typeSlug, selectedType = null) => {
-        const params = new URLSearchParams();
-        if (typeSlug) {
-            params.set("type", typeSlug);
-        }
-        const eventId = selectedType?.jackpot_event_id ?? selectedType?.id;
-        if (eventId && !typeSlug) {
-            params.set("jackpot_event_id", eventId);
+    const fetchMatchesForType = useCallback(async (selectedType) => {
+        const typeId = resolveJackpotTypeId(selectedType);
+        if (typeId == null) {
+            return;
         }
 
-        let matchEndpoint = "/jackpot/matches";
-        const query = params.toString();
-        if (query) {
-            matchEndpoint = `${matchEndpoint}?${query}`;
+        // Serve cached games within 4h TTL; otherwise fetch and refresh storage.
+        const cachedGames = readStoredJackpotGames(typeId);
+        if (cachedGames) {
+            const applied = applyJackpotPayload(cachedGames, typeId);
+            if (applied) {
+                const jackpotbetslip = getJackpotBetslip();
+                dispatch({ type: "SET", key: "jackpotbetslip", payload: jackpotbetslip });
+                return;
+            }
         }
+
+        const matchEndpoint = `/jackpot/matches?id=${encodeURIComponent(String(typeId))}`;
 
         const [m_status, result] = await makeRequest({
             url: matchEndpoint,
@@ -139,30 +153,37 @@ const Jackpot = () => {
         });
 
         if (m_status == 200) {
-            applyJackpotPayload(result?.data);
+            applyJackpotPayload(result?.data, typeId);
         }
 
         const jackpotbetslip = getJackpotBetslip();
         dispatch({ type: "SET", key: "jackpotbetslip", payload: jackpotbetslip });
     }, [applyJackpotPayload, dispatch]);
 
-    // URL ?type= change → fetch that jackpot.
+    // URL ?type= change (reload, click, or replace) → resolve from localStorage list, fetch by id.
     useEffect(() => {
-        if (!urlTypeParam || !jackpotTypes.length) {
-            return;
-        }
-        if (String(lastFetchedType) === String(urlTypeParam)) {
+        if (!jackpotTypes.length) {
             return;
         }
 
-        const selected =
-            jackpotTypes.find((item) => matchesTypeParam(item, urlTypeParam)) ||
-            null;
+        const selected = resolveJackpotTypeFromParam(jackpotTypes, urlTypeParam);
+        if (!selected) {
+            return;
+        }
 
-        setLastFetchedType(urlTypeParam);
+        const selectedId = resolveJackpotTypeId(selected);
+        const fetchKey = selectedId != null
+            ? String(selectedId)
+            : String(typeParamValue(selected));
+
+        if (String(lastFetchedType) === fetchKey) {
+            return;
+        }
+
+        setLastFetchedType(fetchKey);
         clearJackpotSlip();
         dispatch({ type: "SET", key: "jackpotbetslip", payload: [] });
-        void fetchMatchesForType(urlTypeParam, selected);
+        void fetchMatchesForType(selected);
     }, [
         urlTypeParam,
         jackpotTypes,
@@ -191,9 +212,7 @@ const Jackpot = () => {
     };
 
     const activeJackpotType =
-        jackpotTypes.find((item) => matchesTypeParam(item, urlTypeParam)) ||
-        jackpotTypes[0] ||
-        null;
+        resolveJackpotTypeFromParam(jackpotTypes, urlTypeParam);
 
     const AutoPickAllMatches = async () => {
         if (isAutoPicking || !jackpotData?.matches) {
@@ -342,8 +361,15 @@ const Jackpot = () => {
                     {(jackpotData?.matches?.length > 0 && jackpotData?.total_games) ? (
                         <JackpotMatchList setJackpotData={setJackpotData} matches={jackpotData} />
                     ) : (
-                        <div className={'col-md-12 text-center background-primary mt-2 p-5 no-events-div'}>
-                            There are no jackpots at the moment.
+                        <div className={'col-md-12 text-center background-primary mt-2 no-events-div jackpot-empty-state'}>
+                            <img
+                                src={jackpotEmptyBall}
+                                alt=""
+                                aria-hidden="true"
+                                className="jackpot-empty-illustration"
+                            />
+                            <h3 className="jackpot-empty-title">There are no jackpots at the moment.</h3>
+                            <p className="jackpot-empty-subtitle">Check back later for exciting football jackpots and big wins!</p>
                         </div>
                     )}
                 </Tab>
