@@ -502,6 +502,18 @@ const SurvivorChallengeGames = ({ id }) => {
                                         disabled={pendingGame === game.game_number}
                                         onPick={setDraftPick}
                                     />
+                                    {(draftPicks[game.game_number] || mine?.selection) && (
+                                        <div className="survivor-game-outcome">
+                                            <span>
+                                                Your pick:{" "}
+                                                <b>
+                                                    {normalizeSelection(
+                                                        draftPicks[game.game_number] || mine?.selection
+                                                    )}
+                                                </b>
+                                            </span>
+                                        </div>
+                                    )}
                                     <div className="survivor-place-btn-row">
                                         <button
                                             type="button"
