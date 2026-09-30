@@ -97,14 +97,17 @@ const StatusPill = ({ status, labels }) => (
     </span>
 );
 
-/** Challenge-level status badge only (not used for game rows). "Active"
- * here is the USER's own participant status in this challenge (still
- * alive), not the challenge's own ACTIVE status - green when the user is
- * enrolled and still active, blue when enrolled but not currently active
- * (eliminated/winner/unknown), grey when not enrolled at all. Label text
- * is unaffected - only the color/variant changes. */
-const ChallengeStatusPill = ({ status, labels, enrolled, participantActive }) => {
-    const variant = !enrolled ? "grey" : participantActive ? "active" : "enrolled";
+/** Challenge-level status badge only (not used for game rows). The
+ * challenge's own "In progress" (ACTIVE) state always renders green and
+ * square-cornered, same as it always has. For every other status, color
+ * instead reflects whether the viewer is enrolled: blue rounded if
+ * enrolled, grey rounded if not. Label text is unaffected - only the
+ * color/variant changes. */
+const ChallengeStatusPill = ({ status, labels, enrolled }) => {
+    // The challenge's own "In progress" (ACTIVE) state always wins and
+    // stays green/square, as it always has - enrolled-vs-not only decides
+    // the color for every other status (blue if enrolled, grey if not).
+    const variant = statusIs(status, "ACTIVE") ? "active" : enrolled ? "enrolled" : "grey";
     return (
         <span className={`survivor-status-pill survivor-status-${variant}`}>
             {(labels && caseInsensitiveLabel(labels, status)) || status || "—"}
@@ -870,9 +873,6 @@ const SurvivorChallengesList = () => {
                         const isEnrolled = challengeProgress
                             ? !!challengeProgress.enrolled
                             : getJoinedChallengeIds().includes(String(challenge.id));
-                        const isParticipantActive =
-                            statusIs(challengeProgress?.participant_status, "ALIVE") ||
-                            statusIs(challengeProgress?.participant_status, "ACTIVE");
                         return (
                             <Accordion.Item key={challenge.id} eventKey={key}>
                                 <Accordion.Header>
@@ -882,7 +882,6 @@ const SurvivorChallengesList = () => {
                                             status={challenge.status}
                                             labels={SURVIVOR_STATUS_LABELS}
                                             enrolled={isEnrolled}
-                                            participantActive={isParticipantActive}
                                         />
                                     </div>
                                     <div className="survivor-challenge-card-pool">
@@ -1045,10 +1044,6 @@ const SurvivorChallengeDetail = ({ id }) => {
                             progress
                                 ? !!progress.enrolled
                                 : getJoinedChallengeIds().includes(String(challenge.id))
-                        }
-                        participantActive={
-                            statusIs(progress?.participant_status, "ALIVE") ||
-                            statusIs(progress?.participant_status, "ACTIVE")
                         }
                     />
                 </div>
