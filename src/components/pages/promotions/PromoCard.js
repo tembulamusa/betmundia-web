@@ -62,7 +62,7 @@ const PromoCard = ({ promo, openModal }) => {
             {content.accent ? <span className="promo-card__accent"> {content.accent}</span> : null}
           </p>
         </div>
-        <span className="promo-card__badge">18+</span>
+        <span className="promo-card__badge">21+</span>
       </div>
       <div className="promo-card__body">
         <p className="promo-card__eyebrow promo-card__eyebrow--body">{content.eyebrow}</p>
