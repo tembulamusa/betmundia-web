@@ -56,7 +56,7 @@ const TERMS_SECTIONS = [
             <ul>
                 <li>
                     You must hold a registered Betmundial account in good standing
-                    and be of legal gambling age in your jurisdiction.
+                    and be at least 21 years of age.
                 </li>
                 <li>
                     Participation may be limited to residents of Kenya or other

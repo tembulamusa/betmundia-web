@@ -143,11 +143,10 @@
   padding: 1rem 1.15rem 1.1rem;
   border-radius: 0.75rem;
   background: linear-gradient(180deg, #323c50 0%, #252e40 100%);
-  border: 2px solid #ff52d4;
-  box-shadow:
-    0 0 0 1px rgba(255, 82, 212, 0.35),
+  border: 2px solid #a71f66;
+  /* box-shadow: 0 0 0 1px rgba(255, 82, 212, 0.35),
     0 0 18px rgba(233, 30, 140, 0.4),
-    0 10px 24px rgba(0, 0, 0, 0.35);
+    0 10px 24px rgba(0, 0, 0, 0.35); */
 }
 
 .freebet-match-card-header {
@@ -299,12 +298,10 @@
 .freebet-match-skel-line,
 .freebet-match-skel-block,
 .freebet-match-skel-odds span {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.16) 50%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.16) 50%,
+      rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: freebet-skel-shine 1.4s ease-in-out infinite;
   border-radius: 0.35rem;
@@ -348,6 +345,7 @@
   0% {
     background-position: 100% 0;
   }
+
   100% {
     background-position: -100% 0;
   }
@@ -708,6 +706,7 @@
 }
 
 @media screen and (max-width: 640px) {
+
   .freebet-features,
   .freebet-steps {
     grid-template-columns: 1fr;

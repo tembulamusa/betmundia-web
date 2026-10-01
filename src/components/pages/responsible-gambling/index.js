@@ -148,11 +148,11 @@ const SECTIONS = [
         content: (
             <>
                 <p>
-                    Gambling is strictly prohibited for individuals under the age of 18. Betmundial
+                    Gambling is strictly prohibited for individuals under the age of 21. Betmundial
                     takes strong measures to prevent underage gambling.
                 </p>
                 <ul>
-                    <li>Players must confirm they are 18+ during registration.</li>
+                    <li>Players must confirm they are 21+ during registration.</li>
                     <li>Personal information is verified during signup.</li>
                     <li>Mobile money registration requires valid national ID.</li>
                     <li>Parents should secure login credentials and shared devices.</li>
