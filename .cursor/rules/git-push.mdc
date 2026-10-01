@@ -5,21 +5,21 @@ alwaysApply: true
 
 # Git push remotes
 
-## Day-to-day (`dev` and topic work)
+## Day-to-day (`development` and topic work)
 
-When pushing after merge to **`dev`** (or when the user asks to push the integration branch):
+When pushing after merge to **`development`** (or when the user asks to push the integration branch):
 
-- Push **`dev`** to **both**:
+- Push **`development`** to **both**:
   - **`betmundial`** (`Betmundial-ke/betmundial_web`)
   - **`origin`** (`tembulamusa/betmundia-web`)
-- Prefer: `git push betmundial dev` and `git push origin dev` (set upstream on first push with `-u` on one or both remotes if needed).
+- Prefer: `git push betmundial development` and `git push origin development` (set upstream on first push with `-u` on one or both remotes if needed).
 - Do **not** push only one of these two unless the user explicitly scopes the push.
 
-After a topic branch is merged into `dev` and `dev` is pushed:
+After a topic branch is merged into `development` and `development` is pushed:
 
 - Delete the topic branch **locally** always.
 - Delete it on the **remote** if it was pushed there (`git push <remote> --delete <branch>`).
-- Do **not** delete `dev` or `master`.
+- Do **not** delete `development` or `master`.
 
 ## “All remotes”
 
