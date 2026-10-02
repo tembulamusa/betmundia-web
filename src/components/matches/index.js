@@ -1462,12 +1462,15 @@ export const MarketList = (props) => {
 
 export const JackpotHeader = (props) => {
     const { jackpot } = props
+    const gamesCount = Array.isArray(jackpot?.matches) && jackpot.matches.length
+        ? jackpot.matches.length
+        : jackpot?.total_games;
     return (
         <Container>
             <Row className="top-matches">
                 <Row className="jp-header-text text-center">
                     <div className="jp-header-top">
-                        {jackpot?.jackpot_name} - {jackpot?.total_games} GAMES
+                        {jackpot?.jackpot_name} - {gamesCount} GAMES
                     </div>
                 </Row>
                 {/* <Row className="jp-header-text mb-2">
@@ -1525,7 +1528,7 @@ export const JackpotMatchList = (props) => {
                     <MatchRow
                         initialMatch={match}
                         jackpot
-                        key={key}
+                        key={match?.match_id ?? match?.parent_match_id ?? key}
                         jackpotstatus={matches?.status}
                     />
                 ))}
@@ -1565,7 +1568,7 @@ export const JackpotResultsList = (props) => {
             <Container className="web-element">
                 {(results && results?.matches?.length > 0) ? (
                     results?.matches?.map((match, key) => (
-                        <MatchRow initialMatch={match} key={key} jackpot jackpotstatus={results?.status} />
+                        <MatchRow initialMatch={match} key={match?.match_id ?? match?.parent_match_id ?? key} jackpot jackpotstatus={results?.status} />
                     ))
                 ) : (
                     <div className="top-matches row px-4 text-center py-3">
