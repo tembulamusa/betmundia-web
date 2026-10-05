@@ -57,6 +57,19 @@ export const fetchSurvivorChallenges = async () => {
     return [];
 };
 
+/** GET /survivor/challenges/{id}/games — visible games only (poll-friendly). */
+export const fetchSurvivorGames = async (id) => {
+    const [httpStatus, response] = await makeRequest({
+        url: `/survivor/challenges/${id}/games`,
+        method: "GET",
+        api_version: 2,
+    });
+    if (isSurvivorSuccess(httpStatus, response)) {
+        return Array.isArray(response?.data) ? response.data : [];
+    }
+    return [];
+};
+
 /** GET /survivor/challenges/{id} — public challenge detail + games list. */
 export const fetchSurvivorChallenge = async (id) => {
     const [httpStatus, response] = await makeRequest({
@@ -151,13 +164,7 @@ const cleanUcn = (value) =>
  */
 export const SURVIVOR_PLACEBET_TYPE = "10";
 
-// TODO: still no real per-game odds or team names from the API — a
-// survivor game (per /survivor/challenges/{id}) carries game_number,
-// parent_match_id, status, scheduled_at, lock_at, result, selection,
-// result_status, but no home_team/away_team/sport_name/odds. Using one
-// arbitrary odd value for every 1X2 outcome for now, per instruction,
-// until the backend adds real match/odds data to each game. Swap this
-// out for game.odds["1x2"].outcomes[i] once that's available.
+/** Fallback when API has no 1X2 outcomes yet for a fixture. */
 export const SURVIVOR_ARBITRARY_ODD = 2.0;
 
 const betPickForSelection = (game, selection) => {
@@ -166,6 +173,33 @@ const betPickForSelection = (game, selection) => {
         case "2": return game?.away_team || "Away";
         default: return "Draw";
     }
+};
+
+/** Resolve 1/X/2 to a sports-shaped outcome from game.odds["1x2"].outcomes. */
+export const survivorOutcomeForSelection = (game, selection) => {
+    const outcomes = game?.odds?.["1x2"]?.outcomes;
+    if (!Array.isArray(outcomes) || outcomes.length === 0) {
+        return null;
+    }
+    const sel = normalizeSelection(selection);
+    const home = (game?.home_team || "").toLowerCase();
+    const away = (game?.away_team || "").toLowerCase();
+    for (const o of outcomes) {
+        const key = String(o.odd_key || o.display || "").toLowerCase();
+        if (sel === "1" && home && key === home) return o;
+        if (sel === "2" && away && key === away) return o;
+        if (sel === "X" && (key === "draw" || key === "x")) return o;
+    }
+    const idx = sel === "1" ? 0 : sel === "X" ? 1 : 2;
+    return outcomes[idx] ?? null;
+};
+
+export const survivorOddValueForSelection = (game, selection) => {
+    const o = survivorOutcomeForSelection(game, selection);
+    if (o?.odd_value != null && o.odd_value !== "") {
+        return Float(Number(o.odd_value), 2);
+    }
+    return Float(SURVIVOR_ARBITRARY_ODD, 2);
 };
 
 /**
@@ -186,26 +220,29 @@ const betPickForSelection = (game, selection) => {
  * arbitrary for now (see SURVIVOR_ARBITRARY_ODD).
  */
 export const placeSurvivorGameBet = async (challenge, game, selection) => {
-    const oddValue = Float(SURVIVOR_ARBITRARY_ODD, 2);
-    const betPick = betPickForSelection(game, selection);
-    const subTypeId = game?.sub_type_id ?? 1;
+    const outcome = survivorOutcomeForSelection(game, selection);
+    const oddValue = survivorOddValueForSelection(game, selection);
+    const betPick = outcome?.odd_key || outcome?.display || betPickForSelection(game, selection);
+    const subTypeId = outcome?.sub_type_id ?? game?.sub_type_id ?? 1;
+    const market1x2 = game?.odds?.["1x2"];
 
-    const matchId = game?.parent_match_id ?? game?.match_id;
+    const matchId = game?.match_id ?? game?.parent_match_id;
     const slip = {
         match_id: String(matchId ?? ""),
-        parent_match_id: String(matchId ?? ""),
-        special_bet_value: "",
+        parent_match_id: String(game?.parent_match_id ?? matchId ?? ""),
+        special_bet_value: outcome?.special_bet_value || "",
         sub_type_id: String(subTypeId),
         away_team: game?.away_team,
         bet_pick: betPick,
         bet_type: SURVIVOR_PLACEBET_TYPE,
         home_team: game?.home_team,
         live: 0,
-        market_active: 1,
+        market_active: outcome?.odd_active ?? 1,
         odd_type: game?.odd_type || "1x2",
         odd_value: oddValue.toFixed(2),
-        producer_id: String(game?.producer_id || "3"),
+        producer_id: String(outcome?.producer_id ?? market1x2?.producer_id ?? "3"),
         sport_name: game?.sport_name || "Soccer",
+        outcome_id: outcome?.outcome_id,
         ucn: cleanUcn(`${matchId ?? ""}${subTypeId}${betPick ?? ""}`),
     };
 
