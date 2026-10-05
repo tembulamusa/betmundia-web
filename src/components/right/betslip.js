@@ -215,24 +215,51 @@ const BetSlip = (props) => {
             <div className='px-2 py-1'>
                 <div className='my-3 font-[500] text-2xl text-center'>Do you have a shared betslip code? Enter it here.</div>
                 {sharedBetError && <div className='my-3'><Alert message={sharedBetError} /></div>}
-                <input
-                    type="text"
-                    name="sharecode"
-                    placeholder="Eg HLRTMRV"
-                    onChange={handleCodeInputChange}
-                    onKeyPress={handleKeyPress}
-                    value={inputShareCode}
-                    className='block w-full px-2 text-center rounded-2xl'
-                    style={{ border: "1px solid rgba(255, 255, 255, 0.15)", margin: "0px 0px 0px", height: "40px", backgroundColor: "#151525", color: "#ffffff" }}
-                />
-                <button
-                    disabled={sharedBetLoading}
-                    className="my-3 w-full block capitalize secondary-bg bg-pink p-3 px-3 py-2 font-bold btn-pink border-none text-white uppercase hover:opacity-80 rounded-2xl"
-                    style={{ padding: "0px", height: "40px" }}
-                    onClick={() => loadBetslipFromCode()}
+                <div
+                    className="shared-slip-input-group"
+                    style={{
+                        display: "flex",
+                        alignItems: "stretch",
+                        width: "100%",
+                        height: "40px",
+                        border: "1px solid rgba(255, 255, 255, 0.15)",
+                        borderRadius: "1rem",
+                        overflow: "hidden",
+                        backgroundColor: "#151525",
+                    }}
                 >
-                    {sharedBetLoading ? "wait..." : "Load Betslip"}
-                </button>
+                    <input
+                        type="text"
+                        name="sharecode"
+                        placeholder="Eg HLRTMRV"
+                        onChange={handleCodeInputChange}
+                        onKeyPress={handleKeyPress}
+                        value={inputShareCode}
+                        className="shared-slip-code-input block flex-1 px-2 text-center border-0 outline-none"
+                        style={{
+                            height: "100%",
+                            minWidth: 0,
+                            backgroundColor: "#151525",
+                            color: "#ffffff",
+                            borderRadius: 0,
+                        }}
+                    />
+                    <button
+                        type="button"
+                        disabled={sharedBetLoading}
+                        className="shared-slip-load-btn capitalize secondary-bg bg-pink font-bold btn-pink border-none text-white uppercase hover:opacity-80"
+                        style={{
+                            height: "100%",
+                            padding: "0 14px",
+                            whiteSpace: "nowrap",
+                            flexShrink: 0,
+                            borderRadius: 0,
+                        }}
+                        onClick={() => loadBetslipFromCode()}
+                    >
+                        {sharedBetLoading ? "wait..." : "Load Slip"}
+                    </button>
+                </div>
             </div>
         );
     };

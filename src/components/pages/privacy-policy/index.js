@@ -279,7 +279,7 @@ const SECTIONS = [
         title: "Sensitive personal data and sector-specific processing",
         content: (
             <p>
-                Betmundial does not knowingly permit persons under 18 years of
+                Betmundial does not knowingly permit persons under 21 years of
                 age to register or gamble. We may use account, identity,
                 transaction, device and behavioural information to detect
                 suspicious activity, enforce legal and regulatory controls and
@@ -468,10 +468,10 @@ const SECTIONS = [
         title: "Children and age restrictions",
         content: (
             <p>
-                Betmundial is strictly for persons aged 18 years and above. We
+                Betmundial is strictly for persons aged 21 years and above. We
                 do not knowingly register or provide gambling services to
-                children. If we discover that an account belongs to a person
-                under 18, we may restrict or close the account and take any
+                anyone under 21. If we discover that an account belongs to a person
+                under 21, we may restrict or close the account and take any
                 action required by law or regulation.
             </p>
         ),
@@ -614,9 +614,21 @@ const PrivacyPolicy = () => {
                 </button>
 
                 <div className="affiliate-terms-page-heading">
+                    <p className="privacy-policy-org">
+                        Betmundial / AIB Petals Limited
+                    </p>
                     <h1 className="affiliate-terms-page-title">
                         Privacy Policy
                     </h1>
+                    <p className="affiliate-terms-page-subtitle">
+                        <a
+                            href="https://betmundial.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            https://betmundial.com/
+                        </a>
+                    </p>
                 </div>
 
                 <span

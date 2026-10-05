@@ -15,23 +15,23 @@ import { BiSolidOffer } from "react-icons/bi";
 
 const CasinoHome = () => {
     const [state, dispatch] = useContext(Context);
-    const [games, setGames] = useState(state?.casinogames || []); 
+    const [games, setGames] = useState(state?.casinogames || []);
     const [fetching, setFetching] = useState(false);
 
     const fetchCasinoGames = async () => {
         setFetching(true);
         let endpoint = "games-list";
-    
+
         if (state?.casinogamesfilter?.filterType === "category") {
             endpoint = `game-type/games-list/${state?.casinogamesfilter?.category?.id}`;
         } else if (state?.casinogamesfilter?.filterType === "provider") {
             endpoint = `provider/games-list/${state?.casinogamesfilter?.provider?.id}`;
         }
-    
+
         const [status, result] = await makeRequest({ url: endpoint, method: "GET", api_version: "faziCasino" });
         if (status === 200) {
             if (Array.isArray(result.games)) {
-                setGames(result.games); 
+                setGames(result.games);
                 dispatch({ type: "SET", key: "casinogames", payload: result.games });
                 setLocalStorage('casinogames', result.games);
             } else {
@@ -40,7 +40,7 @@ const CasinoHome = () => {
         }
         setFetching(false);
     };
-    
+
 
     useEffect(() => {
         const localGames = getFromLocalStorage("casinogames");
@@ -49,7 +49,7 @@ const CasinoHome = () => {
             dispatch({ type: "SET", key: "casinogames", payload: localGames });
         } else {
             fetchCasinoGames();
-        }      
+        }
     }, []);
 
     const filteredGames = Array.isArray(games) ? games.map((category) => ({
@@ -113,7 +113,7 @@ const CasinoHome = () => {
                         Daily Offers
                     </button>
                 </div>
-{/* 
+                {/* 
                 {/* Section for each tab with cards
                 <div className="casino-section mt-6">
                     {['must-play', 'new-games', 'live', 'tables', 'drops-wins', 'daily-offers'].map((section, idx) => {
@@ -141,10 +141,10 @@ const CasinoHome = () => {
                 </div> 
             */}
 
-               {/* Section for each tab with cards */}
-               <div className="casino-section mt-6">
-                        {['must-play', 'new-games', 'live', 'tables', 'drops-wins', 'daily-offers'].map((section, idx) => {
-                        const sectionGames = Array.isArray(games) ? games.slice(0, 4) : []; 
+                {/* Section for each tab with cards */}
+                <div className="casino-section mt-6">
+                    {['must-play', 'new-games', 'live', 'tables', 'drops-wins', 'daily-offers'].map((section, idx) => {
+                        const sectionGames = Array.isArray(games) ? games.slice(0, 4) : [];
                         return (
                             <div id={`${section}-section`} key={idx} className="section mb-8">
                                 <h2 className="section-title text-2xl font-bold mb-4 capitalize">

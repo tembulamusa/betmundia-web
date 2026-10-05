@@ -92,7 +92,7 @@ const BetslipSubmitForm = (props) => {
     const [bonusSettings, setBonusSettings] = useState({ percentage: 100 });
 
     useEffect(() => {
-        makeRequest({ url: 'bonus/settings', method: 'GET', api_version: 2 })
+        makeRequest({ url: '/bonus/settings', method: 'GET', api_version: 2 })
             .then(([status, response]) => {
                 if (status === 200 && response?.data) {
                     setBonusSettings({

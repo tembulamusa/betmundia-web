@@ -265,7 +265,7 @@ const Signup = (props) => {
                                 By registering for an account, you agree to our <Link to={"/terms"} style={{ color: '#a71f66' }}>Terms of Use,</Link> <Link to={"/privacy-policy"} style={{ color: '#a71f66' }}>Privacy Policy</Link> and Responsible Gambling Policy.
                             </p>
                             <p className='mt-4'>
-                                You must be 18yrs and above in order to sign up.
+                                You must be 21yrs and above in order to sign up.
                             </p>
                         </div>
                     </div>

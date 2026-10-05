@@ -65,7 +65,7 @@ const FAQ_ITEMS = [
                     <strong>Online Registration:</strong> Go to www.betmundial.com and click on the
                     Register button on the top right corner of the page. Fill the required fields
                     (including phone number and creating a unique password), read and accept the
-                    terms and conditions, and confirm that you are over 18 years old.
+                    terms and conditions, and confirm that you are 21 years old or over.
                 </p>
             </>
         ),

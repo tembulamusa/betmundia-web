@@ -261,7 +261,10 @@ const BodyLogin = (props) => {
                             <span className="">Forgot Password</span>
                         </div>
                         <div className="my-5 px-0 cursor-pointer ">
-                            <div className="capitalize font-bold hover:underline" onClick={() => navigateAway("/signup")}>
+                            <div className="capitalize font-bold hover:underline" onClick={() => {
+                                dispatch({ type: "SET", key: "showloginmodal", payload: false });
+                                navigateAway("/signup");
+                            }}>
                                 <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Don't have an account? </span>
                                 <span style={{ color: '#a71f66' }}>Register now!</span>
                             </div>

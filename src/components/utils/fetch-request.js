@@ -15,24 +15,37 @@ const CASINO_INTOUCHVAS_URL = process.env.REACT_APP_INTOUCHVAS_URL; // split the
 const CASINO_PRAGMATIC_URL = process.env.REACT_APP_PRAGMATIC_URL; // pragmatic
 const CASINO_SMARTSOFT_URL = process.env.REACT_APP_SMARTSOFT_URL; // smartsoft
 
+const joinBaseUrl = (base, path) => {
+    if (!base) {
+        return path;
+    }
+    if (!path) {
+        return base;
+    }
+    const normalizedBase = String(base).replace(/\/+$/, "");
+    const normalizedPath = String(path).replace(/^\/+/, "");
+    return `${normalizedBase}/${normalizedPath}`;
+};
+
 const makeRequest = async ({ url, method, data = null, use_jwt = false, api_version = 1, responseType = "json" }) => {
     // const 
     if (api_version == 2) {
-        url = BASE2_URL + url;
+        // BASE2_URL is typically .../v2 with no trailing slash; paths may or may not start with /
+        url = joinBaseUrl(BASE2_URL, url);
     } else {
         if (api_version == 3) {
-            url = ACCOUNTS_URL + url
+            url = joinBaseUrl(ACCOUNTS_URL, url);
         } else {
             if (api_version == "sureCoin") {
-                url = SURECOIN_URL + url;
+                url = joinBaseUrl(SURECOIN_URL, url);
             } else if (api_version == "sureBox") {
-                url = SUREBOX_URL + url;
+                url = joinBaseUrl(SUREBOX_URL, url);
             } else if (api_version == "casinoGames") {
-                url = CASINOGAMES + url;
+                url = joinBaseUrl(CASINOGAMES, url);
             } else if (api_version == "CasinoGameLaunch") {
-                url = CASINOGAMELaunch + url;
+                url = joinBaseUrl(CASINOGAMELaunch, url);
             } else if (api_version == "casinoJackpots") {
-                url = PRAGMATIC_JACKPOT_URL + url;
+                url = joinBaseUrl(PRAGMATIC_JACKPOT_URL, url);
             }
         }
     }

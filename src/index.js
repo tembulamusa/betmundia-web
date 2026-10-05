@@ -35,6 +35,7 @@ import './assets/css/promo-wins-page.css';
 import './assets/css/account-drawer.css';
 import './assets/css/site-footer.css';
 import './assets/css/mobile-bottom-nav.css';
+import './assets/css/survivor-page.css';
 import 'react-toastify/dist/ReactToastify.css'
 import Store from './context/store';
 import Index from './components/index';

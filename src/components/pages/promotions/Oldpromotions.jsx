@@ -160,7 +160,7 @@ const Promotions = () => {
                         <div className="col-md-12">
                             <span><b>How to participate</b></span>
                             <p>The Share Bet Ushinde Promotion  is open to individuals who are registered users of betmundial and who meet the eligibility criteria outlined in these terms and conditions.</p>
-                            <p>Participants must be of legal age to gamble in their jurisdiction and must comply with all applicable laws and regulations</p>
+                            <p>Participants must be at least 21 years of age and must comply with all applicable laws and regulations</p>
                             <ul>
 
                                 <li>The Promotion will run everyday .</li>

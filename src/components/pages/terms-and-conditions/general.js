@@ -54,7 +54,7 @@ const General = () => {
                         Agreement.
                     </li>
                     <li> This Agreement is effective upon acceptance of the registration for
-                        newly registering CLIENTS by checking the box “I am 18 years old or
+                        newly registering CLIENTS by checking the box “I am 21 years old or
                         over
                         and I have read and accept the Terms and Conditions and Privacy
                         Policy"
@@ -69,7 +69,7 @@ const General = () => {
                     <li>This Agreement is effective upon acceptance of the registration for
                         newly registering CLIENTS on mobile applications by selecting the
                         option
-                        “YES” to confirm that the CLIENT is “18 years old or over and that
+                        “YES” to confirm that the CLIENT is “21 years old or over and that
                         they
                         have read and accepted the Terms and Conditions and Privacy Policy."
                         If

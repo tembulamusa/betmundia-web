@@ -57,7 +57,7 @@ function AffiliateGreetingSilhouette() {
 const AFFILIATE_TERMS = [
     {
         title: "Eligibility",
-        body: "The Betmundial Affiliate Program is open to registered Betmundial account holders who are of legal gambling age in their jurisdiction. Betmundial reserves the right to approve or decline affiliate participation at its discretion.",
+        body: "The Betmundial Affiliate Program is open to registered Betmundial account holders who are at least 21 years of age. Betmundial reserves the right to approve or decline affiliate participation at its discretion.",
     },
     {
         title: "Your affiliate code",

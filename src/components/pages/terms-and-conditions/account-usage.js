@@ -24,8 +24,8 @@ const AccountUsage = () => {
                     </li>
                     <ul style={{ 'marginLeft': '30px' }}>
                         <li>
-                            You are 18 years of age or over. It is an offence for anyone
-                            under the age of 18 to open an account or to gamble on betmundial;
+                            You are 21 years of age or over. It is an offence for anyone
+                            under the age of 21 to open an account or to gamble on betmundial;
                         </li>
                         <li>
                             You are of sound mind and capable of taking responsibility for

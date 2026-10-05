@@ -80,7 +80,7 @@ const TermsAndConditions = (props) => {
 
                         <p><strong>1.</strong> You must register personally and only one account per person is permitted.</p>
 
-                        <p><strong>2.</strong> You must be 18 years or older. Proof of age may be requested.</p>
+                        <p><strong>2.</strong> You must be 21 years or older. Proof of age may be requested.</p>
 
                         <p><strong>3.</strong> All information provided must be accurate and updated when necessary.</p>
 

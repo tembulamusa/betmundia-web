@@ -196,26 +196,19 @@
     display: none;
 }
 
-/* Ensure the account label visibility is enforced across breakpoints.
-   Use high-specificity selectors and !important to override conflicting rules. */
+/* Account control: icon-only (pink circular background). Never show "Account" label. */
 .app-navbar .user-profile .user-profile-text,
 .header .user-profile .user-profile-text,
+.header-account .user-profile .user-profile-text,
 .header-top-actions .user-profile .user-profile-text {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
-}
-
-@media (min-width: 768px) {
-
-    .app-navbar .user-profile .user-profile-text,
-    .header .user-profile .user-profile-text,
-    .header-top-actions .user-profile .user-profile-text {
-        display: inline-block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        margin-left: 0.35rem;
-    }
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .mobile-chat-launcher__button {
@@ -2303,6 +2296,11 @@ events-header {
     text-transform: uppercase !important;
 }
 
+.compt-teams.d-flex.flex-column,
+.compt-teams.d-flex.flex-column .bold {
+    font-weight: 500 !important;
+}
+
 .matches .top-matches button {
     height: 30px;
     margin-right: 2px;
@@ -2312,9 +2310,20 @@ events-header {
 .more-markets-container {}
 
 .home-team {
-    background: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
     color: rgba(255, 215, 0) !important;
     font-weight: 100 !important;
+}
+
+/* Phone: stronger home-team button fill */
+@media screen and (max-width: 767px) {
+    .home-team,
+    .matches .top-matches .match-detail button.home-team,
+    .matches .top-matches .match-detail > button.home-team,
+    .mobile-match-card .c-btn.home-team,
+    .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.home-team {
+        background: rgba(255, 255, 255, 0.25) !important;
+    }
 }
 
 .away-team {
@@ -2354,7 +2363,11 @@ events-header {
 }
 
 .top-matches button.picked,
-.matches .top-matches .match-detail button.home-team.picked {
+.matches .top-matches .match-detail button.home-team.picked,
+.mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.picked,
+.mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.home-team.picked,
+.matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > button.picked,
+.matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > button.home-team.picked {
     background: #a71f66 !important;
 }
 
@@ -15368,8 +15381,6 @@ img.zoom-img {
 
 .top-matches:nth-child(2n) {
     /* background: #f5f5f5b3; */
-    border-bottom: 2px solid #101020c9 !important;
-    border-top: 2px solid #101020c9 !important;
 }
 
 .top-matches:nth-child(2n + 1) {
