@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useContext, useMemo } from "react";
+import React, { useEffect, useCallback, useState, useContext, useMemo, useRef } from "react";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { JackpotMatchList, JackpotHeader } from './matches/index';
 import makeRequest from "./utils/fetch-request";
@@ -6,6 +6,7 @@ import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.jpeg';
 import jackpotEmptyBall from '../assets/img/backgrounds/jackpot-empty-ball.png';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import Spinner from 'react-bootstrap/Spinner';
 import { Context } from '../context/store';
 import {
     addToJackpotSlip,
@@ -39,6 +40,8 @@ const Jackpot = () => {
     const [autoPickButtonKey, setAutoPickButtonKey] = useState(0);
     const [activeTab, setActiveTab] = useState("games");
     const [lastFetchedType, setLastFetchedType] = useState(null);
+    const [isLoadingMatches, setIsLoadingMatches] = useState(false);
+    const matchesRequestRef = useRef(0);
     const [state, dispatch] = useContext(Context);
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -133,11 +136,14 @@ const Jackpot = () => {
             return;
         }
 
+        const requestId = ++matchesRequestRef.current;
+
         // Serve cached games within 4h TTL; otherwise fetch and refresh storage.
         const cachedGames = readStoredJackpotGames(typeId);
         if (cachedGames) {
             const applied = applyJackpotPayload(cachedGames, typeId);
             if (applied) {
+                setIsLoadingMatches(false);
                 const jackpotbetslip = getJackpotBetslip();
                 dispatch({ type: "SET", key: "jackpotbetslip", payload: jackpotbetslip });
                 return;
@@ -146,15 +152,22 @@ const Jackpot = () => {
 
         const matchEndpoint = `/jackpot/matches?id=${encodeURIComponent(String(typeId))}`;
 
+        setIsLoadingMatches(true);
         const [m_status, result] = await makeRequest({
             url: matchEndpoint,
             method: "GET",
             api_version: 2,
         });
 
+        // A newer jackpot was selected while this request was in flight.
+        if (requestId !== matchesRequestRef.current) {
+            return;
+        }
+
         if (m_status == 200) {
             applyJackpotPayload(result?.data, typeId);
         }
+        setIsLoadingMatches(false);
 
         const jackpotbetslip = getJackpotBetslip();
         dispatch({ type: "SET", key: "jackpotbetslip", payload: jackpotbetslip });
@@ -181,6 +194,8 @@ const Jackpot = () => {
         }
 
         setLastFetchedType(fetchKey);
+        setJackpotData(null);
+        dispatch({ type: "DEL", key: "jackpotdata" });
         clearJackpotSlip();
         dispatch({ type: "SET", key: "jackpotbetslip", payload: [] });
         void fetchMatchesForType(selected);
@@ -321,7 +336,7 @@ const Jackpot = () => {
 
             <div className="jackpot-header row">
                 <div className="col-12">
-                    <JackpotHeader jackpot={jackpotData} />
+                    {jackpotData && <JackpotHeader jackpot={jackpotData} />}
                 </div>
             </div>
             <Tabs
@@ -358,8 +373,17 @@ const Jackpot = () => {
                         </div>
                     )}
 
-                    {(jackpotData?.matches?.length > 0 && jackpotData?.total_games) ? (
-                        <JackpotMatchList setJackpotData={setJackpotData} matches={jackpotData} />
+                    {isLoadingMatches ? (
+                        <div className="col-md-12 text-center mt-4" role="status">
+                            <Spinner animation="border" size="sm" className="me-2" />
+                            Loading jackpot games...
+                        </div>
+                    ) : (jackpotData?.matches?.length > 0 && jackpotData?.total_games) ? (
+                        <JackpotMatchList
+                            key={jackpotData?.jackpot_event_id ?? lastFetchedType}
+                            setJackpotData={setJackpotData}
+                            matches={jackpotData}
+                        />
                     ) : (
                         <div className={'col-md-12 text-center background-primary mt-2 no-events-div jackpot-empty-state'}>
                             <img
