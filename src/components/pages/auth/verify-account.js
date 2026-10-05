@@ -269,7 +269,8 @@ const VerifyAccount = () => {
         return errors;
     };
 
-    // Only called from "Click Resend Code" — no mount/interval/focus auto-send
+    // Sends the OTP. Called once automatically on load (see effect below) and
+    // again from "Click Resend Code".
     const sendOTP = useCallback(() => {
         if (!msisdn) return;
         const endpoint = '/auth/verification-code';
@@ -294,6 +295,15 @@ const VerifyAccount = () => {
         });
         emitOtpListen();
     }, [msisdn, emitOtpListen]);
+
+    // Auto-send the verification code once when the page loads for a phone number.
+    // The ref guards against StrictMode double-invoked effects and re-renders.
+    const autoSentFor = useRef(null);
+    useEffect(() => {
+        if (!msisdn || autoSentFor.current === msisdn) return;
+        autoSentFor.current = msisdn;
+        sendOTP();
+    }, [msisdn, sendOTP]);
 
     const handleKeyPress = (event, submitFn) => {
         if (event.key === 'Enter') {
