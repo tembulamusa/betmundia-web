@@ -687,7 +687,7 @@
 .survivor-your-game-number {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.6);
-  font-weight: 400;
+  font-weight: 700;
   text-transform: none;
   /* The row-top is space-between: auto right margin keeps this tucked
      right next to the Today's Game badge, with the status pill still
