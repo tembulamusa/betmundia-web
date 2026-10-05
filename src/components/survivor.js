@@ -525,7 +525,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                     parent_match_id) - shows the literal placeholder for now, and
                                     will pick up real names automatically once the backend adds
                                     them, same fallback convention as betPickForSelection. */}
-                                ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
+                                {game.home_team || "Home"} Vs {game.away_team || "Away"}
                             </div>
                             <div className="survivor-game-time">
                                 Active until {formatDateTime(game.lock_at)}
@@ -623,7 +623,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                     parent_match_id) - shows the literal placeholder for now, and
                                     will pick up real names automatically once the backend adds
                                     them, same fallback convention as betPickForSelection. */}
-                                ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
+                                {game.home_team || "Home"} Vs {game.away_team || "Away"}
                             </div>
                             <div className="survivor-game-time">
                                 Active until {formatDateTime(game.lock_at)}
