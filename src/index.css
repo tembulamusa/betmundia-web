@@ -3419,6 +3419,47 @@ svg.big-offcanvas-icon {
   text-transform: none;
 }
 
+/* Bonuses loaded from GET /bonuses (name, description, rules). */
+.bonus-terms-list {
+  max-height: 38vh;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  padding-right: 4px;
+}
+
+.bonus-terms-item {
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  text-transform: none;
+}
+
+.bonus-terms-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.bonus-terms-item-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: rgba(255, 215, 0);
+}
+
+.bonus-terms-item-desc {
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 2px 0 4px;
+}
+
+.bonus-terms-item-rules {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  list-style: disc;
+}
+
 /* "Use Bonus" row body — same lighter tint of the page's navy background
    (rgba(0, 12, 36)) as the terms modal, so the row reads as one unit. */
 .use-bonus-row-body {
