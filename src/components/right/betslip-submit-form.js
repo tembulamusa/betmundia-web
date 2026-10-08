@@ -23,7 +23,6 @@ import {
 import { isMobile } from "react-device-detect";
 import { Modal } from "react-bootstrap";
 import { TbRefreshAlert } from "react-icons/tb";
-import { FaCheck, FaGift } from "react-icons/fa";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
@@ -759,18 +758,19 @@ const BetslipSubmitForm = (props) => {
                         show={showBonusTooltip}
                         onHide={() => setShowBonusTooltip(false)}
                         centered
-                        className="bonus-terms-modal"
+                        className="popover-login-modal bonus-terms-modal"
                     >
-                        <Modal.Header closeButton closeVariant="white">
-                            <Modal.Title>
-                                <span className="bonus-terms-modal-title-icon" aria-hidden="true">
-                                    <FaGift />
-                                </span>
-                                Bonus Terms
-                            </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p className="bonus-terms-modal-intro">
+                        <Modal.Body className="p-4 bonus-terms-modal-body">
+                            <button
+                                type="button"
+                                className="bonus-terms-modal-close"
+                                aria-label="Close"
+                                onClick={() => setShowBonusTooltip(false)}
+                            >
+                                &times;
+                            </button>
+                            <div className="bonus-terms-modal-title">Bonus Terms</div>
+                            <p className="bonus-terms-modal-text">
                                 Bonus funds are subject to wagering requirements and expiry.
                             </p>
                             {bonusTerms.length > 0 && (
@@ -778,36 +778,31 @@ const BetslipSubmitForm = (props) => {
                                     {bonusTerms.map((bonusItem) => {
                                         const ruleLines = formatBonusRules(bonusItem.rules);
                                         return (
-                                            <section className="bonus-terms-item" key={bonusItem.code || bonusItem.name}>
-                                                <h3 className="bonus-terms-item-name">{bonusItem.name}</h3>
+                                            <div className="bonus-terms-item" key={bonusItem.code || bonusItem.name}>
+                                                <div className="bonus-terms-item-name">{bonusItem.name}</div>
                                                 {bonusItem.description && (
-                                                    <p className="bonus-terms-item-desc">{bonusItem.description}</p>
+                                                    <div className="bonus-terms-item-desc">{bonusItem.description}</div>
                                                 )}
                                                 {ruleLines.length > 0 && (
                                                     <ul className="bonus-terms-item-rules">
                                                         {ruleLines.map((line) => (
-                                                            <li key={line}>
-                                                                <FaCheck className="bonus-terms-item-rule-icon" aria-hidden="true" />
-                                                                <span>{line}</span>
-                                                            </li>
+                                                            <li key={line}>{line}</li>
                                                         ))}
                                                     </ul>
                                                 )}
-                                            </section>
+                                            </div>
                                         );
                                     })}
                                 </div>
                             )}
-                        </Modal.Body>
-                        <Modal.Footer>
                             <button
                                 type="button"
-                                className="bonus-terms-modal-ok"
+                                className="place-bet-btn bold w-full"
                                 onClick={() => setShowBonusTooltip(false)}
                             >
-                                Got it
+                                Close
                             </button>
-                        </Modal.Footer>
+                        </Modal.Body>
                     </Modal>
                 </>
             )
