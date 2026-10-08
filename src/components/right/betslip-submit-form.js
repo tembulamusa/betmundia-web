@@ -65,6 +65,29 @@ const formatSlipForPlaceBet = (slip) => {
 }
 
 
+// Turn a bonus rule from GET /bonuses into a readable line for the Bonus Terms modal.
+const humanizeKey = (key) => String(key).replace(/_/g, ' ').replace(/^./, (ch) => ch.toUpperCase());
+const humanizeValue = (value) => String(value).toLowerCase().replace(/_/g, ' ').replace(/^./, (ch) => ch.toUpperCase());
+const BONUS_RULE_FORMATTERS = {
+    bonus_amount: (v) => `Bonus amount: KSh ${formatNumber(v)}`,
+    bonus_percentage: (v) => `Bonus: ${v}%`,
+    bonus_contribution_percentage: (v) => `Bonus covers up to ${v}% of the stake`,
+    cash_contribution_percentage: (v) => `Cash covers ${v}% of the stake`,
+    minimum_odds_per_game: (v) => `Minimum odds per game: ${v}`,
+    minimum_games: (v) => `Minimum games: ${v}`,
+    maximum_games: (v) => `Maximum games: ${v}`,
+    winnings_withdrawable: (v) => (v ? 'Winnings are withdrawable' : 'Winnings are not withdrawable'),
+    deposit_frequency: (v) => `Deposit: ${humanizeValue(v)}`,
+    expiry_hours: (v) => `Expires after ${v} hour${Number(v) === 1 ? '' : 's'}`,
+    expiry_days: (v) => `Expires after ${v} day${Number(v) === 1 ? '' : 's'}`,
+};
+const formatBonusRules = (rules) =>
+    Object.entries(rules || {})
+        .filter(([, rule]) => rule && rule.enabled !== false && rule.value !== undefined && rule.value !== null)
+        .map(([key, rule]) => (BONUS_RULE_FORMATTERS[key]
+            ? BONUS_RULE_FORMATTERS[key](rule.value)
+            : `${humanizeKey(key)}: ${typeof rule.value === 'boolean' ? (rule.value ? 'Yes' : 'No') : rule.value}`));
+
 const BetslipSubmitForm = (props) => {
 
     const { jackpot, jackpotData, bonusBet, dbWinMatrix } = props;
@@ -90,10 +113,15 @@ const BetslipSubmitForm = (props) => {
     // back to 100% (bonus covers the full stake, capped by bonusBalance)
     // so the UI keeps working.
     const [bonusSettings, setBonusSettings] = useState({ percentage: 100 });
+    // Active bonuses + their rules from GET /bonuses, shown in the Bonus Terms modal.
+    const [bonusTerms, setBonusTerms] = useState([]);
 
     useEffect(() => {
         makeRequest({ url: '/bonuses', method: 'GET', api_version: 2 })
             .then(([status, response]) => {
+                if (status === 200 && Array.isArray(response?.data?.bonuses)) {
+                    setBonusTerms(response.data.bonuses.filter((b) => b && b.active !== false));
+                }
                 if (status === 200 && response?.data) {
                     setBonusSettings({
                         percentage: parseFloat(response.data.percentage ?? response.data.bonus_use_percentage ?? 100)
@@ -705,6 +733,28 @@ const BetslipSubmitForm = (props) => {
                             <p className="bonus-terms-modal-text">
                                 Bonus funds are subject to wagering requirements and expiry.
                             </p>
+                            {bonusTerms.length > 0 && (
+                                <div className="bonus-terms-list">
+                                    {bonusTerms.map((bonusItem) => {
+                                        const ruleLines = formatBonusRules(bonusItem.rules);
+                                        return (
+                                            <div className="bonus-terms-item" key={bonusItem.code || bonusItem.name}>
+                                                <div className="bonus-terms-item-name">{bonusItem.name}</div>
+                                                {bonusItem.description && (
+                                                    <div className="bonus-terms-item-desc">{bonusItem.description}</div>
+                                                )}
+                                                {ruleLines.length > 0 && (
+                                                    <ul className="bonus-terms-item-rules">
+                                                        {ruleLines.map((line) => (
+                                                            <li key={line}>{line}</li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
                             {values?.use_bonus ? (
                                 <p className="bonus-terms-modal-text">
                                     At {bonusUsePercentage}% bonus usage, placing this KSh {formatNumber(stake)} bet will deduct
