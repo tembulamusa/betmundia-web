@@ -3507,6 +3507,47 @@ svg.big-offcanvas-icon {
   padding: 8px 10px !important;
 }
 
+/* Warning shown when "Use Bonus" is ticked but the slip breaks the bonus rules. */
+.bonus-use-warning {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgba(255, 196, 40, 0.12);
+  border: 1px solid rgba(255, 196, 40, 0.55);
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.4;
+  text-transform: none;
+}
+
+.bonus-use-warning-title {
+  font-weight: 700;
+  color: #ffc428;
+}
+
+.bonus-use-warning-list {
+  margin: 4px 0 6px;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+.bonus-use-warning-action {
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  background: #a71f66;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bonus-use-warning-action:hover,
+.bonus-use-warning-action:focus-visible {
+  background: #8e1a56;
+  outline: none;
+}
+
 /* Plain-text "Terms" trigger (betslip Use Bonus row) — dotted underline,
    brand purple, no pill/background like .bonus-tooltip-trigger. */
 .bonus-terms-link {

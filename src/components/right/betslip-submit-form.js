@@ -89,6 +89,39 @@ const formatBonusRules = (rules) =>
             ? BONUS_RULE_FORMATTERS[key](rule.value)
             : `${humanizeKey(key)}: ${typeof rule.value === 'boolean' ? (rule.value ? 'Yes' : 'No') : rule.value}`));
 
+// Compare the current slip with the rules of the bonus that can be used on a stake
+// (GET /bonuses -> DAILY_DEPOSIT_BONUS). Returns a list of human-readable problems;
+// empty when the slip is empty, no matching bonus was loaded, or the slip is fine.
+const STAKE_BONUS_CODE = 'DAILY_DEPOSIT_BONUS';
+const getBonusUseIssues = (bonuses, slip) => {
+    const picks = Object.values(slip || {});
+    if (!picks.length) return [];
+    const bonusItem = (bonuses || []).find((b) => b?.code === STAKE_BONUS_CODE);
+    const rules = bonusItem?.rules;
+    if (!rules) return [];
+    const active = (key) => (rules[key]?.enabled !== false && rules[key]?.value != null ? Number(rules[key].value) : null);
+    const issues = [];
+    const count = picks.length;
+    const gamesLabel = (n) => `${n} game${n === 1 ? '' : 's'}`;
+
+    const minGames = active('minimum_games');
+    if (minGames != null && count < minGames) {
+        issues.push(`At least ${gamesLabel(minGames)} required (you have ${count}).`);
+    }
+    const maxGames = active('maximum_games');
+    if (maxGames != null && count > maxGames) {
+        issues.push(`No more than ${gamesLabel(maxGames)} allowed (you have ${count}).`);
+    }
+    const minOdds = active('minimum_odds_per_game');
+    if (minOdds != null) {
+        const below = picks.filter((pick) => parseFloat(pick?.odd_value) < minOdds).length;
+        if (below > 0) {
+            issues.push(`Every game needs odds of at least ${minOdds} (${gamesLabel(below)} ${below === 1 ? 'is' : 'are'} below).`);
+        }
+    }
+    return issues;
+};
+
 const BetslipSubmitForm = (props) => {
 
     const { jackpot, jackpotData, bonusBet, dbWinMatrix } = props;
@@ -110,6 +143,11 @@ const BetslipSubmitForm = (props) => {
 
     // Active bonuses + their rules from GET /bonuses, shown in the Bonus Terms modal.
     const [bonusTerms, setBonusTerms] = useState([]);
+    // Re-evaluated whenever the slip (games/odds) or the loaded bonus rules change.
+    const bonusUseIssues = useMemo(
+        () => getBonusUseIssues(bonusTerms, state?.betslip),
+        [bonusTerms, state?.betslip]
+    );
 
     useEffect(() => {
         makeRequest({ url: '/bonuses', method: 'GET', api_version: 2 })
@@ -629,6 +667,26 @@ const BetslipSubmitForm = (props) => {
                                                     >
                                                         Terms
                                                     </button>
+
+                                                    {!!values?.use_bonus && bonusUseIssues.length > 0 && (
+                                                        <div className="bonus-use-warning" role="alert">
+                                                            <div className="bonus-use-warning-title">
+                                                                Your slip doesn't meet the bonus rules. Uncheck "Use Bonus" to continue.
+                                                            </div>
+                                                            <ul className="bonus-use-warning-list">
+                                                                {bonusUseIssues.map((issue) => (
+                                                                    <li key={issue}>{issue}</li>
+                                                                ))}
+                                                            </ul>
+                                                            <button
+                                                                type="button"
+                                                                className="bonus-use-warning-action"
+                                                                onClick={() => setFieldValue('use_bonus', false)}
+                                                            >
+                                                                Uncheck bonus
+                                                            </button>
+                                                        </div>
+                                                    )}
                                                 </td>
                                             </tr>
                                         )}
