@@ -23,6 +23,7 @@ import {
 import { isMobile } from "react-device-detect";
 import { Modal } from "react-bootstrap";
 import { TbRefreshAlert } from "react-icons/tb";
+import { FaCheck, FaGift } from "react-icons/fa";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
@@ -107,12 +108,6 @@ const BetslipSubmitForm = (props) => {
     const user = getFromLocalStorage("user");
     const bonusBalance = formatToFloat(user?.bonus || user?.bonus_balance || 0);
 
-    // Bonus settings (how much of the stake bonus is allowed to cover) come
-    // from the bonus settings API. TODO: confirm the real endpoint + field
-    // name with the backend and swap it in below — until then this falls
-    // back to 100% (bonus covers the full stake, capped by bonusBalance)
-    // so the UI keeps working.
-    const [bonusSettings, setBonusSettings] = useState({ percentage: 100 });
     // Active bonuses + their rules from GET /bonuses, shown in the Bonus Terms modal.
     const [bonusTerms, setBonusTerms] = useState([]);
 
@@ -122,21 +117,9 @@ const BetslipSubmitForm = (props) => {
                 if (status === 200 && Array.isArray(response?.data?.bonuses)) {
                     setBonusTerms(response.data.bonuses.filter((b) => b && b.active !== false));
                 }
-                if (status === 200 && response?.data) {
-                    setBonusSettings({
-                        percentage: parseFloat(response.data.percentage ?? response.data.bonus_use_percentage ?? 100)
-                    });
-                }
             })
-            .catch(() => { /* keep the 100% fallback */ });
+            .catch(() => { /* terms stay empty if the request fails */ });
     }, []);
-
-    const bonusUsePercentage = bonusSettings?.percentage ?? 100;
-    const bonusStakePortion = Math.min(
-        Float(stake * (bonusUsePercentage / 100), 2),
-        parseFloat(bonusBalance) || 0
-    );
-    const balanceStakePortion = Math.max(Float(stake - bonusStakePortion, 2), 0);
 
 
     // const setbonusMatrix = () => {
@@ -718,19 +701,18 @@ const BetslipSubmitForm = (props) => {
                         show={showBonusTooltip}
                         onHide={() => setShowBonusTooltip(false)}
                         centered
-                        className="popover-login-modal bonus-terms-modal"
+                        className="bonus-terms-modal"
                     >
-                        <Modal.Body className="p-4 bonus-terms-modal-body">
-                            <button
-                                type="button"
-                                className="bonus-terms-modal-close"
-                                aria-label="Close"
-                                onClick={() => setShowBonusTooltip(false)}
-                            >
-                                &times;
-                            </button>
-                            <div className="bonus-terms-modal-title">Bonus Terms</div>
-                            <p className="bonus-terms-modal-text">
+                        <Modal.Header closeButton closeVariant="white">
+                            <Modal.Title>
+                                <span className="bonus-terms-modal-title-icon" aria-hidden="true">
+                                    <FaGift />
+                                </span>
+                                Bonus Terms
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p className="bonus-terms-modal-intro">
                                 Bonus funds are subject to wagering requirements and expiry.
                             </p>
                             {bonusTerms.length > 0 && (
@@ -738,42 +720,36 @@ const BetslipSubmitForm = (props) => {
                                     {bonusTerms.map((bonusItem) => {
                                         const ruleLines = formatBonusRules(bonusItem.rules);
                                         return (
-                                            <div className="bonus-terms-item" key={bonusItem.code || bonusItem.name}>
-                                                <div className="bonus-terms-item-name">{bonusItem.name}</div>
+                                            <section className="bonus-terms-item" key={bonusItem.code || bonusItem.name}>
+                                                <h3 className="bonus-terms-item-name">{bonusItem.name}</h3>
                                                 {bonusItem.description && (
-                                                    <div className="bonus-terms-item-desc">{bonusItem.description}</div>
+                                                    <p className="bonus-terms-item-desc">{bonusItem.description}</p>
                                                 )}
                                                 {ruleLines.length > 0 && (
                                                     <ul className="bonus-terms-item-rules">
                                                         {ruleLines.map((line) => (
-                                                            <li key={line}>{line}</li>
+                                                            <li key={line}>
+                                                                <FaCheck className="bonus-terms-item-rule-icon" aria-hidden="true" />
+                                                                <span>{line}</span>
+                                                            </li>
                                                         ))}
                                                     </ul>
                                                 )}
-                                            </div>
+                                            </section>
                                         );
                                     })}
                                 </div>
                             )}
-                            {values?.use_bonus ? (
-                                <p className="bonus-terms-modal-text">
-                                    At {bonusUsePercentage}% bonus usage, placing this KSh {formatNumber(stake)} bet will deduct
-                                    {' '}<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {formatNumber(bonusStakePortion)}</span> from your bonus balance
-                                    and <b>KSh {formatNumber(balanceStakePortion)}</b> from your real balance.
-                                </p>
-                            ) : (
-                                <p className="bonus-terms-modal-text">
-                                    Tick "Use Bonus" to cover part of this stake from your bonus balance instead of your real balance.
-                                </p>
-                            )}
+                        </Modal.Body>
+                        <Modal.Footer>
                             <button
                                 type="button"
-                                className="place-bet-btn bold w-full"
+                                className="bonus-terms-modal-ok"
                                 onClick={() => setShowBonusTooltip(false)}
                             >
-                                Close
+                                Got it
                             </button>
-                        </Modal.Body>
+                        </Modal.Footer>
                     </Modal>
                 </>
             )
