@@ -3358,106 +3358,121 @@ svg.big-offcanvas-icon {
   transform: rotate(45deg);
 }
 
-/* Betslip "Use Bonus" terms — a floating tooltip got clipped by #betslip's
-   own overflow-y: auto scroll box no matter how high its z-index went, so
-   this renders as a react-bootstrap Modal instead (portaled to <body>,
-   escaping the clipping ancestor entirely). Uses a lighter tint of the
-   page's navy background (rgba(0, 12, 36)) rather than the default dark
-   modal fill. */
-.bonus-terms-modal .modal-dialog {
-  max-width: 360px;
-}
-
+/* Betslip "Use Bonus" terms — rendered as a react-bootstrap Modal (portaled to
+   <body>) because #betslip's overflow-y: auto clips floating tooltips.
+   Follows the platform modal standard used by the account drawer's
+   Loyalty Points Guide modal (account-drawer.css): dark panel, tinted header
+   with a purple icon badge, gold section titles, purple footer button. */
 .bonus-terms-modal .modal-content {
-  background: rgb(191, 194, 200);
-  border: none;
+  background: #0f0f1f;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  text-transform: none;
 }
 
-.bonus-terms-modal-body {
-  position: relative;
-  background: rgba(0, 0, 0, 0.48);
+.bonus-terms-modal .modal-header {
+  background: #151525;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px 10px 0 0;
+}
+
+.bonus-terms-modal .modal-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.bonus-terms-modal-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: #a71f66;
+  color: #fff;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.bonus-terms-modal .modal-body {
+  background: #0f0f1f;
+  color: #fff;
+  padding: 1.15rem 1.25rem 1.25rem;
+  max-height: min(70vh, 34rem);
+  overflow-y: auto;
+}
+
+.bonus-terms-modal-intro {
+  margin: 0 0 1.1rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1.1rem;
+  line-height: 1.45;
+}
+
+/* One block per bonus returned by GET /bonuses (name, description, rules). */
+.bonus-terms-modal-section {
+  margin: 0 0 1rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bonus-terms-modal-section h3 {
+  margin: 0 0 0.4rem;
+  color: #ffc428;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.bonus-terms-modal-desc {
+  margin: 0 0 0.55rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.bonus-terms-modal-section ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1.05rem;
+  line-height: 1.45;
+  list-style: disc;
+}
+
+.bonus-terms-modal-section li + li {
+  margin-top: 0.4rem;
+}
+
+.bonus-terms-modal .modal-footer {
+  background: #0f0f1f;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 10px 10px;
 }
 
 .bonus-terms-modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #d32f2f;
-  color: #ffffff;
-  border: none;
-  font-size: 18px;
-  line-height: 1;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 2.6rem;
+  padding: 0.55rem 1.25rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: #a71f66;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
   cursor: pointer;
 }
 
-.bonus-terms-modal-close:hover,
-.bonus-terms-modal-close:focus-visible {
-  background: #b71c1c;
-  outline: none;
-}
-
-.bonus-terms-modal-title {
-  font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 10px;
-  margin-right: 24px;
-  color: #ffffff;
-  text-transform: none;
-}
-
-.bonus-terms-modal-text {
-  font-size: 16px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 16px;
-  text-transform: none;
-}
-
-/* Bonuses loaded from GET /bonuses (name, description, rules). */
-.bonus-terms-list {
-  max-height: 38vh;
-  overflow-y: auto;
-  margin-bottom: 16px;
-  padding-right: 4px;
-}
-
-.bonus-terms-item {
-  padding: 10px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  text-transform: none;
-}
-
-.bonus-terms-item:first-child {
-  border-top: none;
-  padding-top: 0;
-}
-
-.bonus-terms-item-name {
-  font-weight: 700;
-  font-size: 17px;
-  color: rgba(255, 215, 0);
-}
-
-.bonus-terms-item-desc {
-  font-size: 15px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 2px 0 4px;
-}
-
-.bonus-terms-item-rules {
-  margin: 0;
-  padding-left: 18px;
-  font-size: 14.5px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.75);
-  list-style: disc;
+.bonus-terms-modal-close:hover {
+  background: #8e1a56;
 }
 
 /* "Use Bonus" row body — same lighter tint of the page's navy background

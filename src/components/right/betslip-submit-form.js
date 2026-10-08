@@ -23,6 +23,7 @@ import {
 import { isMobile } from "react-device-detect";
 import { Modal } from "react-bootstrap";
 import { TbRefreshAlert } from "react-icons/tb";
+import { FaGift } from "react-icons/fa";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
@@ -758,51 +759,48 @@ const BetslipSubmitForm = (props) => {
                         show={showBonusTooltip}
                         onHide={() => setShowBonusTooltip(false)}
                         centered
-                        className="popover-login-modal bonus-terms-modal"
+                        className="bonus-terms-modal"
                     >
-                        <Modal.Body className="p-4 bonus-terms-modal-body">
+                        <Modal.Header closeButton closeVariant="white">
+                            <Modal.Title>
+                                <span className="bonus-terms-modal-title-icon" aria-hidden="true">
+                                    <FaGift />
+                                </span>
+                                Bonus Terms
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p className="bonus-terms-modal-intro">
+                                Bonus funds are subject to wagering requirements and expiry.
+                            </p>
+                            {bonusTerms.map((bonusItem) => {
+                                const ruleLines = formatBonusRules(bonusItem.rules);
+                                return (
+                                    <section className="bonus-terms-modal-section" key={bonusItem.code || bonusItem.name}>
+                                        <h3>{bonusItem.name}</h3>
+                                        {bonusItem.description && (
+                                            <p className="bonus-terms-modal-desc">{bonusItem.description}</p>
+                                        )}
+                                        {ruleLines.length > 0 && (
+                                            <ul>
+                                                {ruleLines.map((line) => (
+                                                    <li key={line}>{line}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </section>
+                                );
+                            })}
+                        </Modal.Body>
+                        <Modal.Footer>
                             <button
                                 type="button"
                                 className="bonus-terms-modal-close"
-                                aria-label="Close"
-                                onClick={() => setShowBonusTooltip(false)}
-                            >
-                                &times;
-                            </button>
-                            <div className="bonus-terms-modal-title">Bonus Terms</div>
-                            <p className="bonus-terms-modal-text">
-                                Bonus funds are subject to wagering requirements and expiry.
-                            </p>
-                            {bonusTerms.length > 0 && (
-                                <div className="bonus-terms-list">
-                                    {bonusTerms.map((bonusItem) => {
-                                        const ruleLines = formatBonusRules(bonusItem.rules);
-                                        return (
-                                            <div className="bonus-terms-item" key={bonusItem.code || bonusItem.name}>
-                                                <div className="bonus-terms-item-name">{bonusItem.name}</div>
-                                                {bonusItem.description && (
-                                                    <div className="bonus-terms-item-desc">{bonusItem.description}</div>
-                                                )}
-                                                {ruleLines.length > 0 && (
-                                                    <ul className="bonus-terms-item-rules">
-                                                        {ruleLines.map((line) => (
-                                                            <li key={line}>{line}</li>
-                                                        ))}
-                                                    </ul>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                            <button
-                                type="button"
-                                className="place-bet-btn bold w-full"
                                 onClick={() => setShowBonusTooltip(false)}
                             >
                                 Close
                             </button>
-                        </Modal.Body>
+                        </Modal.Footer>
                     </Modal>
                 </>
             )
