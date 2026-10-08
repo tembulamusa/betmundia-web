@@ -694,7 +694,6 @@ aside.ps-sidebar-root:focus-visible,
     flex-direction: column;
   }
 
-  .mobile-match-card .match-market-extra,
   .mobile-match-card .tablet-only-market {
     display: none !important;
   }
@@ -5358,5 +5357,119 @@ button.locked-button:hover {
 
   .mobile-match-card .match-score-desktop-break {
     display: none !important;
+  }
+}
+
+/*
+ * Mobile (< 768px): use the same odds-button design and market layout as the
+ * tablet/desktop card (the 768-1210 block above): 3 WAY full width, with
+ * Double Chance + Over/Under 2.5 side by side underneath.
+ * Soccer rows only (they carry Tailwind's md:flex); other sports keep their layout.
+ */
+@media screen and (max-width: 767px) {
+  .mobile-match-card .matches-row.md\:flex {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0 !important;
+    margin: 0;
+  }
+
+  .mobile-match-card .matches-row .tablet-market-panel,
+  .mobile-match-card .matches-row .tablet-market-panel.match-market-extra {
+    display: flex !important;
+    flex-direction: column;
+    min-width: 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  .mobile-match-card .matches-row .tablet-market-full {
+    grid-column: 1 / -1;
+  }
+
+  /* Jackpot rows only carry the 1X2 market: keep the extra panels hidden on mobile */
+  .mobile-match-card .matches-row.is-jackpot .tablet-market-panel.match-market-extra {
+    display: none !important;
+  }
+
+  .mobile-match-card .matches-row .mobile-market-bar,
+  .mobile-match-card .matches-row .tablet-market-bar {
+    display: block !important;
+    width: 100%;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 6px 10px;
+    border-radius: 4px 4px 0 0;
+    background: #0a162d;
+    color: #ffffff;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group {
+    display: flex !important;
+    width: 100%;
+    margin: 0 !important;
+    border-radius: 0 0 4px 4px;
+    overflow: hidden;
+    gap: 1px;
+    background: #0A162D !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .locked-button {
+    flex: 1 1 0;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px !important;
+    border-radius: 0 !important;
+    border-right: none !important;
+    margin: 0 !important;
+    color: #ffffff !important;
+  }
+
+  /* beats tolkits.css's 0.25 mobile background so buttons match the tablet/desktop 0.2 */
+  .matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:not(.picked),
+  .matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > .locked-button {
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .mobile-odd-label {
+    display: block !important;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: #ffffff !important;
+    opacity: 1;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-match-card .tablet-market-panel .theodds {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #ffc428 !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.picked .theodds,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.picked .mobile-odd-label {
+    color: #ffffff !important;
   }
 }
