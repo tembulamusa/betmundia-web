@@ -227,10 +227,6 @@ const ResetPassword = (props) => {
     useEffect(() => {
         const storedMobile = getMobileFromStorage();
         setMobile(storedMobile);
-        if (storedMobile && !hasAutoSubmitted.current) {
-            // hasAutoSubmitted.current = true;
-            // handleSubmit(storedMobile);
-        }
         return () => {
             setSuccess(false);
             setMessage(null);
@@ -239,6 +235,15 @@ const ResetPassword = (props) => {
             setResending(false);
         };
     }, []);
+
+    // Auto-send the verification code once on load, as soon as the phone number is known.
+    // hasAutoSubmitted guards against StrictMode double-invoked effects and re-renders.
+    useEffect(() => {
+        if (!mobile || hasAutoSubmitted.current) return;
+        hasAutoSubmitted.current = true;
+        handleResendCode();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mobile]);
 
     const handleSubmitPasswordReset = (values) => {
         const payload = {

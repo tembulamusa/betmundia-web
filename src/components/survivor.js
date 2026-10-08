@@ -14,7 +14,7 @@ import {
     joinSurvivorChallenge,
     fetchSurvivorProgress,
     placeSurvivorGameBet,
-    SURVIVOR_ARBITRARY_ODD,
+    survivorOddValueForSelection,
     readStoredSurvivorChallenges,
     persistSurvivorChallenges,
     normalizeSelection,
@@ -179,7 +179,9 @@ const PickButtons = ({ game, currentSelection, draftSelection, disabled, onPick 
                         onClick={() => onPick(game.game_number, opt.value)}
                     >
                         {opt.label}
-                        <span className="survivor-pick-odd">{SURVIVOR_ARBITRARY_ODD.toFixed(2)}</span>
+                        <span className="survivor-pick-odd">
+                            {survivorOddValueForSelection(game, opt.value).toFixed(2)}
+                        </span>
                     </button>
                 );
             })}
@@ -525,7 +527,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                     parent_match_id) - shows the literal placeholder for now, and
                                     will pick up real names automatically once the backend adds
                                     them, same fallback convention as betPickForSelection. */}
-                                ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
+                                {game.home_team || "Home"} Vs {game.away_team || "Away"}
                             </div>
                             <div className="survivor-game-time">
                                 Active until {formatDateTime(game.lock_at)}
@@ -623,7 +625,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                     parent_match_id) - shows the literal placeholder for now, and
                                     will pick up real names automatically once the backend adds
                                     them, same fallback convention as betPickForSelection. */}
-                                ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
+                                {game.home_team || "Home"} Vs {game.away_team || "Away"}
                             </div>
                             <div className="survivor-game-time">
                                 Active until {formatDateTime(game.lock_at)}
@@ -695,7 +697,17 @@ const SurvivorChallengeGames = ({ id }) => {
                     </div>
                     <div className="survivor-pick-confirm-row">
                         <span>Possible win</span>
-                        <b>{formatMoney((challenge.entry_stake || 0) * SURVIVOR_ARBITRARY_ODD)}</b>
+                        <b>
+                            {formatMoney(
+                                (challenge.entry_stake || 0) *
+                                    survivorOddValueForSelection(
+                                        (challenge.games || []).find(
+                                            (g) => g.game_number === pendingPick?.gameNumber
+                                        ),
+                                        pendingPick?.selection
+                                    )
+                            )}
+                        </b>
                     </div>
                     {pendingPick?.existing?.selection && (
                         <p className="survivor-pick-confirm-warning">
