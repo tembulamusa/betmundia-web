@@ -229,8 +229,18 @@ const Jackpot = () => {
     const activeJackpotType =
         resolveJackpotTypeFromParam(jackpotTypes, urlTypeParam);
 
+    // Auto Pick is offered for any open jackpot that has games we can actually pick.
+    // We deliberately do not require status === "active" or matches.length === total_games:
+    // staging/production payloads vary (status casing/wording, extra or missing games).
+    const CLOSED_JACKPOT_STATUSES = ["closed", "settled", "completed", "cancelled", "canceled", "expired", "finished", "ended", "inactive"];
+    const pickableMatches = Object.values(jackpotData?.matches || {}).filter(
+        (match) => match && match.match_id != null && match?.odds?.["1x2"]?.outcomes?.length >= 3
+    );
+    const jackpotStatus = String(jackpotData?.status ?? "").trim().toLowerCase();
+    const canAutoPick = pickableMatches.length > 0 && !CLOSED_JACKPOT_STATUSES.includes(jackpotStatus);
+
     const AutoPickAllMatches = async () => {
-        if (isAutoPicking || !jackpotData?.matches) {
+        if (isAutoPicking || !pickableMatches.length) {
             return;
         }
 
@@ -248,7 +258,7 @@ const Jackpot = () => {
             await new Promise((resolve) => setTimeout(resolve, 0));
 
             let betslip;
-            Object.entries(jackpotData.matches).forEach(([, match]) => {
+            pickableMatches.forEach((match) => {
                 const reference = match.match_id + "_selected";
                 const pick = randomPick(1, 3);
                 const pickedValue = (pick == 1 ? match.home_team : (pick == 2 ? 'draw' : match?.away_team));
@@ -346,12 +356,12 @@ const Jackpot = () => {
                 className="jackpot-tabs plain-tabs"
             >
                 <Tab eventKey="games" title="Games" className="p-3">
-                    {(jackpotData?.status?.toLowerCase() == "active" && jackpotData?.matches?.length == jackpotData?.total_games) && (
+                    {canAutoPick && (
                         <div className="row flex flex-col items-center md:flex-row">
                             <div className="col-md-8 !px-3 text-center md:text-left">
                                 <div className="!px-2">
                                     <div className="jackpot-amount !pl-0 pt-3">
-                                        Autopick randomly picks jackpot for you! KES {Intl.NumberFormat('en-US').format(jackpotData?.jackpot_amount)}
+                                        Autopick randomly picks jackpot for you!{Number(jackpotData?.jackpot_amount) > 0 && ` KES ${Intl.NumberFormat('en-US').format(jackpotData?.jackpot_amount)}`}
                                     </div>
                                 </div>
                             </div>
