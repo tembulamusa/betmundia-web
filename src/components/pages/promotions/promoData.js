@@ -105,7 +105,7 @@ Only 21+. Play responsibly.
       - Term and conditions and Bonus rules.
       - The bonus is calculated as a percentage of the total odds of the bet slip, based on the number of selections added:
       - a minimum odds of 1.3 is required for each selection to qualify for the bonus.
-      -minimum of 3 selections are required to activate the bonus.
+      - minimum of 4 selections are required to activate the bonus.
         sgr_bonus_percent_3: 1.5
         sgr_bonus_percent_4: 4
         sgr_bonus_percent_5: 5
@@ -231,7 +231,7 @@ Eligibility
 3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.To qualify, your bet slip must contain:
-oExactly 4 selections.
+oBetween 1 and 3 selections (inclusive).
 oEach selection must have minimum odds of 1.50.
 oAll standard sports betting markets are eligible.
 Example:
@@ -244,17 +244,16 @@ Sample Odds
 Selection 2: Bayern Munich – 2.31
 Selection 3: Manchester United – 2.50
 Selection 4: Barcelona – 1.75
-Minimum combined odds: 10.00
 Note: Repetitive, duplicate, or intentionally similar bets placed to abuse the promotion are strictly prohibited. BetMundial reserves the right to void such bets and withdraw the bonus.
 Bonus Usage
-5.Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (50:50 ratio).
+5.Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (70% cash / 30% bonus).
 Example:
 Cash Balance: KES 100
 Bonus Balance: KES 100
 If you place a KES 100 bet:
-KES 50 will be deducted from your cash balance.
-KES 50 will be deducted from your bonus balance.
-Any winnings will be credited according to the applicable cash and bonus contribution and in line with BetMundial's Bonus Policy.
+KES 70 will be deducted from your cash balance.
+KES 30 will be deducted from your bonus balance.
+Winnings from qualifying bonus bets are credited to your cash balance and may be withdrawn per BetMundial Bonus Policy. Slips that do not meet bonus rules are placed from cash only.
 Bonus Expiry
 6.The bonus is valid for 24 hours from the time it is credited. Any unused bonus balance will automatically expire after this period.
 General Terms
@@ -276,7 +275,7 @@ Eligibility
 3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.To qualify, your bet slip must contain:
-oExactly 4 selections.
+oBetween 1 and 3 selections (inclusive).
 oEach selection must have minimum odds of 1.50.
 oAll standard sports betting markets are eligible.
 Example:
@@ -289,17 +288,16 @@ Sample Odds
 Selection 2: Bayern Munich – 2.31
 Selection 3: Manchester United – 2.50
 Selection 4: Barcelona – 1.75
-Minimum combined odds: 10.00
 Note: Repetitive, duplicate, or intentionally similar bets placed to abuse the promotion are strictly prohibited. BetMundial reserves the right to void such bets and withdraw the bonus.
 Bonus Usage
-5.Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (50:50 ratio).
+5.Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (70% cash / 30% bonus).
 Example:
 Cash Balance: KES 100
 Bonus Balance: KES 100
 If you place a KES 100 bet:
-KES 50 will be deducted from your cash balance.
-KES 50 will be deducted from your bonus balance.
-Any winnings will be credited according to the applicable cash and bonus contribution and in line with BetMundial's Bonus Policy.
+KES 70 will be deducted from your cash balance.
+KES 30 will be deducted from your bonus balance.
+Winnings from qualifying bonus bets are credited to your cash balance and may be withdrawn per BetMundial Bonus Policy. Slips that do not meet bonus rules are placed from cash only.
 Bonus Expiry
 6.The bonus is valid for 24 hours from the time it is credited. Any unused bonus balance will automatically expire after this period.
 General Terms
@@ -315,7 +313,7 @@ Eligibility
 3.	This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.	To qualify, your bet slip must contain:
-o	Exactly 4 selections.
+o	Between 1 and 3 selections (inclusive).
 o	Each selection must have minimum odds of 1.50.
 o	All standard sports betting markets are eligible.
 Example:
@@ -328,17 +326,16 @@ Sample Odds
 •	Selection 2: Bayern Munich – 2.31
 •	Selection 3: Manchester United – 2.50
 •	Selection 4: Barcelona – 1.75
-Minimum combined odds: 10.00
 Note: Repetitive, duplicate, or intentionally similar bets placed to abuse the promotion are strictly prohibited. BetMundial reserves the right to void such bets and withdraw the bonus.
 Bonus Usage
-5.	Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (50:50 ratio).
+5.	Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (70% cash / 30% bonus).
 Example:
 •	Cash Balance: KES 100
 •	Bonus Balance: KES 100
 If you place a KES 100 bet:
-•	KES 50 will be deducted from your cash balance.
-•	KES 50 will be deducted from your bonus balance.
-Any winnings will be credited according to the applicable cash and bonus contribution and in line with BetMundial's Bonus Policy.
+•	KES 70 will be deducted from your cash balance.
+•	KES 30 will be deducted from your bonus balance.
+Winnings from qualifying bonus bets are credited to your cash balance and may be withdrawn per BetMundial Bonus Policy. Slips that do not meet bonus rules are placed from cash only.
 Bonus Expiry
 6.	The bonus is valid for 24 hours from the time it is credited. Any unused bonus balance will automatically expire after this period.
 General Terms

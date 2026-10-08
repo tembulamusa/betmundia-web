@@ -1,5 +1,5 @@
 export const emptyBonusAdvice = {
-  status: "Select 3 or more games to win big bonus",
+  status: "Select 4 or more games to win big bonus",
   nudgeTitle: null,
   nudgeSub: null,
 };

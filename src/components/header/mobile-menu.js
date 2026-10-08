@@ -249,7 +249,7 @@ function MobileMenu(props) {
 
                       {showBonusTooltip && (
                         <span className="bonus-tooltip-bubble" role="tooltip">
-                          Bonus funds are subject to wagering requirements and expiry. See the Promotions page for full T&amp;Cs.
+                          First deposit of the day: 50% bonus (24h). Qualifying bets: 70% cash / 30% bonus, 1–3 games, min odds 1.50. See Promotions or Terms for details.
                           <span className="bonus-tooltip-arrow" aria-hidden="true" />
                         </span>
                       )}

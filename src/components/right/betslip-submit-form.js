@@ -12,6 +12,7 @@ import {
 } from '../utils/betslip';
 import { toast } from 'react-toastify';
 import makeRequest from '../utils/fetch-request';
+import { useBonusCatalog } from '../utils/useBonusCatalog';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -84,26 +85,16 @@ const BetslipSubmitForm = (props) => {
     const user = getFromLocalStorage("user");
     const bonusBalance = formatToFloat(user?.bonus || user?.bonus_balance || 0);
 
-    // Bonus settings (how much of the stake bonus is allowed to cover) come
-    // from the bonus settings API. TODO: confirm the real endpoint + field
-    // name with the backend and swap it in below — until then this falls
-    // back to 100% (bonus covers the full stake, capped by bonusBalance)
-    // so the UI keeps working.
-    const [bonusSettings, setBonusSettings] = useState({ percentage: 100 });
+    const {
+        bonusStakePct,
+        cashStakePct,
+        minOdds,
+        maxGames,
+        minGames,
+        expiryHours,
+    } = useBonusCatalog();
 
-    useEffect(() => {
-        makeRequest({ url: '/bonus/settings', method: 'GET', api_version: 2 })
-            .then(([status, response]) => {
-                if (status === 200 && response?.data) {
-                    setBonusSettings({
-                        percentage: parseFloat(response.data.percentage ?? response.data.bonus_use_percentage ?? 100)
-                    });
-                }
-            })
-            .catch(() => { /* keep the 100% fallback */ });
-    }, []);
-
-    const bonusUsePercentage = bonusSettings?.percentage ?? 100;
+    const bonusUsePercentage = bonusStakePct ?? 30;
     const bonusStakePortion = Math.min(
         Float(stake * (bonusUsePercentage / 100), 2),
         parseFloat(bonusBalance) || 0
@@ -285,6 +276,7 @@ const BetslipSubmitForm = (props) => {
             msisdn: getFromLocalStorage("user")?.msisdn || state?.user?.msisdn,
             accept_all_odds_change: 0,
             bet_type: getFromLocalStorage("liveCount") > 0 ? "1" : jackpot ? "9" : "3", // update for live
+            use_bonus: !jackpot && !!values.use_bonus,
         };
         let endpoint = '/user/place-bet';
         let method = "POST"
@@ -703,17 +695,19 @@ const BetslipSubmitForm = (props) => {
                             </button>
                             <div className="bonus-terms-modal-title">Bonus Terms</div>
                             <p className="bonus-terms-modal-text">
-                                Bonus funds are subject to wagering requirements and expiry.
+                                Qualifying bonus bets use {cashStakePct}% cash and {bonusUsePercentage}% bonus,
+                                with {minGames}–{maxGames} games at min odds {minOdds} each. Bonus expires {expiryHours} hours after award.
+                                If the slip does not qualify, the bet is placed from cash only.
                             </p>
                             {values?.use_bonus ? (
                                 <p className="bonus-terms-modal-text">
-                                    At {bonusUsePercentage}% bonus usage, placing this KSh {formatNumber(stake)} bet will deduct
-                                    {' '}<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {formatNumber(bonusStakePortion)}</span> from your bonus balance
-                                    and <b>KSh {formatNumber(balanceStakePortion)}</b> from your real balance.
+                                    This KSh {formatNumber(stake)} bet will use up to
+                                    {' '}<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {formatNumber(bonusStakePortion)}</span> bonus
+                                    and <b>KSh {formatNumber(balanceStakePortion)}</b> cash when rules are met.
                                 </p>
                             ) : (
                                 <p className="bonus-terms-modal-text">
-                                    Tick "Use Bonus" to cover part of this stake from your bonus balance instead of your real balance.
+                                    Tick &quot;Use Bonus&quot; to apply bonus balance when the slip qualifies.
                                 </p>
                             )}
                             <button
