@@ -3,6 +3,7 @@ import { Modal } from "react-bootstrap";
 import { FaGift } from "react-icons/fa";
 import { Context } from "../../context/store";
 import FreeBet from "../highlights/free-bet";
+import makeRequest from "../utils/fetch-request";
 import "../../assets/css/freebet-modal.css";
 
 const SEEN_FLAG = "freebetModalSeenFor";
@@ -41,22 +42,43 @@ const FreeBetModal = ({ user }) => {
 
     const close = () => dispatch({ type: "SET", key: "showfreebetmodal", payload: false });
 
-    // Pop once per login session when a free bet is available.
+    // Confirm the user really has a free bet (same check the old highlights card
+    // made: profile flag, then /user/freebet returning data). Only then pop the
+    // modal (once per login session) and light up the header notice.
     useEffect(() => {
         if (!user) {
             writeFlag(null);
-            return;
+            dispatch({ type: "SET", key: "freebetAvailable", payload: false });
+            return undefined;
         }
-        if (hasFreebet && readFlag() !== String(profileId)) {
-            writeFlag(profileId);
-            dispatch({ type: "SET", key: "showfreebetmodal", payload: true });
+        if (!hasFreebet) {
+            dispatch({ type: "SET", key: "freebetAvailable", payload: false });
+            return undefined;
         }
+        let cancelled = false;
+        makeRequest({ url: "/user/freebet", method: "GET", api_version: 2 })
+            .then(([, result]) => {
+                if (cancelled) return;
+                const available = ["200", "201"].includes(String(result?.status)) && result?.data != null;
+                dispatch({ type: "SET", key: "freebetAvailable", payload: available });
+                if (available && readFlag() !== String(profileId)) {
+                    writeFlag(profileId);
+                    dispatch({ type: "SET", key: "showfreebetmodal", payload: true });
+                }
+            })
+            .catch(() => {
+                if (!cancelled) dispatch({ type: "SET", key: "freebetAvailable", payload: false });
+            });
+        return () => {
+            cancelled = true;
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Boolean(user), hasFreebet, profileId]);
 
     // Close shortly after the free bet is placed.
     useEffect(() => {
         const onPlaced = () => {
+            dispatch({ type: "SET", key: "freebetAvailable", payload: false });
             clearTimeout(closeTimer.current);
             closeTimer.current = setTimeout(close, 2500);
         };
