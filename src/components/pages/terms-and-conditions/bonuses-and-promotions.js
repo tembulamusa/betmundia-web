@@ -76,43 +76,28 @@ const BonusesAndPromotions = () => {
                 <br />
                 <ol>
                     <li>
-                        Apart from the JACKPOT BONUS, any other bonus CANNOT be WITHDRAWN. However, bonus winnings
-                        derived from the bets placed successfully with the bonus can be withdrawn.
+                        Daily deposit bonus: 50% on your first successful deposit of each calendar day; valid 24 hours from award.
                     </li>
                     <li>
-                        If betmundial notices something suspicious about your activities with the bonus, then we may
-                        take it away. This includes very similar betting patterns between the referrer and the referred
-                        account.
+                        Bonus balance cannot be withdrawn directly; winnings from qualifying bonus bets are credited to your cash balance and may be withdrawn.
                     </li>
                     <li>
-                        EACH bonus offer will have its own “TERMS & CONDITIONS” and Customers should ensure that the terms and conditions associated with each individual bonus offer are read and understood prior to accepting the bonus.
+                        Qualifying bonus bets: 1–3 games, minimum 1.50 odds per selection, funded 70% cash / 30% bonus when rules are met. Non-qualifying slips are placed from cash only.
                     </li>
                     <li>
-                        Bonus expiry is midnight (all bonuses)
+                        Mshipi (acca win boost) requires at least 4 qualifying games; see Promotions for full Mshipi rules.
                     </li>
                     <li>
-                        Maximum games per slip on bonus related bets is 4
+                        Each promotion may have additional terms on the Promotions page and via GET /v2/bonuses.
                     </li>
                     <li>
-                        Minimum odds per game on bonus related bets is 1.8
+                        Abuse, fraud, or bonus manipulation may result in forfeiture and account action.
                     </li>
                     <li>
-                        Minimum total odds per bonus bet is 10.00
-                    </li>
-                    <li>
-                        The maximum pays-out from bonus bets - KES.1,000 per betslip.
-                    </li>
-                    <li>
-                        All rules on bonus bets will apply.
-                    </li>
-                    <li>
-                        Promotions are subject to change. All management decisions are final.
-                    </li>
-                    <li>
-                        In the event of an error when attributing a bonus to a customer account, the company reserves the right to correct such errors by removing any funds that were put into the customer’s account erroneously and by avoid
+                        Promotions are subject to change; management decisions are final.
                     </li>
                 </ol>
-                <p><strong><strong>NB;</strong> APART FROM JACKPOT BONUSES , THE REST CANNOT BE WITHDRAWN</strong></p>
+                <p><strong>NB: Bonus balance is not withdrawable; bonus winnings from qualifying bets go to your cash balance.</strong></p>
             </AccordionItemPanel>
         </AccordionItem>
     )

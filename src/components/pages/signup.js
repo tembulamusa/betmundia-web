@@ -49,7 +49,11 @@ const Signup = (props) => {
 
         makeRequest({ url: endpoint, method: 'POST', data: data, api_version: 2 }).then(([status, response]) => {
             setMessage(response?.message);
-            if ([200, 201, 204].includes(status)) {
+            const profileId = response?.data?.profile_id ?? response?.data?.profileId;
+            // #region agent log
+            fetch('http://127.0.0.1:7508/ingest/cb422352-05d9-4a59-9363-ce9918d47252',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'704c88'},body:JSON.stringify({sessionId:'704c88',hypothesisId:'H3',location:'signup.js:handleSubmit',message:'signup response',data:{httpStatus:status,apiStatus:response?.status,profileId:profileId??null},timestamp:Date.now()})}).catch(()=>{});
+            // #endregion
+            if ([200, 201, 204].includes(status) && (response?.status == 200 || response?.status == 201) && profileId) {
                 dispatch({ type: "SET", key: "regmsisdn", payload: values?.msisdn });
                 // In-memory + sessionStorage for auto-login after verify (cleared after login)
                 dispatch({ type: "SET", key: "regpassword", payload: values?.password });
@@ -64,7 +68,8 @@ const Signup = (props) => {
                 });
                 navigate("/verify-account");
             } else {
-                Notify({ status: 400, message: "Error Making registration" })
+                const errMsg = response?.result || response?.message || "Error Making registration";
+                Notify({ status: 400, message: errMsg })
                 setIsLoading(false);
             }
 

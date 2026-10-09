@@ -1435,7 +1435,16 @@ export const MarketList = (props) => {
                 {/* {(!matchwithmarkets || Object.entries(matchwithmarkets?.odds || {}).length == 0 || matchwithmarkets == null) && <EventUnavailable />} */}
 
                 {/* filter here */}
-                {Object.entries(matchwithmarkets?.odds || {}).map(([mkt_id, markets]) => {
+                {[...Object.entries(matchwithmarkets?.odds || {})]
+                    .sort(([, a], [, b]) => {
+                        const pa = Number(a?.priority ?? 0);
+                        const pb = Number(b?.priority ?? 0);
+                        if (pb !== pa) {
+                            return pb - pa;
+                        }
+                        return Number(a?.subTypeId ?? a?.sub_type_id ?? 0) - Number(b?.subTypeId ?? b?.sub_type_id ?? 0);
+                    })
+                    .map(([mkt_id, markets]) => {
 
                     return (["active", "suspended", "handedover"].includes(markets?.market_status.toLowerCase()) && markets.outcomes.length > 0) &&
                         <MarketRow

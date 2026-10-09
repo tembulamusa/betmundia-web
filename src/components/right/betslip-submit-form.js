@@ -12,6 +12,7 @@ import {
 } from '../utils/betslip';
 import { toast } from 'react-toastify';
 import makeRequest from '../utils/fetch-request';
+import { useBonusCatalog } from '../utils/useBonusCatalog';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -141,9 +142,23 @@ const BetslipSubmitForm = (props) => {
     const user = getFromLocalStorage("user");
     const bonusBalance = formatToFloat(user?.bonus || user?.bonus_balance || 0);
 
-    // Active bonuses + their rules from GET /bonuses, shown in the Bonus Terms modal.
+    const {
+        bonusStakePct,
+        cashStakePct,
+        minOdds,
+        maxGames,
+        minGames,
+        expiryHours,
+    } = useBonusCatalog();
+
+    const bonusUsePercentage = bonusStakePct ?? 30;
+    const bonusStakePortion = Math.min(
+        Float(stake * (bonusUsePercentage / 100), 2),
+        parseFloat(bonusBalance) || 0
+    );
+    const balanceStakePortion = Math.max(Float(stake - bonusStakePortion, 2), 0);
+
     const [bonusTerms, setBonusTerms] = useState([]);
-    // Re-evaluated whenever the slip (games/odds) or the loaded bonus rules change.
     const bonusUseIssues = useMemo(
         () => getBonusUseIssues(bonusTerms, state?.betslip),
         [bonusTerms, state?.betslip]
@@ -334,6 +349,7 @@ const BetslipSubmitForm = (props) => {
             msisdn: getFromLocalStorage("user")?.msisdn || state?.user?.msisdn,
             accept_all_odds_change: 0,
             bet_type: getFromLocalStorage("liveCount") > 0 ? "1" : jackpot ? "9" : "3", // update for live
+            use_bonus: !jackpot && !!values.use_bonus,
         };
         let endpoint = '/user/place-bet';
         let method = "POST"
@@ -771,8 +787,21 @@ const BetslipSubmitForm = (props) => {
                         </Modal.Header>
                         <Modal.Body>
                             <p className="bonus-terms-modal-intro">
-                                Bonus funds are subject to wagering requirements and expiry.
+                                Qualifying bonus bets use {cashStakePct}% cash and {bonusUsePercentage}% bonus,
+                                with {minGames}–{maxGames} games at min odds {minOdds} each. Bonus expires {expiryHours} hours after award.
+                                If the slip does not qualify, the bet is placed from cash only.
                             </p>
+                            {values?.use_bonus ? (
+                                <p className="bonus-terms-modal-intro">
+                                    This KSh {formatNumber(stake)} bet will use up to
+                                    {' '}<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {formatNumber(bonusStakePortion)}</span> bonus
+                                    and <b>KSh {formatNumber(balanceStakePortion)}</b> cash when rules are met.
+                                </p>
+                            ) : (
+                                <p className="bonus-terms-modal-intro">
+                                    Tick &quot;Use Bonus&quot; to apply bonus balance when the slip qualifies.
+                                </p>
+                            )}
                             {bonusTerms.map((bonusItem) => {
                                 const ruleLines = formatBonusRules(bonusItem.rules);
                                 return (
