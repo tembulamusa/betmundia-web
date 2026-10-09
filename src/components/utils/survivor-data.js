@@ -151,14 +151,35 @@ const cleanUcn = (value) =>
  */
 export const SURVIVOR_PLACEBET_TYPE = "10";
 
-// TODO: still no real per-game odds or team names from the API — a
-// survivor game (per /survivor/challenges/{id}) carries game_number,
-// parent_match_id, status, scheduled_at, lock_at, result, selection,
-// result_status, but no home_team/away_team/sport_name/odds. Using one
-// arbitrary odd value for every 1X2 outcome for now, per instruction,
-// until the backend adds real match/odds data to each game. Swap this
-// out for game.odds["1x2"].outcomes[i] once that's available.
+/** Fallback when a game has no 1X2 outcomes yet (e.g. match not priced). */
 export const SURVIVOR_ARBITRARY_ODD = 2.0;
+
+const outcomeField = (row, snake, camel) => row?.[snake] ?? row?.[camel];
+
+/** Map 1 / X / 2 pick to a row in `game.odds["1x2"].outcomes` (Betradar-style 1,2,3). */
+export const survivorOutcomeForSelection = (game, selection) => {
+    const outcomes = game?.odds?.["1x2"]?.outcomes;
+    if (!Array.isArray(outcomes) || outcomes.length === 0) {
+        return null;
+    }
+    const sel = normalizeSelection(selection);
+    const findByOutcomeId = (id) =>
+        outcomes.find((o) => String(outcomeField(o, "outcome_id", "outcomeId")) === id);
+
+    if (sel === "1") {
+        return findByOutcomeId("1") || outcomes[0];
+    }
+    if (sel === "2") {
+        return findByOutcomeId("3") || outcomes[outcomes.length - 1];
+    }
+    return findByOutcomeId("2") || outcomes[Math.min(1, outcomes.length - 1)];
+};
+
+export const survivorOddForSelection = (game, selection) => {
+    const row = survivorOutcomeForSelection(game, selection);
+    const value = outcomeField(row, "odd_value", "oddValue");
+    return value != null && value !== "" ? Number(value) : SURVIVOR_ARBITRARY_ODD;
+};
 
 const betPickForSelection = (game, selection) => {
     switch (normalizeSelection(selection)) {
@@ -180,15 +201,11 @@ const betPickForSelection = (game, selection) => {
  * NOTE: game.parent_match_id is the real match reference (confirmed from
  * /survivor/challenges/{id}) and is used for both match_id and
  * parent_match_id below since no separate child match_id is exposed.
- * home_team/away_team/sport_name still aren't in the game object, so
- * bet_pick falls back to "Home"/"Draw"/"Away" rather than real team
- * names — swap in real names once the backend adds them. Odds are
- * arbitrary for now (see SURVIVOR_ARBITRARY_ODD).
  */
 export const placeSurvivorGameBet = async (challenge, game, selection) => {
-    const oddValue = Float(SURVIVOR_ARBITRARY_ODD, 2);
+    const oddValue = Float(survivorOddForSelection(game, selection), 2);
     const betPick = betPickForSelection(game, selection);
-    const subTypeId = game?.sub_type_id ?? 1;
+    const subTypeId = game?.sub_type_id ?? game?.subTypeId ?? 1;
 
     const matchId = game?.parent_match_id ?? game?.match_id;
     const slip = {
@@ -204,7 +221,7 @@ export const placeSurvivorGameBet = async (challenge, game, selection) => {
         market_active: 1,
         odd_type: game?.odd_type || "1x2",
         odd_value: oddValue.toFixed(2),
-        producer_id: String(game?.producer_id || "3"),
+        producer_id: String(game?.producer_id ?? game?.producerId ?? "3"),
         sport_name: game?.sport_name || "Soccer",
         ucn: cleanUcn(`${matchId ?? ""}${subTypeId}${betPick ?? ""}`),
     };

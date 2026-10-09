@@ -15,6 +15,7 @@ import {
     fetchSurvivorProgress,
     placeSurvivorGameBet,
     SURVIVOR_ARBITRARY_ODD,
+    survivorOddForSelection,
     readStoredSurvivorChallenges,
     persistSurvivorChallenges,
     normalizeSelection,
@@ -179,7 +180,9 @@ const PickButtons = ({ game, currentSelection, draftSelection, disabled, onPick 
                         onClick={() => onPick(game.game_number, opt.value)}
                     >
                         {opt.label}
-                        <span className="survivor-pick-odd">{SURVIVOR_ARBITRARY_ODD.toFixed(2)}</span>
+                        <span className="survivor-pick-odd">
+                            {survivorOddForSelection(game, opt.value).toFixed(2)}
+                        </span>
                     </button>
                 );
             })}
