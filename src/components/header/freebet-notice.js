@@ -6,9 +6,9 @@ import { Context } from "../../context/store";
  * free bet. Clicking it opens the free bet modal.
  */
 const FreebetNotice = ({ user, className = "" }) => {
-    const [, dispatch] = useContext(Context);
+    const [state, dispatch] = useContext(Context);
 
-    if (!user?.token || Number(user?.has_freebet) !== 1) {
+    if (!user?.token || Number(user?.has_freebet) !== 1 || state?.freebetAvailable !== true) {
         return null;
     }
 
