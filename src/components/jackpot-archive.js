@@ -156,7 +156,7 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
     const [archive, setArchive] = useState(null);
     const [yearOptions, setYearOptions] = useState(() => buildYearOptions());
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [, setError] = useState(null);
     const [prizesOpen, setPrizesOpen] = useState(true);
     const requestSeq = useRef(0);
     const selectedTypeRef = useRef(selectedType);
