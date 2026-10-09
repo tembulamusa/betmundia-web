@@ -30,8 +30,8 @@ const FAQ_ITEMS = [
         content: (
             <p>
                 betmundial is a leading betting site in Kenya, offering a wide range of sports
-                betting options and games. We are licensed by the Betting Control and Licensing
-                Board (BCLB) and are committed to providing a safe and enjoyable betting experience
+                betting options and games. We are licensed by the Gambling Regulatory
+                Authority (GRA) and are committed to providing a safe and enjoyable betting experience
                 for all our users.
             </p>
         ),

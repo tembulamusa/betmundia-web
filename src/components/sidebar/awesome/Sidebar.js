@@ -35,7 +35,7 @@ const ProSidebar = (props) => {
     const [competitions, setCompetitions] = useState(null);
     const [focusSportId, setFocusSportId] = useState(null);
     // const []
-    const excludeSidebar = ["/login", "/signup", '/livescore', '/forgot-password', '/verify-account']
+    const excludeSidebar = ["/login", '/livescore', '/verify-account']
     const navigate = useNavigate()
 
     const isJackpotsPage =

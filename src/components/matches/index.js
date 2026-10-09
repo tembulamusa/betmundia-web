@@ -1254,7 +1254,7 @@ const MatchRow = (props) => {
                                     </div>
                                 </div>
 
-                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra hidden md:flex`} key="223">
+                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="223">
                                     <div className="mobile-market-bar tablet-market-bar">
                                         <span>DOUBLE CHANCE</span>
                                     </div>
@@ -1278,7 +1278,7 @@ const MatchRow = (props) => {
                                     </div>
                                 </div>
 
-                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra hidden md:flex`} key="224">
+                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="224">
                                     <div className="mobile-market-bar tablet-market-bar">
                                         <span>OVER/UNDER 2.5</span>
                                     </div>

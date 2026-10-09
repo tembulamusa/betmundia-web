@@ -24,6 +24,7 @@ import {
 import { isMobile } from "react-device-detect";
 import { Modal } from "react-bootstrap";
 import { TbRefreshAlert } from "react-icons/tb";
+import { FaGift } from "react-icons/fa";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
@@ -66,6 +67,62 @@ const formatSlipForPlaceBet = (slip) => {
 }
 
 
+// Turn a bonus rule from GET /bonuses into a readable line for the Bonus Terms modal.
+const humanizeKey = (key) => String(key).replace(/_/g, ' ').replace(/^./, (ch) => ch.toUpperCase());
+const humanizeValue = (value) => String(value).toLowerCase().replace(/_/g, ' ').replace(/^./, (ch) => ch.toUpperCase());
+const BONUS_RULE_FORMATTERS = {
+    bonus_amount: (v) => `Bonus amount: KSh ${formatNumber(v)}`,
+    bonus_percentage: (v) => `Bonus: ${v}%`,
+    bonus_contribution_percentage: (v) => `Bonus covers up to ${v}% of the stake`,
+    cash_contribution_percentage: (v) => `Cash covers ${v}% of the stake`,
+    minimum_odds_per_game: (v) => `Minimum odds per game: ${v}`,
+    minimum_games: (v) => `Minimum games: ${v}`,
+    maximum_games: (v) => `Maximum games: ${v}`,
+    winnings_withdrawable: (v) => (v ? 'Winnings are withdrawable' : 'Winnings are not withdrawable'),
+    deposit_frequency: (v) => `Deposit: ${humanizeValue(v)}`,
+    expiry_hours: (v) => `Expires after ${v} hour${Number(v) === 1 ? '' : 's'}`,
+    expiry_days: (v) => `Expires after ${v} day${Number(v) === 1 ? '' : 's'}`,
+};
+const formatBonusRules = (rules) =>
+    Object.entries(rules || {})
+        .filter(([, rule]) => rule && rule.enabled !== false && rule.value !== undefined && rule.value !== null)
+        .map(([key, rule]) => (BONUS_RULE_FORMATTERS[key]
+            ? BONUS_RULE_FORMATTERS[key](rule.value)
+            : `${humanizeKey(key)}: ${typeof rule.value === 'boolean' ? (rule.value ? 'Yes' : 'No') : rule.value}`));
+
+// Compare the current slip with the rules of the bonus that can be used on a stake
+// (GET /bonuses -> DAILY_DEPOSIT_BONUS). Returns a list of human-readable problems;
+// empty when the slip is empty, no matching bonus was loaded, or the slip is fine.
+const STAKE_BONUS_CODE = 'DAILY_DEPOSIT_BONUS';
+const getBonusUseIssues = (bonuses, slip) => {
+    const picks = Object.values(slip || {});
+    if (!picks.length) return [];
+    const bonusItem = (bonuses || []).find((b) => b?.code === STAKE_BONUS_CODE);
+    const rules = bonusItem?.rules;
+    if (!rules) return [];
+    const active = (key) => (rules[key]?.enabled !== false && rules[key]?.value != null ? Number(rules[key].value) : null);
+    const issues = [];
+    const count = picks.length;
+    const gamesLabel = (n) => `${n} game${n === 1 ? '' : 's'}`;
+
+    const minGames = active('minimum_games');
+    if (minGames != null && count < minGames) {
+        issues.push(`At least ${gamesLabel(minGames)} required (you have ${count}).`);
+    }
+    const maxGames = active('maximum_games');
+    if (maxGames != null && count > maxGames) {
+        issues.push(`No more than ${gamesLabel(maxGames)} allowed (you have ${count}).`);
+    }
+    const minOdds = active('minimum_odds_per_game');
+    if (minOdds != null) {
+        const below = picks.filter((pick) => parseFloat(pick?.odd_value) < minOdds).length;
+        if (below > 0) {
+            issues.push(`Every game needs odds of at least ${minOdds} (${gamesLabel(below)} ${below === 1 ? 'is' : 'are'} below).`);
+        }
+    }
+    return issues;
+};
+
 const BetslipSubmitForm = (props) => {
 
     const { jackpot, jackpotData, bonusBet, dbWinMatrix } = props;
@@ -100,6 +157,22 @@ const BetslipSubmitForm = (props) => {
         parseFloat(bonusBalance) || 0
     );
     const balanceStakePortion = Math.max(Float(stake - bonusStakePortion, 2), 0);
+
+    const [bonusTerms, setBonusTerms] = useState([]);
+    const bonusUseIssues = useMemo(
+        () => getBonusUseIssues(bonusTerms, state?.betslip),
+        [bonusTerms, state?.betslip]
+    );
+
+    useEffect(() => {
+        makeRequest({ url: '/bonuses', method: 'GET', api_version: 2 })
+            .then(([status, response]) => {
+                if (status === 200 && Array.isArray(response?.data?.bonuses)) {
+                    setBonusTerms(response.data.bonuses.filter((b) => b && b.active !== false));
+                }
+            })
+            .catch(() => { /* terms stay empty if the request fails */ });
+    }, []);
 
 
     // const setbonusMatrix = () => {
@@ -610,6 +683,26 @@ const BetslipSubmitForm = (props) => {
                                                     >
                                                         Terms
                                                     </button>
+
+                                                    {!!values?.use_bonus && bonusUseIssues.length > 0 && (
+                                                        <div className="bonus-use-warning" role="alert">
+                                                            <div className="bonus-use-warning-title">
+                                                                Your slip doesn't meet the bonus rules. Uncheck "Use Bonus" to continue.
+                                                            </div>
+                                                            <ul className="bonus-use-warning-list">
+                                                                {bonusUseIssues.map((issue) => (
+                                                                    <li key={issue}>{issue}</li>
+                                                                ))}
+                                                            </ul>
+                                                            <button
+                                                                type="button"
+                                                                className="bonus-use-warning-action"
+                                                                onClick={() => setFieldValue('use_bonus', false)}
+                                                            >
+                                                                Uncheck bonus
+                                                            </button>
+                                                        </div>
+                                                    )}
                                                 </td>
                                             </tr>
                                         )}
@@ -682,42 +775,61 @@ const BetslipSubmitForm = (props) => {
                         show={showBonusTooltip}
                         onHide={() => setShowBonusTooltip(false)}
                         centered
-                        className="popover-login-modal bonus-terms-modal"
+                        className="bonus-terms-modal"
                     >
-                        <Modal.Body className="p-4 bonus-terms-modal-body">
-                            <button
-                                type="button"
-                                className="bonus-terms-modal-close"
-                                aria-label="Close"
-                                onClick={() => setShowBonusTooltip(false)}
-                            >
-                                &times;
-                            </button>
-                            <div className="bonus-terms-modal-title">Bonus Terms</div>
-                            <p className="bonus-terms-modal-text">
+                        <Modal.Header closeButton closeVariant="white">
+                            <Modal.Title>
+                                <span className="bonus-terms-modal-title-icon" aria-hidden="true">
+                                    <FaGift />
+                                </span>
+                                Bonus Terms
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p className="bonus-terms-modal-intro">
                                 Qualifying bonus bets use {cashStakePct}% cash and {bonusUsePercentage}% bonus,
                                 with {minGames}–{maxGames} games at min odds {minOdds} each. Bonus expires {expiryHours} hours after award.
                                 If the slip does not qualify, the bet is placed from cash only.
                             </p>
                             {values?.use_bonus ? (
-                                <p className="bonus-terms-modal-text">
+                                <p className="bonus-terms-modal-intro">
                                     This KSh {formatNumber(stake)} bet will use up to
                                     {' '}<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {formatNumber(bonusStakePortion)}</span> bonus
                                     and <b>KSh {formatNumber(balanceStakePortion)}</b> cash when rules are met.
                                 </p>
                             ) : (
-                                <p className="bonus-terms-modal-text">
+                                <p className="bonus-terms-modal-intro">
                                     Tick &quot;Use Bonus&quot; to apply bonus balance when the slip qualifies.
                                 </p>
                             )}
+                            {bonusTerms.map((bonusItem) => {
+                                const ruleLines = formatBonusRules(bonusItem.rules);
+                                return (
+                                    <section className="bonus-terms-modal-section" key={bonusItem.code || bonusItem.name}>
+                                        <h3>{bonusItem.name}</h3>
+                                        {bonusItem.description && (
+                                            <p className="bonus-terms-modal-desc">{bonusItem.description}</p>
+                                        )}
+                                        {ruleLines.length > 0 && (
+                                            <ul>
+                                                {ruleLines.map((line) => (
+                                                    <li key={line}>{line}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </section>
+                                );
+                            })}
+                        </Modal.Body>
+                        <Modal.Footer>
                             <button
                                 type="button"
-                                className="place-bet-btn bold w-full"
+                                className="bonus-terms-modal-close"
                                 onClick={() => setShowBonusTooltip(false)}
                             >
-                                Close
+                                Got it
                             </button>
-                        </Modal.Body>
+                        </Modal.Footer>
                     </Modal>
                 </>
             )

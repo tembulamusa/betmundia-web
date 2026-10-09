@@ -15,7 +15,6 @@ import {
     fetchSurvivorProgress,
     placeSurvivorGameBet,
     survivorOddValueForSelection,
-    SURVIVOR_ARBITRARY_ODD,
     readStoredSurvivorChallenges,
     persistSurvivorChallenges,
     normalizeSelection,
@@ -528,7 +527,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                     parent_match_id) - shows the literal placeholder for now, and
                                     will pick up real names automatically once the backend adds
                                     them, same fallback convention as betPickForSelection. */}
-                                ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
+                                {game.home_team || "Home"} Vs {game.away_team || "Away"}
                             </div>
                             <div className="survivor-game-time">
                                 Active until {formatDateTime(game.lock_at)}
@@ -626,7 +625,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                     parent_match_id) - shows the literal placeholder for now, and
                                     will pick up real names automatically once the backend adds
                                     them, same fallback convention as betPickForSelection. */}
-                                ({game.home_team || "Home"}) Vs ({game.away_team || "Away"})
+                                {game.home_team || "Home"} Vs {game.away_team || "Away"}
                             </div>
                             <div className="survivor-game-time">
                                 Active until {formatDateTime(game.lock_at)}
@@ -698,7 +697,17 @@ const SurvivorChallengeGames = ({ id }) => {
                     </div>
                     <div className="survivor-pick-confirm-row">
                         <span>Possible win</span>
-                        <b>{formatMoney((challenge.entry_stake || 0) * SURVIVOR_ARBITRARY_ODD)}</b>
+                        <b>
+                            {formatMoney(
+                                (challenge.entry_stake || 0) *
+                                    survivorOddValueForSelection(
+                                        (challenge.games || []).find(
+                                            (g) => g.game_number === pendingPick?.gameNumber
+                                        ),
+                                        pendingPick?.selection
+                                    )
+                            )}
+                        </b>
                     </div>
                     {pendingPick?.existing?.selection && (
                         <p className="survivor-pick-confirm-warning">

@@ -25,11 +25,8 @@ const Signup = (props) => {
 
 
     useEffect(() => {
-        dispatch({ type: "SET", key: "fullpagewidth", payload: true });
+        // Not setting fullpagewidth here so the sidebar/leftbar stays visible
         dispatch({ type: "DEL", key: "showloginmodal" });
-        return () => {
-            dispatch({ type: "DEL", key: "fullpagewidth" });
-        };
     }, [dispatch]);
 
     const initialValues = {

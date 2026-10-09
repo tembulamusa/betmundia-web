@@ -8,8 +8,9 @@ import AwayTeamDefaultFlag from "../../assets/team-jersies/away-default.png"
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 import { getStoredIpAddress } from "../utils/ip-address";
 import NoEvents from "../utils/no-events";
+import { normalizeFreebetOdds } from "../utils/freebet-odds";
 
-const FreeBet = ({ isFreebetPage = false } = {}) => {
+const FreeBet = ({ isFreebetPage = false, inModal = false } = {}) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [freebet, setFreebet] = useState(null);
@@ -50,6 +51,7 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
                 let updatedUser = { ...getFromLocalStorage("user") };
                 updatedUser.has_freebet = 0;
                 setLocalStorage("user", updatedUser);
+                window.dispatchEvent(new Event("freebet:placed"));
                 setTimeout(() => {
                     setAlert(null)
                 }, 5000)
@@ -116,16 +118,8 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
 
                     if (result.data != null) {
 
-                        let data = result.data;
-
-                        // ✅ SORT outcomes
-                        const outcomes = data?.odds?.["1x2"]?.outcomes;
-
-                        if (Array.isArray(outcomes)) {
-                            data.odds["1x2"].outcomes = outcomes.sort(
-                                (a, b) => Number(a.outcome_id) - Number(b.outcome_id)
-                            );
-                        }
+                        // odds may be keyed "1x2" or by sub_type_id ("1"); sort outcomes 1, X, 2
+                        let data = normalizeFreebetOdds(result.data);
 
                         setFreebet(data);
                     }
@@ -225,7 +219,7 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
 
                 freebet &&
                 <div className="highlights">
-                    <div className="marquee-card free-bet relative blink-e animate-shadow-pulse" style={{
+                    <div className="marquee-card free-bet relative blink-e" style={{
                         background: "rgba(255, 255, 255, 0.1)",
                         marginBottom: "8px",
                         marginRight: "4px",
@@ -286,9 +280,10 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
                                 <span className="card-option-group btn-count-3 freebet-btn">
                                     {freebet?.odds?.["1x2"]?.outcomes?.map((outcome, idx) => (
 
-                                        <span className="ng-star-inserted ">
+                                        <span className="ng-star-inserted " key={outcome?.odd_key ?? idx}>
                                             <div className={`freebet-pick secondary-bg-2 home-team c-btn ${outcome?.odd_key == selectedOdd && "picked"}`} onClick={() => updatePick(outcome)}>
                                                 <div className="card-event-result-name card-result-name ng-star-inserted">
+                                                    <span className="freebet-pick-label">{outcome?.display || ["1", "X", "2"][idx] || ""}</span>
                                                 </div>
                                                 <span className="card-result-odds option-value odds-right-align ng-star-inserted">
                                                     <span className="ng-star-inserted" >{outcome?.odd_value}</span>
@@ -312,6 +307,12 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
                 </div >
 
             }
+
+            {inModal && !freebet && !alert && (
+                <p className="freebet-modal__status">
+                    {fetchCompleted && !isLoading ? "You have no free bet at the moment." : "Loading your free bet..."}
+                </p>
+            )}
 
             {isFreebetPage && fetchCompleted && !isLoading && !freebet && !alert && (
                 <div className="w-full">
