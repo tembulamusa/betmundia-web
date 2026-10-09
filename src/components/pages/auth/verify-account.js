@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useRef, useState, useCallback } from 'rea
 import { Formik } from 'formik';
 import makeRequest from "../../utils/fetch-request";
 import { Context } from '../../../context/store';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+    clearLoginRedirect,
+    resolveLoginRedirect,
+} from '../../utils/login-redirect';
 import Notify from '../../utils/Notify';
 import Alert from '../../utils/alert';
 import socket from '../../utils/socket-connect';
@@ -60,6 +64,7 @@ const VerifyAccount = () => {
     const otpAbortRef = useRef(null);
     const [state, dispatch] = useContext(Context);
     const navigate = useNavigate();
+    const location = useLocation();
     const deviceId = useRef(getOrCreateDeviceId());
 
     const msisdn =
@@ -199,7 +204,11 @@ const VerifyAccount = () => {
                 dispatch({ type: "DEL", key: "regpassword" });
                 dispatch({ type: "DEL", key: "showloginmodal" });
                 Notify({ status: 200, message: "Account verified. You are now logged in." });
-                window.location.href = '/';
+                const next = resolveLoginRedirect(state?.loginRedirect, location.search);
+                if (state?.loginRedirect) {
+                    clearLoginRedirect(dispatch);
+                }
+                window.location.href = next || '/';
                 return;
             }
 
@@ -218,7 +227,7 @@ const VerifyAccount = () => {
             clearPendingVerifyAuth();
             dispatch({ type: "DEL", key: "regpassword" });
         }
-    }, [dispatch, msisdn, navigate, state?.regpassword]);
+    }, [dispatch, location.search, msisdn, navigate, state?.loginRedirect, state?.regpassword]);
 
     const handleSubmit = (values) => {
         const endpoint = '/auth/verify';
@@ -234,9 +243,6 @@ const VerifyAccount = () => {
             },
             api_version: 2,
         }).then(([status, response]) => {
-            // #region agent log
-            fetch('http://127.0.0.1:7508/ingest/cb422352-05d9-4a59-9363-ce9918d47252',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'704c88'},body:JSON.stringify({sessionId:'704c88',hypothesisId:'H4',location:'verify-account.js:handleSubmit',message:'verify response',data:{httpStatus:status,apiStatus:response?.status,result:response?.result??null},timestamp:Date.now()})}).catch(()=>{});
-            // #endregion
             if ([200, 201].includes(status)) {
                 if (response?.status == 200 || response?.status == 201) {
                     Notify({ status: 200, message: "Account verified successfully." });
