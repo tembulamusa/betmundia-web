@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import makeRequest from "../../utils/fetch-request";
 import { getFromLocalStorage } from "../../utils/local-storage";
+import { normalizeFreebetOdds } from "../../utils/freebet-odds";
 import HomeTeamDefaultFlag from "../../../assets/team-jersies/home-default.png";
 import AwayTeamDefaultFlag from "../../../assets/team-jersies/away-default.png";
 
@@ -196,7 +197,7 @@ const FreeBetPage = () => {
         makeRequest({ url: "/sports/freebet", method: "GET", api_version: 2 })
             .then(([, result]) => {
                 if (["200", "201"].includes(result?.status) && result.data != null) {
-                    const data = result.data;
+                    const data = normalizeFreebetOdds(result.data);
                     const outcomes = data?.odds?.["1x2"]?.outcomes;
                     const hasMatch = Boolean(data?.home_team || data?.away_team || data?.match_id);
                     const hasOdds = Array.isArray(outcomes) && outcomes.length > 0;

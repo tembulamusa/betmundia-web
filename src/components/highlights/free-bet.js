@@ -8,6 +8,7 @@ import AwayTeamDefaultFlag from "../../assets/team-jersies/away-default.png"
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 import { getStoredIpAddress } from "../utils/ip-address";
 import NoEvents from "../utils/no-events";
+import { normalizeFreebetOdds } from "../utils/freebet-odds";
 
 const FreeBet = ({ isFreebetPage = false, inModal = false } = {}) => {
     const navigate = useNavigate();
@@ -117,16 +118,8 @@ const FreeBet = ({ isFreebetPage = false, inModal = false } = {}) => {
 
                     if (result.data != null) {
 
-                        let data = result.data;
-
-                        // ✅ SORT outcomes
-                        const outcomes = data?.odds?.["1x2"]?.outcomes;
-
-                        if (Array.isArray(outcomes)) {
-                            data.odds["1x2"].outcomes = outcomes.sort(
-                                (a, b) => Number(a.outcome_id) - Number(b.outcome_id)
-                            );
-                        }
+                        // odds may be keyed "1x2" or by sub_type_id ("1"); sort outcomes 1, X, 2
+                        let data = normalizeFreebetOdds(result.data);
 
                         setFreebet(data);
                     }
