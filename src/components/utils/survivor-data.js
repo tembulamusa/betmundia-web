@@ -57,6 +57,19 @@ export const fetchSurvivorChallenges = async () => {
     return [];
 };
 
+/** GET /survivor/challenges/{id}/games — visible games only (poll-friendly). */
+export const fetchSurvivorGames = async (id) => {
+    const [httpStatus, response] = await makeRequest({
+        url: `/survivor/challenges/${id}/games`,
+        method: "GET",
+        api_version: 2,
+    });
+    if (isSurvivorSuccess(httpStatus, response)) {
+        return Array.isArray(response?.data) ? response.data : [];
+    }
+    return [];
+};
+
 /** GET /survivor/challenges/{id} — public challenge detail + games list. */
 export const fetchSurvivorChallenge = async (id) => {
     const [httpStatus, response] = await makeRequest({
@@ -181,6 +194,9 @@ export const survivorOddForSelection = (game, selection) => {
     return value != null && value !== "" ? Number(value) : SURVIVOR_ARBITRARY_ODD;
 };
 
+export const survivorOddValueForSelection = (game, selection) =>
+    Float(survivorOddForSelection(game, selection), 2);
+
 const betPickForSelection = (game, selection) => {
     switch (normalizeSelection(selection)) {
         case "1": return game?.home_team || "Home";
@@ -203,26 +219,40 @@ const betPickForSelection = (game, selection) => {
  * parent_match_id below since no separate child match_id is exposed.
  */
 export const placeSurvivorGameBet = async (challenge, game, selection) => {
-    const oddValue = Float(survivorOddForSelection(game, selection), 2);
-    const betPick = betPickForSelection(game, selection);
-    const subTypeId = game?.sub_type_id ?? game?.subTypeId ?? 1;
+    const outcome = survivorOutcomeForSelection(game, selection);
+    const oddValue = survivorOddValueForSelection(game, selection);
+    const betPick =
+        outcome?.odd_key || outcome?.display || betPickForSelection(game, selection);
+    const subTypeId =
+        outcomeField(outcome, "sub_type_id", "subTypeId") ??
+        game?.sub_type_id ??
+        game?.subTypeId ??
+        1;
+    const market1x2 = game?.odds?.["1x2"];
 
     const matchId = game?.parent_match_id ?? game?.match_id;
     const slip = {
         match_id: String(matchId ?? ""),
         parent_match_id: String(matchId ?? ""),
-        special_bet_value: "",
+        special_bet_value: outcomeField(outcome, "special_bet_value", "specialBetValue") || "",
         sub_type_id: String(subTypeId),
         away_team: game?.away_team,
         bet_pick: betPick,
         bet_type: SURVIVOR_PLACEBET_TYPE,
         home_team: game?.home_team,
         live: 0,
-        market_active: 1,
+        market_active: outcomeField(outcome, "odd_active", "oddActive") ?? 1,
         odd_type: game?.odd_type || "1x2",
         odd_value: oddValue.toFixed(2),
-        producer_id: String(game?.producer_id ?? game?.producerId ?? "3"),
+        producer_id: String(
+            outcomeField(outcome, "producer_id", "producerId") ??
+                game?.producer_id ??
+                game?.producerId ??
+                market1x2?.producer_id ??
+                "3"
+        ),
         sport_name: game?.sport_name || "Soccer",
+        outcome_id: outcomeField(outcome, "outcome_id", "outcomeId"),
         ucn: cleanUcn(`${matchId ?? ""}${subTypeId}${betPick ?? ""}`),
     };
 
