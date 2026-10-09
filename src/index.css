@@ -3363,6 +3363,10 @@ svg.big-offcanvas-icon {
    Follows the platform modal standard used by the account drawer's
    Loyalty Points Guide modal (account-drawer.css): dark panel, tinted header
    with a purple icon badge, gold section titles, purple footer button. */
+.bonus-terms-modal .modal-dialog {
+  max-width: 720px;
+}
+
 .bonus-terms-modal .modal-content {
   background: #0f0f1f;
   color: #fff;
@@ -3382,7 +3386,7 @@ svg.big-offcanvas-icon {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  font-size: 1.35rem;
+  font-size: 2.7rem;
   font-weight: 700;
 }
 
@@ -3390,12 +3394,12 @@ svg.big-offcanvas-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 3.6rem;
+  height: 3.6rem;
   border-radius: 50%;
   background: #a71f66;
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 1.8rem;
   flex-shrink: 0;
 }
 
@@ -3410,8 +3414,8 @@ svg.big-offcanvas-icon {
 .bonus-terms-modal-intro {
   margin: 0 0 1.1rem;
   color: rgba(255, 255, 255, 0.78);
-  font-size: 1.1rem;
-  line-height: 1.45;
+  font-size: 2.2rem;
+  line-height: 1.4;
 }
 
 /* One block per bonus returned by GET /bonuses (name, description, rules). */
@@ -3421,28 +3425,29 @@ svg.big-offcanvas-icon {
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: none;
 }
 
 .bonus-terms-modal-section h3 {
   margin: 0 0 0.4rem;
   color: #ffc428;
-  font-size: 1.25rem;
+  font-size: 2.5rem;
   font-weight: 700;
 }
 
 .bonus-terms-modal-desc {
   margin: 0 0 0.55rem;
   color: rgba(255, 255, 255, 0.82);
-  font-size: 1.05rem;
-  line-height: 1.45;
+  font-size: 2.1rem;
+  line-height: 1.4;
 }
 
 .bonus-terms-modal-section ul {
   margin: 0;
   padding-left: 1.15rem;
   color: rgba(255, 255, 255, 0.88);
-  font-size: 1.05rem;
-  line-height: 1.45;
+  font-size: 2.1rem;
+  line-height: 1.4;
   list-style: disc;
 }
 
@@ -3451,6 +3456,7 @@ svg.big-offcanvas-icon {
 }
 
 .bonus-terms-modal .modal-footer {
+  justify-content: center;
   background: #0f0f1f;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0 0 10px 10px;
@@ -3460,13 +3466,13 @@ svg.big-offcanvas-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.6rem;
-  padding: 0.55rem 1.25rem;
+  min-height: 2.3rem;
+  padding: 0.4rem 1.6rem;
   border: none;
   border-radius: 0.4rem;
   background: #a71f66;
   color: #fff;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
 }
