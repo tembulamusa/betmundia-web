@@ -226,7 +226,7 @@ const FreeBet = ({ isFreebetPage = false, inModal = false } = {}) => {
 
                 freebet &&
                 <div className="highlights">
-                    <div className="marquee-card free-bet relative blink-e animate-shadow-pulse" style={{
+                    <div className="marquee-card free-bet relative blink-e" style={{
                         background: "rgba(255, 255, 255, 0.1)",
                         marginBottom: "8px",
                         marginRight: "4px",
@@ -287,9 +287,10 @@ const FreeBet = ({ isFreebetPage = false, inModal = false } = {}) => {
                                 <span className="card-option-group btn-count-3 freebet-btn">
                                     {freebet?.odds?.["1x2"]?.outcomes?.map((outcome, idx) => (
 
-                                        <span className="ng-star-inserted ">
+                                        <span className="ng-star-inserted " key={outcome?.odd_key ?? idx}>
                                             <div className={`freebet-pick secondary-bg-2 home-team c-btn ${outcome?.odd_key == selectedOdd && "picked"}`} onClick={() => updatePick(outcome)}>
                                                 <div className="card-event-result-name card-result-name ng-star-inserted">
+                                                    <span className="freebet-pick-label">{["1", "X", "2"][idx] ?? ""}</span>
                                                 </div>
                                                 <span className="card-result-odds option-value odds-right-align ng-star-inserted">
                                                     <span className="ng-star-inserted" >{outcome?.odd_value}</span>
