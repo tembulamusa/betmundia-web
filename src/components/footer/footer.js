@@ -156,7 +156,7 @@ const Footer = () => {
                         <h5 className="site-footer__heading">Licensing</h5>
                         <p className="site-footer__licensing leading-[2.25]">
                             AIB Petals Limited is licensed by the Gambling Regulatory Authority of
-                            Kenya (GRAK- formerly BCLB) under the Betting, Lotteries and gaming Act,
+                            Kenya (GRA) under the Betting, Lotteries and gaming Act,
                             1966 (now repealed by the Gambling Control Act, 2025) and any regulations
                             made thereunder under License Numbers: Book Maker&apos;s - 0001303 and
                             Public Gaming 0001211
