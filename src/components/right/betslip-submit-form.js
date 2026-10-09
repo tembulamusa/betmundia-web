@@ -23,6 +23,7 @@ import {
 import { isMobile } from "react-device-detect";
 import { Modal } from "react-bootstrap";
 import { TbRefreshAlert } from "react-icons/tb";
+import { FaGift } from "react-icons/fa";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
@@ -65,6 +66,62 @@ const formatSlipForPlaceBet = (slip) => {
 }
 
 
+// Turn a bonus rule from GET /bonuses into a readable line for the Bonus Terms modal.
+const humanizeKey = (key) => String(key).replace(/_/g, ' ').replace(/^./, (ch) => ch.toUpperCase());
+const humanizeValue = (value) => String(value).toLowerCase().replace(/_/g, ' ').replace(/^./, (ch) => ch.toUpperCase());
+const BONUS_RULE_FORMATTERS = {
+    bonus_amount: (v) => `Bonus amount: KSh ${formatNumber(v)}`,
+    bonus_percentage: (v) => `Bonus: ${v}%`,
+    bonus_contribution_percentage: (v) => `Bonus covers up to ${v}% of the stake`,
+    cash_contribution_percentage: (v) => `Cash covers ${v}% of the stake`,
+    minimum_odds_per_game: (v) => `Minimum odds per game: ${v}`,
+    minimum_games: (v) => `Minimum games: ${v}`,
+    maximum_games: (v) => `Maximum games: ${v}`,
+    winnings_withdrawable: (v) => (v ? 'Winnings are withdrawable' : 'Winnings are not withdrawable'),
+    deposit_frequency: (v) => `Deposit: ${humanizeValue(v)}`,
+    expiry_hours: (v) => `Expires after ${v} hour${Number(v) === 1 ? '' : 's'}`,
+    expiry_days: (v) => `Expires after ${v} day${Number(v) === 1 ? '' : 's'}`,
+};
+const formatBonusRules = (rules) =>
+    Object.entries(rules || {})
+        .filter(([, rule]) => rule && rule.enabled !== false && rule.value !== undefined && rule.value !== null)
+        .map(([key, rule]) => (BONUS_RULE_FORMATTERS[key]
+            ? BONUS_RULE_FORMATTERS[key](rule.value)
+            : `${humanizeKey(key)}: ${typeof rule.value === 'boolean' ? (rule.value ? 'Yes' : 'No') : rule.value}`));
+
+// Compare the current slip with the rules of the bonus that can be used on a stake
+// (GET /bonuses -> DAILY_DEPOSIT_BONUS). Returns a list of human-readable problems;
+// empty when the slip is empty, no matching bonus was loaded, or the slip is fine.
+const STAKE_BONUS_CODE = 'DAILY_DEPOSIT_BONUS';
+const getBonusUseIssues = (bonuses, slip) => {
+    const picks = Object.values(slip || {});
+    if (!picks.length) return [];
+    const bonusItem = (bonuses || []).find((b) => b?.code === STAKE_BONUS_CODE);
+    const rules = bonusItem?.rules;
+    if (!rules) return [];
+    const active = (key) => (rules[key]?.enabled !== false && rules[key]?.value != null ? Number(rules[key].value) : null);
+    const issues = [];
+    const count = picks.length;
+    const gamesLabel = (n) => `${n} game${n === 1 ? '' : 's'}`;
+
+    const minGames = active('minimum_games');
+    if (minGames != null && count < minGames) {
+        issues.push(`At least ${gamesLabel(minGames)} required (you have ${count}).`);
+    }
+    const maxGames = active('maximum_games');
+    if (maxGames != null && count > maxGames) {
+        issues.push(`No more than ${gamesLabel(maxGames)} allowed (you have ${count}).`);
+    }
+    const minOdds = active('minimum_odds_per_game');
+    if (minOdds != null) {
+        const below = picks.filter((pick) => parseFloat(pick?.odd_value) < minOdds).length;
+        if (below > 0) {
+            issues.push(`Every game needs odds of at least ${minOdds} (${gamesLabel(below)} ${below === 1 ? 'is' : 'are'} below).`);
+        }
+    }
+    return issues;
+};
+
 const BetslipSubmitForm = (props) => {
 
     const { jackpot, jackpotData, bonusBet, dbWinMatrix } = props;
@@ -84,31 +141,23 @@ const BetslipSubmitForm = (props) => {
     const user = getFromLocalStorage("user");
     const bonusBalance = formatToFloat(user?.bonus || user?.bonus_balance || 0);
 
-    // Bonus settings (how much of the stake bonus is allowed to cover) come
-    // from the bonus settings API. TODO: confirm the real endpoint + field
-    // name with the backend and swap it in below — until then this falls
-    // back to 100% (bonus covers the full stake, capped by bonusBalance)
-    // so the UI keeps working.
-    const [bonusSettings, setBonusSettings] = useState({ percentage: 100 });
+    // Active bonuses + their rules from GET /bonuses, shown in the Bonus Terms modal.
+    const [bonusTerms, setBonusTerms] = useState([]);
+    // Re-evaluated whenever the slip (games/odds) or the loaded bonus rules change.
+    const bonusUseIssues = useMemo(
+        () => getBonusUseIssues(bonusTerms, state?.betslip),
+        [bonusTerms, state?.betslip]
+    );
 
     useEffect(() => {
-        makeRequest({ url: '/bonus/settings', method: 'GET', api_version: 2 })
+        makeRequest({ url: '/bonuses', method: 'GET', api_version: 2 })
             .then(([status, response]) => {
-                if (status === 200 && response?.data) {
-                    setBonusSettings({
-                        percentage: parseFloat(response.data.percentage ?? response.data.bonus_use_percentage ?? 100)
-                    });
+                if (status === 200 && Array.isArray(response?.data?.bonuses)) {
+                    setBonusTerms(response.data.bonuses.filter((b) => b && b.active !== false));
                 }
             })
-            .catch(() => { /* keep the 100% fallback */ });
+            .catch(() => { /* terms stay empty if the request fails */ });
     }, []);
-
-    const bonusUsePercentage = bonusSettings?.percentage ?? 100;
-    const bonusStakePortion = Math.min(
-        Float(stake * (bonusUsePercentage / 100), 2),
-        parseFloat(bonusBalance) || 0
-    );
-    const balanceStakePortion = Math.max(Float(stake - bonusStakePortion, 2), 0);
 
 
     // const setbonusMatrix = () => {
@@ -618,6 +667,26 @@ const BetslipSubmitForm = (props) => {
                                                     >
                                                         Terms
                                                     </button>
+
+                                                    {!!values?.use_bonus && bonusUseIssues.length > 0 && (
+                                                        <div className="bonus-use-warning" role="alert">
+                                                            <div className="bonus-use-warning-title">
+                                                                Your slip doesn't meet the bonus rules. Uncheck "Use Bonus" to continue.
+                                                            </div>
+                                                            <ul className="bonus-use-warning-list">
+                                                                {bonusUseIssues.map((issue) => (
+                                                                    <li key={issue}>{issue}</li>
+                                                                ))}
+                                                            </ul>
+                                                            <button
+                                                                type="button"
+                                                                className="bonus-use-warning-action"
+                                                                onClick={() => setFieldValue('use_bonus', false)}
+                                                            >
+                                                                Uncheck bonus
+                                                            </button>
+                                                        </div>
+                                                    )}
                                                 </td>
                                             </tr>
                                         )}
@@ -690,40 +759,48 @@ const BetslipSubmitForm = (props) => {
                         show={showBonusTooltip}
                         onHide={() => setShowBonusTooltip(false)}
                         centered
-                        className="popover-login-modal bonus-terms-modal"
+                        className="bonus-terms-modal"
                     >
-                        <Modal.Body className="p-4 bonus-terms-modal-body">
+                        <Modal.Header closeButton closeVariant="white">
+                            <Modal.Title>
+                                <span className="bonus-terms-modal-title-icon" aria-hidden="true">
+                                    <FaGift />
+                                </span>
+                                Bonus Terms
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p className="bonus-terms-modal-intro">
+                                Bonus funds are subject to wagering requirements and expiry.
+                            </p>
+                            {bonusTerms.map((bonusItem) => {
+                                const ruleLines = formatBonusRules(bonusItem.rules);
+                                return (
+                                    <section className="bonus-terms-modal-section" key={bonusItem.code || bonusItem.name}>
+                                        <h3>{bonusItem.name}</h3>
+                                        {bonusItem.description && (
+                                            <p className="bonus-terms-modal-desc">{bonusItem.description}</p>
+                                        )}
+                                        {ruleLines.length > 0 && (
+                                            <ul>
+                                                {ruleLines.map((line) => (
+                                                    <li key={line}>{line}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </section>
+                                );
+                            })}
+                        </Modal.Body>
+                        <Modal.Footer>
                             <button
                                 type="button"
                                 className="bonus-terms-modal-close"
-                                aria-label="Close"
                                 onClick={() => setShowBonusTooltip(false)}
                             >
-                                &times;
+                                Got it
                             </button>
-                            <div className="bonus-terms-modal-title">Bonus Terms</div>
-                            <p className="bonus-terms-modal-text">
-                                Bonus funds are subject to wagering requirements and expiry.
-                            </p>
-                            {values?.use_bonus ? (
-                                <p className="bonus-terms-modal-text">
-                                    At {bonusUsePercentage}% bonus usage, placing this KSh {formatNumber(stake)} bet will deduct
-                                    {' '}<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {formatNumber(bonusStakePortion)}</span> from your bonus balance
-                                    and <b>KSh {formatNumber(balanceStakePortion)}</b> from your real balance.
-                                </p>
-                            ) : (
-                                <p className="bonus-terms-modal-text">
-                                    Tick "Use Bonus" to cover part of this stake from your bonus balance instead of your real balance.
-                                </p>
-                            )}
-                            <button
-                                type="button"
-                                className="place-bet-btn bold w-full"
-                                onClick={() => setShowBonusTooltip(false)}
-                            >
-                                Close
-                            </button>
-                        </Modal.Body>
+                        </Modal.Footer>
                     </Modal>
                 </>
             )
