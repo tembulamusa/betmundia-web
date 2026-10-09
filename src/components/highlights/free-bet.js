@@ -9,7 +9,7 @@ import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
 import { getStoredIpAddress } from "../utils/ip-address";
 import NoEvents from "../utils/no-events";
 
-const FreeBet = ({ isFreebetPage = false } = {}) => {
+const FreeBet = ({ isFreebetPage = false, inModal = false } = {}) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [freebet, setFreebet] = useState(null);
@@ -50,6 +50,7 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
                 let updatedUser = { ...getFromLocalStorage("user") };
                 updatedUser.has_freebet = 0;
                 setLocalStorage("user", updatedUser);
+                window.dispatchEvent(new Event("freebet:placed"));
                 setTimeout(() => {
                     setAlert(null)
                 }, 5000)
@@ -312,6 +313,12 @@ const FreeBet = ({ isFreebetPage = false } = {}) => {
                 </div >
 
             }
+
+            {inModal && !freebet && !alert && (
+                <p className="freebet-modal__status">
+                    {fetchCompleted && !isLoading ? "You have no free bet at the moment." : "Loading your free bet..."}
+                </p>
+            )}
 
             {isFreebetPage && fetchCompleted && !isLoading && !freebet && !alert && (
                 <div className="w-full">

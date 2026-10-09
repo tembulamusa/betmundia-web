@@ -1,0 +1,135 @@
+/* Header notice: blinking purple text while the user has a free bet */
+.freebet-notice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.25rem 0.6rem;
+  border: none;
+  background: transparent;
+  color: #a71f66;
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  animation: freebet-notice-blink 1s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.freebet-notice:hover,
+.freebet-notice:focus,
+.freebet-notice:focus-visible,
+.freebet-notice:active {
+  background: transparent;
+  color: #a71f66;
+  outline: none;
+  box-shadow: none;
+}
+
+.freebet-notice--mobile {
+  display: flex;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1.3rem;
+  white-space: normal;
+  text-align: center;
+}
+
+@keyframes freebet-notice-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .freebet-notice {
+    animation: none;
+  }
+}
+
+/* Free bet modal (platform modal standard) */
+.freebet-modal .freebet-modal__content {
+  background: #0f0f1f;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.freebet-modal .modal-header {
+  background: #151525;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px 10px 0 0;
+}
+
+.freebet-modal .modal-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.freebet-modal__title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: #a71f66;
+  color: #fff;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.freebet-modal .modal-body {
+  background: #0f0f1f;
+  color: #fff;
+  padding: 1.15rem 1.25rem 1.5rem;
+}
+
+.freebet-modal__intro {
+  margin: 0 0 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.4rem;
+}
+
+.freebet-modal__status {
+  margin: 0;
+  padding: 1.5rem 0.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.4rem;
+}
+
+/* Re-flow the highlights card for the modal */
+.freebet-modal .highlights .marquee-card,
+.freebet-modal .marquee-card.free-bet {
+  width: 100% !important;
+  max-height: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding: 8px 8px 12px !important;
+  display: block;
+}
+
+.freebet-modal .freebet-btn-parent {
+  position: static !important;
+  transform: none !important;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.freebet-modal .btn.place-free-bet {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1.6rem;
+}
+
+.freebet-modal .freebet-btn .home-team {
+  margin-right: 6px;
+}
