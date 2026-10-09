@@ -6,6 +6,7 @@ import logo from '../../assets/img/logo.svg';
 import { Context } from '../../context/store';
 import { formatToFloat } from '../utils/formatters';
 import HeaderNav from './header-nav';
+import FreebetNotice from './freebet-notice';
 import MobileChat from './mobile-chat';
 import MobileMenu from './mobile-menu';
 import '../../assets/css/mobile-top-bar.css';
@@ -77,6 +78,7 @@ const MobileTopBar = ({ user }) => {
                     </div>
                 )}
             </div>
+            <FreebetNotice user={user} className="freebet-notice--mobile" />
         </div>
     );
 };
