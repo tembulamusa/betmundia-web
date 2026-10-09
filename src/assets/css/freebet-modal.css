@@ -130,6 +130,70 @@
   font-size: 1.6rem;
 }
 
-.freebet-modal .freebet-btn .home-team {
-  margin-right: 6px;
+
+/* Odds buttons: 1 / X / 2, tap one then Place Bet */
+.freebet-pick-label {
+  display: none;
+}
+
+.freebet-modal .freebet-pick-label {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.freebet-modal .marquee-card.free-bet {
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.freebet-modal .card-option-group {
+  display: flex !important;
+  gap: 8px;
+  padding: 6px 0 0;
+}
+
+.freebet-modal .btn-count-3 > .ng-star-inserted {
+  flex: 1 1 0;
+  width: auto !important;
+  min-width: 0;
+}
+
+.freebet-modal .freebet-pick {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 56px;
+  margin: 0 !important;
+  padding: 6px 4px;
+  line-height: 1.2 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffc428 !important;
+  cursor: pointer;
+}
+
+.freebet-modal .freebet-pick .card-result-odds,
+.freebet-modal .freebet-pick .card-result-odds * {
+  display: inline;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: inherit;
+}
+
+.freebet-modal .freebet-pick.picked {
+  background: #a71f66 !important;
+  border-color: #a71f66 !important;
+  color: #fff !important;
+}
+
+.freebet-modal .freebet-pick.picked .freebet-pick-label {
+  color: #fff;
 }
