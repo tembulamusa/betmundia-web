@@ -1373,32 +1373,6 @@ export const MarketList = (props) => {
     }, [initialMatchwithmarkets]);
 
     useEffect(() => {
-        // #region agent log
-        const odds = matchwithmarkets?.odds;
-        if (typeof fetch === 'function' && odds && typeof odds === 'object') {
-            const apiKeyOrder = Object.entries(odds).map(([key, v]) => ({
-                key,
-                priority: v?.priority,
-                subTypeId: v?.subTypeId ?? v?.sub_type_id,
-            }));
-            fetch('http://127.0.0.1:7508/ingest/cb422352-05d9-4a59-9363-ce9918d47252', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '704c88' },
-                body: JSON.stringify({
-                    sessionId: '704c88',
-                    hypothesisId: 'D',
-                    location: 'MarketList.useEffect',
-                    message: 'match detail odds from API',
-                    data: { apiKeyOrder, matchId: matchwithmarkets?.match_id },
-                    timestamp: Date.now(),
-                    runId: 'pre-fix',
-                }),
-            }).catch(() => {});
-        }
-        // #endregion
-    }, [matchwithmarkets?.match_id, matchwithmarkets?.odds]);
-
-    useEffect(() => {
         if (matchwithmarkets) {
             if (socket.connected) {
                 handleGameSocket("listen", matchwithmarkets?.parent_match_id);
