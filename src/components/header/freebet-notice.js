@@ -18,7 +18,7 @@ const FreebetNotice = ({ user, className = "" }) => {
             className={`freebet-notice ${className}`.trim()}
             onClick={() => dispatch({ type: "SET", key: "showfreebetmodal", payload: true })}
         >
-            You have a Free Bet! Click to play
+            Freebet
         </button>
     );
 };
