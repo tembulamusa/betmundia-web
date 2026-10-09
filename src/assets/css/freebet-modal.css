@@ -206,3 +206,82 @@
 .freebet-modal .freebet-pick.picked .freebet-pick-label {
   color: #fff;
 }
+
+/* Desktop: compact widget (narrow dialog, tighter vertical spacing) */
+@media (min-width: 768px) {
+  .modal-dialog.freebet-modal {
+    width: 420px;
+    max-width: calc(100vw - 2rem);
+    margin: 4rem auto;
+  }
+
+  .freebet-modal .modal-header {
+    padding: 0.6rem 1rem;
+  }
+
+  .freebet-modal .modal-title {
+    font-size: 1.6rem;
+  }
+
+  .freebet-modal__title-icon {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+
+  .freebet-modal .modal-body {
+    padding: 0.7rem 1rem 1rem;
+  }
+
+  .freebet-modal__intro {
+    margin: 0 0 0.4rem;
+    font-size: 1.3rem;
+  }
+
+  .freebet-modal .marquee-card.free-bet {
+    padding: 4px 6px 8px !important;
+  }
+
+  .freebet-modal .card-top-sub-heading {
+    margin-bottom: 0;
+    line-height: 1.4;
+  }
+
+  .freebet-modal .marquee-card .main {
+    height: auto;
+    min-height: 0;
+    padding: 2px 0 0;
+    line-height: 1.3;
+  }
+
+  .freebet-modal .marquee-card .main .team-flag {
+    width: 16px !important;
+  }
+
+  .freebet-modal .marquee-card .market-type {
+    margin-bottom: 2px;
+  }
+
+  .freebet-modal .card-option-group {
+    padding: 2px 0 0;
+  }
+
+  .freebet-modal .freebet-pick {
+    min-height: 44px;
+    padding: 4px;
+  }
+
+  .freebet-modal .freebet-pick .card-result-odds,
+  .freebet-modal .freebet-pick .card-result-odds * {
+    font-size: 1.6rem;
+  }
+
+  .freebet-modal .freebet-btn-parent {
+    margin-top: 8px;
+  }
+
+  .freebet-modal .btn.place-free-bet {
+    padding: 6px 12px;
+    font-size: 1.4rem;
+  }
+}
