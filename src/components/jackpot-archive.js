@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import makeRequest from "./utils/fetch-request";
+import jackpotEmptyBall from "../assets/img/backgrounds/jackpot-empty-ball.png";
 import { Context } from "../context/store";
 import {
     persistJackpotArchive,
@@ -326,6 +327,8 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
     const disablePrev = loading || (archive && archive.hasPrev === false && archive.prevId == null);
     const disableNext = loading || (archive && archive.hasNext === false && archive.nextId == null);
 
+    const showEmpty = !loading && (!archive || !archive.prizes?.length);
+
     return (
         <div className="jackpot-archive">
             <div className="jackpot-archive__title-bar">
@@ -398,11 +401,22 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
                 </button>
             </div>
 
-            <div className="jackpot-archive__prizes-heading">Prizes</div>
-
-            {error && !archive ? (
-                <div className="jackpot-archive__empty">{error}</div>
+            {showEmpty ? (
+                <div className="col-md-12 text-center background-primary mt-2 no-events-div jackpot-empty-state">
+                    <img
+                        src={jackpotEmptyBall}
+                        alt=""
+                        aria-hidden="true"
+                        className="jackpot-empty-illustration"
+                    />
+                    <h3 className="jackpot-empty-title">No winning history available.</h3>
+                    <p className="jackpot-empty-subtitle">
+                        There are no past jackpot results to show for this selection. Try a different year or month.
+                    </p>
+                </div>
             ) : (
+                <>
+                <div className="jackpot-archive__prizes-heading">Prizes</div>
                 <div className={`jackpot-archive__card${prizesOpen ? " is-open" : ""}`}>
                     <div className="jackpot-archive__card-head">
                         <div>
@@ -454,6 +468,7 @@ const JackpotArchive = ({ active = false, jackpotName, selectedType, typeSlug })
                         </div>
                     )}
                 </div>
+                </>
             )}
         </div>
     );
