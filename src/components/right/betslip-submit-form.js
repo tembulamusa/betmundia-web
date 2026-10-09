@@ -798,7 +798,7 @@ const BetslipSubmitForm = (props) => {
                                 className="bonus-terms-modal-close"
                                 onClick={() => setShowBonusTooltip(false)}
                             >
-                                Close
+                                Got it
                             </button>
                         </Modal.Footer>
                     </Modal>
