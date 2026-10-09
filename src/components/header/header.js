@@ -18,6 +18,8 @@ import socket from '../utils/socket-connect';
 import HeaderNav from './header-nav';
 import MobileChat from './mobile-chat';
 import MobileTopBar from './mobile-top-bar';
+import FreebetNotice from './freebet-notice';
+import FreeBetModal from '../webmodals/freebet-modal';
 import {
     getJackpotTypes,
     persistJackpotTypes,
@@ -115,7 +117,8 @@ const Header = (props) => {
         makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
             if (status == 200 || status == 201 || status == 204) {
                 if (response.status == 200 || response.status == 201) {
-                    setUser(response?.data);
+                    // keep the locally known free bet flag if the refresh payload omits it
+                    setUser({ has_freebet: user?.has_freebet, ...response?.data });
                 } else {
                     removeItem("user");
                     setUser(null);
@@ -138,6 +141,12 @@ const Header = (props) => {
             handleTokenRefresh();
         };
     }, user ? 60 * 60 * 1000 * 7 : null);
+    // The free bet modal tells us once the free bet has been used.
+    useEffect(() => {
+        const onFreebetPlaced = () => setUser((prev) => (prev ? { ...prev, has_freebet: 0 } : prev));
+        window.addEventListener('freebet:placed', onFreebetPlaced);
+        return () => window.removeEventListener('freebet:placed', onFreebetPlaced);
+    }, []);
     useEffect(() => {
         if (user) {
             setLocalStorage("user", user, 1000 * 60 * 60 * 24 * 7);
@@ -205,7 +214,8 @@ const Header = (props) => {
                         </div>
 
                         <div className="header-top-actions d-none d-md-flex" id="navbar-collapse-main">
-                            <div className="flex justify-end">
+                            <div className="flex justify-end items-center">
+                                <FreebetNotice user={user} className="mr-3" />
                                 {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
                             </div>
                         </div>
@@ -230,6 +240,7 @@ const Header = (props) => {
             <LoginModal setUser={setUser} />
             <CheckMpesaDepositStatus />
             <DepositModal />
+            <FreeBetModal user={user} />
         </>
 
     )

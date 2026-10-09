@@ -94,8 +94,8 @@ const General = () => {
                         affiliated companies.
                     </li>
                     <li> This Agreement shall be governed by and interpreted in accordance
-                        with the laws of the Republic of Kenya and Betting Control and
-                        Licensing
+                        with the laws of the Republic of Kenya and Gambling Regulatory
+                        Authority
                         License conditions. Any legal action or proceeding arising under
                         this
                         Agreement will be brought exclusively in courts located in the

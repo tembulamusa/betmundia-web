@@ -231,29 +231,29 @@ Eligibility
 3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.To qualify, your bet slip must contain:
-oExactly 4 selections.
-oEach selection must have minimum odds of 1.50.
-oAll standard sports betting markets are eligible.
+Exactly 4 selections.
+Each selection must have minimum odds of 1.50.
+All standard sports betting markets are eligible.
 Example:
-Manchester City vs Arsenal
-Bayern Munich vs Werder Bremen
-Manchester United vs Chelsea
-Barcelona vs Sevilla
+Manchester City vs Arsenal
+Bayern Munich vs Werder Bremen
+Manchester United vs Chelsea
+Barcelona vs Sevilla
 Sample Odds
-Selection 1: Arsenal – 1.91
-Selection 2: Bayern Munich – 2.31
-Selection 3: Manchester United – 2.50
-Selection 4: Barcelona – 1.75
+Selection 1: Arsenal – 1.91
+Selection 2: Bayern Munich – 2.31
+Selection 3: Manchester United – 2.50
+Selection 4: Barcelona – 1.75
 Minimum combined odds: 10.00
 Note: Repetitive, duplicate, or intentionally similar bets placed to abuse the promotion are strictly prohibited. BetMundial reserves the right to void such bets and withdraw the bonus.
 Bonus Usage
 5.Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (50:50 ratio).
 Example:
-Cash Balance: KES 100
-Bonus Balance: KES 100
+Cash Balance: KES 100
+Bonus Balance: KES 100
 If you place a KES 100 bet:
-KES 50 will be deducted from your cash balance.
-KES 50 will be deducted from your bonus balance.
+KES 50 will be deducted from your cash balance.
+KES 50 will be deducted from your bonus balance.
 Any winnings will be credited according to the applicable cash and bonus contribution and in line with BetMundial's Bonus Policy.
 Bonus Expiry
 6.The bonus is valid for 24 hours from the time it is credited. Any unused bonus balance will automatically expire after this period.
@@ -276,29 +276,29 @@ Eligibility
 3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.To qualify, your bet slip must contain:
-oExactly 4 selections.
-oEach selection must have minimum odds of 1.50.
-oAll standard sports betting markets are eligible.
+Exactly 4 selections.
+Each selection must have minimum odds of 1.50.
+All standard sports betting markets are eligible.
 Example:
-Manchester City vs Arsenal
-Bayern Munich vs Werder Bremen
-Manchester United vs Chelsea
-Barcelona vs Sevilla
+Manchester City vs Arsenal
+Bayern Munich vs Werder Bremen
+Manchester United vs Chelsea
+Barcelona vs Sevilla
 Sample Odds
-Selection 1: Arsenal – 1.91
-Selection 2: Bayern Munich – 2.31
-Selection 3: Manchester United – 2.50
-Selection 4: Barcelona – 1.75
+Selection 1: Arsenal – 1.91
+Selection 2: Bayern Munich – 2.31
+Selection 3: Manchester United – 2.50
+Selection 4: Barcelona – 1.75
 Minimum combined odds: 10.00
 Note: Repetitive, duplicate, or intentionally similar bets placed to abuse the promotion are strictly prohibited. BetMundial reserves the right to void such bets and withdraw the bonus.
 Bonus Usage
 5.Bets placed using this promotion will utilize your cash balance and bonus balance proportionally (50:50 ratio).
 Example:
-Cash Balance: KES 100
-Bonus Balance: KES 100
+Cash Balance: KES 100
+Bonus Balance: KES 100
 If you place a KES 100 bet:
-KES 50 will be deducted from your cash balance.
-KES 50 will be deducted from your bonus balance.
+KES 50 will be deducted from your cash balance.
+KES 50 will be deducted from your bonus balance.
 Any winnings will be credited according to the applicable cash and bonus contribution and in line with BetMundial's Bonus Policy.
 Bonus Expiry
 6.The bonus is valid for 24 hours from the time it is credited. Any unused bonus balance will automatically expire after this period.
@@ -315,9 +315,9 @@ Eligibility
 3.	This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.	To qualify, your bet slip must contain:
-o	Exactly 4 selections.
-o	Each selection must have minimum odds of 1.50.
-o	All standard sports betting markets are eligible.
+Exactly 4 selections.
+Each selection must have minimum odds of 1.50.
+All standard sports betting markets are eligible.
 Example:
 •	Manchester City vs Arsenal
 •	Bayern Munich vs Werder Bremen

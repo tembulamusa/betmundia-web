@@ -2269,14 +2269,14 @@ input.std-input::placeholder {
 .jackpot-empty-title {
   color: #ffffff;
   font-weight: 800;
-  font-size: 1.35rem;
-  margin: 0 0 0.5rem;
+  font-size: 2.4rem;
+  margin: 0 0 0.75rem;
 }
 
 .jackpot-empty-subtitle {
   color: rgba(255, 255, 255, 0.6);
   font-weight: 400;
-  font-size: 0.95rem;
+  font-size: 1.6rem;
   margin: 0;
 }
 
