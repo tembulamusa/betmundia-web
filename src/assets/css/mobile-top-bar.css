@@ -38,25 +38,36 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
+    width: 44px;
+    min-width: 44px;
     min-height: 44px;
     padding: 0;
     border: 0;
+    border-radius: 50%;
     background: transparent;
     color: #000000;
-    font-size: 1.35rem;
     line-height: 1;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
 
+  .mobile-top-bar__app-promo-dismiss svg {
+    display: block;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    box-sizing: border-box;
+    background: transparent;
+  }
+
   .mobile-top-bar__app-promo-dismiss:hover,
-  .mobile-top-bar__app-promo-dismiss:focus,
-  .mobile-top-bar__app-promo-dismiss:focus-visible,
   .mobile-top-bar__app-promo-dismiss:active {
-    background: #ffd84d;
     color: #000000;
-    outline: none !important;
+  }
+
+  .mobile-top-bar__app-promo-dismiss:focus-visible {
+    outline: 3px solid #111111;
+    outline-offset: 2px;
     box-shadow: none !important;
   }
 

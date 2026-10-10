@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
+import { MdCancel } from 'react-icons/md';
 import logo from '../../assets/img/logo.svg';
 import { Context } from '../../context/store';
 import { formatToFloat } from '../utils/formatters';
@@ -9,25 +10,51 @@ import HeaderNav from './header-nav';
 import FreebetNotice from './freebet-notice';
 import MobileChat from './mobile-chat';
 import MobileMenu from './mobile-menu';
+import { ANDROID_PLAY_STORE_URL, getAppDownloadTarget } from '../utils/app-download';
 import '../../assets/css/mobile-top-bar.css';
 
 const MobileTopBar = ({ user }) => {
     const [, dispatch] = useContext(Context);
     const balance = formatToFloat(user?.balance || 0);
-    // The "Download the App" promo row was removed. The body class is kept so the
-    // layout spacing rules (previously used after dismissing the promo) still apply.
+    const [appDownloadHref, setAppDownloadHref] = useState(ANDROID_PLAY_STORE_URL);
+    const [showAppPromo, setShowAppPromo] = useState(true);
+
     useEffect(() => {
-        document.body.classList.add('app-promo-dismissed');
-        return () => {
-            document.body.classList.remove('app-promo-dismissed');
-        };
+        setAppDownloadHref(getAppDownloadTarget().href);
     }, []);
+
+    useEffect(() => {
+        document.body.classList.toggle('app-promo-dismissed', !showAppPromo);
+        return () => document.body.classList.remove('app-promo-dismissed');
+    }, [showAppPromo]);
 
     return (
         <div
-            className="mobile-top-bar mobile-top-bar--promo-hidden"
+            className="mobile-top-bar"
             aria-label="Mobile navigation"
         >
+            {showAppPromo && (
+                <div className="mobile-top-bar__app-promo-row">
+                    <a
+                        href={appDownloadHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mobile-top-bar__app-promo"
+                    >
+                        <span className="mobile-top-bar__app-promo-text">Download the Betmundial App</span>
+                        <span className="mobile-top-bar__app-promo-cta">Download Now</span>
+                    </a>
+                    <button
+                        type="button"
+                        className="mobile-top-bar__app-promo-dismiss"
+                        aria-label="Close app download banner"
+                        onClick={() => setShowAppPromo(false)}
+                    >
+                        <MdCancel aria-hidden="true" />
+                    </button>
+                </div>
+            )}
+
             <div className="mobile-top-bar__brand">
                 <Link to="/" className="mobile-top-bar__logo" title="Betmundial">
                     <img src={logo} alt="Betmundial" />

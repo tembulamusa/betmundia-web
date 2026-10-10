@@ -12,6 +12,8 @@ import {
     getPendingVerifyAuth,
 } from '../../utils/pending-verify-auth';
 import { setLocalStorage } from '../../utils/local-storage';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BRAND = '#a71f66';
 const OTP_CHANNEL = 'sms';
@@ -290,11 +292,19 @@ const VerifyAccount = () => {
                         message: "Verification code sent to phone",
                     });
                 } else {
-                    setMessage({ status: 400, message: "Error fetching code" });
+                    const errorMessage = response?.result || response?.error?.message || response?.error || response?.message || "Unable to send verification code. Please try again.";
+                    setMessage({ status: 400, message: errorMessage });
+                    toast.error(errorMessage);
                 }
             } else {
-                setMessage({ status: status, message: "Error fetching code" });
+                const errorMessage = response?.result || response?.error?.message || response?.error || response?.message || "Unable to send verification code. Please try again.";
+                setMessage({ status: status || 400, message: errorMessage });
+                toast.error(errorMessage);
             }
+        }).catch(() => {
+            const errorMessage = "Unable to send verification code. Please try again.";
+            setMessage({ status: 400, message: errorMessage });
+            toast.error(errorMessage);
         });
         emitOtpListen();
     }, [msisdn, emitOtpListen]);
@@ -425,6 +435,7 @@ const VerifyAccount = () => {
 
     return (
         <>
+            <ToastContainer position="top-center" autoClose={5000} closeOnClick pauseOnFocusLoss draggable />
             <div className='signup-container' style={{ paddingTop: '20px' }}>
                 <div className='std-medium-width-block'>
                     <div className="col-md-12 mt-2 p-2 std-boxed-form-page" data-backdrop="static">
