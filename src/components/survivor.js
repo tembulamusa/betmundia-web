@@ -13,7 +13,7 @@ import {
     fetchSurvivorResults,
     joinSurvivorChallenge,
     fetchSurvivorProgress,
-    placeSurvivorGameBet,
+    submitSurvivorPrediction,
     survivorOddValueForSelection,
     readStoredSurvivorChallenges,
     persistSurvivorChallenges,
@@ -283,11 +283,25 @@ const SurvivorChallengeGames = ({ id }) => {
             Notify({ status: 400, message: "You cannot place a bet on this challenge" });
             return;
         }
-        const game = (challenge.games || []).find((g) => g.game_number === gameNumber);
         setPendingGame(gameNumber);
-        // Real placebet, not the challenge's own /prediction endpoint — see
-        // placeSurvivorGameBet in utils/survivor-data.js.
-        const outcome = await placeSurvivorGameBet(challenge, game, selection);
+        // Canonical survivor flow (bet-api v2): enrol first (debits the
+        // entry stake) when the user isn't in yet, then record the pick at
+        //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
+        //   body: { selection: "1" | "X" | "2" }
+        if (!isEnrolled) {
+            const joined = await joinSurvivorChallenge(id);
+            if (!joined.success) {
+                setPendingGame(null);
+                Notify({ status: 400, message: joined.message || "Could not join this challenge." });
+                return;
+            }
+            rememberJoinedChallenge(id);
+        }
+        const outcome = await submitSurvivorPrediction(
+            id,
+            gameNumber,
+            normalizeSelection(selection)
+        );
         setPendingGame(null);
         if (outcome.success) {
             Notify({ status: 200, message: "Bet placed." });
@@ -741,8 +755,7 @@ const SurvivorChallengeGames = ({ id }) => {
                         <p className="survivor-pick-confirm-warning">
                             Heads up — you already have a pick recorded for game{" "}
                             {pendingPick.gameNumber} (<b>{normalizeSelection(pendingPick.existing.selection)}</b>).
-                            Confirming will submit a new bet for this game with your updated
-                            selection, <b>{normalizeSelection(pendingPick?.selection)}</b>.
+                            Confirming will update your pick for this game to <b>{normalizeSelection(pendingPick?.selection)}</b>.
                         </p>
                     )}
                 </Modal.Body>
