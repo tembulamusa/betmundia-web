@@ -343,7 +343,10 @@ const SurvivorChallengeGames = ({ id }) => {
     // /progress example response) — prefer it, fall back to the challenge
     // detail's own status field.
     const challengeStatus = progress?.status ?? challenge?.status;
-    const isChallengeActive = statusIs(challengeStatus, "ACTIVE");
+    // OPEN challenges (registration still running, today's game already
+    // OPEN_FOR_PICKS) accept picks too — placing the bet is the entry.
+    const isChallengeActive =
+        statusIs(challengeStatus, "ACTIVE") || statusIs(challengeStatus, "OPEN");
     // Betting is allowed whenever the challenge itself is active and this
     // user hasn't been knocked out of it (or already won it) — there is
     // no separate "must already be an enrolled/active participant"
