@@ -684,7 +684,7 @@ const SurvivorChallengeGames = ({ id }) => {
                 className="survivor-pick-confirm-modal"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Confirm your pick</Modal.Title>
+                    <Modal.Title>Confirm Your Pick</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="survivor-pick-confirm-row">
