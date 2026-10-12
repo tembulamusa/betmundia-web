@@ -953,7 +953,13 @@ const SurvivorChallengesList = () => {
                                         <span className="survivor-challenge-card-pool-label">prize pool</span>
                                     </div>
                                     <div className="survivor-challenge-card-meta">
-                                        <span className="survivor-challenge-card-meta-item"><FaUsers aria-hidden="true" /> {challenge.participant_count} participants</span>
+                                        <span className="survivor-challenge-card-meta-item"><FaUsers aria-hidden="true" /> <b className="survivor-yellow">{challenge.participant_count}</b> participants</span>
+                                        {(challenge.maximum_games ?? challenge.minimum_games) != null && (
+                                            <span className="survivor-challenge-card-meta-item">
+                                                Game <b className="survivor-yellow">{challenge.current_game_number ?? 1}</b> of{" "}
+                                                <b className="survivor-yellow">{challenge.maximum_games ?? challenge.minimum_games}</b>
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="survivor-challenge-card-time">
                                         {statusIs(challenge.status, "OPEN")
@@ -1120,12 +1126,26 @@ const SurvivorChallengeDetail = ({ id }) => {
                         <span className="survivor-stat-label">Prize pool</span>
                     </div>
                     <div className="survivor-stat">
-                        <span className="survivor-stat-value">{results?.survivors_remaining ?? "—"}</span>
+                        <span className="survivor-stat-value survivor-yellow">{results?.survivors_remaining ?? "—"}</span>
                         <span className="survivor-stat-label">Survivors left</span>
                     </div>
                     <div className="survivor-stat">
-                        <span className="survivor-stat-value">{challenge.participant_count}</span>
+                        <span className="survivor-stat-value survivor-yellow">{challenge.participant_count}</span>
                         <span className="survivor-stat-label">Players</span>
+                    </div>
+                    <div className="survivor-stat">
+                        <span className="survivor-stat-value survivor-yellow">
+                            {results?.initial_participants ??
+                                results?.total_participants ??
+                                challenge.participant_count}
+                        </span>
+                        <span className="survivor-stat-label">Initially enrolled</span>
+                    </div>
+                    <div className="survivor-stat">
+                        <span className="survivor-stat-value">
+                            {challenge.current_game_number ?? 1} / {challenge.maximum_games ?? challenge.minimum_games ?? "—"}
+                        </span>
+                        <span className="survivor-stat-label">Game no.</span>
                     </div>
                     <div className="survivor-stat">
                         <span className="survivor-stat-value">{formatMoney(challenge.entry_stake)}</span>
@@ -1134,7 +1154,9 @@ const SurvivorChallengeDetail = ({ id }) => {
                 </div>
             </div>
 
-            <SurvivorChallengeGames id={id} />
+            <div className="survivor-detail-body">
+                <SurvivorChallengeGames id={id} />
+            </div>
         </div>
     );
 };
