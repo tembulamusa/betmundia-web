@@ -1014,19 +1014,31 @@
 
 .survivor-your-pick {
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.7rem;
+}
+
+.survivor-result-line {
+  font-weight: 700;
+  font-size: 1.7rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.survivor-result-line b {
+  font-weight: 800;
 }
 
 .survivor-your-pick b {
   font-weight: 800;
+  color: #ffc428;
 }
 
 .survivor-result-status {
   font-weight: 700;
   text-transform: uppercase;
-  font-size: 0.72rem;
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
+  font-size: 1.2rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
 }
 
 .survivor-result-correct {
@@ -1040,8 +1052,8 @@
 }
 
 .survivor-result-pending {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .survivor-outcome-line {

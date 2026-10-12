@@ -681,7 +681,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                         <span className="survivor-your-pick">
                                             Your pick: <b>{normalizeSelection(placedSelection)}</b>
                                         </span>
-                                        <span className="survivor-your-pick">
+                                        <span className="survivor-result-line">
                                             Result: <b>{game.result ? normalizeSelection(game.result) : "---"}</b>
                                         </span>
                                         {!game.result && (
@@ -756,7 +756,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                             Outcome: <OutcomeBadge resultStatus={mine.result_status} />
                                         </span>
                                     )}
-                                    {game.result && <span>Result: <b>{normalizeSelection(game.result)}</b></span>}
+                                    {game.result && <span className="survivor-result-line">Result: <b>{normalizeSelection(game.result)}</b></span>}
                                 </div>
                             )}
                         </div>
