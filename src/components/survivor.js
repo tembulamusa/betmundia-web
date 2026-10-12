@@ -274,7 +274,7 @@ const SurvivorChallengeGames = ({ id }) => {
             return;
         }
         setIsJoining(true);
-        const outcome = await joinSurvivorChallenge(id, challenge);
+        const outcome = await joinSurvivorChallenge(id);
         setIsJoining(false);
         if (outcome.unauthorized) {
             handleUnauthorized();
@@ -304,7 +304,7 @@ const SurvivorChallengeGames = ({ id }) => {
         //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
         //   body: { selection: "1" | "X" | "2" }
         if (!isEnrolled) {
-            const joined = await joinSurvivorChallenge(id, challenge);
+            const joined = await joinSurvivorChallenge(id);
             if (!joined.success) {
                 setPendingGame(null);
                 if (joined.unauthorized) {
