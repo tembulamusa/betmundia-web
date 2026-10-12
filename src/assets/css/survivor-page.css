@@ -377,13 +377,13 @@
    modal, but branded with the app's pick/join accent color rather than
    the purple used for the "blocked" reason link. */
 .survivor-pick-confirm-modal.modal-dialog {
-  max-width: 380px;
+  max-width: 420px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .survivor-pick-confirm-modal .modal-content {
-  background: #0f111a;
+  background: #1b1e2e;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   color: #ffffff;
@@ -391,13 +391,23 @@
 
 .survivor-pick-confirm-modal .modal-header,
 .survivor-pick-confirm-modal .modal-footer {
-  border-color: rgba(255, 255, 255, 0.12);
+  border: none;
+  padding: 1.8rem 2rem 0.8rem;
+}
+
+.survivor-pick-confirm-modal .modal-footer {
+  padding: 1.2rem 2rem 2rem;
+  gap: 1rem;
+}
+
+.survivor-pick-confirm-modal .modal-body {
+  padding: 0.8rem 2rem;
 }
 
 .survivor-pick-confirm-modal .modal-title {
   color: #ffffff;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1.9rem;
 }
 
 .survivor-pick-confirm-modal .btn-close {
@@ -408,13 +418,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.45rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.92rem;
-}
-
-.survivor-pick-confirm-row:last-of-type {
+  padding: 0.9rem 0;
   border-bottom: none;
+  font-size: 1.5rem;
 }
 
 .survivor-pick-confirm-row span {
@@ -423,33 +429,33 @@
 
 .survivor-pick-confirm-terms-toggle {
   display: block;
-  margin: 0.6rem 0 0;
+  margin: 1.2rem 0 0;
   padding: 0;
   background: none;
   border: none;
   color: #ffc428;
-  font-size: 0.88rem;
+  font-size: 1.4rem;
   text-decoration: underline;
   cursor: pointer;
 }
 
 .survivor-pick-confirm-terms {
-  margin: 0.5rem 0 0;
-  padding-left: 1.1rem;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.82rem;
-  line-height: 1.5;
+  margin: 1rem 0 0;
+  padding-left: 1.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.35rem;
+  line-height: 1.7;
 }
 
 .survivor-pick-confirm-warning {
-  margin: 0.9rem 0 0;
-  padding: 0.7rem 0.8rem;
+  margin: 1.5rem 0 0;
+  padding: 1.1rem 1.3rem;
   background: rgba(167, 31, 102, 0.12);
   border: 1px solid rgba(167, 31, 102, 0.35);
   border-radius: 8px;
   color: rgba(255, 255, 255, 0.85);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 1.35rem;
+  line-height: 1.6;
 }
 
 .survivor-pick-confirm-cancel {
@@ -457,7 +463,8 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.75);
   border-radius: 8px;
-  padding: 0.5rem 1.1rem;
+  padding: 0.9rem 1.8rem;
+  font-size: 1.5rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -472,7 +479,8 @@
   border: none;
   color: #ffffff;
   border-radius: 8px;
-  padding: 0.5rem 1.2rem;
+  padding: 0.9rem 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s ease;
