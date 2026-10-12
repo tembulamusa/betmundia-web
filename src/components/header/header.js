@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Context } from '../../context/store';
 import { getFromLocalStorage, removeItem } from '../utils/local-storage';
@@ -108,40 +108,62 @@ const Header = (props) => {
         checkIfExpired();
     }, (1000 * 60 * 60))
 
+    const TOKEN_REFRESH_INTERVAL_MS = 30 * 60 * 1000;
+    const lastRefreshAt = useRef(Date.now());
+
+    const expireSession = () => {
+        removeItem("user");
+        setUser(null);
+        dispatch({ type: "DEL", key: "user" });
+        dispatch({ type: "SET", key: "showloginmodal", payload: true });
+        dispatch({ type: "SET", key: "sessionMessage", payload: "User Session Expired. Please Login Again" })
+    }
+
     const handleTokenRefresh = () => {
         if (!user) {
             return false;
         }
+        // Use the latest stored session so a refresh token rotated by an earlier refresh is never reused stale.
+        const current = getFromLocalStorage("user") || user;
         let endpoint = "/auth/token/refresh";
-        let values = { refresh_token: user?.refresh_token }
+        let values = { refresh_token: current?.refresh_token }
         makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
             if (status == 200 || status == 201 || status == 204) {
                 if (response.status == 200 || response.status == 201) {
-                    // keep the locally known free bet flag if the refresh payload omits it
-                    setUser({ has_freebet: user?.has_freebet, ...response?.data });
+                    lastRefreshAt.current = Date.now();
+                    // merge so fields the refresh payload omits (refresh_token, has_freebet, ...) are kept
+                    setUser((prev) => ({ ...(prev || current), ...response?.data }));
                 } else {
-                    removeItem("user");
-                    setUser(null);
-                    dispatch({ type: "DEL", key: "user" });
-                    dispatch({ type: "SET", key: "showloginmodal", payload: true });
-                    dispatch({ type: "SET", key: "sessionMessage", payload: "User Session Expired. Please Login Again" })
+                    expireSession();
                 }
+            } else if (!status || status >= 500) {
+                // network error / server down: keep the session and try again on the next cycle
+                console.warn('[session] token refresh failed, will retry', status);
             } else {
-                removeItem("user");
-                setUser(null);
-                dispatch({ type: "DEL", key: "user" });
-                dispatch({ type: "SET", key: "showloginmodal", payload: true });
-                dispatch({ type: "SET", key: "sessionMessage", payload: "User Session Expired. Please Login Again" })
+                expireSession();
             }
         })
     }
 
+    // Keep the session alive: refresh every 30 minutes while logged in.
     useInterval(async () => {
         if (user) {
             handleTokenRefresh();
         };
-    }, user ? 60 * 60 * 1000 * 7 : null);
-    // The free bet modal tells us once the free bet has been used.
+    }, user ? TOKEN_REFRESH_INTERVAL_MS : null);
+
+    // Browsers throttle timers in background tabs / sleeping laptops: refresh as soon as the tab is visible again if due.
+    useEffect(() => {
+        const onVisible = () => {
+            if (document.visibilityState === 'visible' && user
+                && Date.now() - lastRefreshAt.current >= TOKEN_REFRESH_INTERVAL_MS) {
+                handleTokenRefresh();
+            }
+        };
+        document.addEventListener('visibilitychange', onVisible);
+        return () => document.removeEventListener('visibilitychange', onVisible);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
     useEffect(() => {
         const onFreebetPlaced = () => setUser((prev) => (prev ? { ...prev, has_freebet: 0 } : prev));
         window.addEventListener('freebet:placed', onFreebetPlaced);
