@@ -230,10 +230,12 @@ export const placeSurvivorGameBet = async (challenge, game, selection) => {
         1;
     const market1x2 = game?.odds?.["1x2"];
 
-    const matchId = game?.parent_match_id ?? game?.match_id;
+    // The payload carries both ids: match_id (child) and parent_match_id.
+    const parentMatchId = game?.parent_match_id ?? game?.match_id;
+    const matchId = game?.match_id ?? parentMatchId;
     const slip = {
         match_id: String(matchId ?? ""),
-        parent_match_id: String(matchId ?? ""),
+        parent_match_id: String(parentMatchId ?? ""),
         special_bet_value: outcomeField(outcome, "special_bet_value", "specialBetValue") || "",
         sub_type_id: String(subTypeId),
         away_team: game?.away_team,
@@ -253,7 +255,7 @@ export const placeSurvivorGameBet = async (challenge, game, selection) => {
         ),
         sport_name: game?.sport_name || "Soccer",
         outcome_id: outcomeField(outcome, "outcome_id", "outcomeId"),
-        ucn: cleanUcn(`${matchId ?? ""}${subTypeId}${betPick ?? ""}`),
+        ucn: cleanUcn(`${parentMatchId ?? ""}${subTypeId}${betPick ?? ""}`),
     };
 
     const user = getFromLocalStorage("user");
