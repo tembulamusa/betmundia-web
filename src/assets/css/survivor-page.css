@@ -218,31 +218,34 @@
 
 .survivor-challenge-card-top {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.6rem;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+  margin-bottom: 0.8rem;
 }
 
 .survivor-challenge-name {
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 1.5rem;
+  font-size: 1.9rem;
   color: white;
 }
 
+/* Prize amount sits inline with the title, pushed to the right. */
 .survivor-challenge-card-pool {
-  font-size: 1.75rem;
+  margin-left: auto;
+  font-size: 1.9rem;
   font-weight: 800;
-  color: #ffd54a;
+  color: #ffc428;
   display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
-  margin-bottom: 0.6rem;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .survivor-challenge-card-pool-label {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #ffffff;
   text-transform: uppercase;
@@ -252,9 +255,9 @@
 .survivor-challenge-card-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: rgba(255, 255, 255);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .survivor-challenge-card-meta-item {
@@ -271,7 +274,7 @@
 }
 
 .survivor-challenge-card-time {
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -1006,24 +1009,38 @@
     margin: 0;
   }
 
+  /* name + prize share the first row; the status pill drops to its own
+     row beneath (the ::after forces the line break between them). */
   .survivor-challenge-card-top {
     flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 0.8rem;
+    align-items: flex-start;
+    gap: 0.6rem 0.8rem;
     margin-bottom: 0.9rem;
   }
 
+  .survivor-challenge-card-top::after {
+    content: "";
+    order: 3;
+    flex-basis: 100%;
+    height: 0;
+  }
+
   .survivor-challenge-name {
-    flex: 1 1 100%;
+    order: 1;
+    flex: 1 1 0;
     min-width: 0;
-    font-size: 1.4rem;
+    font-size: 1.7rem;
     line-height: 1.3;
     overflow-wrap: anywhere;
   }
 
   .survivor-challenge-card-pool {
-    font-size: 2.2rem;
-    margin-bottom: 0.9rem;
+    order: 2;
+    font-size: 1.8rem;
+  }
+
+  .survivor-challenge-card-top .survivor-status-pill {
+    order: 4;
   }
 
   .survivor-challenge-card-pool-label {
@@ -1034,7 +1051,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 0.6rem 1.8rem;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     margin-bottom: 0.8rem;
   }
 
@@ -1044,7 +1061,7 @@
   }
 
   .survivor-challenge-card-time {
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     line-height: 1.4;
   }
 
