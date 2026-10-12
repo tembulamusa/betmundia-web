@@ -115,14 +115,51 @@ const LoadedBetslip = ({ betslipValidationData, jackpotData, dbWinMatrix }) => {
 };
 
 
+// SGR (Mshipi) bonus matrix: kept in localStorage and refreshed from the API only once
+// per page load, so the bonus advice reads the stored values straight away and never
+// changes mid-session.
+const SGR_STORAGE_KEY = "sgrBonusMatrix";
+const SGR_STORAGE_TTL = 1000 * 60 * 60 * 24 * 30;
+let sgrLoadPromise = null;
+
+const readStoredSgr = () => {
+  try {
+    return getFromLocalStorage(SGR_STORAGE_KEY) || {};
+  } catch (e) {
+    return {};
+  }
+};
+
+const loadSgrOncePerPageLoad = () => {
+  if (!sgrLoadPromise) {
+    sgrLoadPromise = makeRequest({ url: "/sports/config/sgr", method: "GET", api_version: 2 })
+      .then(([status, result]) => {
+        if (status == 200 && result?.status == 200 && result?.data) {
+          try {
+            setLocalStorage(SGR_STORAGE_KEY, result.data, SGR_STORAGE_TTL);
+          } catch (e) {
+            // storage unavailable: still use the fresh value for this page load
+          }
+          return result.data;
+        }
+        sgrLoadPromise = null; // allow a retry on the next mount
+        return null;
+      })
+      .catch(() => {
+        sgrLoadPromise = null;
+        return null;
+      });
+  }
+  return sgrLoadPromise;
+};
+
 const Right = (props) => {
   const { betslipValidationData, jackpotData } = props;
   const location = useLocation();
   const [state, dispatch] = useContext(Context);
   const [bongeBonusAdvice, setBongeBonusAdvice] = useState(emptyBonusAdvice);
   const [bonusCentage, setBonusCentage] = useState(3);
-  const [dbWinMatrix, setDbWinMatrix] = useState({
-  });
+  const [dbWinMatrix, setDbWinMatrix] = useState(readStoredSgr);
   const sharedSlipCode = useMemo(() => {
     const match = location?.pathname?.match(/^\/betslip\/share\/([^/]+)\/?$/);
     return match ? decodeURIComponent(match[1]) : '';
@@ -134,20 +171,16 @@ const Right = (props) => {
   //   }
   // }, [state?.sgrBonusMatrix]);
 
-  const getDbWinMatrix = () => {
-    let endpoint = "/sports/config/sgr";
-
-    makeRequest({ url: endpoint, method: "GET", api_version: 2 }).then(([status, result]) => {
-      if (status == 200) {
-        if (result.status == 200) {
-          setDbWinMatrix(result?.data);
-        }
+  useEffect(() => {
+    let cancelled = false;
+    loadSgrOncePerPageLoad().then((data) => {
+      if (data && !cancelled) {
+        setDbWinMatrix(data);
       }
     });
-
-  }
-  useEffect(() => {
-    getDbWinMatrix();
+    return () => {
+      cancelled = true;
+    };
   }, []);
   useEffect(() => {
     if (dbWinMatrix) {
