@@ -458,7 +458,9 @@ const SurvivorChallengeGames = ({ id }) => {
                     // row's controls need to reflect, rather than hiding the
                     // whole games list behind one summary row.
                     const isLockedOut = statusIs(game.status, "LOCKED") && !canBetOnChallenge;
-                    const canBetOnThisGame = canPick && canBetOnChallenge;
+                    const hasSubmittedPick = mine?.selection != null && mine.selection !== "";
+                    const canBetOnThisGame =
+                        canPick && canBetOnChallenge && isCurrentGame && !hasSubmittedPick;
                     return (
                         <div
                             key={game.game_number}
@@ -542,7 +544,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                                 requestPick(game.game_number, draftPicks[game.game_number])
                                             }
                                         >
-                                            Place bet
+                                            Submit pick
                                         </button>
                                     </div>
                                 </>
@@ -661,14 +663,9 @@ const SurvivorChallengeGames = ({ id }) => {
                             <b>{formatMoney(challenge.entry_stake)}</b>
                         </div>
                     )}
-                    {pendingPick?.existing?.selection && (
-                        <p className="survivor-pick-confirm-warning">
-                            Heads up — you already have a pick recorded for game{" "}
-                            {pendingPick.gameNumber} (<b>{normalizeSelection(pendingPick.existing.selection)}</b>).
-                            Confirming will update your pick to{" "}
-                            <b>{normalizeSelection(pendingPick?.selection)}</b>.
-                        </p>
-                    )}
+                    <p className="survivor-pick-confirm-note">
+                        Your pick for this game is final and cannot be changed after you confirm.
+                    </p>
                 </Modal.Body>
                 <Modal.Footer>
                     <button
