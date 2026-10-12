@@ -284,20 +284,39 @@ const SurvivorChallengeGames = ({ id }) => {
             return;
         }
         setPendingGame(gameNumber);
-        // Survivor place-bet API (bet-api v2): the user simply places the
-        // pick, no separate join step:
+        // Survivor place-bet API (bet-api v2):
         //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
         //   body: { "selection": "1" | "X" | "2" } + Bearer token
-        const outcome = await submitSurvivorPrediction(
-            id,
-            gameNumber,
-            normalizeSelection(selection)
-        );
+        // The HTTP status is 200 even for rejections — the real result is
+        // the envelope's `status` ("400" etc.) and `result` message.
+        const pick = () =>
+            submitSurvivorPrediction(id, gameNumber, normalizeSelection(selection));
+        let outcome = await pick();
+
+        // The backend only accepts picks from enrolled participants. When
+        // it says so, enrol the user (debits entry_stake) and retry once, so
+        // the user still just taps "Place bet".
+        if (!outcome.success && /not enrolled/i.test(outcome.message || "")) {
+            const joined = await joinSurvivorChallenge(id);
+            if (!joined.success) {
+                setPendingGame(null);
+                Notify({
+                    status: joined.httpStatus || 400,
+                    message: joined.message || "Could not join this challenge, so your bet was not placed.",
+                });
+                return;
+            }
+            rememberJoinedChallenge(id);
+            outcome = await pick();
+        }
+
         setPendingGame(null);
         if (outcome.success) {
             rememberJoinedChallenge(id);
-            Notify({ status: 200, message: "Bet placed." });
+            Notify({ status: 200, message: "Bet placed successfully. Good luck!" });
             void loadAll();
+        } else if (!outcome.httpStatus) {
+            Notify({ status: 400, message: "Network error. Your bet was not placed, please try again." });
         } else {
             Notify({ status: 400, message: outcome.message || "Could not place bet." });
         }
