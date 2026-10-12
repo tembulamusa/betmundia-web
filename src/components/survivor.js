@@ -13,7 +13,6 @@ import {
     fetchSurvivorChallenge,
     survivorGameList,
     fetchSurvivorResults,
-    joinSurvivorChallenge,
     fetchSurvivorProgress,
     submitSurvivorPrediction,
     survivorOddValueForSelection,
@@ -344,41 +343,19 @@ const SurvivorChallengeGames = ({ id }) => {
         clearTimeout(betFeedbackTimer.current);
         setBetFeedback(null);
         setPendingGame(gameNumber);
-        // Survivor place-bet API (bet-api v2):
-        //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
-        //   body: { "selection": "1" | "X" | "2" } + Bearer token
-        // The HTTP status can be 200 even for rejections — the real result
-        // is the envelope's `status` ("400" etc.) and its message.
-        const pick = () =>
-            submitSurvivorPrediction(id, gameNumber, normalizeSelection(selection));
-        let outcome = await pick();
-
-        // The backend only accepts picks from enrolled participants. When
-        // it says so, enrol the user (debits entry_stake) and retry once, so
-        // the user still just taps "Place bet".
-        if (!outcome.success && /not enrolled/i.test(outcome.message || "")) {
-            const joined = await joinSurvivorChallenge(id);
-            if (!joined.success) {
-                setPendingGame(null);
-                showBetFeedback(
-                    gameNumber,
-                    "error",
-                    joined.message || "Could not join this challenge, so your bet was not placed."
-                );
-                return;
-            }
-            rememberJoinedChallenge(id);
-            outcome = await pick();
-        }
-
+        const outcome = await submitSurvivorPrediction(
+            id,
+            gameNumber,
+            normalizeSelection(selection)
+        );
         setPendingGame(null);
         if (outcome.success) {
             rememberJoinedChallenge(id);
             setPlacedPicks((prev) => ({ ...prev, [gameNumber]: normalizeSelection(selection) }));
-            showBetFeedback(gameNumber, "success", "Bet placed successfully. Good luck!");
+            showBetFeedback(gameNumber, "success", "Pick submitted successfully.");
             void loadAll();
         } else if (!outcome.httpStatus) {
-            showBetFeedback(gameNumber, "error", "Network error. Your bet was not placed, please try again.");
+            showBetFeedback(gameNumber, "error", "Network error. Your pick was not submitted, please try again.");
         } else if (outcome.unauthorized) {
             showBetFeedback(
                 gameNumber,
@@ -386,7 +363,7 @@ const SurvivorChallengeGames = ({ id }) => {
                 "Unauthorized — your session may have expired. Please log out and log in again, then retry."
             );
         } else {
-            showBetFeedback(gameNumber, "error", outcome.message || "Could not place bet. Please try again.");
+            showBetFeedback(gameNumber, "error", outcome.message || "Could not submit pick. Please try again.");
         }
     };
 
@@ -812,24 +789,12 @@ const SurvivorChallengeGames = ({ id }) => {
                         <span>Your pick</span>
                         <b>{normalizeSelection(pendingPick?.selection)}</b>
                     </div>
-                    <div className="survivor-pick-confirm-row">
-                        <span>Entry stake</span>
-                        <b>{formatMoney(challenge.entry_stake)}</b>
-                    </div>
-                    <div className="survivor-pick-confirm-row">
-                        <span>Possible win</span>
-                        <b>
-                            {formatMoney(
-                                (challenge.entry_stake || 0) *
-                                    survivorOddValueForSelection(
-                                        survivorGameList(challenge).find(
-                                            (g) => g.game_number === pendingPick?.gameNumber
-                                        ),
-                                        pendingPick?.selection
-                                    )
-                            )}
-                        </b>
-                    </div>
+                    {!isEnrolled && (
+                        <div className="survivor-pick-confirm-row">
+                            <span>Entry fee (debited once)</span>
+                            <b>{formatMoney(challenge.entry_stake)}</b>
+                        </div>
+                    )}
                     <div className="survivor-pick-confirm-row">
                         <span>Current participants</span>
                         <b>{challenge.participant_count ?? 0}</b>
@@ -858,7 +823,8 @@ const SurvivorChallengeGames = ({ id }) => {
                         <p className="survivor-pick-confirm-warning">
                             Heads up — you already have a pick recorded for game{" "}
                             {pendingPick.gameNumber} (<b>{normalizeSelection(pendingPick.existing.selection)}</b>).
-                            Confirming will update your pick for this game to <b>{normalizeSelection(pendingPick?.selection)}</b>.
+                            Confirming will update your pick to{" "}
+                            <b>{normalizeSelection(pendingPick?.selection)}</b>.
                         </p>
                     )}
                 </Modal.Body>
@@ -875,7 +841,7 @@ const SurvivorChallengeGames = ({ id }) => {
                         className="survivor-pick-confirm-ok"
                         onClick={confirmPendingPick}
                     >
-                        Place bet
+                        {isEnrolled ? "Confirm pick" : "Join and submit pick"}
                     </button>
                 </Modal.Footer>
             </Modal>
