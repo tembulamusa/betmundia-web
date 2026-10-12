@@ -161,3 +161,45 @@ export const buildBongeBonusAdvice = (betslip, dbWinMatrix) => {
 
   return { ...emptyBonusAdvice };
 };
+
+/**
+ * Flatten the /sports/config/sgr payload into { sgr_bonus_percent_4: 4, ... }.
+ * Accepts the flat object, an object wrapped one or two levels deep, a list of
+ * { key|name|config_key|code, value } rows, and values wrapped as { value }.
+ */
+export const normalizeSgrConfig = (raw) => {
+  const out = {};
+  const isSgrKey = (key) => typeof key === "string" && /^sgr_/i.test(key);
+  const unwrap = (value) =>
+    value && typeof value === "object" && !Array.isArray(value) && "value" in value ? value.value : value;
+
+  const visit = (node, depth) => {
+    if (!node || typeof node !== "object" || depth > 3) {
+      return;
+    }
+    if (Array.isArray(node)) {
+      node.forEach((item) => {
+        if (!item || typeof item !== "object") {
+          return;
+        }
+        const key = item.key ?? item.name ?? item.config_key ?? item.code;
+        if (isSgrKey(key)) {
+          out[key.toLowerCase()] = unwrap(item.value ?? item.config_value ?? item.val);
+        } else {
+          visit(item, depth + 1);
+        }
+      });
+      return;
+    }
+    Object.entries(node).forEach(([key, value]) => {
+      if (isSgrKey(key)) {
+        out[key.toLowerCase()] = unwrap(value);
+      } else if (value && typeof value === "object") {
+        visit(value, depth + 1);
+      }
+    });
+  };
+
+  visit(raw, 0);
+  return out;
+};
