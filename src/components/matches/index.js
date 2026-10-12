@@ -67,10 +67,17 @@ const getMobileOddLabel = (match, mkt) => {
     }
 
     if (subTypeId === 18 || marketName.includes('total') || marketName.includes('over')) {
-        const line = match?.special_bet_value || '2.5';
-        const lineFmt = Number.isFinite(Number(line)) ? Number(line).toFixed(2) : line;
-        if (key.includes('over') || outcomeId === '12') return `OVER ${lineFmt}`;
-        if (key.includes('under') || outcomeId === '13') return `UNDER ${lineFmt}`;
+        // Label comes straight from odd_key ("over 2.5" / "under 2.5"); the line is
+        // appended from special_bet_value only when odd_key does not carry it.
+        const rawKey = String(match?.odd_key || '').trim();
+        if (rawKey) {
+            if (/\d/.test(rawKey)) return rawKey;
+            const line = numbersIn(match?.special_bet_value)[0] ?? 2.5;
+            return `${rawKey} ${line}`;
+        }
+        const line = numbersIn(match?.special_bet_value)[0] ?? 2.5;
+        if (outcomeId === '12') return `over ${line}`;
+        if (outcomeId === '13') return `under ${line}`;
     }
 
     if (subTypeId === 10 || marketName.includes('double')) {
