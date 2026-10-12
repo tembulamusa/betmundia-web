@@ -1,6 +1,5 @@
 import makeRequest from "./fetch-request";
 import { getFromLocalStorage, setLocalStorage } from "./local-storage";
-import { getStoredIpAddress } from "./ip-address";
 
 /**
  * Survivor Challenge API helpers.
@@ -96,14 +95,6 @@ export const fetchSurvivorResults = async (id) => {
     return null;
 };
 
-/** @deprecated Entry is automatic on survivor place-bet (see placeSurvivorGameBet). */
-export const joinSurvivorChallenge = async () => ({
-    success: false,
-    httpStatus: 410,
-    message: "Join via place bet on the current game.",
-    data: null,
-});
-
 /**
  * GET /user/survivor/challenges/{id}/progress — the logged-in user's own
  * pick-by-pick progress in a challenge: enrolled?, alive/eliminated,
@@ -143,20 +134,6 @@ export const submitSurvivorPrediction = async (id, gameNumber, selection) => {
 const Float = (equation, precision = 4) =>
     Math.ceil(equation * (10 ** precision)) / (10 ** precision);
 
-const cleanUcn = (value) =>
-    String(value).replace(/[^A-Za-z0-9-]/g, "").replace(/-+/g, "-");
-
-/**
- * bet_type tag for a survivor-challenge pick placed through the regular
- * placebet flow. This app's existing convention (see betslip-submit-form.js
- * / jackpot.js) already overloads bet_type as a context tag rather than a
- * pure prematch/live flag: "0" prematch, "1" live, "3" share-existing bet,
- * "9" jackpot. Nothing is reserved for survivor yet, so "10" is used here —
- * confirm with backend and change this one constant if a different code is
- * expected.
- */
-export const SURVIVOR_PLACEBET_TYPE = "10";
-
 /** Fallback when a game has no 1X2 outcomes yet (e.g. match not priced). */
 export const SURVIVOR_ARBITRARY_ODD = 2.0;
 
@@ -189,117 +166,6 @@ export const survivorOddForSelection = (game, selection) => {
 
 export const survivorOddValueForSelection = (game, selection) =>
     Float(survivorOddForSelection(game, selection), 2);
-
-const betPickForSelection = (game, selection) => {
-    switch (normalizeSelection(selection)) {
-        case "1": return game?.home_team || "Home";
-        case "2": return game?.away_team || "Away";
-        default: return "Draw";
-    }
-};
-
-/**
- * Places a real bet for one survivor-challenge game pick, through the same
- * placebet endpoint every other bet in this app uses (not the challenge's
- * own /prediction endpoint) — so a survivor pick is a genuine, tracked bet.
- *
- * Reuses a freebet automatically when the user has one available, the same
- * way src/components/highlights/free-bet.js does, otherwise stakes the
- * challenge's entry_stake as a normal bet.
- *
- * NOTE: game.parent_match_id is the real match reference (confirmed from
- * /survivor/challenges/{id}) and is used for both match_id and
- * parent_match_id below since no separate child match_id is exposed.
- */
-export const placeSurvivorGameBet = async (challenge, game, selection) => {
-    const outcome = survivorOutcomeForSelection(game, selection);
-    const oddValue = survivorOddValueForSelection(game, selection);
-    const betPick =
-        outcome?.odd_key || outcome?.display || betPickForSelection(game, selection);
-    const subTypeId =
-        outcomeField(outcome, "sub_type_id", "subTypeId") ??
-        game?.sub_type_id ??
-        game?.subTypeId ??
-        1;
-    const market1x2 = game?.odds?.["1x2"];
-
-    const matchId = game?.parent_match_id ?? game?.match_id;
-    const slip = {
-        match_id: String(matchId ?? ""),
-        parent_match_id: String(matchId ?? ""),
-        special_bet_value: outcomeField(outcome, "special_bet_value", "specialBetValue") || "",
-        sub_type_id: String(subTypeId),
-        away_team: game?.away_team,
-        bet_pick: betPick,
-        bet_type: SURVIVOR_PLACEBET_TYPE,
-        home_team: game?.home_team,
-        live: 0,
-        market_active: outcomeField(outcome, "odd_active", "oddActive") ?? 1,
-        odd_type: game?.odd_type || "1x2",
-        odd_value: oddValue.toFixed(2),
-        producer_id: String(
-            outcomeField(outcome, "producer_id", "producerId") ??
-                game?.producer_id ??
-                game?.producerId ??
-                market1x2?.producer_id ??
-                "3"
-        ),
-        sport_name: game?.sport_name || "Soccer",
-        outcome_id: outcomeField(outcome, "outcome_id", "outcomeId"),
-        ucn: cleanUcn(`${matchId ?? ""}${subTypeId}${betPick ?? ""}`),
-    };
-
-    const user = getFromLocalStorage("user");
-    const hasFreebet = !!user?.has_freebet;
-    const stakeAmount = challenge?.entry_stake ?? 0;
-
-    const payload = {
-        bet_string: "web",
-        app_name: "web",
-        channel_id: "web",
-        possible_win: Float(stakeAmount * oddValue, 2),
-        stake_amount: stakeAmount,
-        amount: stakeAmount,
-        bet_total_odds: oddValue,
-        ip_address: String(getStoredIpAddress() || ""),
-        slip: [slip],
-        profile_id: user?.profile_id,
-        account: 1,
-        msisdn: user?.msisdn,
-        accept_all_odds_change: 1,
-        bet_type: SURVIVOR_PLACEBET_TYPE,
-        // Lets the backend attribute this placebet to the survivor
-        // challenge/game it came from, on top of the bet_type tag above.
-        placebet_type: "survivor_challenge",
-        survivor_challenge_id: challenge?.id,
-        survivor_game_number: game?.game_number,
-    };
-
-    // Same URL every other bet in this app posts to — not a dedicated
-    // survivor endpoint. Freebet, when the user has one, goes through its
-    // own dedicated endpoint instead, same as free-bet.js.
-    const endpoint = hasFreebet ? "/user/place-free-bet" : "/user/place-bet";
-
-    const [httpStatus, response] = await makeRequest({
-        url: endpoint,
-        method: "POST",
-        data: payload,
-        api_version: 2,
-    });
-
-    const success = isSurvivorSuccess(httpStatus, response) || [200, 201, 204].includes(httpStatus);
-
-    if (success && hasFreebet) {
-        setLocalStorage("user", { ...user, has_freebet: 0 });
-    }
-
-    return {
-        success,
-        httpStatus,
-        message: response?.result || response?.message,
-        data: response?.data || null,
-    };
-};
 
 /** GET /user/survivor/challenges/{id}/results — same shape as the public one. */
 export const fetchSurvivorUserResults = async (id) => {
