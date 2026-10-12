@@ -549,11 +549,14 @@ const SurvivorChallengeGames = ({ id }) => {
                     // row's controls need to reflect, rather than hiding the
                     // whole games list behind one summary row.
                     const isLockedOut = statusIs(game.status, "LOCKED") && !canBetOnChallenge;
-                    const canBetOnThisGame = canPick && canBetOnChallenge;
-                    // Once a pick exists for this game (from the server or just
-                    // placed), the 1X2 buttons and Place bet are replaced by
-                    // "Your pick" + the result (--- until it is available).
-                    const placedSelection = mine?.selection ?? placedPicks[game.game_number];
+                    const hasSubmittedPick = mine?.selection != null && mine.selection !== "";
+                    const canBetOnThisGame = canPick && canBetOnChallenge && isCurrentGame;
+                    // One pick per game, no changes: once a pick exists (from the
+                    // server or just placed), the 1X2 buttons and Submit pick are
+                    // replaced by "Your pick" + the result (--- until available).
+                    const placedSelection = hasSubmittedPick
+                        ? mine.selection
+                        : placedPicks[game.game_number];
                     const showPickControls = canBetOnThisGame && !placedSelection;
                     return (
                         <div
@@ -637,10 +640,10 @@ const SurvivorChallengeGames = ({ id }) => {
                                             {pendingGame === game.game_number ? (
                                                 <>
                                                     <span className="survivor-btn-spinner" aria-hidden="true" />
-                                                    Placing bet…
+                                                    Submitting pick…
                                                 </>
                                             ) : (
-                                                "Place bet"
+                                                "Submit pick"
                                             )}
                                         </button>
                                     </div>
@@ -819,14 +822,9 @@ const SurvivorChallengeGames = ({ id }) => {
                             <li>Game results are settled on the official 90-minute result.</li>
                         </ul>
                     )}
-                    {pendingPick?.existing?.selection && (
-                        <p className="survivor-pick-confirm-warning">
-                            Heads up — you already have a pick recorded for game{" "}
-                            {pendingPick.gameNumber} (<b>{normalizeSelection(pendingPick.existing.selection)}</b>).
-                            Confirming will update your pick to{" "}
-                            <b>{normalizeSelection(pendingPick?.selection)}</b>.
-                        </p>
-                    )}
+                    <p className="survivor-pick-confirm-note">
+                        Your pick for this game is final and cannot be changed after you confirm.
+                    </p>
                 </Modal.Body>
                 <Modal.Footer>
                     <button
