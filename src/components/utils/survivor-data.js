@@ -96,17 +96,36 @@ export const fetchSurvivorResults = async (id) => {
     return null;
 };
 
-/** POST /user/survivor/challenges/{id}/join — debits wallet, enrolls user. */
-export const joinSurvivorChallenge = async (id) => {
+/**
+ * POST /user/survivor/challenges/{id}/join — debits wallet, enrolls user.
+ *
+ * Bearer token is added by makeRequest from the stored session. The body
+ * packages everything the backend may need to identify the punter, the
+ * challenge and the entry fee, the same way place-bet does. `unauthorized`
+ * is true on a 401 so the caller can send the user back through login.
+ */
+export const joinSurvivorChallenge = async (id, challenge = null) => {
+    const user = getFromLocalStorage("user");
     const [httpStatus, response] = await makeRequest({
         url: `/user/survivor/challenges/${id}/join`,
         method: "POST",
+        data: {
+            challenge_id: Number(id),
+            profile_id: user?.profile_id,
+            msisdn: user?.msisdn,
+            amount: challenge?.entry_stake,
+            account: 1,
+            channel_id: "web",
+            app_name: "web",
+            ip_address: String(getStoredIpAddress() || ""),
+        },
         api_version: 2,
     });
     return {
         success: isSurvivorSuccess(httpStatus, response),
         httpStatus,
-        message: response?.result,
+        unauthorized: httpStatus === 401,
+        message: response?.result || response?.message || response?.error,
         data: response?.data || null,
     };
 };
@@ -142,7 +161,8 @@ export const submitSurvivorPrediction = async (id, gameNumber, selection) => {
     return {
         success: isSurvivorSuccess(httpStatus, response),
         httpStatus,
-        message: response?.result,
+        unauthorized: httpStatus === 401,
+        message: response?.result || response?.message || response?.error,
         data: response?.data || null,
     };
 };
