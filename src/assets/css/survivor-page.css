@@ -1257,20 +1257,23 @@
   --survivor-acc-active-bg: rgb(47, 59, 86);
   --survivor-acc-border: rgba(255, 255, 255, 0.14);
   --survivor-acc-body-bg: rgb(23, 34, 56);
-  gap: 0;
-  border: 1px solid var(--survivor-acc-border);
-  border-radius: 6px;
-  overflow: hidden;
+  --survivor-acc-frame-border: rgba(255, 255, 255, 0.06);
+  gap: 0.6rem;
+  padding: 0.6rem;
+  border: 1px solid var(--survivor-acc-frame-border);
+  border-radius: 8px;
 }
 
-.survivor-challenge-accordion .accordion-item {
+/* Each item is its own rounded card inside the faint frame. The
+   first/last-of-type selectors are needed to beat Bootstrap's own
+   per-position item radii. */
+.survivor-challenge-accordion .accordion-item,
+.survivor-challenge-accordion .accordion-item:first-of-type,
+.survivor-challenge-accordion .accordion-item:last-of-type {
   background: var(--survivor-acc-bg);
   border: none;
-  border-radius: 0;
-}
-
-.survivor-challenge-accordion .accordion-item + .accordion-item {
-  border-top: 1px solid var(--survivor-acc-border);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .survivor-challenge-accordion .accordion-button {
@@ -1323,6 +1326,11 @@
 }
 
 @media screen and (max-width: 575px) {
+  .survivor-challenge-accordion {
+    gap: 0.5rem;
+    padding: 0.4rem;
+  }
+
   .survivor-challenge-accordion .accordion-button {
     padding: 1.1rem 1.1rem;
   }
