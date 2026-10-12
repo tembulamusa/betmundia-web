@@ -12,7 +12,6 @@ import Live from '../../assets/img/banner/carousel/live.png';
 import Casino from '../../assets/img/banner/carousel/casino.png';
 import Jackpot from '../../assets/img/banner/carousel/jackpot.jpg';
 import MundialLeague from '../../assets/img/banner/carousel/mundial-league.jpeg';
-import KaribuBonus from '../../assets/img/banner/carousel/Karibu-Bonus.jpeg';
 import DepositBonus from '../../assets/img/banner/carousel/Deposit-Bonus.jpeg';
 import Aviator from '../../assets/img/banner/carousel/aviator.jpeg';
 import Aviatrix from '../../assets/img/banner/carousel/aviatrix.jpeg';
@@ -66,17 +65,6 @@ const CarouselLoader = (props) => {
                 />
             </Carousel.Item>
 
-            <Carousel.Item >
-                <img
-                    className="d-block w-100"
-                    style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={KaribuBonus}
-                    onLoad={onImageLoaded}
-                    alt="karibu-bonus"
-                    onClick={() => linkBanner("/promotions#karibu-bonus")}
-                    effects="blur"
-                />
-            </Carousel.Item>
             <Carousel.Item >
                 <img
                     className="d-block w-100"
