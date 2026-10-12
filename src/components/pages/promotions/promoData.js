@@ -1,8 +1,47 @@
 import MshipiBonusImg from "../../../assets/img/banner/products/Mshipi-Bonus.png";
 import depositBonus from "../../../assets/img/banner/products/depositBonus.png";
 import AviatorRainsImg from "../../../assets/img/banner/products/AviatorRainsImg.png";
+import freeBetFirstBet from "../../../assets/img/banner/products/FreeBetFirstBet.png";
 
 export const promoData = [
+  {
+    title: "Free Bet on First Bet",
+    image: freeBetFirstBet,
+    description: `
+      Sign up to BetMundial and get a Free Bet on your first bet.
+    `,
+    details: `
+      Register a new BetMundial account.
+      Claim your Free Bet on the preselected match.
+      Pick a 1X2 outcome and place your bet.
+    `,
+    termsAndConditions: `
+    BETMUNDIAL FREE BET PROMOTION – TERMS & CONDITIONS
+
+Promotion Details
+BetMundial is offering a KSh 30 Free Bet to newly registered customers subject to the following terms and conditions.
+Eligibility
+1.The promotion is open to newly registered BetMundial customers only.
+2.Each eligible customer will receive one (1) Free Bet of KSh 30 upon successful registration.
+3.Only one free bet per customer/account is permitted.
+Free Bet Usage
+4.The free bet can only be used on the preselected match/game specified by BetMundial.
+5.The free bet is valid only on the 1X2 market (Home Win, Draw, Away Win).
+6.The free bet stake is non-withdrawable and cannot be exchanged for cash.
+Winnings
+7.Any winnings generated from the free bet will be credited to the customer’s Bonus Wallet.
+8.To convert it to cash, deposit and place a sports bet of 100kes on odds 1.4 and above.
+Expiry
+9.The free bet is valid for 24 hours from the time it is credited.
+10.Any unused free bet will automatically expire after 24 hours and cannot be reinstated.
+General Terms
+11.BetMundial reserves the right to amend, suspend, or cancel this promotion at any time without prior notice.
+12.Any abuse of the promotion may result in disqualification and forfeiture of any associated rewards.
+13.By participating in this promotion, customers agree to these Terms & Conditions and all other BetMundial rules and policies.
+
+Bet Responsibly. 21+ Only.
+        `
+  },
   {
     title: "Aviator Rains",
     image: AviatorRainsImg,
