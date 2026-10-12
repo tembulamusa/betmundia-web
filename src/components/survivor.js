@@ -1104,6 +1104,7 @@ const SurvivorChallengeDetail = ({ id }) => {
                 </div>
             </div>
 
+            <div className="survivor-detail-card">
             <div className="survivor-detail-header">
                 <div className="survivor-detail-header-top">
                     <h1 className="survivor-detail-title">{challenge.name}</h1>
@@ -1156,6 +1157,7 @@ const SurvivorChallengeDetail = ({ id }) => {
 
             <div className="survivor-detail-body">
                 <SurvivorChallengeGames id={id} />
+            </div>
             </div>
         </div>
     );

@@ -151,6 +151,21 @@
   gap: 0.9rem;
 }
 
+.survivor-challenge-accordion {
+  --bs-accordion-bg: rgb(54, 66, 94);
+  --bs-accordion-active-bg: rgb(54, 66, 94);
+  --bs-accordion-border-width: 0px;
+}
+
+/* One item, not two: the title, the collapse wrapper and the body all
+   share one background with no seam (border / shadow / gap) between. */
+.survivor-challenge-accordion .accordion-collapse,
+.survivor-challenge-accordion .accordion-button:not(.collapsed) {
+  background: rgb(54, 66, 94) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .survivor-challenge-accordion .accordion-item {
   background: rgb(54, 66, 94);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -553,19 +568,27 @@
   cursor: not-allowed;
 }
 
-.survivor-detail-header {
+.survivor-detail-card {
   background: rgb(54, 66, 94);
-  border-radius: 4px 4px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.survivor-detail-header {
+  background: transparent;
+  border-radius: 0;
   padding: 1.1rem 1.25rem;
   margin-bottom: 0;
 }
 
 .survivor-detail-body {
-  background: rgb(54, 66, 94);
+  background: transparent;
   border: none;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0;
   padding: 0 1.1rem 1.1rem;
-  margin-bottom: 1rem;
+  margin: 0;
 }
 
 .survivor-detail-header-top {
