@@ -517,8 +517,9 @@
 
 .survivor-pick-confirm-modal .modal-header,
 .survivor-pick-confirm-modal .modal-footer {
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   padding: 1.8rem 2rem 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .survivor-pick-confirm-modal .modal-footer {
