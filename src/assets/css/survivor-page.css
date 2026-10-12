@@ -960,3 +960,116 @@
   text-underline-offset: 3px;
   cursor: pointer;
 }
+
+/* Mobile: give the accordion title / challenge header room to breathe —
+   name + status pill on one row (name wraps instead of colliding), prize
+   pool on its own line, counts wrap onto separate lines rather than being
+   squeezed side by side, and the chevron is pinned to the top-right so it
+   never takes a slot in the content flow. */
+@media screen and (max-width: 575px) {
+  .survivor-challenge-accordion {
+    gap: 0.8rem;
+  }
+
+  .survivor-challenge-accordion .accordion-button {
+    position: relative;
+    padding: 1.1rem 3.2rem 1.1rem 1.1rem;
+  }
+
+  .survivor-challenge-accordion .accordion-button::after {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.1rem;
+    margin: 0;
+  }
+
+  .survivor-challenge-card-top {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.8rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .survivor-challenge-name {
+    flex: 1 1 100%;
+    min-width: 0;
+    font-size: 1.4rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .survivor-challenge-card-pool {
+    font-size: 2.2rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .survivor-challenge-card-pool-label {
+    font-size: 0.9rem;
+  }
+
+  .survivor-challenge-card-meta {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.6rem 1.8rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .survivor-challenge-card-meta svg {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .survivor-challenge-card-time {
+    font-size: 1.15rem;
+    line-height: 1.4;
+  }
+
+  .survivor-challenge-accordion .accordion-body {
+    padding: 0 0.8rem 0.9rem;
+  }
+
+  /* Challenge page header */
+  .survivor-detail-header {
+    padding: 1.2rem 1.1rem;
+  }
+
+  .survivor-detail-header-top {
+    gap: 0.7rem;
+  }
+
+  .survivor-detail-title {
+    flex: 1 1 100%;
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+
+  .survivor-detail-description {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-top: 0.8rem;
+  }
+
+  .survivor-detail-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+  }
+
+  .survivor-stat {
+    padding: 0.9rem 0.6rem;
+  }
+
+  .survivor-stat-value {
+    font-size: 1.6rem;
+  }
+
+  .survivor-stat-label {
+    font-size: 0.95rem;
+    margin-top: 0.3rem;
+  }
+
+  .survivor-detail-body {
+    padding: 0 0.8rem 0.9rem;
+  }
+}
