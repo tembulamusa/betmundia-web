@@ -173,6 +173,14 @@ const cleanUcn = (value) =>
  */
 export const SURVIVOR_PLACEBET_TYPE = "10";
 
+/**
+ * When true, a not-yet-enrolled user is enrolled via POST .../join before
+ * the bet is placed. Off by default: the web placebet already carries the
+ * survivor tags, and join also debits entry_stake, so doing both could
+ * charge twice. Flip once the backend confirms the contract.
+ */
+export const SURVIVOR_JOIN_BEFORE_BET = false;
+
 /** Fallback when a game has no 1X2 outcomes yet (e.g. match not priced). */
 export const SURVIVOR_ARBITRARY_ODD = 2.0;
 
