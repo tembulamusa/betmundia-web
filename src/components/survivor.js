@@ -268,7 +268,6 @@ const SurvivorChallengeGames = ({ id }) => {
     const [challenge, setChallenge] = useState(null);
     const [progress, setProgress] = useState(null);
     const [fetching, setFetching] = useState(true);
-    const [isJoining, setIsJoining] = useState(false);
     const [pendingGame, setPendingGame] = useState(null);
     const [showBlockReason, setShowBlockReason] = useState(false);
     // The pick the user clicked but hasn't confirmed yet — clicking 1/X/2
@@ -332,23 +331,6 @@ const SurvivorChallengeGames = ({ id }) => {
         hasScrolledToCurrentGameRef.current = true;
         currentGameRowRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     });
-
-    const handleJoin = async () => {
-        if (!user) {
-            openLoginWithRedirect(dispatch, `/survivor/${id}`);
-            return;
-        }
-        setIsJoining(true);
-        const outcome = await joinSurvivorChallenge(id);
-        setIsJoining(false);
-        if (outcome.success) {
-            rememberJoinedChallenge(id);
-            Notify({ status: 200, message: "You're in! Good luck." });
-            void loadAll();
-        } else {
-            Notify({ status: 400, message: outcome.message || "Could not join this challenge." });
-        }
-    };
 
     const handlePick = async (gameNumber, selection) => {
         if (!user) {
@@ -455,16 +437,10 @@ const SurvivorChallengeGames = ({ id }) => {
     // /progress example response) — prefer it, fall back to the challenge
     // detail's own status field.
     const challengeStatus = progress?.status ?? challenge?.status;
-    // OPEN challenges (registration still running, today's game already
-    // OPEN_FOR_PICKS) accept picks too — placing the bet is the entry.
-    const isChallengeActive =
-        statusIs(challengeStatus, "ACTIVE") || statusIs(challengeStatus, "OPEN");
-    // Betting is allowed whenever the challenge itself is active and this
-    // user hasn't been knocked out of it (or already won it) — there is
-    // no separate "must already be an enrolled/active participant"
-    // requirement: placing a pick through the regular placebet flow IS
-    // the entry action now, since the explicit join button is hidden.
-    const canBetOnChallenge = isChallengeActive && !isEliminated && !isWinner;
+    const isChallengeOpenForEntry =
+        statusIs(challengeStatus, "OPEN") || statusIs(challengeStatus, "ACTIVE");
+    // Placing a pick through place-bet enrolls the user (no separate /join).
+    const canBetOnChallenge = isChallengeOpenForEntry && !isEliminated && !isWinner;
     const nonSettledGames = survivorGameList(challenge).filter((g) => !isGameSettled(g));
     const settledGames = survivorGameList(challenge).filter((g) => isGameSettled(g));
 
@@ -499,12 +475,12 @@ const SurvivorChallengeGames = ({ id }) => {
     /** Why the odds buttons are replaced with a reason link, and what the
      * modal behind it should say. Only meaningful when !canBetOnChallenge. */
     const resolveBlockReason = () => {
-        if (!isChallengeActive) {
+        if (!isChallengeOpenForEntry) {
             return {
                 key: "closed",
                 label: "Challenge closed",
                 title: "Challenge closed",
-                body: "This challenge isn't currently active, so no bets can be placed on its games right now.",
+                body: "This challenge isn't open for entry, so no bets can be placed on its games right now.",
             };
         }
         if (isEliminated) {
@@ -578,19 +554,6 @@ const SurvivorChallengeGames = ({ id }) => {
                             : `You're ${caseInsensitiveLabel(PARTICIPANT_STATUS_LABELS, progress.participant_status)?.toLowerCase() || "still in"} — ${progress.games_survived} game(s) survived so far.`}
                     </span>
                 </div>
-            )}
-
-            {/* Join button hidden per request; handleJoin/isJoining kept in
-                place so it can be re-enabled by uncommenting this block. */}
-            {false && !isEnrolled && !statusIs(challenge.status, "COMPLETED") && (
-                <button
-                    type="button"
-                    className="survivor-join-btn"
-                    disabled={isJoining || statusIs(challenge.status, "COMPLETED")}
-                    onClick={handleJoin}
-                >
-                    {isJoining ? "Joining…" : `Join for ${formatMoney(challenge.entry_stake)}`}
-                </button>
             )}
 
             <div className="survivor-games-list">

@@ -131,28 +131,13 @@ export const fetchSurvivorResults = async (id) => {
     return null;
 };
 
-/**
- * POST /user/survivor/challenges/{id}/join — debits the challenge's
- * entry_stake from the cash wallet and enrols the user.
- *
- * Per the bet-api contract this takes NO request body: identity comes from
- * the Bearer token (added by makeRequest). `unauthorized` is true on a 401
- * so the caller can send the user back through login.
- */
-export const joinSurvivorChallenge = async (id) => {
-    const [httpStatus, response] = await makeRequest({
-        url: `/user/survivor/challenges/${id}/join`,
-        method: "POST",
-        api_version: 2,
-    });
-    return {
-        success: isSurvivorSuccess(httpStatus, response),
-        httpStatus,
-        unauthorized: httpStatus === 401,
-        message: survivorResponseMessage(response),
-        data: response?.data || null,
-    };
-};
+/** @deprecated Entry is automatic on survivor place-bet (see placeSurvivorGameBet). */
+export const joinSurvivorChallenge = async () => ({
+    success: false,
+    httpStatus: 410,
+    message: "Join via place bet on the current game.",
+    data: null,
+});
 
 /**
  * GET /user/survivor/challenges/{id}/progress — the logged-in user's own
