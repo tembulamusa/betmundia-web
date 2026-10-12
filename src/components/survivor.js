@@ -213,6 +213,7 @@ const SurvivorChallengeGames = ({ id }) => {
     // The pick the user clicked but hasn't confirmed yet — clicking 1/X/2
     // opens a confirmation modal instead of placing the bet immediately.
     const [pendingPick, setPendingPick] = useState(null);
+    const [showPickTerms, setShowPickTerms] = useState(false);
     // Local, unsubmitted picks per game (gameNumber -> "1"/"X"/"2") — set
     // by clicking 1/X/2, cleared once that game's pick is confirmed (or
     // the confirm attempt finishes). Nothing is sent to the server until
@@ -712,6 +713,30 @@ const SurvivorChallengeGames = ({ id }) => {
                             )}
                         </b>
                     </div>
+                    <div className="survivor-pick-confirm-row">
+                        <span>Current participants</span>
+                        <b>{challenge.participant_count ?? 0}</b>
+                    </div>
+                    <div className="survivor-pick-confirm-row">
+                        <span>Amount to be won</span>
+                        <b>{formatMoney(challenge.current_prize_pool)}</b>
+                    </div>
+                    <button
+                        type="button"
+                        className="survivor-pick-confirm-terms-toggle"
+                        onClick={() => setShowPickTerms((v) => !v)}
+                    >
+                        {showPickTerms ? "Hide terms" : "Terms"}
+                    </button>
+                    {showPickTerms && (
+                        <ul className="survivor-pick-confirm-terms">
+                            <li>Pick one result (1, X or 2) for each game; picks close at the game's lock time.</li>
+                            <li>A correct pick keeps you in the challenge; one wrong pick eliminates you.</li>
+                            <li>The prize pool is shared among the participants who survive every game.</li>
+                            <li>Your entry stake is deducted when you place the bet and is non-refundable once the game locks.</li>
+                            <li>Game results are settled on the official 90-minute result.</li>
+                        </ul>
+                    )}
                     {pendingPick?.existing?.selection && (
                         <p className="survivor-pick-confirm-warning">
                             Heads up — you already have a pick recorded for game{" "}
