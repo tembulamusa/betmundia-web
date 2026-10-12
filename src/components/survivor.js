@@ -940,6 +940,7 @@ const SurvivorChallengesList = () => {
                         return (
                             <Accordion.Item key={challenge.id} eventKey={key}>
                                 <Accordion.Header>
+                                    <div className="survivor-accordion-content">
                                     <div className="survivor-challenge-card-top">
                                         <span className="survivor-challenge-name">{challenge.name}</span>
                                         <ChallengeStatusPill
@@ -965,6 +966,7 @@ const SurvivorChallengesList = () => {
                                         {statusIs(challenge.status, "OPEN")
                                             ? `Entries close ${formatDateTime(challenge.registration_closes_at)}`
                                             : `Started ${formatDateTime(challenge.start_at)}`}
+                                    </div>
                                     </div>
                                 </Accordion.Header>
                                 <Accordion.Body>
