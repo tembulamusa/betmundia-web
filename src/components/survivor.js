@@ -13,8 +13,7 @@ import {
     fetchSurvivorResults,
     joinSurvivorChallenge,
     fetchSurvivorProgress,
-    placeSurvivorGameBet,
-    SURVIVOR_JOIN_BEFORE_BET,
+    submitSurvivorPrediction,
     survivorOddValueForSelection,
     readStoredSurvivorChallenges,
     persistSurvivorChallenges,
@@ -285,13 +284,12 @@ const SurvivorChallengeGames = ({ id }) => {
             return;
         }
         setPendingGame(gameNumber);
-        // Same as production web: a normal placebet (POST /user/place-bet, or
-        // /user/place-free-bet when the user has a freebet) tagged with
-        // bet_type "10", placebet_type "survivor_challenge" and the
-        // challenge/game ids — see placeSurvivorGameBet. Joining first
-        // (which also debits entry_stake) is opt-in via
-        // SURVIVOR_JOIN_BEFORE_BET so the stake can't be charged twice.
-        if (SURVIVOR_JOIN_BEFORE_BET && !isEnrolled) {
+        // Survivor place-bet API (bet-api v2): enrol first when the user
+        // hasn't joined (POST /user/survivor/challenges/{id}/join, no body,
+        // debits entry_stake), then record the pick with
+        //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
+        //   body: { "selection": "1" | "X" | "2" }
+        if (!isEnrolled) {
             const joined = await joinSurvivorChallenge(id);
             if (!joined.success) {
                 setPendingGame(null);
@@ -300,8 +298,11 @@ const SurvivorChallengeGames = ({ id }) => {
             }
             rememberJoinedChallenge(id);
         }
-        const game = (challenge.games || []).find((g) => g.game_number === gameNumber);
-        const outcome = await placeSurvivorGameBet(challenge, game, selection);
+        const outcome = await submitSurvivorPrediction(
+            id,
+            gameNumber,
+            normalizeSelection(selection)
+        );
         setPendingGame(null);
         if (outcome.success) {
             Notify({ status: 200, message: "Bet placed." });
@@ -755,7 +756,7 @@ const SurvivorChallengeGames = ({ id }) => {
                         <p className="survivor-pick-confirm-warning">
                             Heads up — you already have a pick recorded for game{" "}
                             {pendingPick.gameNumber} (<b>{normalizeSelection(pendingPick.existing.selection)}</b>).
-                            Confirming will submit a new bet for this game with your updated selection, <b>{normalizeSelection(pendingPick?.selection)}</b>.
+                            Confirming will update your pick for this game to <b>{normalizeSelection(pendingPick?.selection)}</b>.
                         </p>
                     )}
                 </Modal.Body>
