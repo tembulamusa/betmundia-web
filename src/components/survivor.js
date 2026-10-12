@@ -284,20 +284,10 @@ const SurvivorChallengeGames = ({ id }) => {
             return;
         }
         setPendingGame(gameNumber);
-        // Survivor place-bet API (bet-api v2): enrol first when the user
-        // hasn't joined (POST /user/survivor/challenges/{id}/join, no body,
-        // debits entry_stake), then record the pick with
+        // Survivor place-bet API (bet-api v2): the user simply places the
+        // pick, no separate join step:
         //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
-        //   body: { "selection": "1" | "X" | "2" }
-        if (!isEnrolled) {
-            const joined = await joinSurvivorChallenge(id);
-            if (!joined.success) {
-                setPendingGame(null);
-                Notify({ status: 400, message: joined.message || "Could not join this challenge." });
-                return;
-            }
-            rememberJoinedChallenge(id);
-        }
+        //   body: { "selection": "1" | "X" | "2" } + Bearer token
         const outcome = await submitSurvivorPrediction(
             id,
             gameNumber,
@@ -305,6 +295,7 @@ const SurvivorChallengeGames = ({ id }) => {
         );
         setPendingGame(null);
         if (outcome.success) {
+            rememberJoinedChallenge(id);
             Notify({ status: 200, message: "Bet placed." });
             void loadAll();
         } else {
