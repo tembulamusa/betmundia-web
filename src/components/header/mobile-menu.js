@@ -16,6 +16,8 @@ import {
 } from "../pages/promo-wins/promo-code";
 import { formatToFloat } from "../utils/formatters";
 import makeRequest from "../utils/fetch-request";
+import { useBonusCatalog } from "../utils/useBonusCatalog";
+import BonusTermsModal, { findBonus, DEPOSIT_BONUS_CODE } from "../right/bonus-terms-modal";
 import {
   getFromLocalStorage,
   setLocalStorage,
@@ -59,6 +61,9 @@ function MobileMenu(props) {
   const navigate = useNavigate();
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [showBonusTooltip, setShowBonusTooltip] = useState(false);
+  // Daily deposit bonus terms come from GET /bonuses (fetched once, cached).
+  const { catalog, bonusStakePct, cashStakePct, minOdds, maxGames, minGames, expiryHours } = useBonusCatalog();
+  const depositBonus = findBonus(catalog?.bonuses, DEPOSIT_BONUS_CODE);
   const [showLoyaltyModal, setShowLoyaltyModal] = useState(false);
   const [affiliateCode, setAffiliateCode] = useState(
     user?.promo_code || null
@@ -239,20 +244,12 @@ function MobileMenu(props) {
                         type="button"
                         className="bonus-tooltip-trigger"
                         aria-label="Bonus terms"
-                        aria-expanded={showBonusTooltip}
-                        onClick={() => setShowBonusTooltip((v) => !v)}
-                        onBlur={() => setShowBonusTooltip(false)}
+                        onClick={() => setShowBonusTooltip(true)}
                       >
                         Terms
                         <FaInfoCircle className="bonus-tooltip-icon" aria-hidden="true" />
                       </button>
 
-                      {showBonusTooltip && (
-                        <span className="bonus-tooltip-bubble" role="tooltip">
-                          First deposit of the day: 50% bonus (24h). Qualifying bets: 70% cash / 30% bonus, 1–3 games, min odds 1.50. See Promotions or Terms for details.
-                          <span className="bonus-tooltip-arrow" aria-hidden="true" />
-                        </span>
-                      )}
                     </span>
                   </p>
                 </div>
@@ -506,6 +503,19 @@ function MobileMenu(props) {
         show={showShareModal}
         onHide={() => setShowShareModal(false)}
         promoCode={affiliateCode}
+      />
+      <BonusTermsModal
+        show={showBonusTooltip}
+        onHide={() => setShowBonusTooltip(false)}
+        bonus={depositBonus}
+        title="Daily Deposit Bonus Terms"
+        intro={(
+          <p className="bonus-terms-modal-intro">
+            Qualifying bonus bets use {cashStakePct}% cash and {bonusStakePct}% bonus,
+            with {minGames}–{maxGames} games at min odds {minOdds} each. Bonus expires {expiryHours} hours after award.
+            If the slip does not qualify, the bet is placed from cash only.
+          </p>
+        )}
       />
       <Modal
         show={showLoyaltyModal}

@@ -49,7 +49,7 @@ export const getMaxBongeBonus = (dbWinMatrix) => {
   return { maxPercent, maxGamesWithPercent };
 };
 
-/** Percent for N qualifying games; falls back to highest defined tier if missing. */
+/** Percent for N qualifying games; uses the nearest lower defined tier if N has none (0 below the first tier). */
 export const resolveBongeBonusPercent = (dbWinMatrix, qualifyingGames) => {
   if (!dbWinMatrix) {
     return 0;
@@ -63,8 +63,15 @@ export const resolveBongeBonusPercent = (dbWinMatrix, qualifyingGames) => {
   if (current != null) {
     return current;
   }
-  const { maxPercent } = getMaxBongeBonus(dbWinMatrix);
-  return maxPercent != null ? maxPercent : 0;
+  // No tier for this exact count: use the nearest lower tier that is defined,
+  // and none (0) when the count is below every defined tier.
+  for (let n = games - 1; n >= 1; n -= 1) {
+    const lower = readBonusPercent(dbWinMatrix, n);
+    if (lower != null) {
+      return lower;
+    }
+  }
+  return 0;
 };
 
 export const buildBongeBonusAdvice = (betslip, dbWinMatrix) => {
@@ -153,4 +160,46 @@ export const buildBongeBonusAdvice = (betslip, dbWinMatrix) => {
   }
 
   return { ...emptyBonusAdvice };
+};
+
+/**
+ * Flatten the /sports/config/sgr payload into { sgr_bonus_percent_4: 4, ... }.
+ * Accepts the flat object, an object wrapped one or two levels deep, a list of
+ * { key|name|config_key|code, value } rows, and values wrapped as { value }.
+ */
+export const normalizeSgrConfig = (raw) => {
+  const out = {};
+  const isSgrKey = (key) => typeof key === "string" && /^sgr_/i.test(key);
+  const unwrap = (value) =>
+    value && typeof value === "object" && !Array.isArray(value) && "value" in value ? value.value : value;
+
+  const visit = (node, depth) => {
+    if (!node || typeof node !== "object" || depth > 3) {
+      return;
+    }
+    if (Array.isArray(node)) {
+      node.forEach((item) => {
+        if (!item || typeof item !== "object") {
+          return;
+        }
+        const key = item.key ?? item.name ?? item.config_key ?? item.code;
+        if (isSgrKey(key)) {
+          out[key.toLowerCase()] = unwrap(item.value ?? item.config_value ?? item.val);
+        } else {
+          visit(item, depth + 1);
+        }
+      });
+      return;
+    }
+    Object.entries(node).forEach(([key, value]) => {
+      if (isSgrKey(key)) {
+        out[key.toLowerCase()] = unwrap(value);
+      } else if (value && typeof value === "object") {
+        visit(value, depth + 1);
+      }
+    });
+  };
+
+  visit(raw, 0);
+  return out;
 };

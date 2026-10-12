@@ -4,10 +4,25 @@ import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Context } from "../../context/store";
 import { getFromLocalStorage } from "../utils/local-storage";
+import { useBonusCatalog } from "../utils/useBonusCatalog";
+import BonusTermsModal, { findBonus, MSHIPI_BONUS_PATTERN } from "./bonus-terms-modal";
 
 const BongeBonusCard = ({ advice, slipCount = 0 }) => {
   const [, dispatch] = useContext(Context);
   const [dismissed, setDismissed] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  // GET /bonuses is fetched once and cached by useBonusCatalog.
+  const { catalog } = useBonusCatalog();
+  const mshipiBonus = findBonus(catalog?.bonuses, MSHIPI_BONUS_PATTERN);
+  const termsLink = (
+    <button
+      type="button"
+      className="bonus-terms-link bonge-bonus__terms"
+      onClick={() => setShowTerms(true)}
+    >
+      Terms
+    </button>
+  );
   const adviceSignature = `${advice?.status || ""}|${advice?.nudgeTitle || ""}|${advice?.statusBoost || ""}`;
 
   useEffect(() => {
@@ -61,6 +76,8 @@ const BongeBonusCard = ({ advice, slipCount = 0 }) => {
                 )}
                 <div id="bonus-centage-advice" className="bonge-bonus__text">
                   {statusNode}
+                  {" "}
+                  {termsLink}
                 </div>
               </div>
             ) : null}
@@ -72,12 +89,23 @@ const BongeBonusCard = ({ advice, slipCount = 0 }) => {
                   {advice?.nudgeSub ? (
                     <span className="bonge-bonus__nudge-sub">{advice.nudgeSub}</span>
                   ) : null}
+                  {/* one Terms link per alert: the status line carries it when present */}
+                  {!advice?.status ? (
+                    <span className="bonge-bonus__nudge-terms">{termsLink}</span>
+                  ) : null}
                 </div>
               </div>
             ) : null}
           </div>
         </div>
       ) : null}
+
+      <BonusTermsModal
+        show={showTerms}
+        onHide={() => setShowTerms(false)}
+        bonus={mshipiBonus}
+        title="Mshipi Bonus Terms"
+      />
 
       <div className="bonge-bonus-titlebar">
         <span className="bonge-bonus-titlebar__label">Multibet ({slipCount})</span>
