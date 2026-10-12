@@ -1136,3 +1136,42 @@
     padding: 0 0.8rem 0.9rem;
   }
 }
+
+/* Place-bet loading state + inline result shown after the confirm modal closes. */
+.survivor-btn-spinner {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.6rem;
+  vertical-align: -0.2rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: survivor-btn-spin 0.7s linear infinite;
+}
+
+@keyframes survivor-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.survivor-bet-feedback {
+  margin-top: 0.8rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 2px;
+  font-size: 1.3rem;
+  line-height: 1.4;
+}
+
+.survivor-bet-feedback-success {
+  background: rgba(25, 188, 84, 0.16);
+  border: 1px solid rgba(25, 188, 84, 0.45);
+  color: #6fe9a0;
+}
+
+.survivor-bet-feedback-error {
+  background: rgba(217, 60, 60, 0.16);
+  border: 1px solid rgba(217, 60, 60, 0.45);
+  color: #ff9b9b;
+}

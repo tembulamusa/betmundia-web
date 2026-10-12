@@ -29,6 +29,8 @@ export const SURVIVOR_JOINED_STORAGE_KEY = "survivorJoinedChallenges";
 /** Remember locally which challenges this browser has joined, so My Bets
  * can list them (the API has no "my challenges" endpoint yet — only
  * per-challenge progress). */
+const BET_FEEDBACK_MS = 6000;
+
 const rememberJoinedChallenge = (id) => {
     const existing = getFromLocalStorage(SURVIVOR_JOINED_STORAGE_KEY) || [];
     const list = Array.isArray(existing) ? existing : [];
@@ -219,6 +221,18 @@ const SurvivorChallengeGames = ({ id }) => {
     // the confirm attempt finishes). Nothing is sent to the server until
     // "Place bet" is pressed for that game.
     const [draftPicks, setDraftPicks] = useState({});
+    // Result of the last place-bet attempt, shown inline under the game's
+    // Place bet button for a few seconds ({ gameNumber, type, message }) —
+    // the confirm modal is already gone by then, so this is what keeps the
+    // outcome visible. The button stays disabled until it clears.
+    const [betFeedback, setBetFeedback] = useState(null);
+    const betFeedbackTimer = useRef(null);
+    useEffect(() => () => clearTimeout(betFeedbackTimer.current), []);
+    const showBetFeedback = (gameNumber, type, message) => {
+        clearTimeout(betFeedbackTimer.current);
+        setBetFeedback({ gameNumber, type, message });
+        betFeedbackTimer.current = setTimeout(() => setBetFeedback(null), BET_FEEDBACK_MS);
+    };
 
     // Once this panel has finished its first load, scroll the current/
     // latest game (it's the one rendered last, per orderedNonSettledGames
@@ -280,15 +294,17 @@ const SurvivorChallengeGames = ({ id }) => {
             return;
         }
         if (!canBetOnChallenge) {
-            Notify({ status: 400, message: "You cannot place a bet on this challenge" });
+            showBetFeedback(gameNumber, "error", "You cannot place a bet on this challenge.");
             return;
         }
+        clearTimeout(betFeedbackTimer.current);
+        setBetFeedback(null);
         setPendingGame(gameNumber);
         // Survivor place-bet API (bet-api v2):
         //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
         //   body: { "selection": "1" | "X" | "2" } + Bearer token
-        // The HTTP status is 200 even for rejections — the real result is
-        // the envelope's `status` ("400" etc.) and `result` message.
+        // The HTTP status can be 200 even for rejections — the real result
+        // is the envelope's `status` ("400" etc.) and its message.
         const pick = () =>
             submitSurvivorPrediction(id, gameNumber, normalizeSelection(selection));
         let outcome = await pick();
@@ -300,10 +316,11 @@ const SurvivorChallengeGames = ({ id }) => {
             const joined = await joinSurvivorChallenge(id);
             if (!joined.success) {
                 setPendingGame(null);
-                Notify({
-                    status: joined.httpStatus || 400,
-                    message: joined.message || "Could not join this challenge, so your bet was not placed.",
-                });
+                showBetFeedback(
+                    gameNumber,
+                    "error",
+                    joined.message || "Could not join this challenge, so your bet was not placed."
+                );
                 return;
             }
             rememberJoinedChallenge(id);
@@ -313,12 +330,18 @@ const SurvivorChallengeGames = ({ id }) => {
         setPendingGame(null);
         if (outcome.success) {
             rememberJoinedChallenge(id);
-            Notify({ status: 200, message: "Bet placed successfully. Good luck!" });
+            showBetFeedback(gameNumber, "success", "Bet placed successfully. Good luck!");
             void loadAll();
         } else if (!outcome.httpStatus) {
-            Notify({ status: 400, message: "Network error. Your bet was not placed, please try again." });
+            showBetFeedback(gameNumber, "error", "Network error. Your bet was not placed, please try again.");
+        } else if (outcome.unauthorized) {
+            showBetFeedback(
+                gameNumber,
+                "error",
+                "Unauthorized — your session may have expired. Please log out and log in again, then retry."
+            );
         } else {
-            Notify({ status: 400, message: outcome.message || "Could not place bet." });
+            showBetFeedback(gameNumber, "error", outcome.message || "Could not place bet. Please try again.");
         }
     };
 
@@ -568,7 +591,10 @@ const SurvivorChallengeGames = ({ id }) => {
                                         game={game}
                                         currentSelection={mine?.selection}
                                         draftSelection={draftPicks[game.game_number]}
-                                        disabled={pendingGame === game.game_number}
+                                        disabled={
+                                            pendingGame === game.game_number ||
+                                            betFeedback?.gameNumber === game.game_number
+                                        }
                                         onPick={setDraftPick}
                                     />
                                     {(draftPicks[game.game_number] || mine?.selection) && (
@@ -601,15 +627,31 @@ const SurvivorChallengeGames = ({ id }) => {
                                             className="survivor-place-btn"
                                             disabled={
                                                 !draftPicks[game.game_number] ||
-                                                pendingGame === game.game_number
+                                                pendingGame === game.game_number ||
+                                                betFeedback?.gameNumber === game.game_number
                                             }
                                             onClick={() =>
                                                 requestPick(game.game_number, draftPicks[game.game_number])
                                             }
                                         >
-                                            Place bet
+                                            {pendingGame === game.game_number ? (
+                                                <>
+                                                    <span className="survivor-btn-spinner" aria-hidden="true" />
+                                                    Placing bet…
+                                                </>
+                                            ) : (
+                                                "Place bet"
+                                            )}
                                         </button>
                                     </div>
+                                    {betFeedback?.gameNumber === game.game_number && (
+                                        <div
+                                            className={`survivor-bet-feedback survivor-bet-feedback-${betFeedback.type}`}
+                                            role="status"
+                                        >
+                                            {betFeedback.message}
+                                        </div>
+                                    )}
                                 </>
                             )}
 
