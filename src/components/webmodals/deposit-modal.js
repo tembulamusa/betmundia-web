@@ -1,189 +1,227 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Formik, Form } from 'formik';
-import mpesa from '../../assets/img/mpesa.png'
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Context } from '../../context/store';
 import { Modal } from "react-bootstrap";
+import { isMobile } from "react-device-detect";
+import { FaWallet, FaMobileAlt, FaCheckCircle } from "react-icons/fa";
 import makeRequest from '../utils/fetch-request';
-import Alert from '../utils/alert';
+import { getFromLocalStorage, removeItem } from '../utils/local-storage';
+import { formatNumber } from '../utils/betslip';
+import '../../assets/css/deposit-prompt-modal.css';
 
+const MAX_DEPOSIT = 70000;
+const BALANCE_POLL_MS = 7000;
+const BALANCE_POLL_FOR_MS = 60000;
 
-const DepositModal = (props) => {
+const DepositModal = () => {
 
     const [state, dispatch] = useContext(Context);
-    const [success, setSuccess] = useState(false);
-    const [depositMessage, setDepositMessage] = useState(state?.promptdepositrequest?.message);
+    const prompt = state?.promptdepositrequest;
+    const user = getFromLocalStorage("user") || state?.user;
+    const msisdn = user?.msisdn || '';
+
+    const [amount, setAmount] = useState('');
+    const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [directDepositPromt, setDirectDepositPrompt] = useState(false);
-    const [amount, setAmount] = useState(state?.promptdepositrequest?.payableAmt)
-    const [closeButton, setCloseButton] = useState(false);
+    const [stkSent, setStkSent] = useState(false);
+    const pollRef = useRef({ interval: null, timeout: null });
+    const toggleRef = useRef(state?.toggleuserbalance);
+    toggleRef.current = state?.toggleuserbalance;
 
-    const initialValues = {
-        amount: state?.promptdepositrequest?.payableAmt,
-        msisdn: state?.user?.msisdn || ''
-    }
+    const stopPolling = () => {
+        clearInterval(pollRef.current.interval);
+        clearTimeout(pollRef.current.timeout);
+        pollRef.current = { interval: null, timeout: null };
+    };
 
+    const refreshBalance = () => {
+        dispatch({ type: "SET", key: "toggleuserbalance", payload: !toggleRef.current });
+    };
 
     useEffect(() => {
-        setDepositMessage(state?.promptdepositrequest?.message);
-    }, [state?.promptdepositrequest?.message]);
+        if (prompt?.show) {
+            setAmount(prompt?.payableAmt ? String(prompt.payableAmt) : '');
+            setError(null);
+            setStkSent(false);
+            setIsLoading(false);
+        }
+    }, [prompt?.show, prompt?.payableAmt]);
 
-    const handleSubmit = values => {
-        let endpoint = '/deposits/stk/new';
+    useEffect(() => stopPolling, []);
+
+    const close = () => {
+        stopPolling();
+        dispatch({ type: "DEL", key: "promptdepositrequest" });
+    };
+
+    const backToBetslip = () => {
+        close();
+        if (isMobile) {
+            dispatch({ type: "SET", key: "showmobileslip", payload: true });
+        }
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const value = parseFloat(amount);
+        if (!msisdn) {
+            setError("Log in to deposit.");
+            return;
+        }
+        if (!value || value < 1 || value > MAX_DEPOSIT) {
+            setError(`Enter an amount between KSh 1 and KSh ${formatNumber(MAX_DEPOSIT)}.`);
+            return;
+        }
+
         setIsLoading(true);
-        setDepositMessage(null);
-        setSuccess(false)
-        makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 3 }).then(([status, response]) => {
+        setError(null);
+        const promoName = state?.promoInfo;
+        makeRequest({
+            url: 'v2/deposits/stk/new',
+            method: 'POST',
+            data: {
+                amount: value,
+                msisdn,
+                app_name: promoName ? `desktop-web:${promoName}` : 'desktop-web',
+            },
+            api_version: 3
+        }).then(([status, response]) => {
+            setIsLoading(false);
             if (status == 200) {
-                setSuccess(true)
-                setDepositMessage({ status: 200, message: "Check your phone and enter pin to complete deposit" })
-            } else {
-                setDepositMessage({ status: 400, message: "Error pushing stk. Please deposit directly" });
-                setDirectDepositPrompt(true)
-                setIsLoading(false)
+                setStkSent(true);
+                refreshBalance();
+                stopPolling();
+                pollRef.current.interval = setInterval(refreshBalance, BALANCE_POLL_MS);
+                pollRef.current.timeout = setTimeout(stopPolling, BALANCE_POLL_FOR_MS);
+                return;
             }
-        })
-    }
+            if (status == 401 || response?.status == 401 || response?.status == 403) {
+                close();
+                removeItem("user");
+                dispatch({ type: "DEL", key: "user" });
+                dispatch({ type: "SET", key: "showloginmodal", payload: true });
+                return;
+            }
+            setError(response?.message || response?.error?.message
+                || "We couldn't send the M-Pesa prompt. Use the Paybill option below.");
+        });
+    };
 
-
-
-    const validate = values => {
-
-        let errors = {}
-
-        if (!values.msisdn || !values.msisdn.match(/(254|0|)?[71]\d{8}/g)) {
-            errors.msisdn = 'Please enter a valid phone number'
-        }
-
-        if (!values.amount || values.amount < state.promptdepositrequest?.payableAmt || values.amount > 70000) {
-            errors.amount = `Please enter amount between KES ${state.promptdepositrequest?.payableAmt} and KES 70,000.00`;
-        }
-        return errors
-    }
-
-
-
-    const DepositFormFields = (props) => {
-        const { values, errors, onFieldChanged } = props;
-        return (
-            <>
-
-                <div className="form-group row d-flex justify-content-center mt-4">
-                    {depositMessage && <div className='my-3 font-bold'><Alert message={depositMessage} font={"light"} /></div>}
-
-                    <div className="row">
-                        <div className=''>
-                            <input
-                                onChange={ev => onFieldChanged(ev)}
-                                style={{}}
-                                className="text-dark deposit-input form-control  input-field"
-                                id="amount"
-                                name="amount"
-                                type="text"
-                                value={values.amount}
-                                placeholder='Enter Amount'
-                            />
-                            {errors.amount && <div className='text-danger'> {errors.amount} </div>}
-                        </div>
-
-                        <input
-                            onChange={ev => onFieldChanged(ev)}
-                            style={{}}
-                            className="text-dark deposit-input form-control  input-field"
-                            id="msisdn"
-                            name="msisdn"
-                            type="hidden"
-                            value={state?.user?.msisdn}
-                        />
-                        <div className='col-8'>
-                            <button
-                                disabled={isLoading}
-                                style={{}}
-                                className='w-full btn btn-lg btn-primary bg-primary deposit-withdraw-butto font-[500]'>
-                                {isLoading ? "wait..." : "Deposit"}
-                            </button>
-                        </div>
-                        <div className='col-4'>
-                            <div
-                                onClick={() => dispatch({ type: "DEL", key: "promptdepositrequest" })}
-                                className='w-full btn btn-lg btn-primary btn-warning deposit-withdraw-butto font-[500]'>
-                                {closeButton ? "Cancel" : "Close"}
-                            </div></div>
-
-                    </div>
-                </div>
-            </>
-        )
-    }
-
-
-
-    const MyDepositForm = (props) => {
-        const { errors, values, setFieldValue } = props;
-
-        const onFieldChanged = (ev) => {
-            let field = ev.target.name;
-            let value = ev.target.value;
-            setFieldValue(field, value);
-            // if (field == "amount") {
-            //     setAmount(value);
-            // }
-
-        }
-
-        return (
-            <Form className="rounded border-0">
-                <div className="pt-0">
-                    <div className="row px-3">
-                        <div className='text-center'>
-                            <img src={mpesa} alt="" />
-                        </div>
-
-
-                    </div>
-                    <hr className='my-2' />
-                    <div className='row'>
-                        <div className=''>
-                            <DepositFormFields onFieldChanged={onFieldChanged} values={values} errors={errors} />
-                        </div>
-
-                    </div>
-                </div>
-            </Form>
-        );
-    }
-
-    const DepositForm = (props) => {
-        return (
-            <Formik
-                initialValues={initialValues}
-                onSubmit={handleSubmit}
-                validateOnChange={false}
-                validateOnBlur={false}
-                validate={validate}
-                render={(props) => <MyDepositForm {...props} />} />
-        );
-    }
+    const hasShortfall = prompt?.stake != null && prompt?.balance != null;
 
     return (
         <Modal
-            show={state?.promptdepositrequest?.show}
-            onHide={() => dispatch({ type: "DEL", key: "promptdepositrequest" })}
-            dialog className="popover-login-modal"
-            aria-labelledby="contained-modal-title-vcenter">
-            {/* <Modal.Header closeButton className="no-header">
-                      <Modal.Title>Deposit</Modal.Title>
-                    </Modal.Header> */}
-            <Modal.Body className="p-4">
-                <Alert message={{ status: 400, message: "Insufficient Balance" }} />
-                <div className='row mt-5'>
-                    <div className='col-7'><a href={`/deposit?next=${window.location.pathname}`} className='p-3 w-[200px] btn btn-primary btn-lg bold uppercase'>Click to Deposit</a></div>
-                    <div className='col-5'><button className='p-3 w-[100px] btn btn-lg bold uppercase btn btn-default' onClick={() => dispatch({ type: "DEL", key: "promptdepositrequest" })}>Close</button></div>
-                </div>
+            show={!!prompt?.show}
+            onHide={close}
+            centered
+            className="deposit-prompt-modal"
+        >
+            <Modal.Header closeButton closeVariant="white">
+                <Modal.Title>
+                    <span className="deposit-prompt-title-icon" aria-hidden="true">
+                        <FaWallet />
+                    </span>
+                    Insufficient balance
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {stkSent ? (
+                    <div className="deposit-prompt-success" role="status">
+                        <FaCheckCircle className="deposit-prompt-success-icon" aria-hidden="true" />
+                        <p className="deposit-prompt-success-title">Check your phone</p>
+                        <p className="deposit-prompt-text">
+                            Enter your M-Pesa PIN on {msisdn} to complete the deposit of
+                            {' '}<b>KSh {formatNumber(amount)}</b>. Once it reflects in your balance,
+                            go back to your betslip and place the bet again.
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        <p className="deposit-prompt-text">
+                            You don't have enough balance to place this bet. Top up with M-Pesa to continue.
+                        </p>
+
+                        {hasShortfall && (
+                            <div className="deposit-prompt-summary">
+                                <div className="deposit-prompt-row">
+                                    <span>Stake</span>
+                                    <span>KSh {formatNumber(prompt.stake)}</span>
+                                </div>
+                                <div className="deposit-prompt-row">
+                                    <span>Your balance</span>
+                                    <span>KSh {formatNumber(prompt.balance)}</span>
+                                </div>
+                                <div className="deposit-prompt-row deposit-prompt-row--total">
+                                    <span>Top up at least</span>
+                                    <span className="deposit-prompt-highlight">KSh {formatNumber(prompt.payableAmt)}</span>
+                                </div>
+                            </div>
+                        )}
+
+                        <form className="deposit-prompt-form" onSubmit={handleSubmit} noValidate>
+                            <label className="deposit-prompt-label" htmlFor="deposit-prompt-msisdn">
+                                <FaMobileAlt aria-hidden="true" /> M-Pesa number
+                            </label>
+                            <input
+                                id="deposit-prompt-msisdn"
+                                className="deposit-prompt-input"
+                                type="text"
+                                value={msisdn}
+                                readOnly
+                                disabled
+                            />
+
+                            <label className="deposit-prompt-label" htmlFor="deposit-prompt-amount">
+                                Amount to deposit
+                            </label>
+                            <div className="deposit-prompt-amount-wrap">
+                                <span className="deposit-prompt-currency">KSh</span>
+                                <input
+                                    id="deposit-prompt-amount"
+                                    className="deposit-prompt-input deposit-prompt-input--amount"
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value.replace(/[^0-9.]/g, ''))}
+                                    placeholder="Enter amount"
+                                    autoFocus
+                                />
+                            </div>
+
+                            {error && <div className="deposit-prompt-error" role="alert">{error}</div>}
+
+                            <button type="submit" className="deposit-prompt-submit" disabled={isLoading}>
+                                {isLoading ? "Sending M-Pesa prompt..." : "Deposit now"}
+                            </button>
+                        </form>
+
+                        <p className="deposit-prompt-paybill">
+                            Or pay via M-Pesa Paybill <b>444142</b>, account number: your phone number.
+                        </p>
+                    </>
+                )}
             </Modal.Body>
+            <Modal.Footer>
+                {stkSent ? (
+                    <button type="button" className="deposit-prompt-secondary" onClick={backToBetslip}>
+                        Back to betslip
+                    </button>
+                ) : (
+                    <>
+                        <a
+                            href={`/deposit?next=${encodeURIComponent(window.location.pathname)}`}
+                            className="deposit-prompt-link"
+                            onClick={() => stopPolling()}
+                        >
+                            Open deposit page
+                        </a>
+                        <button type="button" className="deposit-prompt-secondary" onClick={close}>
+                            Cancel
+                        </button>
+                    </>
+                )}
+            </Modal.Footer>
         </Modal>
+    );
+};
 
-
-    )
-}
-
-export default DepositModal
+export default DepositModal;
