@@ -1271,7 +1271,7 @@
 .survivor-challenge-accordion .accordion-item:first-of-type,
 .survivor-challenge-accordion .accordion-item:last-of-type {
   background: var(--survivor-acc-bg);
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -1380,35 +1380,4 @@
   .survivor-detail-body > .survivor-progress-banner {
     margin: 1rem 1rem 0;
   }
-}
-
-/* Each accordion item carries its own 1px border (items stay flush: the
-   shared edge is collapsed with a -1px overlap so it never doubles up). */
-.survivor-challenge-accordion {
-  border: none;
-  border-radius: 0;
-  overflow: visible;
-}
-
-.survivor-challenge-accordion .accordion-item {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0;
-  overflow: hidden;
-}
-
-.survivor-challenge-accordion .accordion-item + .accordion-item {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: -1px;
-}
-
-.survivor-challenge-accordion .accordion-item:first-of-type {
-  border-radius: 6px 6px 0 0;
-}
-
-.survivor-challenge-accordion .accordion-item:last-of-type {
-  border-radius: 0 0 6px 6px;
-}
-
-.survivor-challenge-accordion .accordion-item:only-of-type {
-  border-radius: 6px;
 }
