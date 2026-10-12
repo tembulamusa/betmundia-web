@@ -1,6 +1,74 @@
 .survivor-page {
-  padding: 1rem 0.75rem 3rem;
+  padding: 0 0.75rem 3rem;
   color: #ffffff;
+}
+
+/* Page header — same look as the Promotions page header. */
+.survivor-page-header {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 -0.75rem 2.5rem;
+  padding: 1.15rem 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+}
+
+.survivor-page-header__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.survivor-page-header__back:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.survivor-page-header__back svg {
+  font-size: 1.32rem;
+}
+
+.survivor-page-header__title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.25;
+}
+
+.survivor-page-header__spacer {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.survivor-page-subtitle {
+  margin: -1rem 0 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1.2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .survivor-page-header {
+    padding: 1.25rem 1.25rem 1.35rem;
+  }
+
+  .survivor-page-header__title {
+    font-size: 1.89rem;
+  }
 }
 
 .survivor-lobby-header {

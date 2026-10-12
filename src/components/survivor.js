@@ -6,7 +6,7 @@ import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
 import Notify from "./utils/Notify";
 import NoEvents from "./utils/no-events";
-import { FaShieldAlt, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
+import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
 import {
     fetchSurvivorChallenges,
     fetchSurvivorChallenge,
@@ -30,6 +30,26 @@ export const SURVIVOR_JOINED_STORAGE_KEY = "survivorJoinedChallenges";
  * can list them (the API has no "my challenges" endpoint yet — only
  * per-challenge progress). */
 const BET_FEEDBACK_MS = 6000;
+
+/** Page header in the same style as the Promotions page: full-width bar
+ * with a round back button, centred title and a spacer to balance it. */
+const SurvivorPageHeader = () => {
+    const navigate = useNavigate();
+    return (
+        <header className="survivor-page-header">
+            <button
+                type="button"
+                className="survivor-page-header__back"
+                aria-label="Go back"
+                onClick={() => navigate(-1)}
+            >
+                <FaArrowLeft />
+            </button>
+            <h1 className="survivor-page-header__title">Survivor Challenge</h1>
+            <span className="survivor-page-header__spacer" aria-hidden="true" />
+        </header>
+    );
+};
 
 const rememberJoinedChallenge = (id) => {
     const existing = getFromLocalStorage(SURVIVOR_JOINED_STORAGE_KEY) || [];
@@ -923,16 +943,11 @@ const SurvivorChallengesList = () => {
 
     return (
         <div className="survivor-page">
-            <div className="survivor-lobby-header">
-                <FaShieldAlt className="survivor-lobby-icon" aria-hidden="true" />
-                <div>
-                    <h1 className="survivor-lobby-title">Survivor Challenge</h1>
-                    <p className="survivor-lobby-subtitle">
-                        Pick one 1X2 result per game. One wrong pick and you're out —
-                        last player standing takes the pool.
-                    </p>
-                </div>
-            </div>
+            <SurvivorPageHeader />
+            <p className="survivor-page-subtitle">
+                Pick one 1X2 result per game. One wrong pick and you're out —
+                last player standing takes the pool.
+            </p>
 
             {challenges && challenges.length > 0 && (
                 <div className="survivor-lobby-filter-bar">
@@ -1104,16 +1119,7 @@ const SurvivorChallengeDetail = ({ id }) => {
 
     return (
         <div className="survivor-page">
-            <div className="survivor-lobby-header">
-                <FaShieldAlt className="survivor-lobby-icon" aria-hidden="true" />
-                <div>
-                    <h1 className="survivor-lobby-title">Survivor Challenge</h1>
-                    <p className="survivor-lobby-subtitle">
-                        Pick one 1X2 result per game. One wrong pick and you're out —
-                        last player standing takes the pool.
-                    </p>
-                </div>
-            </div>
+            <SurvivorPageHeader />
 
             <div className="survivor-detail-nav">
                 <select
