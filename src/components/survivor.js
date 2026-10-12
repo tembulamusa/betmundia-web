@@ -246,6 +246,9 @@ const SurvivorChallengeGames = ({ id }) => {
     // the confirm modal is already gone by then, so this is what keeps the
     // outcome visible. The button stays disabled until it clears.
     const [betFeedback, setBetFeedback] = useState(null);
+    // Picks placed in this session (gameNumber -> "1"/"X"/"2"), so the 1X2
+    // buttons disappear the moment a bet succeeds rather than after reload.
+    const [placedPicks, setPlacedPicks] = useState({});
     const betFeedbackTimer = useRef(null);
     useEffect(() => () => clearTimeout(betFeedbackTimer.current), []);
     const showBetFeedback = (gameNumber, type, message) => {
@@ -350,6 +353,7 @@ const SurvivorChallengeGames = ({ id }) => {
         setPendingGame(null);
         if (outcome.success) {
             rememberJoinedChallenge(id);
+            setPlacedPicks((prev) => ({ ...prev, [gameNumber]: normalizeSelection(selection) }));
             showBetFeedback(gameNumber, "success", "Bet placed successfully. Good luck!");
             void loadAll();
         } else if (!outcome.httpStatus) {
@@ -567,6 +571,11 @@ const SurvivorChallengeGames = ({ id }) => {
                     // whole games list behind one summary row.
                     const isLockedOut = statusIs(game.status, "LOCKED") && !canBetOnChallenge;
                     const canBetOnThisGame = canPick && canBetOnChallenge;
+                    // Once a pick exists for this game (from the server or just
+                    // placed), the 1X2 buttons and Place bet are replaced by
+                    // "Your pick" + the result (--- until it is available).
+                    const placedSelection = mine?.selection ?? placedPicks[game.game_number];
+                    const showPickControls = canBetOnThisGame && !placedSelection;
                     return (
                         <div
                             key={game.game_number}
@@ -605,7 +614,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                 Active until {formatDateTime(game.lock_at)}
                             </div>
 
-                            {canBetOnThisGame && (
+                            {showPickControls && (
                                 <>
                                     <PickButtons
                                         game={game}
@@ -617,21 +626,12 @@ const SurvivorChallengeGames = ({ id }) => {
                                         }
                                         onPick={setDraftPick}
                                     />
-                                    {(draftPicks[game.game_number] || mine?.selection) && (
+                                    {draftPicks[game.game_number] && (
                                         <div className="survivor-game-outcome">
                                             <span className="survivor-your-pick">
                                                 Your pick:{" "}
-                                                <b>
-                                                    {normalizeSelection(
-                                                        draftPicks[game.game_number] || mine?.selection
-                                                    )}
-                                                </b>
+                                                <b>{normalizeSelection(draftPicks[game.game_number])}</b>
                                             </span>
-                                            {mine?.selection && (
-                                                <span className="survivor-result-status survivor-result-pending">
-                                                    Pending
-                                                </span>
-                                            )}
                                             <span className="survivor-next-prize">
                                                 Next prize will be: <b>—</b>
                                             </span>
@@ -663,6 +663,32 @@ const SurvivorChallengeGames = ({ id }) => {
                                                 "Place bet"
                                             )}
                                         </button>
+                                    </div>
+                                    {betFeedback?.gameNumber === game.game_number && (
+                                        <div
+                                            className={`survivor-bet-feedback survivor-bet-feedback-${betFeedback.type}`}
+                                            role="status"
+                                        >
+                                            {betFeedback.message}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
+                            {canBetOnThisGame && placedSelection && (
+                                <>
+                                    <div className="survivor-game-outcome">
+                                        <span className="survivor-your-pick">
+                                            Your pick: <b>{normalizeSelection(placedSelection)}</b>
+                                        </span>
+                                        <span className="survivor-your-pick">
+                                            Result: <b>{game.result ? normalizeSelection(game.result) : "---"}</b>
+                                        </span>
+                                        {!game.result && (
+                                            <span className="survivor-result-status survivor-result-pending">
+                                                Pending
+                                            </span>
+                                        )}
                                     </div>
                                     {betFeedback?.gameNumber === game.game_number && (
                                         <div
