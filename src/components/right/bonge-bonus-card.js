@@ -89,7 +89,10 @@ const BongeBonusCard = ({ advice, slipCount = 0 }) => {
                   {advice?.nudgeSub ? (
                     <span className="bonge-bonus__nudge-sub">{advice.nudgeSub}</span>
                   ) : null}
-                  <span className="bonge-bonus__nudge-terms">{termsLink}</span>
+                  {/* one Terms link per alert: the status line carries it when present */}
+                  {!advice?.status ? (
+                    <span className="bonge-bonus__nudge-terms">{termsLink}</span>
+                  ) : null}
                 </div>
               </div>
             ) : null}
