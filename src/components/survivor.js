@@ -657,12 +657,10 @@ const SurvivorChallengeGames = ({ id }) => {
                         <span>Your pick</span>
                         <b>{normalizeSelection(pendingPick?.selection)}</b>
                     </div>
-                    {!isEnrolled && (
-                        <div className="survivor-pick-confirm-row">
-                            <span>Entry fee (debited once)</span>
-                            <b>{formatMoney(challenge.entry_stake)}</b>
-                        </div>
-                    )}
+                    <div className="survivor-pick-confirm-row">
+                        <span>Stake for this game</span>
+                        <b>{formatMoney(challenge.entry_stake)}</b>
+                    </div>
                     <p className="survivor-pick-confirm-note">
                         Your pick for this game is final and cannot be changed after you confirm.
                     </p>
@@ -680,7 +678,7 @@ const SurvivorChallengeGames = ({ id }) => {
                         className="survivor-pick-confirm-ok"
                         onClick={confirmPendingPick}
                     >
-                        {isEnrolled ? "Confirm pick" : "Join and submit pick"}
+                        {isEnrolled ? "Pay stake and submit pick" : "Join and submit pick"}
                     </button>
                 </Modal.Footer>
             </Modal>
