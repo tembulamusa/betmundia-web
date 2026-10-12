@@ -87,6 +87,34 @@ const getMobileOddLabel = (match, mkt) => {
     return match?.odd_key || '';
 }
 
+// Order a market's outcomes for the home-screen buttons. Over/Under (sub type 18)
+// is built from odd_key: the Over and Under outcomes of the requested line, in
+// that order (OVER 2.5 first, UNDER 2.5 second). Other markets keep outcome_id order.
+const numbersIn = (value) => (String(value ?? '').match(/\d+(?:\.\d+)?/g) || []).map(Number);
+
+export const orderMarketOutcomes = (outcomes, marketId, line) => {
+    const list = Array.isArray(outcomes) ? [...outcomes] : [];
+    const byOutcomeId = (a, b) => Number(a?.outcome_id) - Number(b?.outcome_id);
+
+    if (Number(marketId) !== 18) {
+        return list.sort(byOutcomeId);
+    }
+
+    const keyOf = (o) => String(o?.odd_key ?? '').trim().toLowerCase();
+    const wanted = Number(line);
+    const forLine = Number.isFinite(wanted) && line !== ''
+        ? list.filter((o) => numbersIn(o?.special_bet_value).includes(wanted) || numbersIn(o?.odd_key).includes(wanted))
+        : list;
+    const pool = forLine.length ? forLine : list;
+
+    const over = pool.find((o) => keyOf(o).startsWith('over'));
+    const under = pool.find((o) => keyOf(o).startsWith('under'));
+    if (over || under) {
+        return [over, under].filter(Boolean);
+    }
+    return pool.sort(byOutcomeId);
+};
+
 const findOddsMarketKey = (odds, subTypeId, fallbackName) => {
     if (!odds || typeof odds !== 'object') {
         return fallbackName;
@@ -884,8 +912,7 @@ const MatchMarket = (props) => {
     const [pdown, setPdown] = useState(false);
     const [btnCount,] = useState(buttonCount);
     const [outcomes, setOutcomes] = useState(
-        initialMatch?.odds?.[marketName]?.outcomes.sort((a, b) =>
-            a?.outcome_id - b?.outcome_id) || []);
+        orderMarketOutcomes(initialMatch?.odds?.[marketName]?.outcomes, marketId, special_bet_value));
     const [producerId, setProducerId] = useState(initialMatch?.odds?.[marketName]?.producer_id);
 
     const [market_status, setMarketStatus] = useState(initialMatch?.odds?.[marketName]?.market_status);
@@ -920,8 +947,8 @@ const MatchMarket = (props) => {
                 if (data.match_market.special_bet_value == special_bet_value) {
                     if (Object.keys(data.event_odds).length > 0) {
                         setOutcomes((prev) => {
-                            let newOdds = Object.values(data.event_odds).sort(
-                                (a, b) => a.outcome_id - b.outcome_id
+                            let newOdds = orderMarketOutcomes(
+                                Object.values(data.event_odds), marketId, special_bet_value
                             )
                             newOdds.forEach(odd => {
                                 odd.name = data.match_market.market_name;
