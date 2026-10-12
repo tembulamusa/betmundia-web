@@ -947,10 +947,10 @@ const SurvivorChallengesList = () => {
                                             labels={SURVIVOR_STATUS_LABELS}
                                             enrolled={isEnrolled}
                                         />
-                                    </div>
-                                    <div className="survivor-challenge-card-pool">
-                                        {formatMoney(challenge.current_prize_pool)}
-                                        <span className="survivor-challenge-card-pool-label">prize pool</span>
+                                        <div className="survivor-challenge-card-pool">
+                                            {formatMoney(challenge.current_prize_pool)}
+                                            <span className="survivor-challenge-card-pool-label">prize pool</span>
+                                        </div>
                                     </div>
                                     <div className="survivor-challenge-card-meta">
                                         <span className="survivor-challenge-card-meta-item"><FaUsers aria-hidden="true" /> <b className="survivor-yellow">{challenge.participant_count}</b> participants</span>
