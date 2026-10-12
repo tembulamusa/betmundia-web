@@ -1256,6 +1256,7 @@
   --survivor-acc-bg: rgb(38, 48, 69);
   --survivor-acc-active-bg: rgb(47, 59, 86);
   --survivor-acc-border: rgba(255, 255, 255, 0.14);
+  --survivor-acc-body-bg: rgb(23, 34, 56);
   gap: 0;
   border: 1px solid var(--survivor-acc-border);
   border-radius: 6px;
@@ -1293,9 +1294,25 @@
   background: var(--survivor-acc-bg) !important;
 }
 
+/* The body has no padding: the games list fills it edge to edge, starting
+   right under the header's hairline, and carries the horizontal spacing
+   for its rows itself. The body takes the list's tint so there is one
+   continuous surface below the header rather than a band of item colour. */
 .survivor-challenge-accordion .accordion-body {
-  background: var(--survivor-acc-bg);
-  padding: 1.2rem 1.4rem 1.4rem;
+  background: var(--survivor-acc-body-bg);
+  padding: 0;
+}
+
+.survivor-challenge-accordion .accordion-body > .survivor-games-list {
+  margin: 0;
+  padding: 1.4rem 1.4rem 1.6rem;
+  gap: 1rem;
+  background: transparent;
+  border-radius: 0;
+}
+
+.survivor-challenge-accordion .accordion-body > .survivor-progress-banner {
+  margin: 1.4rem 1.4rem 0;
 }
 
 /* Gold chevron while open (Bootstrap tints its active chevron too). */
@@ -1311,7 +1328,16 @@
   }
 
   .survivor-challenge-accordion .accordion-body {
-    padding: 1rem 0.9rem 1.1rem;
+    padding: 0;
+  }
+
+  .survivor-challenge-accordion .accordion-body > .survivor-games-list {
+    padding: 1.1rem 0.9rem 1.2rem;
+    gap: 0.8rem;
+  }
+
+  .survivor-challenge-accordion .accordion-body > .survivor-progress-banner {
+    margin: 1.1rem 0.9rem 0;
   }
 }
 
