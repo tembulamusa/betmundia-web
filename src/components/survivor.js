@@ -6,6 +6,7 @@ import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
 import Notify from "./utils/Notify";
 import NoEvents from "./utils/no-events";
+import jackpotEmptyBall from "../assets/img/backgrounds/jackpot-empty-ball.png";
 import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
 import {
     fetchSurvivorChallenges,
@@ -30,6 +31,21 @@ export const SURVIVOR_JOINED_STORAGE_KEY = "survivorJoinedChallenges";
  * can list them (the API has no "my challenges" endpoint yet — only
  * per-challenge progress). */
 const BET_FEEDBACK_MS = 6000;
+
+/** Empty state for the lobby — same look as the empty jackpots page
+ * (illustration, title, subtitle). */
+const SurvivorEmptyState = ({ title, subtitle }) => (
+    <div className="col-md-12 text-center background-primary mt-2 no-events-div jackpot-empty-state">
+        <img
+            src={jackpotEmptyBall}
+            alt=""
+            aria-hidden="true"
+            className="jackpot-empty-illustration"
+        />
+        <h3 className="jackpot-empty-title">{title}</h3>
+        <p className="jackpot-empty-subtitle">{subtitle}</p>
+    </div>
+);
 
 /** Page header in the same style as the Promotions page: full-width bar
  * with a round back button, centred title and a spacer to balance it. */
@@ -998,11 +1014,17 @@ const SurvivorChallengesList = () => {
             {fetching && !challenges && <SurvivorLoading label="Loading challenges" />}
 
             {!fetching && (!challenges || challenges.length < 1) && (
-                <NoEvents message="No survivor challenges are open right now. Check back later!" />
+                <SurvivorEmptyState
+                    title="There are no survivor challenges at the moment."
+                    subtitle="Check back later for new challenges and a chance to be the last one standing!"
+                />
             )}
 
             {challenges && challenges.length > 0 && filteredChallenges.length < 1 && (
-                <NoEvents message="No challenges match this filter right now." />
+                <SurvivorEmptyState
+                    title="No challenges match this filter."
+                    subtitle="Try a different status to see more survivor challenges."
+                />
             )}
 
             {challenges && filteredChallenges.length > 0 && (
