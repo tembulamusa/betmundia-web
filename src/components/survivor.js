@@ -6,7 +6,7 @@ import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
 import Notify from "./utils/Notify";
 import NoEvents from "./utils/no-events";
-import { FaShieldAlt, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
+import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
 import {
     fetchSurvivorChallenges,
     fetchSurvivorChallenge,
@@ -28,6 +28,28 @@ export const SURVIVOR_JOINED_STORAGE_KEY = "survivorJoinedChallenges";
 /** Remember locally which challenges this browser has joined, so My Bets
  * can list them (the API has no "my challenges" endpoint yet — only
  * per-challenge progress). */
+const BET_FEEDBACK_MS = 6000;
+
+/** Page header in the same style as the Promotions page: full-width bar
+ * with a round back button, centred title and a spacer to balance it. */
+const SurvivorPageHeader = () => {
+    const navigate = useNavigate();
+    return (
+        <header className="survivor-page-header">
+            <button
+                type="button"
+                className="survivor-page-header__back"
+                aria-label="Go back"
+                onClick={() => navigate(-1)}
+            >
+                <FaArrowLeft />
+            </button>
+            <h1 className="survivor-page-header__title">Survivor Challenge</h1>
+            <span className="survivor-page-header__spacer" aria-hidden="true" />
+        </header>
+    );
+};
+
 const rememberJoinedChallenge = (id) => {
     const existing = getFromLocalStorage(SURVIVOR_JOINED_STORAGE_KEY) || [];
     const list = Array.isArray(existing) ? existing : [];
@@ -211,11 +233,24 @@ const SurvivorChallengeGames = ({ id }) => {
     // The pick the user clicked but hasn't confirmed yet — clicking 1/X/2
     // opens a confirmation modal instead of placing the bet immediately.
     const [pendingPick, setPendingPick] = useState(null);
+    const [showPickTerms, setShowPickTerms] = useState(false);
     // Local, unsubmitted picks per game (gameNumber -> "1"/"X"/"2") — set
     // by clicking 1/X/2, cleared once that game's pick is confirmed (or
     // the confirm attempt finishes). Nothing is sent to the server until
     // "Place bet" is pressed for that game.
     const [draftPicks, setDraftPicks] = useState({});
+    // Result of the last place-bet attempt, shown inline under the game's
+    // Place bet button for a few seconds ({ gameNumber, type, message }) —
+    // the confirm modal is already gone by then, so this is what keeps the
+    // outcome visible. The button stays disabled until it clears.
+    const [betFeedback, setBetFeedback] = useState(null);
+    const betFeedbackTimer = useRef(null);
+    useEffect(() => () => clearTimeout(betFeedbackTimer.current), []);
+    const showBetFeedback = (gameNumber, type, message) => {
+        clearTimeout(betFeedbackTimer.current);
+        setBetFeedback({ gameNumber, type, message });
+        betFeedbackTimer.current = setTimeout(() => setBetFeedback(null), BET_FEEDBACK_MS);
+    };
 
     // Once this panel has finished its first load, scroll the current/
     // latest game (it's the one rendered last, per orderedNonSettledGames
@@ -260,19 +295,32 @@ const SurvivorChallengeGames = ({ id }) => {
             return;
         }
         if (!canBetOnChallenge) {
-            Notify({ status: 400, message: "You cannot place a bet on this challenge" });
+            showBetFeedback(gameNumber, "error", "You cannot place a bet on this challenge.");
             return;
         }
-        const game = (challenge.games || []).find((g) => g.game_number === gameNumber);
+        clearTimeout(betFeedbackTimer.current);
+        setBetFeedback(null);
         setPendingGame(gameNumber);
-        const outcome = await submitSurvivorPrediction(id, gameNumber, selection);
+        const outcome = await submitSurvivorPrediction(
+            id,
+            gameNumber,
+            normalizeSelection(selection)
+        );
         setPendingGame(null);
         if (outcome.success) {
             rememberJoinedChallenge(id);
-            Notify({ status: 200, message: "Pick submitted." });
+            showBetFeedback(gameNumber, "success", "Pick submitted successfully.");
             void loadAll();
+        } else if (!outcome.httpStatus) {
+            showBetFeedback(gameNumber, "error", "Network error. Your pick was not submitted, please try again.");
+        } else if (outcome.unauthorized) {
+            showBetFeedback(
+                gameNumber,
+                "error",
+                "Unauthorized — your session may have expired. Please log out and log in again, then retry."
+            );
         } else {
-            Notify({ status: 400, message: outcome.message || "Could not submit pick." });
+            showBetFeedback(gameNumber, "error", outcome.message || "Could not submit pick. Please try again.");
         }
     };
 
@@ -325,7 +373,6 @@ const SurvivorChallengeGames = ({ id }) => {
     const challengeStatus = progress?.status ?? challenge?.status;
     const isChallengeOpenForEntry =
         statusIs(challengeStatus, "OPEN") || statusIs(challengeStatus, "ACTIVE");
-    // Placing a pick through place-bet enrolls the user (no separate /join).
     const canBetOnChallenge = isChallengeOpenForEntry && !isEliminated && !isWinner;
     const nonSettledGames = (challenge.games || []).filter((g) => !isGameSettled(g));
     const settledGames = (challenge.games || []).filter((g) => isGameSettled(g));
@@ -505,7 +552,10 @@ const SurvivorChallengeGames = ({ id }) => {
                                         game={game}
                                         currentSelection={mine?.selection}
                                         draftSelection={draftPicks[game.game_number]}
-                                        disabled={pendingGame === game.game_number}
+                                        disabled={
+                                            pendingGame === game.game_number ||
+                                            betFeedback?.gameNumber === game.game_number
+                                        }
                                         onPick={setDraftPick}
                                     />
                                     {(draftPicks[game.game_number] || mine?.selection) && (
@@ -538,15 +588,31 @@ const SurvivorChallengeGames = ({ id }) => {
                                             className="survivor-place-btn"
                                             disabled={
                                                 !draftPicks[game.game_number] ||
-                                                pendingGame === game.game_number
+                                                pendingGame === game.game_number ||
+                                                betFeedback?.gameNumber === game.game_number
                                             }
                                             onClick={() =>
                                                 requestPick(game.game_number, draftPicks[game.game_number])
                                             }
                                         >
-                                            Submit pick
+                                            {pendingGame === game.game_number ? (
+                                                <>
+                                                    <span className="survivor-btn-spinner" aria-hidden="true" />
+                                                    Submitting pick…
+                                                </>
+                                            ) : (
+                                                "Submit pick"
+                                            )}
                                         </button>
                                     </div>
+                                    {betFeedback?.gameNumber === game.game_number && (
+                                        <div
+                                            className={`survivor-bet-feedback survivor-bet-feedback-${betFeedback.type}`}
+                                            role="status"
+                                        >
+                                            {betFeedback.message}
+                                        </div>
+                                    )}
                                 </>
                             )}
 
@@ -646,7 +712,7 @@ const SurvivorChallengeGames = ({ id }) => {
                 className="survivor-pick-confirm-modal"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Confirm your pick</Modal.Title>
+                    <Modal.Title>Confirm Your Pick</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="survivor-pick-confirm-row">
@@ -661,6 +727,31 @@ const SurvivorChallengeGames = ({ id }) => {
                         <span>Stake for this game</span>
                         <b>{formatMoney(challenge.entry_stake)}</b>
                     </div>
+                    <div className="survivor-pick-confirm-row">
+                        <span>Current participants</span>
+                        <b>{challenge.participant_count ?? 0}</b>
+                    </div>
+                    <div className="survivor-pick-confirm-row">
+                        <span>Amount to be won</span>
+                        <b>{formatMoney(challenge.current_prize_pool)}</b>
+                    </div>
+                    <button
+                        type="button"
+                        className="survivor-pick-confirm-terms-toggle"
+                        onClick={() => setShowPickTerms((v) => !v)}
+                    >
+                        {showPickTerms ? "Hide terms" : "Terms"}
+                    </button>
+                    {showPickTerms && (
+                        <ul className="survivor-pick-confirm-terms">
+                            <li>Pick one result (1, X or 2) for each game; picks close at the game's lock time.</li>
+                            <li>A correct pick keeps you in the challenge; one wrong pick eliminates you.</li>
+                            <li>The prize pool is shared among the participants who survive every game.</li>
+                            <li>Your stake for this game is debited when you submit your pick and is non-refundable once the game locks.</li>
+                            <li>Each game round requires a new stake; picks cannot be changed after submission.</li>
+                            <li>Game results are settled on the official 90-minute result.</li>
+                        </ul>
+                    )}
                     <p className="survivor-pick-confirm-note">
                         Your pick for this game is final and cannot be changed after you confirm.
                     </p>
@@ -776,16 +867,11 @@ const SurvivorChallengesList = () => {
 
     return (
         <div className="survivor-page">
-            <div className="survivor-lobby-header">
-                <FaShieldAlt className="survivor-lobby-icon" aria-hidden="true" />
-                <div>
-                    <h1 className="survivor-lobby-title">Survivor Challenge</h1>
-                    <p className="survivor-lobby-subtitle">
-                        Pick one 1X2 result per game. One wrong pick and you're out —
-                        last player standing takes the pool.
-                    </p>
-                </div>
-            </div>
+            <SurvivorPageHeader />
+            <p className="survivor-page-subtitle">
+                Pick one 1X2 result per game. One wrong pick and you're out —
+                last player standing takes the pool.
+            </p>
 
             {challenges && challenges.length > 0 && (
                 <div className="survivor-lobby-filter-bar">
@@ -835,6 +921,7 @@ const SurvivorChallengesList = () => {
                         return (
                             <Accordion.Item key={challenge.id} eventKey={key}>
                                 <Accordion.Header>
+                                    <div className="survivor-accordion-content">
                                     <div className="survivor-challenge-card-top">
                                         <span className="survivor-challenge-name">{challenge.name}</span>
                                         <ChallengeStatusPill
@@ -842,18 +929,25 @@ const SurvivorChallengesList = () => {
                                             labels={SURVIVOR_STATUS_LABELS}
                                             enrolled={isEnrolled}
                                         />
-                                    </div>
-                                    <div className="survivor-challenge-card-pool">
-                                        {formatMoney(challenge.current_prize_pool)}
-                                        <span className="survivor-challenge-card-pool-label">prize pool</span>
+                                        <div className="survivor-challenge-card-pool">
+                                            {formatMoney(challenge.current_prize_pool)}
+                                            <span className="survivor-challenge-card-pool-label">prize pool</span>
+                                        </div>
                                     </div>
                                     <div className="survivor-challenge-card-meta">
-                                        <span className="survivor-challenge-card-meta-item"><FaUsers aria-hidden="true" /> {challenge.participant_count} participants</span>
+                                        <span className="survivor-challenge-card-meta-item"><FaUsers aria-hidden="true" /> <b className="survivor-yellow">{challenge.participant_count}</b> participants</span>
+                                        {(challenge.maximum_games ?? challenge.minimum_games) != null && (
+                                            <span className="survivor-challenge-card-meta-item">
+                                                Game <b className="survivor-yellow">{challenge.current_game_number ?? 1}</b> of{" "}
+                                                <b className="survivor-yellow">{challenge.maximum_games ?? challenge.minimum_games}</b>
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="survivor-challenge-card-time">
                                         {statusIs(challenge.status, "OPEN")
                                             ? `Entries close ${formatDateTime(challenge.registration_closes_at)}`
                                             : `Started ${formatDateTime(challenge.start_at)}`}
+                                    </div>
                                     </div>
                                 </Accordion.Header>
                                 <Accordion.Body>
@@ -949,6 +1043,8 @@ const SurvivorChallengeDetail = ({ id }) => {
 
     return (
         <div className="survivor-page">
+            <SurvivorPageHeader />
+
             <div className="survivor-detail-nav">
                 <select
                     className="survivor-lobby-filter-select survivor-detail-nav-status"
@@ -993,9 +1089,10 @@ const SurvivorChallengeDetail = ({ id }) => {
                 </div>
             </div>
 
+            <div className="survivor-detail-card">
             <div className="survivor-detail-header">
                 <div className="survivor-detail-header-top">
-                    <h1 className="survivor-detail-title">{challenge.name}</h1>
+                    <h2 className="survivor-detail-title">{challenge.name}</h2>
                     <ChallengeStatusPill
                         status={challenge.status}
                         labels={SURVIVOR_STATUS_LABELS}
@@ -1015,12 +1112,26 @@ const SurvivorChallengeDetail = ({ id }) => {
                         <span className="survivor-stat-label">Prize pool</span>
                     </div>
                     <div className="survivor-stat">
-                        <span className="survivor-stat-value">{results?.survivors_remaining ?? "—"}</span>
+                        <span className="survivor-stat-value survivor-yellow">{results?.survivors_remaining ?? "—"}</span>
                         <span className="survivor-stat-label">Survivors left</span>
                     </div>
                     <div className="survivor-stat">
-                        <span className="survivor-stat-value">{challenge.participant_count}</span>
+                        <span className="survivor-stat-value survivor-yellow">{challenge.participant_count}</span>
                         <span className="survivor-stat-label">Players</span>
+                    </div>
+                    <div className="survivor-stat">
+                        <span className="survivor-stat-value survivor-yellow">
+                            {results?.initial_participants ??
+                                results?.total_participants ??
+                                challenge.participant_count}
+                        </span>
+                        <span className="survivor-stat-label">Initially enrolled</span>
+                    </div>
+                    <div className="survivor-stat">
+                        <span className="survivor-stat-value">
+                            {challenge.current_game_number ?? 1} / {challenge.maximum_games ?? challenge.minimum_games ?? "—"}
+                        </span>
+                        <span className="survivor-stat-label">Game no.</span>
                     </div>
                     <div className="survivor-stat">
                         <span className="survivor-stat-value">{formatMoney(challenge.entry_stake)}</span>
@@ -1029,13 +1140,24 @@ const SurvivorChallengeDetail = ({ id }) => {
                 </div>
             </div>
 
-            <SurvivorChallengeGames id={id} />
+            <div className="survivor-detail-body">
+                <SurvivorChallengeGames id={id} />
+            </div>
+            </div>
         </div>
     );
 };
 
 const Survivor = () => {
     const { id } = useParams();
+    // Browser tab title for the lobby and the challenge page; restored on leave.
+    useEffect(() => {
+        const previous = document.title;
+        document.title = "Survivor Challenge - Betmundial";
+        return () => {
+            document.title = previous;
+        };
+    }, [id]);
     return id ? <SurvivorChallengeDetail id={id} /> : <SurvivorChallengesList />;
 };
 

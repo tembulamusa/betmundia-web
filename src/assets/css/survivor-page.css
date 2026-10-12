@@ -1,6 +1,74 @@
 .survivor-page {
-  padding: 1rem 0.75rem 3rem;
+  padding: 0 0.75rem 3rem;
   color: #ffffff;
+}
+
+/* Page header — same look as the Promotions page header. */
+.survivor-page-header {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 -0.75rem 2.5rem;
+  padding: 1.15rem 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+}
+
+.survivor-page-header__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.survivor-page-header__back:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.survivor-page-header__back svg {
+  font-size: 1.32rem;
+}
+
+.survivor-page-header__title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.25;
+}
+
+.survivor-page-header__spacer {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.survivor-page-subtitle {
+  margin: -1rem 0 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1.2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .survivor-page-header {
+    padding: 1.25rem 1.25rem 1.35rem;
+  }
+
+  .survivor-page-header__title {
+    font-size: 1.89rem;
+  }
 }
 
 .survivor-lobby-header {
@@ -151,8 +219,23 @@
   gap: 0.9rem;
 }
 
+.survivor-challenge-accordion {
+  --bs-accordion-bg: rgb(54, 66, 94);
+  --bs-accordion-active-bg: rgb(54, 66, 94);
+  --bs-accordion-border-width: 0px;
+}
+
+/* One item, not two: the title, the collapse wrapper and the body all
+   share one background with no seam (border / shadow / gap) between. */
+.survivor-challenge-accordion .accordion-collapse,
+.survivor-challenge-accordion .accordion-button:not(.collapsed) {
+  background: rgb(54, 66, 94) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .survivor-challenge-accordion .accordion-item {
-  background: rgb(38, 48, 69);
+  background: rgb(54, 66, 94);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 4px;
   overflow: hidden;
@@ -163,9 +246,11 @@
 }
 
 .survivor-challenge-accordion .accordion-button {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   width: 100%;
-  background: transparent !important;
+  background: rgb(54, 66, 94) !important;
   border: none;
   padding: 1rem 1.1rem;
   color: #ffffff;
@@ -184,40 +269,81 @@
    invert it so it shows up against this app's dark accordion rows. */
 .survivor-challenge-accordion .accordion-button::after {
   filter: invert(1);
+  flex-shrink: 0;
+  margin-left: auto;
+  opacity: 0.85;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Bootstrap-style: chevron points down when collapsed, flips when open. */
+.survivor-challenge-accordion .accordion-button:not(.collapsed)::after {
+  transform: rotate(-180deg);
+  opacity: 1;
+}
+
+/* All the header content (name, pill, prize, counts, time) lives in one
+   column that takes the space left of the chevron. */
+.survivor-accordion-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+
+/* Bootstrap's focus glow, in the app's purple for the dark theme —
+   keyboard focus only. */
+.survivor-challenge-accordion .accordion-button:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgba(167, 31, 102, 0.45) !important;
+}
+
+.survivor-challenge-accordion .accordion-button.collapsed:hover {
+  background: rgb(60, 73, 104) !important;
 }
 
 .survivor-challenge-accordion .accordion-body {
   padding: 0 1.1rem 1.1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgb(54, 66, 94);
+  border-top: none;
+}
+
+.survivor-yellow {
+  color: #ffc428;
+  font-weight: 800;
+}
+
+.survivor-stat-value.survivor-yellow {
+  color: #ffc428;
 }
 
 .survivor-challenge-card-top {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.6rem;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+  margin-bottom: 0.8rem;
 }
 
 .survivor-challenge-name {
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 1.5rem;
+  font-size: 1.9rem;
   color: white;
 }
 
+/* Prize amount sits inline with the title, pushed to the right. */
 .survivor-challenge-card-pool {
-  font-size: 1.75rem;
+  margin-left: auto;
+  font-size: 1.9rem;
   font-weight: 800;
-  color: #ffd54a;
+  color: #ffc428;
   display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
-  margin-bottom: 0.6rem;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .survivor-challenge-card-pool-label {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #ffffff;
   text-transform: uppercase;
@@ -227,9 +353,9 @@
 .survivor-challenge-card-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   color: rgba(255, 255, 255);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .survivor-challenge-card-meta-item {
@@ -246,7 +372,7 @@
 }
 
 .survivor-challenge-card-time {
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -377,13 +503,13 @@
    modal, but branded with the app's pick/join accent color rather than
    the purple used for the "blocked" reason link. */
 .survivor-pick-confirm-modal.modal-dialog {
-  max-width: 380px;
+  max-width: 420px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .survivor-pick-confirm-modal .modal-content {
-  background: #0f111a;
+  background: rgba(0, 12, 36, 1) !important;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   color: #ffffff;
@@ -391,13 +517,24 @@
 
 .survivor-pick-confirm-modal .modal-header,
 .survivor-pick-confirm-modal .modal-footer {
-  border-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 1.8rem 2rem 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.survivor-pick-confirm-modal .modal-footer {
+  padding: 1.2rem 2rem 2rem;
+  gap: 1rem;
+}
+
+.survivor-pick-confirm-modal .modal-body {
+  padding: 0.8rem 2rem;
 }
 
 .survivor-pick-confirm-modal .modal-title {
   color: #ffffff;
-  font-weight: 800;
-  font-size: 1.1rem;
+  font-weight: 500;
+  font-size: 1.9rem;
 }
 
 .survivor-pick-confirm-modal .btn-close {
@@ -408,28 +545,44 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.45rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.92rem;
-}
-
-.survivor-pick-confirm-row:last-of-type {
+  padding: 0.9rem 0;
   border-bottom: none;
+  font-size: 1.5rem;
 }
 
 .survivor-pick-confirm-row span {
   color: rgba(255, 255, 255, 0.6);
 }
 
+.survivor-pick-confirm-terms-toggle {
+  display: block;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  background: none;
+  border: none;
+  color: #ffc428;
+  font-size: 1.4rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.survivor-pick-confirm-terms {
+  margin: 1rem 0 0;
+  padding-left: 1.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.35rem;
+  line-height: 1.7;
+}
+
 .survivor-pick-confirm-warning {
-  margin: 0.9rem 0 0;
-  padding: 0.7rem 0.8rem;
+  margin: 1.5rem 0 0;
+  padding: 1.1rem 1.3rem;
   background: rgba(167, 31, 102, 0.12);
   border: 1px solid rgba(167, 31, 102, 0.35);
   border-radius: 8px;
   color: rgba(255, 255, 255, 0.85);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 1.35rem;
+  line-height: 1.6;
 }
 
 .survivor-pick-confirm-cancel {
@@ -437,7 +590,8 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.75);
   border-radius: 8px;
-  padding: 0.5rem 1.1rem;
+  padding: 0.9rem 1.8rem;
+  font-size: 1.5rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -452,7 +606,8 @@
   border: none;
   color: #ffffff;
   border-radius: 8px;
-  padding: 0.5rem 1.2rem;
+  padding: 0.9rem 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -515,11 +670,27 @@
   cursor: not-allowed;
 }
 
-.survivor-detail-header {
-  background: rgb(38, 48, 69);
-  border-radius: 14px;
-  padding: 1.1rem 1.25rem;
+.survivor-detail-card {
+  background: rgb(54, 66, 94);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
   margin-bottom: 1rem;
+}
+
+.survivor-detail-header {
+  background: transparent;
+  border-radius: 0;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 0;
+}
+
+.survivor-detail-body {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0 1.1rem 1.1rem;
+  margin: 0;
 }
 
 .survivor-detail-header-top {
@@ -552,7 +723,7 @@
 
 .survivor-stat {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border-radius: 2px;
   padding: 0.6rem 0.5rem;
   text-align: center;
 }
@@ -626,7 +797,7 @@
   scroll-behavior: smooth;
   padding: 0.7rem 0.4rem 0.7rem 0.7rem;
   background: rgba(0, 12, 36, 0.4);
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 .survivor-games-list::-webkit-scrollbar {
@@ -649,7 +820,7 @@
 .survivor-game-row {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 4px;
+  border-radius: 2px;
   padding: 0.8rem 0.9rem;
 }
 
@@ -913,4 +1084,301 @@
   text-decoration: underline dotted;
   text-underline-offset: 3px;
   cursor: pointer;
+}
+
+/* Mobile: give the accordion title / challenge header room to breathe —
+   name + status pill on one row (name wraps instead of colliding), prize
+   pool on its own line, counts wrap onto separate lines rather than being
+   squeezed side by side, and the chevron is pinned to the top-right so it
+   never takes a slot in the content flow. */
+@media screen and (max-width: 575px) {
+  .survivor-challenge-accordion {
+    gap: 0.8rem;
+  }
+
+  .survivor-challenge-accordion .accordion-button {
+    gap: 0.8rem;
+    padding: 1.1rem;
+  }
+
+  /* name + prize share the first row; the status pill drops to its own
+     row beneath (the ::after forces the line break between them). */
+  .survivor-challenge-card-top {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.6rem 0.8rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .survivor-challenge-card-top::after {
+    content: "";
+    order: 3;
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .survivor-challenge-name {
+    order: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    font-size: 1.7rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .survivor-challenge-card-pool {
+    order: 2;
+    font-size: 1.8rem;
+  }
+
+  .survivor-challenge-card-top .survivor-status-pill {
+    order: 4;
+  }
+
+  .survivor-challenge-card-pool-label {
+    font-size: 0.9rem;
+  }
+
+  .survivor-challenge-card-meta {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.6rem 1.8rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .survivor-challenge-card-meta svg {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .survivor-challenge-card-time {
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+
+  .survivor-challenge-accordion .accordion-body {
+    padding: 0 0.8rem 0.9rem;
+  }
+
+  /* Challenge page header */
+  .survivor-detail-header {
+    padding: 1.2rem 1.1rem;
+  }
+
+  .survivor-detail-header-top {
+    gap: 0.7rem;
+  }
+
+  .survivor-detail-title {
+    flex: 1 1 100%;
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+
+  .survivor-detail-description {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-top: 0.8rem;
+  }
+
+  .survivor-detail-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+  }
+
+  .survivor-stat {
+    padding: 0.9rem 0.6rem;
+  }
+
+  .survivor-stat-value {
+    font-size: 1.6rem;
+  }
+
+  .survivor-stat-label {
+    font-size: 0.95rem;
+    margin-top: 0.3rem;
+  }
+
+  .survivor-detail-body {
+    padding: 0 0.8rem 0.9rem;
+  }
+}
+
+/* Place-bet loading state + inline result shown after the confirm modal closes. */
+.survivor-btn-spinner {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.6rem;
+  vertical-align: -0.2rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: survivor-btn-spin 0.7s linear infinite;
+}
+
+@keyframes survivor-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.survivor-bet-feedback {
+  margin-top: 0.8rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 2px;
+  font-size: 1.3rem;
+  line-height: 1.4;
+}
+
+.survivor-bet-feedback-success {
+  background: rgba(25, 188, 84, 0.16);
+  border: 1px solid rgba(25, 188, 84, 0.45);
+  color: #6fe9a0;
+}
+
+.survivor-bet-feedback-error {
+  background: rgba(217, 60, 60, 0.16);
+  border: 1px solid rgba(217, 60, 60, 0.45);
+  color: #ff9b9b;
+}
+
+/* ------------------------------------------------------------------
+   React-Bootstrap accordion look, dark theme.
+   Mirrors Bootstrap's structure: items stacked flush inside one rounded,
+   bordered container; a full-width header button with the chevron on the
+   right (flips when open); an open header gets Bootstrap's "active" tint
+   and a hairline under it; the body shares the item's background. Colours
+   are Bootstrap's dark-theme roles mapped to this app's navy palette.
+   ------------------------------------------------------------------ */
+.survivor-challenge-accordion {
+  --survivor-acc-bg: rgb(38, 48, 69);
+  --survivor-acc-active-bg: rgb(47, 59, 86);
+  --survivor-acc-border: rgba(255, 255, 255, 0.14);
+  --survivor-acc-body-bg: rgb(23, 34, 56);
+  --survivor-acc-frame-border: rgba(255, 255, 255, 0.06);
+  gap: 0.6rem;
+  padding: 0.6rem;
+  border: 1px solid var(--survivor-acc-frame-border);
+  border-radius: 8px;
+}
+
+/* Each item is its own rounded card inside the faint frame. The
+   first/last-of-type selectors are needed to beat Bootstrap's own
+   per-position item radii. */
+.survivor-challenge-accordion .accordion-item,
+.survivor-challenge-accordion .accordion-item:first-of-type,
+.survivor-challenge-accordion .accordion-item:last-of-type {
+  background: var(--survivor-acc-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.survivor-challenge-accordion .accordion-button {
+  background: var(--survivor-acc-bg) !important;
+  padding: 1.2rem 1.4rem;
+  border-radius: 0;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.survivor-challenge-accordion .accordion-button.collapsed:hover {
+  background: rgb(43, 54, 78) !important;
+}
+
+/* Open header: Bootstrap's active tint + the hairline under the header. */
+.survivor-challenge-accordion .accordion-button:not(.collapsed) {
+  background: var(--survivor-acc-active-bg) !important;
+  box-shadow: inset 0 -1px 0 var(--survivor-acc-border) !important;
+}
+
+.survivor-challenge-accordion .accordion-collapse {
+  background: var(--survivor-acc-bg) !important;
+}
+
+/* The body has no padding: the games list fills it edge to edge, starting
+   right under the header's hairline, and carries the horizontal spacing
+   for its rows itself. The body takes the list's tint so there is one
+   continuous surface below the header rather than a band of item colour. */
+.survivor-challenge-accordion .accordion-body {
+  background: var(--survivor-acc-body-bg);
+  padding: 0;
+}
+
+.survivor-challenge-accordion .accordion-body > .survivor-games-list {
+  margin: 0;
+  padding: 1.4rem 1.4rem 1.6rem;
+  gap: 1rem;
+  background: transparent;
+  border-radius: 0;
+}
+
+.survivor-challenge-accordion .accordion-body > .survivor-progress-banner {
+  margin: 1.4rem 1.4rem 0;
+}
+
+/* Gold chevron while open (Bootstrap tints its active chevron too). */
+.survivor-challenge-accordion .accordion-button:not(.collapsed)::after {
+  filter: none;
+  opacity: 1;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23ffc428' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+}
+
+@media screen and (max-width: 575px) {
+  .survivor-challenge-accordion {
+    gap: 0.5rem;
+    padding: 0.4rem;
+  }
+
+  .survivor-challenge-accordion .accordion-button {
+    padding: 1.1rem 1.1rem;
+  }
+
+  .survivor-challenge-accordion .accordion-body {
+    padding: 0;
+  }
+
+  .survivor-challenge-accordion .accordion-body > .survivor-games-list {
+    padding: 1.1rem 0.9rem 1.2rem;
+    gap: 0.8rem;
+  }
+
+  .survivor-challenge-accordion .accordion-body > .survivor-progress-banner {
+    margin: 1.1rem 0.9rem 0;
+  }
+}
+
+/* Challenge page body: no padding on the wrapper itself — the spacing
+   lives on its children instead (games list gets generous padding). */
+.survivor-detail-body,
+.survivor-detail-body.survivor-detail-body {
+  padding: 0;
+}
+
+.survivor-detail-body > .survivor-games-list {
+  margin-top: 0;
+  padding: 2.4rem 2rem 2.4rem 2.4rem;
+  gap: 1.4rem;
+  border-radius: 0 0 4px 4px;
+}
+
+.survivor-detail-body > .survivor-progress-banner {
+  margin: 1.2rem 1.4rem 0;
+}
+
+@media screen and (max-width: 575px) {
+  .survivor-detail-body {
+    padding: 0;
+  }
+
+  .survivor-detail-body > .survivor-games-list {
+    padding: 1.6rem 1.2rem 1.6rem 1.4rem;
+    gap: 1.1rem;
+  }
+
+  .survivor-detail-body > .survivor-progress-banner {
+    margin: 1rem 1rem 0;
+  }
 }
