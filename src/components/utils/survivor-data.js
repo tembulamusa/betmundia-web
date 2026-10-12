@@ -97,28 +97,17 @@ export const fetchSurvivorResults = async (id) => {
 };
 
 /**
- * POST /user/survivor/challenges/{id}/join — debits wallet, enrolls user.
+ * POST /user/survivor/challenges/{id}/join — debits the challenge's
+ * entry_stake from the cash wallet and enrols the user.
  *
- * Bearer token is added by makeRequest from the stored session. The body
- * packages everything the backend may need to identify the punter, the
- * challenge and the entry fee, the same way place-bet does. `unauthorized`
- * is true on a 401 so the caller can send the user back through login.
+ * Per the bet-api contract this takes NO request body: identity comes from
+ * the Bearer token (added by makeRequest). `unauthorized` is true on a 401
+ * so the caller can send the user back through login.
  */
-export const joinSurvivorChallenge = async (id, challenge = null) => {
-    const user = getFromLocalStorage("user");
+export const joinSurvivorChallenge = async (id) => {
     const [httpStatus, response] = await makeRequest({
         url: `/user/survivor/challenges/${id}/join`,
         method: "POST",
-        data: {
-            challenge_id: Number(id),
-            profile_id: user?.profile_id,
-            msisdn: user?.msisdn,
-            amount: challenge?.entry_stake,
-            account: 1,
-            channel_id: "web",
-            app_name: "web",
-            ip_address: String(getStoredIpAddress() || ""),
-        },
         api_version: 2,
     });
     return {
