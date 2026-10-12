@@ -753,7 +753,7 @@
   color: #4fe08a;
   border-radius: 10px;
   padding: 0.7rem 0.9rem;
-  font-size: 0.88rem;
+  font-size: 1.8rem;
   margin-bottom: 1rem;
 }
 
@@ -1327,10 +1327,6 @@
   border-radius: 0;
 }
 
-.survivor-challenge-accordion .accordion-body > .survivor-progress-banner {
-  margin: 1.4rem 1.4rem 0;
-}
-
 /* Gold chevron while open (Bootstrap tints its active chevron too). */
 .survivor-challenge-accordion .accordion-button:not(.collapsed)::after {
   filter: none;
@@ -1355,10 +1351,6 @@
   .survivor-challenge-accordion .accordion-body > .survivor-games-list {
     padding: 0;
     gap: 0.8rem;
-  }
-
-  .survivor-challenge-accordion .accordion-body > .survivor-progress-banner {
-    margin: 1.1rem 0.9rem 0;
   }
 }
 
