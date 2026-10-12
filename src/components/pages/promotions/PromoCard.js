@@ -1,14 +1,6 @@
 import React from "react";
 
 const promoDisplayContent = {
-  "Free Bet": {
-    eyebrow: "Free Bet",
-    title: "JOIN GET FREE BONUS",
-    summary: "Join today and get up to",
-    accent: "KES 200 Free!",
-    detailSummary: "Join today and get up to KES 200 Free!",
-    anchor: "karibu-bonus"
-  },
   "Aviator Rains": {
     eyebrow: "Aviator Rains",
     title: "THE MORE IT RAINS, THE MORE YOU WIN",
@@ -20,14 +12,6 @@ const promoDisplayContent = {
     title: "SELECT 4 OR MORE GAMES AND GET A MSHIPI BONUS",
     summary: "Add more games to your bet slip and increase your bonus!",
     anchor: "mshipi-bonus"
-  },
-  "100% CASH STAKE BACK": {
-    eyebrow: "Cashback Bonus",
-    title: "GET CASHBACK BONUS.",
-    summary: "100% Cash Stake Back",
-    detailTitle: "GET CASHBACK BONUS, 100% CASH STAKE BACK",
-    detailSummary: "Place cash multi-bets with 6+ selections and get 100% cashback.",
-    anchor: "cashback-bonus"
   },
   "GET 50% DEPOSIT BONUS": {
     eyebrow: "Daily Deposit Bonus",
