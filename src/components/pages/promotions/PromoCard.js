@@ -1,6 +1,12 @@
 import React from "react";
 
 const promoDisplayContent = {
+  "Free Bet on First Bet": {
+    eyebrow: "Free Bet",
+    title: "FREE BET ON YOUR FIRST BET",
+    summary: "Sign up now and get a Free Bet on your first bet.",
+    anchor: "free-bet"
+  },
   "Aviator Rains": {
     eyebrow: "Aviator Rains",
     title: "THE MORE IT RAINS, THE MORE YOU WIN",
