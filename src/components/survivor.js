@@ -257,14 +257,29 @@ const SurvivorChallengeGames = ({ id }) => {
         currentGameRowRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     });
 
+    // 401 from a user endpoint = missing/expired token: send the user back
+    // through login (and return to this challenge afterwards).
+    const handleUnauthorized = () => {
+        openLoginWithRedirect(dispatch, `/survivor/${id}`);
+        dispatch({
+            type: "SET",
+            key: "sessionMessage",
+            payload: "User Session Expired. Please Login Again",
+        });
+    };
+
     const handleJoin = async () => {
         if (!user) {
             openLoginWithRedirect(dispatch, `/survivor/${id}`);
             return;
         }
         setIsJoining(true);
-        const outcome = await joinSurvivorChallenge(id);
+        const outcome = await joinSurvivorChallenge(id, challenge);
         setIsJoining(false);
+        if (outcome.unauthorized) {
+            handleUnauthorized();
+            return;
+        }
         if (outcome.success) {
             rememberJoinedChallenge(id);
             Notify({ status: 200, message: "You're in! Good luck." });
@@ -289,9 +304,13 @@ const SurvivorChallengeGames = ({ id }) => {
         //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
         //   body: { selection: "1" | "X" | "2" }
         if (!isEnrolled) {
-            const joined = await joinSurvivorChallenge(id);
+            const joined = await joinSurvivorChallenge(id, challenge);
             if (!joined.success) {
                 setPendingGame(null);
+                if (joined.unauthorized) {
+                    handleUnauthorized();
+                    return;
+                }
                 Notify({ status: 400, message: joined.message || "Could not join this challenge." });
                 return;
             }
@@ -303,6 +322,10 @@ const SurvivorChallengeGames = ({ id }) => {
             normalizeSelection(selection)
         );
         setPendingGame(null);
+        if (outcome.unauthorized) {
+            handleUnauthorized();
+            return;
+        }
         if (outcome.success) {
             Notify({ status: 200, message: "Bet placed." });
             void loadAll();
