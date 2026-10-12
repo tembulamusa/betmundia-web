@@ -152,9 +152,9 @@
 }
 
 .survivor-challenge-accordion .accordion-item {
-  background: rgb(28, 36, 54);
+  background: rgb(54, 66, 94);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 2px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
@@ -187,8 +187,8 @@
 }
 
 .survivor-challenge-accordion .accordion-body {
-  padding: 1.1rem;
-  background: rgb(28, 36, 54);
+  padding: 0 1.1rem 1.1rem;
+  background: rgb(54, 66, 94);
   border-top: none;
 }
 
@@ -555,16 +555,15 @@
 
 .survivor-detail-header {
   background: rgb(54, 66, 94);
-  border-radius: 2px 2px 0 0;
+  border-radius: 4px 4px 0 0;
   padding: 1.1rem 1.25rem;
   margin-bottom: 0;
 }
 
 .survivor-detail-body {
-  background: rgb(28, 36, 54);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: none;
-  border-radius: 0 0 2px 2px;
+  background: rgb(54, 66, 94);
+  border: none;
+  border-radius: 0 0 4px 4px;
   padding: 0 1.1rem 1.1rem;
   margin-bottom: 1rem;
 }
