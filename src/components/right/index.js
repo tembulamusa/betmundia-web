@@ -8,7 +8,7 @@ import { Modal } from 'react-bootstrap';
 import makeRequest from '../utils/fetch-request';
 import { removeItem, setLocalStorage, getFromLocalStorage } from '../utils/local-storage';
 import { useLocation } from 'react-router-dom';
-import { emptyBonusAdvice, buildBongeBonusAdvice } from './bonge-bonus-utils';
+import { emptyBonusAdvice, buildBongeBonusAdvice, normalizeSgrConfig } from './bonge-bonus-utils';
 
 const AlertMessage = (props) => {
   return (
@@ -124,7 +124,7 @@ let sgrLoadPromise = null;
 
 const readStoredSgr = () => {
   try {
-    return getFromLocalStorage(SGR_STORAGE_KEY) || {};
+    return normalizeSgrConfig(getFromLocalStorage(SGR_STORAGE_KEY));
   } catch (e) {
     return {};
   }
@@ -135,13 +135,20 @@ const loadSgrOncePerPageLoad = () => {
     sgrLoadPromise = makeRequest({ url: "/sports/config/sgr", method: "GET", api_version: 2 })
       .then(([status, result]) => {
         if (status == 200 && result?.status == 200 && result?.data) {
+          const config = normalizeSgrConfig(result.data);
+          if (Object.keys(config).length === 0) {
+            console.warn("[sgr] /sports/config/sgr returned no sgr_* settings:", result.data);
+            sgrLoadPromise = null;
+            return null;
+          }
           try {
-            setLocalStorage(SGR_STORAGE_KEY, result.data, SGR_STORAGE_TTL);
+            setLocalStorage(SGR_STORAGE_KEY, config, SGR_STORAGE_TTL);
           } catch (e) {
             // storage unavailable: still use the fresh value for this page load
           }
-          return result.data;
+          return config;
         }
+        console.warn("[sgr] could not load /sports/config/sgr (status:", status, ")", result);
         sgrLoadPromise = null; // allow a retry on the next mount
         return null;
       })
