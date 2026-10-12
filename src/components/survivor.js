@@ -792,12 +792,10 @@ const SurvivorChallengeGames = ({ id }) => {
                         <span>Your pick</span>
                         <b>{normalizeSelection(pendingPick?.selection)}</b>
                     </div>
-                    {!isEnrolled && (
-                        <div className="survivor-pick-confirm-row">
-                            <span>Entry fee (debited once)</span>
-                            <b>{formatMoney(challenge.entry_stake)}</b>
-                        </div>
-                    )}
+                    <div className="survivor-pick-confirm-row">
+                        <span>Stake for this game</span>
+                        <b>{formatMoney(challenge.entry_stake)}</b>
+                    </div>
                     <div className="survivor-pick-confirm-row">
                         <span>Current participants</span>
                         <b>{challenge.participant_count ?? 0}</b>
@@ -818,7 +816,8 @@ const SurvivorChallengeGames = ({ id }) => {
                             <li>Pick one result (1, X or 2) for each game; picks close at the game's lock time.</li>
                             <li>A correct pick keeps you in the challenge; one wrong pick eliminates you.</li>
                             <li>The prize pool is shared among the participants who survive every game.</li>
-                            <li>Your entry stake is deducted when you place the bet and is non-refundable once the game locks.</li>
+                            <li>Your stake for this game is debited when you submit your pick and is non-refundable once the game locks.</li>
+                            <li>Each game round requires a new stake; picks cannot be changed after submission.</li>
                             <li>Game results are settled on the official 90-minute result.</li>
                         </ul>
                     )}
@@ -839,7 +838,7 @@ const SurvivorChallengeGames = ({ id }) => {
                         className="survivor-pick-confirm-ok"
                         onClick={confirmPendingPick}
                     >
-                        {isEnrolled ? "Confirm pick" : "Join and submit pick"}
+                        {isEnrolled ? "Pay stake and submit pick" : "Join and submit pick"}
                     </button>
                 </Modal.Footer>
             </Modal>
