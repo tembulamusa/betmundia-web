@@ -10,7 +10,7 @@ alwaysApply: true
 When pushing after merge to **`development`** (or when the user asks to push the integration branch):
 
 - Push **`development`** to **both**:
-  - **`betmundial`** (`Betmundial-ke/betmundial_web`)
+  - **`betmundial`** (`Betmundial-ke/betmundial-web`)
   - **`origin`** (`tembulamusa/betmundia-web`)
 - Prefer: `git push betmundial development` and `git push origin development` (set upstream on first push with `-u` on one or both remotes if needed).
 - Do **not** push only one of these two unless the user explicitly scopes the push.
