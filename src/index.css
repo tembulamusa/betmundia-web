@@ -987,6 +987,15 @@ aside.ps-sidebar-root:focus-visible,
   box-sizing: border-box;
 }
 
+.bonge-bonus .bonge-bonus__terms,
+.bonge-bonus .bonge-bonus__terms:hover,
+.bonge-bonus .bonge-bonus__terms:focus-visible {
+  color: #ffc428;
+  text-decoration: underline;
+  text-decoration-color: #ffc428;
+  font-weight: 700;
+}
+
 .bonge-bonus__dismiss {
   position: absolute;
   top: 6px;

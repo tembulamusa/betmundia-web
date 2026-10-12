@@ -13,6 +13,7 @@ import {
 import { toast } from 'react-toastify';
 import makeRequest from '../utils/fetch-request';
 import { useBonusCatalog } from '../utils/useBonusCatalog';
+import BonusTermsModal, { findBonus, DEPOSIT_BONUS_CODE } from './bonus-terms-modal';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -22,9 +23,7 @@ import {
     Field
 } from 'formik';
 import { isMobile } from "react-device-detect";
-import { Modal } from "react-bootstrap";
 import { TbRefreshAlert } from "react-icons/tb";
-import { FaGift } from "react-icons/fa";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
@@ -66,29 +65,6 @@ const formatSlipForPlaceBet = (slip) => {
     };
 }
 
-
-// Turn a bonus rule from GET /bonuses into a readable line for the Bonus Terms modal.
-const humanizeKey = (key) => String(key).replace(/_/g, ' ').replace(/^./, (ch) => ch.toUpperCase());
-const humanizeValue = (value) => String(value).toLowerCase().replace(/_/g, ' ').replace(/^./, (ch) => ch.toUpperCase());
-const BONUS_RULE_FORMATTERS = {
-    bonus_amount: (v) => `Bonus amount: KSh ${formatNumber(v)}`,
-    bonus_percentage: (v) => `Bonus: ${v}%`,
-    bonus_contribution_percentage: (v) => `Bonus covers up to ${v}% of the stake`,
-    cash_contribution_percentage: (v) => `Cash covers ${v}% of the stake`,
-    minimum_odds_per_game: (v) => `Minimum odds per game: ${v}`,
-    minimum_games: (v) => `Minimum games: ${v}`,
-    maximum_games: (v) => `Maximum games: ${v}`,
-    winnings_withdrawable: (v) => (v ? 'Winnings are withdrawable' : 'Winnings are not withdrawable'),
-    deposit_frequency: (v) => `Deposit: ${humanizeValue(v)}`,
-    expiry_hours: (v) => `Expires after ${v} hour${Number(v) === 1 ? '' : 's'}`,
-    expiry_days: (v) => `Expires after ${v} day${Number(v) === 1 ? '' : 's'}`,
-};
-const formatBonusRules = (rules) =>
-    Object.entries(rules || {})
-        .filter(([, rule]) => rule && rule.enabled !== false && rule.value !== undefined && rule.value !== null)
-        .map(([key, rule]) => (BONUS_RULE_FORMATTERS[key]
-            ? BONUS_RULE_FORMATTERS[key](rule.value)
-            : `${humanizeKey(key)}: ${typeof rule.value === 'boolean' ? (rule.value ? 'Yes' : 'No') : rule.value}`));
 
 // Compare the current slip with the rules of the bonus that can be used on a stake
 // (GET /bonuses -> DAILY_DEPOSIT_BONUS). Returns a list of human-readable problems;
@@ -152,13 +128,9 @@ const BetslipSubmitForm = (props) => {
     } = useBonusCatalog();
 
     const bonusUsePercentage = bonusStakePct ?? 30;
-    const bonusStakePortion = Math.min(
-        Float(stake * (bonusUsePercentage / 100), 2),
-        parseFloat(bonusBalance) || 0
-    );
-    const balanceStakePortion = Math.max(Float(stake - bonusStakePortion, 2), 0);
 
     const [bonusTerms, setBonusTerms] = useState([]);
+    const depositBonus = useMemo(() => findBonus(bonusTerms, DEPOSIT_BONUS_CODE), [bonusTerms]);
     const bonusUseIssues = useMemo(
         () => getBonusUseIssues(bonusTerms, state?.betslip),
         [bonusTerms, state?.betslip]
@@ -771,66 +743,19 @@ const BetslipSubmitForm = (props) => {
 
                     }
 
-                    <Modal
+                    <BonusTermsModal
                         show={showBonusTooltip}
                         onHide={() => setShowBonusTooltip(false)}
-                        centered
-                        className="bonus-terms-modal"
-                    >
-                        <Modal.Header closeButton closeVariant="white">
-                            <Modal.Title>
-                                <span className="bonus-terms-modal-title-icon" aria-hidden="true">
-                                    <FaGift />
-                                </span>
-                                Bonus Terms
-                            </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
+                        bonus={depositBonus}
+                        title="Daily Deposit Bonus Terms"
+                        intro={(
                             <p className="bonus-terms-modal-intro">
                                 Qualifying bonus bets use {cashStakePct}% cash and {bonusUsePercentage}% bonus,
                                 with {minGames}–{maxGames} games at min odds {minOdds} each. Bonus expires {expiryHours} hours after award.
                                 If the slip does not qualify, the bet is placed from cash only.
                             </p>
-                            {values?.use_bonus ? (
-                                <p className="bonus-terms-modal-intro">
-                                    This KSh {formatNumber(stake)} bet will use up to
-                                    {' '}<span style={{ color: 'rgba(255, 215, 0)' }}>KSh {formatNumber(bonusStakePortion)}</span> bonus
-                                    and <b>KSh {formatNumber(balanceStakePortion)}</b> cash when rules are met.
-                                </p>
-                            ) : (
-                                <p className="bonus-terms-modal-intro">
-                                    Tick &quot;Use Bonus&quot; to apply bonus balance when the slip qualifies.
-                                </p>
-                            )}
-                            {bonusTerms.map((bonusItem) => {
-                                const ruleLines = formatBonusRules(bonusItem.rules);
-                                return (
-                                    <section className="bonus-terms-modal-section" key={bonusItem.code || bonusItem.name}>
-                                        <h3>{bonusItem.name}</h3>
-                                        {bonusItem.description && (
-                                            <p className="bonus-terms-modal-desc">{bonusItem.description}</p>
-                                        )}
-                                        {ruleLines.length > 0 && (
-                                            <ul>
-                                                {ruleLines.map((line) => (
-                                                    <li key={line}>{line}</li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </section>
-                                );
-                            })}
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <button
-                                type="button"
-                                className="bonus-terms-modal-close"
-                                onClick={() => setShowBonusTooltip(false)}
-                            >
-                                Got it
-                            </button>
-                        </Modal.Footer>
-                    </Modal>
+                        )}
+                    />
                 </>
             )
         }}
