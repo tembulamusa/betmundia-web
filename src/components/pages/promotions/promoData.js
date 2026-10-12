@@ -1,46 +1,8 @@
 import MshipiBonusImg from "../../../assets/img/banner/products/Mshipi-Bonus.png";
-import cashbackBonus from "../../../assets/img/banner/products/cashbackBonus.jpeg";
 import depositBonus from "../../../assets/img/banner/products/depositBonus.png";
-import karibuBonus from "../../../assets/img/banner/products/KaribuBonus.png";
 import AviatorRainsImg from "../../../assets/img/banner/products/AviatorRainsImg.png";
 
 export const promoData = [
-  {
-    title: "Free Bet",
-    image: karibuBonus,
-    description: `
-          JOIN GET FREE Bonus
-        `,
-    details: `
-
-        `,
-    termsAndConditions: `
-    BETMUNDIAL FREE BET PROMOTION – TERMS & CONDITIONS
-
-Promotion Details
-BetMundial is offering a KSh 30 Free Bet to newly registered customers subject to the following terms and conditions.
-Eligibility
-1.The promotion is open to newly registered BetMundial customers only.
-2.Each eligible customer will receive one (1) Free Bet of KSh 30 upon successful registration.
-3.Only one free bet per customer/account is permitted.
-Free Bet Usage
-4.The free bet can only be used on the preselected match/game specified by BetMundial.
-5.The free bet is valid only on the 1X2 market (Home Win, Draw, Away Win).
-6.The free bet stake is non-withdrawable and cannot be exchanged for cash.
-Winnings
-7.Any winnings generated from the free bet will be credited to the customer’s Bonus Wallet.
-8.To convert it to cash, deposit and place a sports bet of 100kes on odds 1.4 and above.
-Expiry
-9.The free bet is valid for 24 hours from the time it is credited.
-10.Any unused free bet will automatically expire after 24 hours and cannot be reinstated.
-General Terms
-11.BetMundial reserves the right to amend, suspend, or cancel this promotion at any time without prior notice.
-12.Any abuse of the promotion may result in disqualification and forfeiture of any associated rewards.
-13.By participating in this promotion, customers agree to these Terms & Conditions and all other BetMundial rules and policies.
-
-Bet Responsibly. 21+ Only.
-        `
-  },
   {
     title: "Aviator Rains",
     image: AviatorRainsImg,
@@ -170,37 +132,6 @@ Only 21+. Play responsibly.
   //     - The bonus is only valid for sports events.
   //   `
   // },
-  {
-    title: "100% CASH STAKE BACK",
-    image: cashbackBonus,
-    description: `
-      HOW IT WORKS
-      The Cash Stake Back is applicable to customers who place cash multi-bets with a minimum of six (6) selections in each bet slip on sportsbook events (pre-match and/or live).
-      For a cash multi-bet to be eligible for the Cash Stake Back, at least any six (6) selections must each have minimum odds of 1.25.
-      For example, if your bet slip has the following selections 1.50; 1.02; 3.90; 1.42; 1.20;1.35; 1.38; 1.19; 1.85; 1.73; 1.22; 1.19 and one selection lose irrespective of the odds, you will be entitled to 100% of your stake back.
-      Only sports book cash bets placed on Betmundial channels are eligible for the Cash Stake Back. The Cash Stake Back shall be deposited into the winning customer(s) Mundial Wallet and may be withdrawn at the customer’s discretion.
-      The maximum amount of the Cash Stake Back is KES.500.
-      This offer cannot be used with any other promotional offer where qualifying conditions for both offers are met.
-    `,
-    details: `
-      
-    `,
-    termsAndConditions: `
-      TERMS AND CONDITIONS OF USE
-      Customers are not limited to the number of bets they may place in order to be eligible for the Cash Stake Back.
-      Cancelled bets and cashed-out bets will not be eligible for the Cash Stake Back.
-      Where there is a dispute regarding the award of the Cash Stake Back, the adjudication and decision of THE GRA shall be final.
-      Where the system erroneously generates bonuses or winnings in excess of the allowed maximum limit, any amount above this limit will be regarded as void and not validly due and payable.
-      Betmundial reserves the right to void any winnings, at its sole discretion, and taking all remedial action in instances including:
-      System or software malfunction or error; or
-      Suspicion that there are Prohibited Activities being undertaken.
-      In case of the occurrence of any Prohibited Acts, Betmundial may take such action as it deems necessary in the circumstances, including but not limited to voiding any winnings or transactions, suspending an account, limiting withdrawals, and/or blocking an IP address(es).
-      Betmundial does not guarantee the availability of the Cash Stake Back on all devices and channels or its availability all the time.
-      The Cash Stake Back terms may be amended from time to time by Betmundial at its sole discretion and without notice.
-      This bonus is provided “as is”, without warranties of any kind, either express or implied, including without limitation, warranties of title, non-infringement, non-interference, accuracy of data, accuracy of translation, availability, timing, merchantability, fitness for a particular purpose, other than those warranties which are implied by and incapable of exclusion, restriction, or modification under the laws applicable to Betmumdial and the General Terms and Conditions and Privacy Policy.
-      The Cash Stake Back is subject to the General Terms and Conditions available here. Where there are any inconsistencies between the Cash Stake Back terms and the Betmundial General Terms and Conditions, the latter shall prevail.
-    `
-  },
   // {
   //   title: "Quiz Bet",
   //   image: hundredPercentDepositBonus,
