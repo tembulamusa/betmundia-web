@@ -92,6 +92,30 @@ const formatBonusRules = (rules) =>
 // Compare the current slip with the rules of the bonus that can be used on a stake
 // (GET /bonuses -> DAILY_DEPOSIT_BONUS). Returns a list of human-readable problems;
 // empty when the slip is empty, no matching bonus was loaded, or the slip is fine.
+// Place-bet failures: an expired/missing session (401/403) and a short balance
+// can come back either as the HTTP status or inside the JSON body.
+const responseErrorText = (response) => [
+    response?.message,
+    response?.error?.message,
+    response?.error?.description,
+    typeof response?.error === 'string' ? response.error : null,
+    response?.result,
+].filter(Boolean).join(' ');
+
+const isUnauthorizedBetResponse = (status, response) => {
+    const codes = [String(status), String(response?.status), response?.error?.code];
+    return codes.some((code) => ['401', '403', 'E0401', 'E0403'].includes(code))
+        || /unauthori[sz]ed/i.test(responseErrorText(response));
+};
+
+const isInsufficientBalanceResponse = (status, response) =>
+    String(status) === '402'
+    || String(response?.status) === '402'
+    || response?.error?.code === 'E0402'
+    || /insufficient|not enough (funds|balance)|low balance/i.test(responseErrorText(response));
+
+const MIN_DEPOSIT_PROMPT_AMOUNT = 10;
+
 const STAKE_BONUS_CODE = 'DAILY_DEPOSIT_BONUS';
 const getBonusUseIssues = (bonuses, slip) => {
     const picks = Object.values(slip || {});
@@ -344,6 +368,35 @@ const BetslipSubmitForm = (props) => {
 
         makeRequest({ url: endpoint, method: method, data: payload, api_version: 2 })
             .then(([status, response]) => {
+                if (isUnauthorizedBetResponse(status, response)) {
+                    removeItem("user");
+                    dispatch({ type: "DEL", key: "user" });
+                    dispatch({ type: "SET", key: "showmobileslip", payload: false });
+                    dispatch({ type: "SET", key: "showloginmodal", payload: true });
+                    setMessage({ status: 401, message: "Your session has expired. Please log in to place your bet." });
+                    setSubmitting(false);
+                    return;
+                }
+
+                if (isInsufficientBalanceResponse(status, response)) {
+                    const stakeAmount = Float(jackpot ? jackpotData?.bet_amount : stake, 2);
+                    const currentBalance = Float(getFromLocalStorage("user")?.balance ?? state?.user?.balance ?? 0, 2);
+                    const shortfall = Math.max(Math.ceil(stakeAmount - currentBalance), MIN_DEPOSIT_PROMPT_AMOUNT);
+                    dispatch({ type: "SET", key: "showmobileslip", payload: false });
+                    dispatch({
+                        type: "SET",
+                        key: "promptdepositrequest",
+                        payload: {
+                            show: true,
+                            payableAmt: shortfall,
+                            stake: stakeAmount,
+                            balance: currentBalance,
+                        }
+                    });
+                    setSubmitting(false);
+                    return;
+                }
+
                 if (status == 200 || status == 201 || status == 204 || jackpot) {
                     if (response?.status == 200) {
                         dispatch({
@@ -372,7 +425,7 @@ const BetslipSubmitForm = (props) => {
                         response = { ...response, ...{ title: successfulBetHeading() } }
                         setMessage({ status: status, message: "Your place bet request received successfully", title: successfulBetHeading() })
                     } else {
-                        let qmessage = {
+                        setMessage({
                             status: 400,
                             message: response?.message
                                 ||
@@ -381,40 +434,17 @@ const BetslipSubmitForm = (props) => {
                                 response?.result
                                 ||
                                 "Error attempting to place bet"
-                        };
-                        if (response?.status == 403 || response?.status == 402) {
-                            // remove the betslip
-                            dispatch({ type: "SET", key: "showmobileslip", payload: false })
-                            // set the modal for request payment
-                            // compute the amount payable and round off to the nearest minimum that can be deposited
-                            let amtDiff = Float(stake, 2) - Float(state?.user?.balance, 2);
-                            if (amtDiff < 5) {
-                                amtDiff = 5.00
-                            }
-                            dispatch({ type: "SET", key: "promptdepositrequest", payload: { show: true, payableAmt: amtDiff, message: { status: 400, message: response.result } } })
-                        } else if (response?.status == 403) {
-                            removeItem("user");
-                            dispatch({ type: "SET", key: "showloginmodal", payload: true })
-
-                        } else {
-                            setMessage(qmessage);
-                        }
+                        });
                     }
                 } else {
-                    if (status == 403) {
-                        dispatch({ type: "DEL", key: "showloginmodal" })
-                        dispatch({ type: "SET", key: "showloginmodal", payload: true })
-                    } else {
-                        let qmessage = {
-                            status: status,
-                            message: response?.message || response?.error?.message || "Error attempting to place bet"
-                        };
-                        if (qmessage.status == 500) {
-                            qmessage.message = "Error attempting to place bet"
-                        }
-                        setMessage(qmessage);
+                    let qmessage = {
+                        status: status,
+                        message: response?.message || response?.error?.message || "Error attempting to place bet"
+                    };
+                    if (qmessage.status == 500) {
+                        qmessage.message = "Error attempting to place bet"
                     }
-
+                    setMessage(qmessage);
                 }
                 setSubmitting(false);
             })
