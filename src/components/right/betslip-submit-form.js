@@ -400,7 +400,7 @@ const BetslipSubmitForm = (props) => {
         if (message && message.status > 299) {
             setMessage(null);
         }
-    }, [state?.[betslipkey], stake]);
+    }, [state?.[betslipkey], stake, dbWinMatrix]);
 
 
     const handleRemoveAll = () => {

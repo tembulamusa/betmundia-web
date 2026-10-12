@@ -49,7 +49,7 @@ export const getMaxBongeBonus = (dbWinMatrix) => {
   return { maxPercent, maxGamesWithPercent };
 };
 
-/** Percent for N qualifying games; falls back to highest defined tier if missing. */
+/** Percent for N qualifying games; uses the nearest lower defined tier if N has none (0 below the first tier). */
 export const resolveBongeBonusPercent = (dbWinMatrix, qualifyingGames) => {
   if (!dbWinMatrix) {
     return 0;
@@ -63,8 +63,15 @@ export const resolveBongeBonusPercent = (dbWinMatrix, qualifyingGames) => {
   if (current != null) {
     return current;
   }
-  const { maxPercent } = getMaxBongeBonus(dbWinMatrix);
-  return maxPercent != null ? maxPercent : 0;
+  // No tier for this exact count: use the nearest lower tier that is defined,
+  // and none (0) when the count is below every defined tier.
+  for (let n = games - 1; n >= 1; n -= 1) {
+    const lower = readBonusPercent(dbWinMatrix, n);
+    if (lower != null) {
+      return lower;
+    }
+  }
+  return 0;
 };
 
 export const buildBongeBonusAdvice = (betslip, dbWinMatrix) => {
