@@ -881,6 +881,16 @@
   font-weight: 500;
 }
 
+.survivor-game-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
 /* Same click-feel as the shared prematch 1X2 odds buttons (clicking one
    turns it purple straight away — a local draft — the same way their own
    "picked" toggle does; nothing is sent to the server until "Place"
