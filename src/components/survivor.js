@@ -32,6 +32,28 @@ export const SURVIVOR_JOINED_STORAGE_KEY = "survivorJoinedChallenges";
  * per-challenge progress). */
 const BET_FEEDBACK_MS = 6000;
 
+// Per-game counts come straight off the game object. Field names aren't
+// fixed in the API doc yet, so a few likely spellings are accepted; the
+// stat shows "—" until the backend sends one of them.
+const SURVIVORS_KEYS = ["survivors_count", "survivor_count", "survivors_remaining", "survivors", "alive_count"];
+const NEW_MEMBERS_KEYS = ["new_members", "new_members_count", "new_participants", "new_entries", "joined_count"];
+const gameCount = (game, keys) => {
+    const key = keys.find((k) => game?.[k] != null && game?.[k] !== "");
+    return key ? game[key] : "—";
+};
+
+/** Survivors + new members for one game. */
+const GameCounts = ({ game }) => (
+    <div className="survivor-game-counts">
+        <span>
+            Survivors: <b className="survivor-yellow">{gameCount(game, SURVIVORS_KEYS)}</b>
+        </span>
+        <span>
+            New members: <b className="survivor-yellow">{gameCount(game, NEW_MEMBERS_KEYS)}</b>
+        </span>
+    </div>
+);
+
 /** Empty state for the lobby — same look as the empty jackpots page
  * (illustration, title, subtitle). */
 const SurvivorEmptyState = ({ title, subtitle }) => (
@@ -629,6 +651,7 @@ const SurvivorChallengeGames = ({ id }) => {
                             <div className="survivor-game-time">
                                 Active until {formatDateTime(game.lock_at)}
                             </div>
+                            <GameCounts game={game} />
 
                             {showPickControls && (
                                 <>
@@ -763,6 +786,7 @@ const SurvivorChallengeGames = ({ id }) => {
                             <div className="survivor-game-time">
                                 Active until {formatDateTime(game.lock_at)}
                             </div>
+                            <GameCounts game={game} />
 
                             {(isEnrolled || mine) && (
                                 <div className="survivor-game-outcome">
