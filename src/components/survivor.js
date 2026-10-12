@@ -1104,6 +1104,17 @@ const SurvivorChallengeDetail = ({ id }) => {
 
     return (
         <div className="survivor-page">
+            <div className="survivor-lobby-header">
+                <FaShieldAlt className="survivor-lobby-icon" aria-hidden="true" />
+                <div>
+                    <h1 className="survivor-lobby-title">Survivor Challenge</h1>
+                    <p className="survivor-lobby-subtitle">
+                        Pick one 1X2 result per game. One wrong pick and you're out —
+                        last player standing takes the pool.
+                    </p>
+                </div>
+            </div>
+
             <div className="survivor-detail-nav">
                 <select
                     className="survivor-lobby-filter-select survivor-detail-nav-status"
@@ -1151,7 +1162,7 @@ const SurvivorChallengeDetail = ({ id }) => {
             <div className="survivor-detail-card">
             <div className="survivor-detail-header">
                 <div className="survivor-detail-header-top">
-                    <h1 className="survivor-detail-title">{challenge.name}</h1>
+                    <h2 className="survivor-detail-title">{challenge.name}</h2>
                     <ChallengeStatusPill
                         status={challenge.status}
                         labels={SURVIVOR_STATUS_LABELS}
@@ -1209,6 +1220,14 @@ const SurvivorChallengeDetail = ({ id }) => {
 
 const Survivor = () => {
     const { id } = useParams();
+    // Browser tab title for the lobby and the challenge page; restored on leave.
+    useEffect(() => {
+        const previous = document.title;
+        document.title = "Survivor Challenge - Betmundial";
+        return () => {
+            document.title = previous;
+        };
+    }, [id]);
     return id ? <SurvivorChallengeDetail id={id} /> : <SurvivorChallengesList />;
 };
 
