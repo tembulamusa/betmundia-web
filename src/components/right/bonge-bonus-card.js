@@ -14,6 +14,15 @@ const BongeBonusCard = ({ advice, slipCount = 0 }) => {
   // GET /bonuses is fetched once and cached by useBonusCatalog.
   const { catalog } = useBonusCatalog();
   const mshipiBonus = findBonus(catalog?.bonuses, MSHIPI_BONUS_PATTERN);
+  const termsLink = (
+    <button
+      type="button"
+      className="bonus-terms-link bonge-bonus__terms"
+      onClick={() => setShowTerms(true)}
+    >
+      Terms
+    </button>
+  );
   const adviceSignature = `${advice?.status || ""}|${advice?.nudgeTitle || ""}|${advice?.statusBoost || ""}`;
 
   useEffect(() => {
@@ -67,18 +76,8 @@ const BongeBonusCard = ({ advice, slipCount = 0 }) => {
                 )}
                 <div id="bonus-centage-advice" className="bonge-bonus__text">
                   {statusNode}
-                  {mshipiBonus ? (
-                    <>
-                      {" "}
-                      <button
-                        type="button"
-                        className="bonus-terms-link bonge-bonus__terms"
-                        onClick={() => setShowTerms(true)}
-                      >
-                        Terms
-                      </button>
-                    </>
-                  ) : null}
+                  {" "}
+                  {termsLink}
                 </div>
               </div>
             ) : null}
@@ -90,6 +89,7 @@ const BongeBonusCard = ({ advice, slipCount = 0 }) => {
                   {advice?.nudgeSub ? (
                     <span className="bonge-bonus__nudge-sub">{advice.nudgeSub}</span>
                   ) : null}
+                  <span className="bonge-bonus__nudge-terms">{termsLink}</span>
                 </div>
               </div>
             ) : null}

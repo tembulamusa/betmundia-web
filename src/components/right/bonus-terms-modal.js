@@ -37,7 +37,7 @@ export const findBonus = (bonuses, matcher) => {
 };
 
 export const DEPOSIT_BONUS_CODE = 'DAILY_DEPOSIT_BONUS';
-export const MSHIPI_BONUS_PATTERN = /mshipi/i;
+export const MSHIPI_BONUS_PATTERN = /mshipi|sgr/i;
 
 /** Modal showing the terms of ONE bonus (name, description, rules) from GET /bonuses. */
 const BonusTermsModal = ({ show, onHide, bonus, title = 'Bonus Terms', intro = null }) => {
