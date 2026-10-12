@@ -16,6 +16,19 @@ import { getStoredIpAddress } from "./ip-address";
  * everywhere else in this app. `status` is returned as a string ("200").
  */
 
+/**
+ * Best human-readable message from the bet-api envelope. Errors arrive as
+ * { result: "Failed", error: { code, description, message } }, so the
+ * generic "Failed" in `result` is skipped in favour of the error message.
+ */
+export const survivorResponseMessage = (response) => {
+    const err = response?.error;
+    const errMessage = typeof err === "string" ? err : err?.message || err?.description;
+    const result = response?.result;
+    const usefulResult = result && !/^failed$/i.test(String(result)) ? result : null;
+    return errMessage || usefulResult || response?.message || null;
+};
+
 const SUCCESS_STATUSES = ["200", "201", 200, 201];
 
 export const isSurvivorSuccess = (httpStatus, response) =>
@@ -114,7 +127,7 @@ export const joinSurvivorChallenge = async (id) => {
         success: isSurvivorSuccess(httpStatus, response),
         httpStatus,
         unauthorized: httpStatus === 401,
-        message: response?.result || response?.message || response?.error,
+        message: survivorResponseMessage(response),
         data: response?.data || null,
     };
 };
@@ -151,7 +164,7 @@ export const submitSurvivorPrediction = async (id, gameNumber, selection) => {
         success: isSurvivorSuccess(httpStatus, response),
         httpStatus,
         unauthorized: httpStatus === 401,
-        message: response?.result || response?.message || response?.error,
+        message: survivorResponseMessage(response),
         data: response?.data || null,
     };
 };
