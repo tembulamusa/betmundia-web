@@ -178,7 +178,9 @@
 }
 
 .survivor-challenge-accordion .accordion-button {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   width: 100%;
   background: rgb(54, 66, 94) !important;
   border: none;
@@ -199,6 +201,34 @@
    invert it so it shows up against this app's dark accordion rows. */
 .survivor-challenge-accordion .accordion-button::after {
   filter: invert(1);
+  flex-shrink: 0;
+  margin-left: auto;
+  opacity: 0.85;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Bootstrap-style: chevron points down when collapsed, flips when open. */
+.survivor-challenge-accordion .accordion-button:not(.collapsed)::after {
+  transform: rotate(-180deg);
+  opacity: 1;
+}
+
+/* All the header content (name, pill, prize, counts, time) lives in one
+   column that takes the space left of the chevron. */
+.survivor-accordion-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+
+/* Bootstrap's focus glow, in the app's purple for the dark theme —
+   keyboard focus only. */
+.survivor-challenge-accordion .accordion-button:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgba(167, 31, 102, 0.45) !important;
+}
+
+.survivor-challenge-accordion .accordion-button.collapsed:hover {
+  background: rgb(60, 73, 104) !important;
 }
 
 .survivor-challenge-accordion .accordion-body {
@@ -998,15 +1028,8 @@
   }
 
   .survivor-challenge-accordion .accordion-button {
-    position: relative;
-    padding: 1.1rem 3.2rem 1.1rem 1.1rem;
-  }
-
-  .survivor-challenge-accordion .accordion-button::after {
-    position: absolute;
-    top: 1.2rem;
-    right: 1.1rem;
-    margin: 0;
+    gap: 0.8rem;
+    padding: 1.1rem;
   }
 
   /* name + prize share the first row; the status pill drops to its own
