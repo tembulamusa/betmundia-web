@@ -4,7 +4,6 @@ import { Modal, Accordion } from "react-bootstrap";
 import { Context } from "../context/store";
 import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
-import Notify from "./utils/Notify";
 import NoEvents from "./utils/no-events";
 import jackpotEmptyBall from "../assets/img/backgrounds/jackpot-empty-ball.png";
 import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
@@ -416,7 +415,6 @@ const SurvivorChallengeGames = ({ id }) => {
     const challengeStatus = progress?.status ?? challenge?.status;
     const isChallengeOpenForEntry =
         statusIs(challengeStatus, "OPEN") || statusIs(challengeStatus, "ACTIVE");
-    // Placing a pick through place-bet enrolls the user (no separate /join).
     const canBetOnChallenge = isChallengeOpenForEntry && !isEliminated && !isWinner;
     const nonSettledGames = survivorGameList(challenge).filter((g) => !isGameSettled(g));
     const settledGames = survivorGameList(challenge).filter((g) => isGameSettled(g));
