@@ -11,6 +11,7 @@ import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, Fa
 import {
     fetchSurvivorChallenges,
     fetchSurvivorChallenge,
+    survivorGameList,
     fetchSurvivorResults,
     joinSurvivorChallenge,
     fetchSurvivorProgress,
@@ -464,8 +465,8 @@ const SurvivorChallengeGames = ({ id }) => {
     // requirement: placing a pick through the regular placebet flow IS
     // the entry action now, since the explicit join button is hidden.
     const canBetOnChallenge = isChallengeActive && !isEliminated && !isWinner;
-    const nonSettledGames = (challenge.games || []).filter((g) => !isGameSettled(g));
-    const settledGames = (challenge.games || []).filter((g) => isGameSettled(g));
+    const nonSettledGames = survivorGameList(challenge).filter((g) => !isGameSettled(g));
+    const settledGames = survivorGameList(challenge).filter((g) => isGameSettled(g));
 
     // The current game - the one the user actually needs to act on next.
     // Prefer the real current_game_number from /progress when it's there;
@@ -548,7 +549,7 @@ const SurvivorChallengeGames = ({ id }) => {
 
     const requestPick = (gameNumber, selection) => {
         if (!selection) return;
-        const game = (challenge.games || []).find((g) => g.game_number === gameNumber);
+        const game = survivorGameList(challenge).find((g) => g.game_number === gameNumber);
         setPendingPick({ gameNumber, selection, existing: predictionFor(game) });
     };
 
@@ -858,7 +859,7 @@ const SurvivorChallengeGames = ({ id }) => {
                             {formatMoney(
                                 (challenge.entry_stake || 0) *
                                     survivorOddValueForSelection(
-                                        (challenge.games || []).find(
+                                        survivorGameList(challenge).find(
                                             (g) => g.game_number === pendingPick?.gameNumber
                                         ),
                                         pendingPick?.selection
