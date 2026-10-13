@@ -3,9 +3,12 @@ import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { JackpotMatchList, JackpotHeader } from './matches/index';
 import makeRequest from "./utils/fetch-request";
 import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.jpeg';
+import jackpotCarousel from '../assets/img/banner/carousel/jackpot.jpg';
+import jackpotBanner from '../assets/img/banner/jackpot.png';
 import jackpotEmptyBall from '../assets/img/backgrounds/jackpot-empty-ball.png';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import Carousel from 'react-bootstrap/Carousel';
 import Spinner from 'react-bootstrap/Spinner';
 import { Context } from '../context/store';
 import {
@@ -14,7 +17,6 @@ import {
     getJackpotBetslip
 } from './utils/betslip';
 import Notify from "./utils/Notify";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FaCoins } from "react-icons/fa";
 import JackpotArchive from "./jackpot-archive";
 import {
@@ -342,7 +344,23 @@ const Jackpot = () => {
                 </nav>
             )}
 
-            <LazyLoadImage src={dailyJackpot} alt="jackpot" className="std-carousel-image" />
+            <Carousel
+                className="jackpot-banner-carousel"
+                controls
+                indicators
+                interval={5000}
+                pause="hover"
+            >
+                <Carousel.Item>
+                    <img src={dailyJackpot} alt="Daily jackpot: KES 1 million to be won daily" className="std-carousel-image" />
+                </Carousel.Item>
+                <Carousel.Item>
+                    <img src={jackpotCarousel} alt="1,000,000 jackpot: 13 games, 10 bob per game" className="std-carousel-image" />
+                </Carousel.Item>
+                <Carousel.Item>
+                    <img src={jackpotBanner} alt="Cheza 1,000,000 jackpot" className="std-carousel-image" />
+                </Carousel.Item>
+            </Carousel>
 
             <div className="jackpot-header row">
                 <div className="col-12">
