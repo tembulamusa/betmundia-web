@@ -34,7 +34,7 @@ const BET_FEEDBACK_MS = 6000;
 // Per-game counts come straight off the game object. Field names aren't
 // fixed in the API doc yet, so a few likely spellings are accepted; the
 // stat shows "—" until the backend sends one of them.
-const SURVIVORS_KEYS = ["survivors_count", "survivor_count", "survivors_remaining", "survivors", "alive_count"];
+const SURVIVORS_KEYS = ["still_standing", "survivors_count", "survivor_count", "survivors_remaining", "survivors", "alive_count"];
 const NEW_MEMBERS_KEYS = ["new_members", "new_members_count", "new_participants", "new_entries", "joined_count"];
 const gameCount = (game, keys) => {
     const key = keys.find((k) => game?.[k] != null && game?.[k] !== "");
@@ -425,9 +425,11 @@ const SurvivorChallengeGames = ({ id }) => {
     // practice there's normally only one game open at a time anyway). It
     // always renders last in the list below, regardless of where it falls
     // in the challenge's own game order.
+    // The challenge payload also names it (current_game_number).
+    const currentGameNumber = progress?.current_game_number ?? challenge?.current_game_number ?? null;
     const currentGame =
         nonSettledGames.find(
-            (g) => progress?.current_game_number != null && g.game_number === progress.current_game_number
+            (g) => currentGameNumber != null && g.game_number === currentGameNumber
         ) || nonSettledGames[nonSettledGames.length - 1] || null;
     const orderedNonSettledGames = currentGame
         ? [
