@@ -56,6 +56,27 @@ export const persistSurvivorChallenges = (list) => {
     return list;
 };
 
+/**
+ * `games` should be an array, but the backend can also send an object
+ * keyed by game number, or wrap the list ({ games: [...] } / { data: [...] }).
+ * Always hand the UI a plain array, ordered by game_number.
+ */
+export const normalizeSurvivorGames = (games) => {
+    let list = [];
+    if (Array.isArray(games)) {
+        list = games;
+    } else if (games && typeof games === "object") {
+        const nested = [games.games, games.data, games.items, games.results].find(Array.isArray);
+        list = nested || Object.values(games).filter((g) => g && typeof g === "object");
+    }
+    return list
+        .filter((g) => g && typeof g === "object")
+        .sort((a, b) => Number(a.game_number ?? 0) - Number(b.game_number ?? 0));
+};
+
+/** Games of a challenge as an array, whatever shape they arrived in. */
+export const survivorGameList = (challenge) => normalizeSurvivorGames(challenge?.games);
+
 /** GET /survivor/challenges — public list of challenges (lobby). */
 export const fetchSurvivorChallenges = async () => {
     const [httpStatus, response] = await makeRequest({
@@ -77,7 +98,7 @@ export const fetchSurvivorGames = async (id) => {
         api_version: 2,
     });
     if (isSurvivorSuccess(httpStatus, response)) {
-        return Array.isArray(response?.data) ? response.data : [];
+        return normalizeSurvivorGames(response?.data);
     }
     return [];
 };
@@ -90,7 +111,8 @@ export const fetchSurvivorChallenge = async (id) => {
         api_version: 2,
     });
     if (isSurvivorSuccess(httpStatus, response)) {
-        return response?.data || null;
+        const detail = response?.data;
+        return detail ? { ...detail, games: normalizeSurvivorGames(detail.games) } : null;
     }
     return null;
 };
