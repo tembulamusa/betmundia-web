@@ -30,8 +30,9 @@ function writeQueue(events) {
 }
 
 function trackUrl() {
-  const base = process.env.REACT_APP_BASE2_URL || "";
-  return `${base}/v2/user/crm/events`;
+  const base = (process.env.REACT_APP_BASE2_URL || "").replace(/\/+$/, "");
+  // REACT_APP_BASE2_URL is already .../v2 (see fetch-request api_version 2).
+  return `${base}/user/crm/events`;
 }
 
 function authHeaders() {

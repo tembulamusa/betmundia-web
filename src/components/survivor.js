@@ -4,7 +4,6 @@ import { Modal, Accordion } from "react-bootstrap";
 import { Context } from "../context/store";
 import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
-import Notify from "./utils/Notify";
 import NoEvents from "./utils/no-events";
 import jackpotEmptyBall from "../assets/img/backgrounds/jackpot-empty-ball.png";
 import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
@@ -13,7 +12,6 @@ import {
     fetchSurvivorChallenge,
     survivorGameList,
     fetchSurvivorResults,
-    joinSurvivorChallenge,
     fetchSurvivorProgress,
     submitSurvivorPrediction,
     survivorOddValueForSelection,
@@ -268,7 +266,6 @@ const SurvivorChallengeGames = ({ id }) => {
     const [challenge, setChallenge] = useState(null);
     const [progress, setProgress] = useState(null);
     const [fetching, setFetching] = useState(true);
-    const [isJoining, setIsJoining] = useState(false);
     const [pendingGame, setPendingGame] = useState(null);
     const [showBlockReason, setShowBlockReason] = useState(false);
     // The pick the user clicked but hasn't confirmed yet — clicking 1/X/2
@@ -333,23 +330,6 @@ const SurvivorChallengeGames = ({ id }) => {
         currentGameRowRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     });
 
-    const handleJoin = async () => {
-        if (!user) {
-            openLoginWithRedirect(dispatch, `/survivor/${id}`);
-            return;
-        }
-        setIsJoining(true);
-        const outcome = await joinSurvivorChallenge(id);
-        setIsJoining(false);
-        if (outcome.success) {
-            rememberJoinedChallenge(id);
-            Notify({ status: 200, message: "You're in! Good luck." });
-            void loadAll();
-        } else {
-            Notify({ status: 400, message: outcome.message || "Could not join this challenge." });
-        }
-    };
-
     const handlePick = async (gameNumber, selection) => {
         if (!user) {
             openLoginWithRedirect(dispatch, `/survivor/${id}`);
@@ -362,41 +342,19 @@ const SurvivorChallengeGames = ({ id }) => {
         clearTimeout(betFeedbackTimer.current);
         setBetFeedback(null);
         setPendingGame(gameNumber);
-        // Survivor place-bet API (bet-api v2):
-        //   POST /user/survivor/challenges/{id}/games/{gameNumber}/prediction
-        //   body: { "selection": "1" | "X" | "2" } + Bearer token
-        // The HTTP status can be 200 even for rejections — the real result
-        // is the envelope's `status` ("400" etc.) and its message.
-        const pick = () =>
-            submitSurvivorPrediction(id, gameNumber, normalizeSelection(selection));
-        let outcome = await pick();
-
-        // The backend only accepts picks from enrolled participants. When
-        // it says so, enrol the user (debits entry_stake) and retry once, so
-        // the user still just taps "Place bet".
-        if (!outcome.success && /not enrolled/i.test(outcome.message || "")) {
-            const joined = await joinSurvivorChallenge(id);
-            if (!joined.success) {
-                setPendingGame(null);
-                showBetFeedback(
-                    gameNumber,
-                    "error",
-                    joined.message || "Could not join this challenge, so your bet was not placed."
-                );
-                return;
-            }
-            rememberJoinedChallenge(id);
-            outcome = await pick();
-        }
-
+        const outcome = await submitSurvivorPrediction(
+            id,
+            gameNumber,
+            normalizeSelection(selection)
+        );
         setPendingGame(null);
         if (outcome.success) {
             rememberJoinedChallenge(id);
             setPlacedPicks((prev) => ({ ...prev, [gameNumber]: normalizeSelection(selection) }));
-            showBetFeedback(gameNumber, "success", "Bet placed successfully. Good luck!");
+            showBetFeedback(gameNumber, "success", "Pick submitted successfully.");
             void loadAll();
         } else if (!outcome.httpStatus) {
-            showBetFeedback(gameNumber, "error", "Network error. Your bet was not placed, please try again.");
+            showBetFeedback(gameNumber, "error", "Network error. Your pick was not submitted, please try again.");
         } else if (outcome.unauthorized) {
             showBetFeedback(
                 gameNumber,
@@ -404,7 +362,7 @@ const SurvivorChallengeGames = ({ id }) => {
                 "Unauthorized — your session may have expired. Please log out and log in again, then retry."
             );
         } else {
-            showBetFeedback(gameNumber, "error", outcome.message || "Could not place bet. Please try again.");
+            showBetFeedback(gameNumber, "error", outcome.message || "Could not submit pick. Please try again.");
         }
     };
 
@@ -455,16 +413,9 @@ const SurvivorChallengeGames = ({ id }) => {
     // /progress example response) — prefer it, fall back to the challenge
     // detail's own status field.
     const challengeStatus = progress?.status ?? challenge?.status;
-    // OPEN challenges (registration still running, today's game already
-    // OPEN_FOR_PICKS) accept picks too — placing the bet is the entry.
-    const isChallengeActive =
-        statusIs(challengeStatus, "ACTIVE") || statusIs(challengeStatus, "OPEN");
-    // Betting is allowed whenever the challenge itself is active and this
-    // user hasn't been knocked out of it (or already won it) — there is
-    // no separate "must already be an enrolled/active participant"
-    // requirement: placing a pick through the regular placebet flow IS
-    // the entry action now, since the explicit join button is hidden.
-    const canBetOnChallenge = isChallengeActive && !isEliminated && !isWinner;
+    const isChallengeOpenForEntry =
+        statusIs(challengeStatus, "OPEN") || statusIs(challengeStatus, "ACTIVE");
+    const canBetOnChallenge = isChallengeOpenForEntry && !isEliminated && !isWinner;
     const nonSettledGames = survivorGameList(challenge).filter((g) => !isGameSettled(g));
     const settledGames = survivorGameList(challenge).filter((g) => isGameSettled(g));
 
@@ -499,12 +450,12 @@ const SurvivorChallengeGames = ({ id }) => {
     /** Why the odds buttons are replaced with a reason link, and what the
      * modal behind it should say. Only meaningful when !canBetOnChallenge. */
     const resolveBlockReason = () => {
-        if (!isChallengeActive) {
+        if (!isChallengeOpenForEntry) {
             return {
                 key: "closed",
                 label: "Challenge closed",
                 title: "Challenge closed",
-                body: "This challenge isn't currently active, so no bets can be placed on its games right now.",
+                body: "This challenge isn't open for entry, so no bets can be placed on its games right now.",
             };
         }
         if (isEliminated) {
@@ -580,19 +531,6 @@ const SurvivorChallengeGames = ({ id }) => {
                 </div>
             )}
 
-            {/* Join button hidden per request; handleJoin/isJoining kept in
-                place so it can be re-enabled by uncommenting this block. */}
-            {false && !isEnrolled && !statusIs(challenge.status, "COMPLETED") && (
-                <button
-                    type="button"
-                    className="survivor-join-btn"
-                    disabled={isJoining || statusIs(challenge.status, "COMPLETED")}
-                    onClick={handleJoin}
-                >
-                    {isJoining ? "Joining…" : `Join for ${formatMoney(challenge.entry_stake)}`}
-                </button>
-            )}
-
             <div className="survivor-games-list">
                 {orderedNonSettledGames.map((game, gameIndex) => {
                     const mine = predictionFor(game);
@@ -609,11 +547,14 @@ const SurvivorChallengeGames = ({ id }) => {
                     // row's controls need to reflect, rather than hiding the
                     // whole games list behind one summary row.
                     const isLockedOut = statusIs(game.status, "LOCKED") && !canBetOnChallenge;
-                    const canBetOnThisGame = canPick && canBetOnChallenge;
-                    // Once a pick exists for this game (from the server or just
-                    // placed), the 1X2 buttons and Place bet are replaced by
-                    // "Your pick" + the result (--- until it is available).
-                    const placedSelection = mine?.selection ?? placedPicks[game.game_number];
+                    const hasSubmittedPick = mine?.selection != null && mine.selection !== "";
+                    const canBetOnThisGame = canPick && canBetOnChallenge && isCurrentGame;
+                    // One pick per game, no changes: once a pick exists (from the
+                    // server or just placed), the 1X2 buttons and Submit pick are
+                    // replaced by "Your pick" + the result (--- until available).
+                    const placedSelection = hasSubmittedPick
+                        ? mine.selection
+                        : placedPicks[game.game_number];
                     const showPickControls = canBetOnThisGame && !placedSelection;
                     return (
                         <div
@@ -697,10 +638,10 @@ const SurvivorChallengeGames = ({ id }) => {
                                             {pendingGame === game.game_number ? (
                                                 <>
                                                     <span className="survivor-btn-spinner" aria-hidden="true" />
-                                                    Placing bet…
+                                                    Submitting pick…
                                                 </>
                                             ) : (
-                                                "Place bet"
+                                                "Submit pick"
                                             )}
                                         </button>
                                     </div>
@@ -850,22 +791,8 @@ const SurvivorChallengeGames = ({ id }) => {
                         <b>{normalizeSelection(pendingPick?.selection)}</b>
                     </div>
                     <div className="survivor-pick-confirm-row">
-                        <span>Entry stake</span>
+                        <span>Stake for this game</span>
                         <b>{formatMoney(challenge.entry_stake)}</b>
-                    </div>
-                    <div className="survivor-pick-confirm-row">
-                        <span>Possible win</span>
-                        <b>
-                            {formatMoney(
-                                (challenge.entry_stake || 0) *
-                                    survivorOddValueForSelection(
-                                        survivorGameList(challenge).find(
-                                            (g) => g.game_number === pendingPick?.gameNumber
-                                        ),
-                                        pendingPick?.selection
-                                    )
-                            )}
-                        </b>
                     </div>
                     <div className="survivor-pick-confirm-row">
                         <span>Current participants</span>
@@ -887,17 +814,14 @@ const SurvivorChallengeGames = ({ id }) => {
                             <li>Pick one result (1, X or 2) for each game; picks close at the game's lock time.</li>
                             <li>A correct pick keeps you in the challenge; one wrong pick eliminates you.</li>
                             <li>The prize pool is shared among the participants who survive every game.</li>
-                            <li>Your entry stake is deducted when you place the bet and is non-refundable once the game locks.</li>
+                            <li>Your stake for this game is debited when you submit your pick and is non-refundable once the game locks.</li>
+                            <li>Each game round requires a new stake; picks cannot be changed after submission.</li>
                             <li>Game results are settled on the official 90-minute result.</li>
                         </ul>
                     )}
-                    {pendingPick?.existing?.selection && (
-                        <p className="survivor-pick-confirm-warning">
-                            Heads up — you already have a pick recorded for game{" "}
-                            {pendingPick.gameNumber} (<b>{normalizeSelection(pendingPick.existing.selection)}</b>).
-                            Confirming will update your pick for this game to <b>{normalizeSelection(pendingPick?.selection)}</b>.
-                        </p>
-                    )}
+                    <p className="survivor-pick-confirm-note">
+                        Your pick for this game is final and cannot be changed after you confirm.
+                    </p>
                 </Modal.Body>
                 <Modal.Footer>
                     <button
@@ -912,7 +836,7 @@ const SurvivorChallengeGames = ({ id }) => {
                         className="survivor-pick-confirm-ok"
                         onClick={confirmPendingPick}
                     >
-                        Place bet
+                        {isEnrolled ? "Pay stake and submit pick" : "Join and submit pick"}
                     </button>
                 </Modal.Footer>
             </Modal>
