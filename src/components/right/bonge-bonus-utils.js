@@ -4,6 +4,60 @@ export const emptyBonusAdvice = {
   nudgeSub: null,
 };
 
+const SGR_PERCENT_KEY = /^sgr_bonus_percent_(\d+)$/;
+
+/** Fallback SGR (Mshipi) config, used for any setting /sports/config/sgr does not return. */
+export const DEFAULT_SGR_CONFIG = {
+  sgr_bonus_enabled: "1",
+  sgr_bonus_min_games: "4",
+  sgr_bonus_max_games: "20",
+  sgr_bonus_min_odds: "1.3",
+  sgr_bonus_percent_4: "4",
+  sgr_bonus_percent_5: "5",
+  sgr_bonus_percent_6: "6",
+  sgr_bonus_percent_7: "7",
+  sgr_bonus_percent_8: "8",
+  sgr_bonus_percent_9: "9",
+  sgr_bonus_percent_10: "10",
+  sgr_bonus_percent_11: "14",
+  sgr_bonus_percent_12: "18",
+  sgr_bonus_percent_13: "22",
+  sgr_bonus_percent_14: "26",
+  sgr_bonus_percent_15: "30",
+  sgr_bonus_percent_16: "34",
+  sgr_bonus_percent_17: "38",
+  sgr_bonus_percent_18: "42",
+  sgr_bonus_percent_19: "46",
+  sgr_bonus_percent_20: "50",
+};
+
+/**
+ * API settings win over the defaults. The percent tiers are taken as a set: the API's
+ * tiers when it returns any, otherwise the default tiers.
+ */
+export const withSgrDefaults = (config) => {
+  const fromApi = config && typeof config === "object" ? config : {};
+  const apiHasTiers = Object.keys(fromApi).some((key) => SGR_PERCENT_KEY.test(key));
+  const merged = {};
+  Object.entries(DEFAULT_SGR_CONFIG).forEach(([key, value]) => {
+    if (!apiHasTiers || !SGR_PERCENT_KEY.test(key)) {
+      merged[key] = value;
+    }
+  });
+  Object.entries(fromApi).forEach(([key, value]) => {
+    if (value != null && value !== "") {
+      merged[key] = value;
+    }
+  });
+  return merged;
+};
+
+/** Selections priced at or above sgr_bonus_min_odds (default 1.3). */
+export const countSgrQualifyingGames = (betslip, dbWinMatrix) => {
+  const minOdds = Number(dbWinMatrix?.sgr_bonus_min_odds) || 1.3;
+  return Object.values(betslip || {}).filter((slip) => Number(slip?.odd_value) >= minOdds).length;
+};
+
 const readBonusPercent = (dbWinMatrix, games) => {
   const raw = dbWinMatrix?.[`sgr_bonus_percent_${games}`];
   if (raw == null || raw === "") {
@@ -24,7 +78,7 @@ export const getMaxBongeBonus = (dbWinMatrix) => {
   const configuredMax = Number(dbWinMatrix.sgr_bonus_max_games) || null;
 
   Object.keys(dbWinMatrix).forEach((key) => {
-    const match = key.match(/^sgr_bonus_percent_(\d+)$/);
+    const match = key.match(SGR_PERCENT_KEY);
     if (!match) {
       return;
     }
@@ -81,9 +135,7 @@ export const buildBongeBonusAdvice = (betslip, dbWinMatrix) => {
 
   const oddLimit = dbWinMatrix?.sgr_bonus_min_odds || 1.3;
   const maxGames = Number(dbWinMatrix?.sgr_bonus_max_games) || null;
-  let totalGames = Object.values(betslip || {}).filter(
-    (slip) => Number(slip.odd_value) > Number(dbWinMatrix?.sgr_bonus_min_odds || 1.3)
-  ).length;
+  let totalGames = countSgrQualifyingGames(betslip, dbWinMatrix);
 
   if (maxGames && totalGames > maxGames) {
     totalGames = maxGames;

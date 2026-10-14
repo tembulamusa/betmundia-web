@@ -25,7 +25,7 @@ import { TbRefreshAlert } from "react-icons/tb";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
-import { resolveBongeBonusPercent } from './bonge-bonus-utils';
+import { resolveBongeBonusPercent, countSgrQualifyingGames } from './bonge-bonus-utils';
 
 const Float = (equation, precision = 4) => {
     return Math.ceil(equation * (10 ** precision)) / (10 ** precision);
@@ -379,8 +379,7 @@ const BetslipSubmitForm = (props) => {
 
             // Get Bonus
             let max_games = dbWinMatrix?.sgr_bonus_max_games || 30;
-            let total_games = Object.values(state?.betslip || {})?.filter(
-                (slip) => slip.odd_value > (dbWinMatrix?.sgr_bonus_min_odds || 1.30))?.length;
+            let total_games = countSgrQualifyingGames(state?.betslip, dbWinMatrix);
 
             if (total_games > max_games) {
                 total_games = max_games;
