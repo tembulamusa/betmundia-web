@@ -505,7 +505,7 @@ const SurvivorChallengeGames = ({ id }) => {
     const requestPick = (gameNumber, selection) => {
         if (!selection) return;
         const game = survivorGameList(challenge).find((g) => g.game_number === gameNumber);
-        if (!isSurvivorGameEligible(game)) return;
+        if (isSignedIn && !isSurvivorGameEligible(game)) return;
         setPendingPick({ gameNumber, selection, existing: predictionFor(game) });
     };
 
@@ -560,9 +560,10 @@ const SurvivorChallengeGames = ({ id }) => {
                     const placedSelection = hasSubmittedPick
                         ? mine.selection
                         : placedPicks[game.game_number];
-                    // Eligibility only gates placing a new pick; an existing
-                    // pick still shows below as usual.
-                    const isEligibleToPlay = isSurvivorGameEligible(game);
+                    // Eligibility only gates placing a new pick for a signed-in
+                    // user; an existing pick still shows below as usual. Guests
+                    // keep the pick buttons, which lead to the login prompt.
+                    const isEligibleToPlay = !isSignedIn || isSurvivorGameEligible(game);
                     const showPickControls = canBetOnThisGame && !placedSelection && isEligibleToPlay;
                     const showIneligibleNotice = canBetOnThisGame && !placedSelection && !isEligibleToPlay;
                     return (
