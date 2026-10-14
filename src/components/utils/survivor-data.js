@@ -92,6 +92,13 @@ export const normalizeSurvivorGames = (games) => {
 /** Games of a challenge as an array, whatever shape they arrived in. */
 export const survivorGameList = (challenge) => normalizeSurvivorGames(challenge?.games);
 
+/**
+ * Whether the user may place a new pick on this game. Only an explicit
+ * `eligible_to_play: true` (sent on current_game) counts — false, null or
+ * a missing field all mean not eligible.
+ */
+export const isSurvivorGameEligible = (game) => game?.eligible_to_play === true;
+
 /** GET /survivor/challenges — public list of challenges (lobby). */
 export const fetchSurvivorChallenges = async () => {
     const [httpStatus, response] = await makeRequest({

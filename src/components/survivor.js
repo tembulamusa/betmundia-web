@@ -6,11 +6,12 @@ import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
 import NoEvents from "./utils/no-events";
 import jackpotEmptyBall from "../assets/img/backgrounds/jackpot-empty-ball.png";
-import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
+import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus, FaBan } from "react-icons/fa";
 import {
     fetchSurvivorChallenges,
     fetchSurvivorChallenge,
     survivorGameList,
+    isSurvivorGameEligible,
     fetchSurvivorResults,
     fetchSurvivorProgress,
     submitSurvivorPrediction,
@@ -335,6 +336,11 @@ const SurvivorChallengeGames = ({ id }) => {
             showBetFeedback(gameNumber, "error", "You cannot place a bet on this challenge.");
             return;
         }
+        const game = survivorGameList(challenge).find((g) => g.game_number === gameNumber);
+        if (!isSurvivorGameEligible(game)) {
+            showBetFeedback(gameNumber, "error", "Not eligible to play. You missed out on some matches.");
+            return;
+        }
         clearTimeout(betFeedbackTimer.current);
         setBetFeedback(null);
         setPendingGame(gameNumber);
@@ -499,6 +505,7 @@ const SurvivorChallengeGames = ({ id }) => {
     const requestPick = (gameNumber, selection) => {
         if (!selection) return;
         const game = survivorGameList(challenge).find((g) => g.game_number === gameNumber);
+        if (!isSurvivorGameEligible(game)) return;
         setPendingPick({ gameNumber, selection, existing: predictionFor(game) });
     };
 
@@ -553,7 +560,11 @@ const SurvivorChallengeGames = ({ id }) => {
                     const placedSelection = hasSubmittedPick
                         ? mine.selection
                         : placedPicks[game.game_number];
-                    const showPickControls = canBetOnThisGame && !placedSelection;
+                    // Eligibility only gates placing a new pick; an existing
+                    // pick still shows below as usual.
+                    const isEligibleToPlay = isSurvivorGameEligible(game);
+                    const showPickControls = canBetOnThisGame && !placedSelection && isEligibleToPlay;
+                    const showIneligibleNotice = canBetOnThisGame && !placedSelection && !isEligibleToPlay;
                     return (
                         <div
                             key={game.game_number}
@@ -652,6 +663,16 @@ const SurvivorChallengeGames = ({ id }) => {
                                         </div>
                                     )}
                                 </>
+                            )}
+
+                            {showIneligibleNotice && (
+                                <div className="survivor-ineligible-notice" role="status">
+                                    <FaBan className="survivor-ineligible-icon" aria-hidden="true" />
+                                    <div>
+                                        <div className="survivor-ineligible-title">Not eligible to play</div>
+                                        <div className="survivor-ineligible-text">You missed out on some matches.</div>
+                                    </div>
+                                </div>
                             )}
 
                             {canBetOnThisGame && placedSelection && (
