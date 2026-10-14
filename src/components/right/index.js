@@ -8,7 +8,13 @@ import { Modal } from 'react-bootstrap';
 import makeRequest from '../utils/fetch-request';
 import { removeItem, setLocalStorage, getFromLocalStorage } from '../utils/local-storage';
 import { useLocation } from 'react-router-dom';
-import { emptyBonusAdvice, buildBongeBonusAdvice, normalizeSgrConfig } from './bonge-bonus-utils';
+import {
+  emptyBonusAdvice,
+  buildBongeBonusAdvice,
+  normalizeSgrConfig,
+  withSgrDefaults,
+  countSgrQualifyingGames,
+} from './bonge-bonus-utils';
 
 const AlertMessage = (props) => {
   return (
@@ -124,9 +130,9 @@ let sgrLoadPromise = null;
 
 const readStoredSgr = () => {
   try {
-    return normalizeSgrConfig(getFromLocalStorage(SGR_STORAGE_KEY));
+    return withSgrDefaults(normalizeSgrConfig(getFromLocalStorage(SGR_STORAGE_KEY)));
   } catch (e) {
-    return {};
+    return withSgrDefaults({});
   }
 };
 
@@ -146,7 +152,7 @@ const loadSgrOncePerPageLoad = () => {
           } catch (e) {
             // storage unavailable: still use the fresh value for this page load
           }
-          return config;
+          return withSgrDefaults(config);
         }
         console.warn("[sgr] could not load /sports/config/sgr (status:", status, ")", result);
         sgrLoadPromise = null; // allow a retry on the next mount
@@ -197,9 +203,7 @@ const Right = (props) => {
 
   const updateBongeBonusMessage = () => {
     const advice = buildBongeBonusAdvice(state?.betslip, dbWinMatrix);
-    const totalGames = Object.values(state?.betslip || {}).filter(
-      (slip) => slip.odd_value > (dbWinMatrix?.sgr_bonus_min_odds || 1.3)
-    ).length;
+    const totalGames = countSgrQualifyingGames(state?.betslip, dbWinMatrix);
     const maxGames = dbWinMatrix?.sgr_bonus_max_games;
     const capped = maxGames && totalGames > maxGames ? maxGames : totalGames;
     const percentKey = `sgr_bonus_percent_${capped}`;
