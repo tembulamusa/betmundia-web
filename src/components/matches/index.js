@@ -403,9 +403,41 @@ const MoreMarketsHeaderRow = (props) => {
     )
 }
 
+const INLINE_SOCCER_MARKETS = [
+    { name: "1x2", id: 1, line: "" },
+    { name: "Double Chance", id: 10, line: "" },
+    { name: "Total", id: 18, line: "2.5" },
+];
+
+// Outcomes rendered as odd buttons on the listing row (same markets MatchRow passes to MatchMarket).
+const getInlineOutcomes = (match) => {
+    const odds = match?.odds || {};
+    if (match?.sport_name?.toLowerCase() == "soccer") {
+        return INLINE_SOCCER_MARKETS.flatMap(({ name, id, line }) =>
+            orderMarketOutcomes(odds?.[name]?.outcomes, id, line));
+    }
+    return Object.keys(odds).flatMap((name) => orderMarketOutcomes(odds?.[name]?.outcomes, 1, ""));
+}
+
+// True when the slip pick for this match is not one an inline OddButton would show as picked.
+const isPickedInMoreMarkets = (match, slip) => {
+    if (!slip) {
+        return false;
+    }
+    const slipSbv = slip.special_bet_value || '';
+    return !getInlineOutcomes(match).some((outcome) =>
+        clean(match?.match_id + "" + (outcome?.sub_type_id || match?.sub_type_id) + (outcome?.odd_key || '')) == slip.ucn
+        && (outcome?.special_bet_value || '') == slipSbv
+    );
+}
+
 const SideBets = (props) => {
     const { match, live, mobile } = props;
     const [picked,] = useState();
+    const [state,] = useContext(Context);
+    const moreMarketsPicked = isPickedInMoreMarkets(
+        match, (getBetslip() || state?.betslip || {})?.[match?.match_id]
+    ) ? 'more-markets-picked' : '';
 
     const openLiveStats = (parent_match_id) => {
         window.open(`https://s5.sir.sportradar.com/betmundialsmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
@@ -424,7 +456,7 @@ const SideBets = (props) => {
                 </button>
                 <Link
                     to={`/match/${match?.match_id}`}
-                    className="mobile-match-action-btn mobile-match-markets-count"
+                    className={`mobile-match-action-btn mobile-match-markets-count ${moreMarketsPicked}`}
                 >
                     {match?.sidebets}+
                 </Link>
@@ -435,7 +467,7 @@ const SideBets = (props) => {
     return (
         <div
             className={`side mt-2 !pl-2 !ml-3 ${picked} align-self-center more-markets-container m-lg-2`}>
-            <Link to={`/match/${match?.match_id}`} className=''>+{match?.sidebets}</Link>
+            <Link to={`/match/${match?.match_id}`} className={`more-markets-count ${moreMarketsPicked}`}>+{match?.sidebets}</Link>
             <div
                 onClick={() => openLiveStats(match?.parent_match_id)}
                 className='ml-3 mt-1 text-white font-bold opacity-70 hover:opacity-100 cursor-pointer'>

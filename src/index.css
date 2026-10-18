@@ -5590,3 +5590,18 @@ button.locked-button:hover {
     color: #ffffff !important;
   }
 }
+
+/* A pick from the match's inner markets: the more-markets counter takes the
+   same purple as a picked odds button. */
+.more-markets-count.more-markets-picked {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.more-markets-count.more-markets-picked,
+.mobile-match-action-btn.mobile-match-markets-count.more-markets-picked {
+  background: #a71f66 !important;
+  border-color: #a71f66 !important;
+  color: #ffffff !important;
+}
