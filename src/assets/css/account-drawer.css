@@ -684,6 +684,8 @@
   text-align: left;
   text-decoration: none !important;
   cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
   transition: background 0.15s ease;
 }
 
@@ -695,9 +697,16 @@
   border-bottom: none;
 }
 
-.account-drawer-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+.account-drawer-item:hover,
+.account-drawer-item:focus,
+.account-drawer-item:focus-visible,
+.account-drawer-item:active,
+.account-drawer-item.active,
+.account-drawer-item[aria-current="page"] {
+  background: var(--acc-pink-deep);
   color: var(--acc-text) !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .account-drawer-item-icon {
