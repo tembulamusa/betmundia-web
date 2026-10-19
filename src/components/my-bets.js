@@ -435,7 +435,7 @@ const MyBets = () => {
                                                 <div>{bet?.created}</div>
                                                 <div>{bet?.bet_id}</div>
                                                 <div>{bet?.total_games}</div>
-                                                <div>{bet?.total_odd}</div>
+                                                <div>{bet?.jackpot_bet_id ? "" : bet?.total_odd}</div>
                                                 <div>{bet?.bet_amount}</div>
                                                 <div>{bet?.possible_win}</div>
 
