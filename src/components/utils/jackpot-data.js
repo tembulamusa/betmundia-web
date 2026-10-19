@@ -81,19 +81,43 @@ export const matchesTypeParam = (item, param) => {
         .some((candidate) => String(candidate) === value);
 };
 
+const isWeeklyJackpot = (item) =>
+    /weekly/i.test(
+        [item?.jackpot_name, item?.name, item?.jackpot_type, item?.type, item?.slug, item?.label]
+            .filter(Boolean)
+            .join(" ")
+    );
+
+/**
+ * Header order: the weekly jackpot goes first (so it is the default pick
+ * when no ?type= is set), everything else keeps the API's order.
+ */
+export const orderJackpotTypes = (types) => {
+    if (!Array.isArray(types)) {
+        return [];
+    }
+    const weekly = types.filter(isWeeklyJackpot);
+    if (!weekly.length) {
+        return types;
+    }
+    return [...weekly, ...types.filter((t) => !isWeeklyJackpot(t))];
+};
+
 export const normalizeJackpotTypes = (payload) => {
     if (!payload) {
         return [];
     }
 
     const asList = (list) =>
-        (list || [])
-            .filter(Boolean)
-            .map((item) => ({
-                ...item,
-                key: String(typeKey(item)),
-                label: typeLabel(item),
-            }));
+        orderJackpotTypes(
+            (list || [])
+                .filter(Boolean)
+                .map((item) => ({
+                    ...item,
+                    key: String(typeKey(item)),
+                    label: typeLabel(item),
+                }))
+        );
 
     // API: { status, result, data: [ { jackpot_type_id, name, jackpot_name, type, ... } ] }
     if (Array.isArray(payload)) {
@@ -140,10 +164,12 @@ export const readStoredJackpotTypes = () => {
 };
 
 export const getJackpotTypes = (state) => {
+    // Also ordered here so lists already stored/cached before this change
+    // show the weekly jackpot first too.
     if (Array.isArray(state?.jackpotTypes) && state.jackpotTypes.length) {
-        return state.jackpotTypes;
+        return orderJackpotTypes(state.jackpotTypes);
     }
-    return readStoredJackpotTypes();
+    return orderJackpotTypes(readStoredJackpotTypes());
 };
 
 export const persistJackpotTypes = (types, dispatch) => {
