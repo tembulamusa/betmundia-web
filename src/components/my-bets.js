@@ -309,9 +309,10 @@ const MyBets = () => {
                 <div className="my-bets-filters">
                     {/* Custom listbox — native <option> hover is not styleable in Chromium */}
                     <div
-                        className={`my-bets-filter-select-wrap${filterMenuOpen ? " is-open" : ""}`}
+                        className={`my-bets-filter-select-wrap my-bets-field${filterMenuOpen ? " is-open" : ""}`}
                         ref={filterSelectRef}
                     >
+                        <span className="my-bets-field-label">Type</span>
                         <button
                             type="button"
                             className="my-bets-filter-select"
@@ -352,24 +353,30 @@ const MyBets = () => {
                     </div>
 
                     <div className="my-bets-date-filters">
-                        <input
-                            type="date"
-                            className="my-bets-date-input"
-                            value={fromDate}
-                            onChange={(e) => setFromDate(e.target.value)}
-                            placeholder="From"
-                            aria-label="From"
-                            max={toDate || undefined}
-                        />
-                        <input
-                            type="date"
-                            className="my-bets-date-input"
-                            value={toDate}
-                            onChange={(e) => setToDate(e.target.value)}
-                            placeholder="To"
-                            aria-label="To"
-                            min={fromDate || undefined}
-                        />
+                        <label className="my-bets-field">
+                            <span className="my-bets-field-label">From</span>
+                            <input
+                                type="date"
+                                className="my-bets-date-input"
+                                value={fromDate}
+                                onChange={(e) => setFromDate(e.target.value)}
+                                placeholder="From"
+                                aria-label="From"
+                                max={toDate || undefined}
+                            />
+                        </label>
+                        <label className="my-bets-field">
+                            <span className="my-bets-field-label">To</span>
+                            <input
+                                type="date"
+                                className="my-bets-date-input"
+                                value={toDate}
+                                onChange={(e) => setToDate(e.target.value)}
+                                placeholder="To"
+                                aria-label="To"
+                                min={fromDate || undefined}
+                            />
+                        </label>
                     </div>
 
                     {hasActiveFilters && (
