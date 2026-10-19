@@ -15,7 +15,7 @@ import {
     clearPendingVerifyAuth,
     getPendingVerifyAuth,
 } from '../../utils/pending-verify-auth';
-import { setLocalStorage } from '../../utils/local-storage';
+import { getFromLocalStorage, setLocalStorage } from '../../utils/local-storage';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -57,6 +57,92 @@ const isBetmundialOtpPayload = (data) => {
         return false;
     }
     return Boolean(extractOtpCode(data));
+};
+
+// ---- Resend cooldown (2 minutes) -----------------------------------------
+// The cooldown end time is kept in localStorage (per phone number) so a page
+// refresh neither resets it nor triggers another automatic SMS inside the
+// window. A window event lets the countdown control update without re-rendering
+// the whole page (which would reset the form).
+const RESEND_COOLDOWN_MS = 2 * 60 * 1000;
+const RESEND_EVENT = 'verify-resend-cooldown';
+const cooldownKey = (msisdn) => `verify_resend_until_${msisdn}`;
+
+const getCooldownRemainingSecs = (msisdn) => {
+    if (!msisdn) return 0;
+    try {
+        const until = Number(getFromLocalStorage(cooldownKey(msisdn)));
+        if (!until) return 0;
+        return Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    } catch {
+        return 0;
+    }
+};
+
+const startResendCooldown = (msisdn) => {
+    if (!msisdn) return;
+    try {
+        setLocalStorage(cooldownKey(msisdn), Date.now() + RESEND_COOLDOWN_MS, RESEND_COOLDOWN_MS + 5000);
+    } catch { /* storage unavailable: fall back to no persistence */ }
+    window.dispatchEvent(new CustomEvent(RESEND_EVENT, { detail: { msisdn, until: Date.now() + RESEND_COOLDOWN_MS } }));
+};
+
+const formatCountdown = (secs) => {
+    const m = Math.floor(secs / 60);
+    const sec = String(secs % 60).padStart(2, '0');
+    return `${m}:${sec}`;
+};
+
+const ResendCodeControl = ({ msisdn, onResend }) => {
+    const [remaining, setRemaining] = useState(() => getCooldownRemainingSecs(msisdn));
+    const untilRef = useRef(Date.now() + getCooldownRemainingSecs(msisdn) * 1000);
+
+    useEffect(() => {
+        const sync = () => {
+            const left = Math.max(0, Math.ceil((untilRef.current - Date.now()) / 1000));
+            setRemaining((prev) => {
+                if (prev > 0 && left === 0) {
+                    Notify({ status: 200, message: 'You can now request a new verification code.' });
+                }
+                return left;
+            });
+        };
+        const onStart = (e) => {
+            if (e?.detail?.msisdn !== msisdn) return;
+            untilRef.current = e.detail.until;
+            sync();
+        };
+        untilRef.current = Date.now() + getCooldownRemainingSecs(msisdn) * 1000;
+        sync();
+        window.addEventListener(RESEND_EVENT, onStart);
+        const timer = setInterval(sync, 1000);
+        return () => {
+            window.removeEventListener(RESEND_EVENT, onStart);
+            clearInterval(timer);
+        };
+    }, [msisdn]);
+
+    const waiting = remaining > 0;
+
+    return (
+        <div className="col-12">
+            <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Didn't receive code?</span>
+            <button
+                onClick={onResend}
+                type="button"
+                disabled={waiting}
+                className='btn text-white ml-2 btn-sm hover:opacity-70'
+                style={{ backgroundColor: BRAND, opacity: waiting ? 0.6 : 1, cursor: waiting ? 'not-allowed' : 'pointer' }}
+            >
+                {waiting ? `Resend code in ${formatCountdown(remaining)}` : 'Click Resend Code'}
+            </button>
+            <div className="mt-2" style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.3rem' }} aria-live="polite">
+                {waiting
+                    ? `We've sent a code to your phone. You can request a new one in ${formatCountdown(remaining)}.`
+                    : 'Still nothing? You can request a new code now.'}
+            </div>
+        </div>
+    );
 };
 
 const VerifyAccount = () => {
@@ -284,6 +370,7 @@ const VerifyAccount = () => {
     // again from "Click Resend Code".
     const sendOTP = useCallback(() => {
         if (!msisdn) return;
+        if (getCooldownRemainingSecs(msisdn) > 0) return; // still inside the 2-minute window
         const endpoint = '/auth/verification-code';
         const values = {
             msisdn,
@@ -293,9 +380,10 @@ const VerifyAccount = () => {
         makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
             if ([200, 201].includes(status)) {
                 if (response?.status == 200 || response?.status == 201 || response?.success) {
+                    startResendCooldown(msisdn);
                     Notify({
                         status: 200,
-                        message: "Verification code sent to phone",
+                        message: "Verification code sent to phone. You can request a new one in 2 minutes.",
                     });
                 } else {
                     const errorMessage = response?.result || response?.error?.message || response?.error || response?.message || "Unable to send verification code. Please try again.";
@@ -394,17 +482,7 @@ const VerifyAccount = () => {
                         </div>
 
                         <div className="form-group row d-flex justify-content-left mt-4">
-                            <div className="col-12">
-                                <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Didn't receive code?</span>
-                                <button
-                                    onClick={sendOTP}
-                                    type={"button"}
-                                    className='btn text-white ml-2 btn-sm hover:opacity-70'
-                                    style={{ backgroundColor: BRAND }}
-                                >
-                                    Click Resend Code
-                                </button>
-                            </div>
+                            <ResendCodeControl msisdn={msisdn} onResend={sendOTP} />
                         </div>
 
                         <div className="form-group row d-flex justify-content-left mb-4">

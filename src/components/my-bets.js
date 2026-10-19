@@ -42,9 +42,22 @@ const getStatusBadge = (status) => {
     }
 };
 
+// The v2 bets list does not always carry jackpot_bet_id, so detect jackpot bets
+// from any of the markers the API may use (ids, flags, bet_type 9, or a
+// descriptive field that mentions "jackpot").
+const isJackpotBet = (bet) => {
+    if (!bet) return false;
+    if (bet.jackpot_bet_id || bet.jackpot_id || bet.jackpot_event_id || bet.jackpot_type_id) return true;
+    if (bet.is_jackpot === true || bet.is_jackpot === 1 || bet.is_jackpot === "1" || bet.jackpot === true || bet.jackpot === 1 || bet.jackpot === "1") return true;
+    if (String(bet.bet_type) === "9") return true;
+    return Object.entries(bet).some(([key, value]) =>
+        typeof value === "string" && (/jackpot/i.test(key) || /jackpot/i.test(value)) && key !== "bet_pick"
+    );
+};
+
 const getBetTypeLabel = (bet) => {
     const count = Number(bet?.total_games ?? bet?.betslip?.length ?? 0);
-    if (bet?.jackpot_bet_id) {
+    if (isJackpotBet(bet)) {
         return `Jackpot (${count})`;
     }
     if (count > 1) {
@@ -296,9 +309,10 @@ const MyBets = () => {
                 <div className="my-bets-filters">
                     {/* Custom listbox — native <option> hover is not styleable in Chromium */}
                     <div
-                        className={`my-bets-filter-select-wrap${filterMenuOpen ? " is-open" : ""}`}
+                        className={`my-bets-filter-select-wrap my-bets-field${filterMenuOpen ? " is-open" : ""}`}
                         ref={filterSelectRef}
                     >
+                        <span className="my-bets-field-label">Type</span>
                         <button
                             type="button"
                             className="my-bets-filter-select"
@@ -339,24 +353,30 @@ const MyBets = () => {
                     </div>
 
                     <div className="my-bets-date-filters">
-                        <input
-                            type="date"
-                            className="my-bets-date-input"
-                            value={fromDate}
-                            onChange={(e) => setFromDate(e.target.value)}
-                            placeholder="From"
-                            aria-label="From"
-                            max={toDate || undefined}
-                        />
-                        <input
-                            type="date"
-                            className="my-bets-date-input"
-                            value={toDate}
-                            onChange={(e) => setToDate(e.target.value)}
-                            placeholder="To"
-                            aria-label="To"
-                            min={fromDate || undefined}
-                        />
+                        <label className="my-bets-field">
+                            <span className="my-bets-field-label">From</span>
+                            <input
+                                type="date"
+                                className="my-bets-date-input"
+                                value={fromDate}
+                                onChange={(e) => setFromDate(e.target.value)}
+                                placeholder="From"
+                                aria-label="From"
+                                max={toDate || undefined}
+                            />
+                        </label>
+                        <label className="my-bets-field">
+                            <span className="my-bets-field-label">To</span>
+                            <input
+                                type="date"
+                                className="my-bets-date-input"
+                                value={toDate}
+                                onChange={(e) => setToDate(e.target.value)}
+                                placeholder="To"
+                                aria-label="To"
+                                min={fromDate || undefined}
+                            />
+                        </label>
                     </div>
 
                     {hasActiveFilters && (
@@ -435,7 +455,7 @@ const MyBets = () => {
                                                 <div>{bet?.created}</div>
                                                 <div>{bet?.bet_id}</div>
                                                 <div>{bet?.total_games}</div>
-                                                <div>{bet?.total_odd}</div>
+                                                <div>{isJackpotBet(bet) ? "" : bet?.total_odd}</div>
                                                 <div>{bet?.bet_amount}</div>
                                                 <div>{bet?.possible_win}</div>
 
