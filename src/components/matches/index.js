@@ -980,6 +980,8 @@ const MatchMarket = (props) => {
 
 
     useEffect(() => {
+        // jackpots only show/update the 1x2 market
+        if (jackpot && marketId != 1) return;
         if (socket.connected) {
             handleGameSocket("listen", match?.parent_match_id);
             socket?.on(`socket-io#${match?.parent_match_id}#${marketId}`, (data) => {
@@ -1089,7 +1091,7 @@ const MatchRow = (props) => {
         setReload,
         subTypes } = props;
     const [match, setMatch] = useState({ ...initialMatch })
-    const [availableMarkets,] = useState(subTypes || [1, 10, 18])
+    const [availableMarkets,] = useState(jackpot ? [1] : (subTypes || [1, 10, 18]))
     const [updatedMatchStatus, setUpdatedMatchStatus] = useState(initialMatch?.match_status);
     const [updatedMatchTime, setUpdatedMatchTime] = useState({});
     const [updatedMatchScore, setUpdatedMatchScore] = useState();
@@ -1320,6 +1322,7 @@ const MatchRow = (props) => {
                                     </div>
                                 </div>
 
+                                {!jackpot && <>
                                 <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="223">
                                     <div className="mobile-market-bar tablet-market-bar">
                                         <span>DOUBLE CHANCE</span>
@@ -1367,6 +1370,7 @@ const MatchRow = (props) => {
                                         />
                                     </div>
                                 </div>
+                                </>}
                             </>
                         }
 
