@@ -5,19 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { getFromLocalStorage } from "./utils/local-storage";
 import { Link } from "react-router-dom";
 
-import AviatorImg from "../assets/img/popups/aviator.jpeg";
-import AviatrixImg from "../assets/img/popups/aviatrix.jpeg";
-import JetXImg from "../assets/img/popups/jetx.jpeg";
-import DepositBonus from "../assets/img/popups/deposit_bonus.jpg";
-import DailyJackpot from "../assets/img/popups/daily_jackpot.jpeg";
+import JackpotPopupImg from "../assets/img/popups/jackpot_popup.jpg";
 
-const images = [
-    { src: AviatorImg, link: "/casino-game/aviator/aviator" },
-    { src: AviatrixImg, link: "/casino-game/aviatrix/aviatrix/sure-popular" },
-    { src: JetXImg, link: "/casino-game/smartsoft/jetx/sure-popular" },
-    { src: DepositBonus, link: "/deposit" },
-    { src: DailyJackpot, link: "/jackpots" },
-];
+// Only one pop-up: the jackpot promotion.
+const popup = { src: JackpotPopupImg, link: "/jackpots" };
 
 const DISMISS_KEY = "popupBannerDismissed";
 const IDLE_MS = 10_000;
@@ -80,8 +71,7 @@ const PopupBanner = () => {
             return;
         }
 
-        const selectedImage = images[Math.floor(Math.random() * images.length)];
-        setRandomImage(selectedImage);
+        setRandomImage(popup);
         hasShownRef.current = true;
         shownAtRef.current = Date.now();
         showRef.current = true;
