@@ -8,6 +8,7 @@ import {
     addToJackpotSlip,
     getJackpotBetslip,
     clearJackpotSlip,
+    orderJackpotSlips,
     formatNumber
 } from '../utils/betslip';
 import { toast } from 'react-toastify';
@@ -213,7 +214,10 @@ const BetslipSubmitForm = (props) => {
             return false
         }
 
-        let bs = Object.values(state?.[betslipkey] || []);
+        // Jackpot selections are submitted in the order of the games on the jackpot page.
+        let bs = jackpot
+            ? orderJackpotSlips(state?.[betslipkey], jackpotData || state?.jackpotdata).map(([, slip]) => slip)
+            : Object.values(state?.[betslipkey] || []);
 
         let slipHasOddsChange = false;
         let slipHasUnbettableEvents = false;

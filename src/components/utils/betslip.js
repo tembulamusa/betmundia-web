@@ -73,6 +73,25 @@ export const addToJackpotSlip = (slip) => {
     return current_slip;
 }
 
+// Jackpot picks must follow the order of the games on the jackpot page.
+// The stored slip is an object keyed by numeric match_id, which JS iterates in
+// ascending id order, so sort by each game's position in the jackpot payload.
+// Returns [match_id, slip] pairs; games not found in the payload go last.
+export const orderJackpotSlips = (slips, jackpotData) => {
+    const entries = Object.entries(slips || {});
+    const games = Object.values(jackpotData?.matches || {});
+    if (!games.length) return entries;
+    const position = new Map();
+    games.forEach((game, index) => {
+        if (game?.match_id != null) position.set(String(game.match_id), index);
+    });
+    const rank = (matchId) => (position.has(String(matchId)) ? position.get(String(matchId)) : Number.MAX_SAFE_INTEGER);
+    return entries
+        .map((entry, index) => ({ entry, index }))
+        .sort((a, b) => (rank(a.entry[0]) - rank(b.entry[0])) || (a.index - b.index))
+        .map(({ entry }) => entry);
+};
+
 export const removeFromJackpotSlip = (match_id) => {
     let current_slip = getFromLocalStorage('jackpotbetslip') || {};
     if (current_slip[match_id]) {

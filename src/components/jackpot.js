@@ -4,7 +4,7 @@ import { JackpotMatchList, JackpotHeader } from './matches/index';
 import makeRequest from "./utils/fetch-request";
 import dailyJackpot from '../assets/img/banner/jackpots/DailyJackpot.jpeg';
 import jackpotCarousel from '../assets/img/banner/carousel/jackpot.jpg';
-import jackpotBanner from '../assets/img/banner/jackpot.png';
+import jackpotBanner from '../assets/img/banner/jackpot.jpeg';
 import jackpotEmptyBall from '../assets/img/backgrounds/jackpot-empty-ball.png';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -351,12 +351,7 @@ const Jackpot = () => {
                 interval={5000}
                 pause="hover"
             >
-                <Carousel.Item>
-                    <img src={dailyJackpot} alt="Daily jackpot: KES 1 million to be won daily" className="std-carousel-image" />
-                </Carousel.Item>
-                <Carousel.Item>
-                    <img src={jackpotCarousel} alt="1,000,000 jackpot: 13 games, 10 bob per game" className="std-carousel-image" />
-                </Carousel.Item>
+
                 <Carousel.Item>
                     <img src={jackpotBanner} alt="Cheza 1,000,000 jackpot" className="std-carousel-image" />
                 </Carousel.Item>
