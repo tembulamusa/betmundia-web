@@ -302,18 +302,25 @@ const SurvivorChallengeGames = ({ id }) => {
 
     const loadAll = useCallback(async () => {
         setFetching(true);
-        const detail = await fetchSurvivorChallenge(id);
-        setChallenge(detail);
-        if (isSignedIn) {
-            const mine = await fetchSurvivorProgress(id);
-            setProgress(mine);
-            if (mine?.enrolled) {
-                rememberJoinedChallenge(id);
+        try {
+            const detail = await fetchSurvivorChallenge(id);
+            setChallenge(detail);
+            if (isSignedIn) {
+                const mine = await fetchSurvivorProgress(id);
+                setProgress(mine);
+                if (mine?.enrolled) {
+                    rememberJoinedChallenge(id);
+                }
+            } else {
+                setProgress(null);
             }
-        } else {
+        } catch (error) {
+            console.error("[Survivor Challenge] Failed to load challenge data", error);
+            setChallenge(null);
             setProgress(null);
+        } finally {
+            setFetching(false);
         }
-        setFetching(false);
     }, [id, isSignedIn]);
 
     useEffect(() => {
@@ -910,6 +917,9 @@ const SurvivorChallengesList = () => {
                     if (defaultKey != null) setActiveKey(defaultKey);
                 }
             }
+        }).catch((error) => {
+            console.error("[Survivor Challenge] Failed to load challenge list", error);
+            if (!cancelled) setFetching(false);
         });
         return () => { cancelled = true; };
     }, []);
@@ -1089,16 +1099,23 @@ const SurvivorChallengeDetail = ({ id }) => {
                 setAllChallenges(list);
                 persistSurvivorChallenges(list);
             }
+        }).catch((error) => {
+            console.error("[Survivor Challenge] Failed to load challenge navigation", error);
         });
         return () => { cancelled = true; };
     }, [allChallenges.length]);
 
     const handleRefreshChallenges = async () => {
         setRefreshingChallenges(true);
-        const list = await fetchSurvivorChallenges();
-        setAllChallenges(list);
-        persistSurvivorChallenges(list);
-        setRefreshingChallenges(false);
+        try {
+            const list = await fetchSurvivorChallenges();
+            setAllChallenges(list);
+            persistSurvivorChallenges(list);
+        } catch (error) {
+            console.error("[Survivor Challenge] Failed to refresh challenge list", error);
+        } finally {
+            setRefreshingChallenges(false);
+        }
     };
 
     useEffect(() => {
@@ -1113,7 +1130,15 @@ const SurvivorChallengeDetail = ({ id }) => {
             setChallenge(detail);
             setResults(aggregate);
             setProgress(progressData);
-            setFetching(false);
+        }).catch((error) => {
+            console.error("[Survivor Challenge] Failed to load challenge detail", error);
+            if (!cancelled) {
+                setChallenge(null);
+                setResults(null);
+                setProgress(null);
+            }
+        }).finally(() => {
+            if (!cancelled) setFetching(false);
         });
         return () => { cancelled = true; };
     }, [id]);
@@ -1241,6 +1266,42 @@ const SurvivorChallengeDetail = ({ id }) => {
     );
 };
 
+class SurvivorErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        console.error("[Survivor Challenge] Render failed", error, errorInfo);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="survivor-page" role="alert">
+                    <SurvivorPageHeader />
+                    <SurvivorEmptyState
+                        title="This challenge could not be loaded."
+                        subtitle="Refresh the page to try again."
+                    />
+                    <div className="text-center mt-3">
+                        <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
+                            Refresh page
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        return this.props.children;
+    }
+}
+
 const Survivor = () => {
     const { id } = useParams();
     // Browser tab title for the lobby and the challenge page; restored on leave.
@@ -1251,7 +1312,11 @@ const Survivor = () => {
             document.title = previous;
         };
     }, [id]);
-    return id ? <SurvivorChallengeDetail id={id} /> : <SurvivorChallengesList />;
+    return (
+        <SurvivorErrorBoundary key={id || "survivor-lobby"}>
+            {id ? <SurvivorChallengeDetail id={id} /> : <SurvivorChallengesList />}
+        </SurvivorErrorBoundary>
+    );
 };
 
 export default Survivor;

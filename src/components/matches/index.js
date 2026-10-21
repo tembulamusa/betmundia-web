@@ -971,6 +971,15 @@ const MatchMarket = (props) => {
     const handleGameSocket = (type, gameId) => {
         availableMarkets?.forEach((subTypeId) => {
             if (type == "listen" && socket?.connected) {
+                if (jackpot) {
+                    console.info("[JACKPOT MATCH SOCKET] listen", {
+                        match_id: match?.match_id,
+                        parent_match_id: gameId,
+                        sub_type_id: subTypeId,
+                        event: `socket-io#${gameId}#${subTypeId}`,
+                        connected: socket.connected,
+                    });
+                }
                 socket.emit('user.market.listen', { parent_match_id: gameId, sub_type_id: subTypeId });
             } else if (type == "leave") {
                 // socket?.emit("user.market.leave", { parent_match_id: gameId, sub_type_id: subTypeId });
@@ -984,12 +993,46 @@ const MatchMarket = (props) => {
         if (jackpot && marketId != 1) return;
         if (socket.connected) {
             handleGameSocket("listen", match?.parent_match_id);
-            socket?.on(`socket-io#${match?.parent_match_id}#${marketId}`, (data) => {
+            const socketEvent = `socket-io#${match?.parent_match_id}#${marketId}`;
+            socket?.on(socketEvent, (data) => {
+                const incomingOdds = Object.values(data?.event_odds || {});
+                const incomingMarketId = Number(data?.match_market?.sub_type_id);
+                const marketOneOdds = incomingOdds.filter(
+                    (odd) => Number(odd?.sub_type_id) === 1
+                );
+
+                if (jackpot) {
+                    const orderedOdds = orderMarketOutcomes(marketOneOdds, marketId, special_bet_value);
+                    console.info("[JACKPOT MATCH SOCKET] update", {
+                        match_id: match?.match_id,
+                        parent_match_id: match?.parent_match_id,
+                        market_id: marketId,
+                        socket_event: socketEvent,
+                        status: data?.match_market?.status,
+                        market_sub_type_id: incomingMarketId,
+                        special_bet_value: data?.match_market?.special_bet_value,
+                        incoming_count: incomingOdds.length,
+                        incoming_market_ids: [...new Set(incomingOdds.map((odd) => odd?.sub_type_id))],
+                        market_1_count: marketOneOdds.length,
+                        incoming_outcomes: incomingOdds.map(({ sub_type_id, outcome_id, odd_key, special_bet_value, odd_value }) => ({ sub_type_id, outcome_id, odd_key, special_bet_value, odd_value })),
+                        ordered_count: orderedOdds.length,
+                        ordered_outcomes: orderedOdds.map(({ sub_type_id, outcome_id, odd_key, special_bet_value }) => ({ sub_type_id, outcome_id, odd_key, special_bet_value })),
+                    });
+
+                    if (incomingMarketId !== 1) {
+                        console.warn("[JACKPOT MATCH SOCKET] ignored non-1X2 market update", {
+                            match_id: match?.match_id,
+                            socket_event: socketEvent,
+                            market_sub_type_id: incomingMarketId,
+                        });
+                        return;
+                    }
+                }
                 if (data.match_market.special_bet_value == special_bet_value) {
-                    if (Object.keys(data.event_odds).length > 0) {
+                    if (incomingOdds.length > 0) {
                         setOutcomes((prev) => {
                             let newOdds = orderMarketOutcomes(
-                                Object.values(data.event_odds), marketId, special_bet_value
+                                jackpot ? marketOneOdds : incomingOdds, marketId, special_bet_value
                             )
                             newOdds.forEach(odd => {
                                 odd.name = data.match_market.market_name;
@@ -1033,6 +1076,21 @@ const MatchMarket = (props) => {
         return () => {
         }
     }, [socket.connected]);
+
+    useEffect(() => {
+        if (jackpot && marketId === 1) {
+            console.info("[JACKPOT MATCH SOCKET] initial 1X2 outcomes", {
+                match_id: match?.match_id,
+                parent_match_id: match?.parent_match_id,
+                market_id: marketId,
+                market_name: marketName,
+                socket_event: `socket-io#${match?.parent_match_id}#${marketId}`,
+                status: market_status,
+                outcome_count: outcomes?.length || 0,
+                outcomes: (outcomes || []).map(({ sub_type_id, outcome_id, odd_key, special_bet_value, odd_value }) => ({ sub_type_id, outcome_id, odd_key, special_bet_value, odd_value })),
+            });
+        }
+    }, [jackpot, marketId, match, marketName, market_status, outcomes]);
 
     return (
         <>
