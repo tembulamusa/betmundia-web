@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Context } from '../../context/store';
 import { getFromLocalStorage, removeItem } from '../utils/local-storage';
-import makeRequest from '../utils/fetch-request';
+import makeRequest, { refreshUserSession } from '../utils/fetch-request';
 import { setLocalStorage } from '../utils/local-storage';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import ShareModal from "../sharemodal";
@@ -119,30 +119,24 @@ const Header = (props) => {
         dispatch({ type: "SET", key: "sessionMessage", payload: "User Session Expired. Please Login Again" })
     }
 
-    const handleTokenRefresh = () => {
+    const handleTokenRefresh = async () => {
         if (!user) {
             return false;
         }
-        // Use the latest stored session so a refresh token rotated by an earlier refresh is never reused stale.
-        const current = getFromLocalStorage("user") || user;
-        let endpoint = "/auth/token/refresh";
-        let values = { refresh_token: current?.refresh_token }
-        makeRequest({ url: endpoint, method: 'POST', data: values, api_version: 2 }).then(([status, response]) => {
-            if (status == 200 || status == 201 || status == 204) {
-                if (response.status == 200 || response.status == 201) {
-                    lastRefreshAt.current = Date.now();
-                    // merge so fields the refresh payload omits (refresh_token, has_freebet, ...) are kept
-                    setUser((prev) => ({ ...(prev || current), ...response?.data }));
-                } else {
-                    expireSession();
-                }
-            } else if (!status || status >= 500) {
+        try {
+            const refresh = await refreshUserSession();
+            if (refresh.success) {
+                lastRefreshAt.current = Date.now();
+                setUser(refresh.user);
+            } else if (!refresh.status || refresh.status >= 500) {
                 // network error / server down: keep the session and try again on the next cycle
-                console.warn('[session] token refresh failed, will retry', status);
+                console.warn('[session] token refresh failed, will retry', refresh.status);
             } else {
                 expireSession();
             }
-        })
+        } catch (error) {
+            console.warn('[session] token refresh failed, will retry', error);
+        }
     }
 
     // Keep the session alive: refresh every 30 minutes while logged in.

@@ -1112,15 +1112,14 @@ const MatchMarket = (props) => {
                                 && matchWithDetails.odd_value
                                 && (!pdown && matchWithDetails.odd_value !== 'NaN') || (jackpot && jackpotstatus == "ACTIVE")
                                 ?
-                                <>
+                                <React.Fragment key={`match-outcome-${marketOdd?.odd_key || marketOdd?.outcome_id || idx}`}>
                                     <OddButton
-                                        key={`match-with-detail-market-${idx}`}
                                         match={matchWithDetails}
                                         mkt={marketName}
                                         live={live}
                                         jackpot={jackpot} />
-                                </>
-                                : <><LockedButton /></>
+                                </React.Fragment>
+                                : <React.Fragment key={`locked-outcome-${marketOdd?.odd_key || marketOdd?.outcome_id || idx}`}><LockedButton /></React.Fragment>
                         )
                     })
             }
@@ -1128,10 +1127,10 @@ const MatchMarket = (props) => {
             {
 
                 !jackpot && !["active", "handedover"].includes(market_status?.toLowerCase()) &&
-                ((btnCount == 2) ? [1, 2].map((btn, idx) => (
-                    <><LockedButton btnStatus={market_status} /></>
-                )) : [1, 2, 3].map((btn, idx) => (
-                    <><LockedButton btnStatus={market_status} /></>
+                ((btnCount == 2) ? [1, 2].map((btn) => (
+                    <React.Fragment key={`locked-market-${marketId}-${btn}`}><LockedButton btnStatus={market_status} /></React.Fragment>
+                )) : [1, 2, 3].map((btn) => (
+                    <React.Fragment key={`locked-market-${marketId}-${btn}`}><LockedButton btnStatus={market_status} /></React.Fragment>
                 )))
             }
         </>
