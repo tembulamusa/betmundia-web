@@ -53,31 +53,31 @@ const DISPUTE_ITEMS = [
                 our social Media Pages Facebook, betmundial, Instagram betmundial etc. Queries
                 will always be processed within one business day. However, if, after your issue
                 has been processed, you&apos;re still not satisfied with the decision or believe
-                that the situation is at a deadlock, you can always ask GRA (The Gambling
+                that the situation is at a deadlock, you can always ask GRAK (The Gambling
                 Regulatory Authority) to conduct an investigation.
             </p>
         ),
     },
     {
         id: "escalating-gra",
-        title: "Escalating to GRA",
+        title: "Escalating to GRAK",
         content: (
             <>
                 <p>
-                    GRA is an impartial external agent that provides independent judgments for
-                    gambling/betting-related disputes. GRA will not charge you for its services.
-                    To raise your dispute or complaint with GRA, you will need to request a
+                    GRAK is an impartial external agent that provides independent judgments for
+                    gambling/betting-related disputes. GRAK will not charge you for its services.
+                    To raise your dispute or complaint with GRAK, you will need to request a
                     Deadlock Email from our CS Agent. This email will outline the full details of
                     your dispute or complaint and will include a unique reference number that must
-                    be quoted when submitting a dispute or complaint with GRA. You can then
-                    submit your dispute or complaint to GRA via info@bclb.go.ke.
+                    be quoted when submitting a dispute or complaint with GRAK. You can then
+                    submit your dispute or complaint to GRAK via info@bclb.go.ke.
                 </p>
                 <p>
-                    GRA as a regulator, is also an independent adjudication service for resolving
+                    GRAK as a regulator, is also an independent adjudication service for resolving
                     disputes between licensed gambling companies and their clients. To start
-                    looking at the detail of any dispute, GRA will ask a complainant to confirm
+                    looking at the detail of any dispute, GRAK will ask a complainant to confirm
                     that they have made every reasonable effort possible to resolve the dispute
-                    before addressing GRA and that they agree to comply with GRA&apos;s terms
+                    before addressing GRAK and that they agree to comply with GRAK&apos;s terms
                     and conditions.
                 </p>
             </>
@@ -85,14 +85,14 @@ const DISPUTE_ITEMS = [
     },
     {
         id: "gra-role",
-        title: "GRA's Role in Dispute Resolution",
+        title: "GRAK's Role in Dispute Resolution",
         content: (
             <p>
                 Decisions are not made based on which party makes a better presentation of the
                 disputed case. Gambling companies and their clients do not need to think of the
-                quality of the presentation or their writing skills. The part of GRA is to
+                quality of the presentation or their writing skills. The part of GRAK is to
                 identify relevant issues. Therefore, decisions are always based on the facts of a
-                case and not on either of the parties&apos; rhetoric. The only thing GRA asks for
+                case and not on either of the parties&apos; rhetoric. The only thing GRAK asks for
                 is that statements submitted cover as many facts as a complainant considers
                 relevant to their dispute.
             </p>
@@ -114,7 +114,7 @@ const DISPUTE_ITEMS = [
         content: (
             <p>
                 If betmundial is unable to settle the dispute, betmundial will refer the dispute
-                to GRA, whose decision will be final (save in respect of any manifest error)
+                to GRAK, whose decision will be final (save in respect of any manifest error)
                 subject to full representation given to all parties involved. No dispute regarding
                 any bet/wager will result in litigation, court action or objection to a
                 bookmaker&apos;s license or permit (including any remote operator&apos;s license

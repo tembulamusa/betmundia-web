@@ -39,7 +39,7 @@ General Terms
 12.Any abuse of the promotion may result in disqualification and forfeiture of any associated rewards.
 13.By participating in this promotion, customers agree to these Terms & Conditions and all other BetMundial rules and policies.
 
-Bet Responsibly. 21+ Only.
+Bet Responsibly. 18+ Only.
         `
   },
   {
@@ -57,7 +57,7 @@ The BET MUNDIAL Aviator Rains Promotion rewards eligible Aviator players with fr
 2. Promotion Period
 The promotion runs from the announced start date until further notice. BET MUNDIAL reserves the right to amend, suspend, or terminate the promotion at any time without prior notice.
 3. Eligibility
-Players must be 21+. Must comply with all BET MUNDIAL Terms & Conditions.
+Players must be 18+. Must comply with all BET MUNDIAL Terms & Conditions.
 4. Claim Process
 Players must claim FreeBet within 10 minutes of Rain release. First-come, first-served. Unclaimed FreeBets expire.
 5. FreeBet Validity
@@ -71,7 +71,7 @@ BET MUNDIAL may suspend or cancel accounts involved in fraud or abuse.
 9. General Terms
 BET MUNDIAL may change or terminate promotion at any time. Decisions are final.
 11. Responsible Gaming
-Only 21+. Play responsibly.
+Only 18+. Play responsibly.
       `
   },
   //   {
