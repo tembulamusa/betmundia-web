@@ -80,7 +80,7 @@ const TERMS_SECTIONS = [
         Icon: MdOutlineWarningAmber,
         content: (
             <p>
-                Any funds or winnings credited in error are not available for use. Betmundial, in consultation with the GRA, may void transactions, withdraw amounts, or reverse transactions in cases of system error, prohibited activities, or other circumstances deemed necessary.
+                Any funds or winnings credited in error are not available for use. Betmundial, in consultation with the GRAK, may void transactions, withdraw amounts, or reverse transactions in cases of system error, prohibited activities, or other circumstances deemed necessary.
             </p>
         ),
     },
@@ -113,7 +113,7 @@ const TERMS_SECTIONS = [
         Icon: MdOutlineEdit,
         content: (
             <p>
-                These Terms may be amended from time to time in consultation with the Gambling Regulatory Authority of Kenya (GRA).
+                These Terms may be amended from time to time in consultation with the Gambling Regulatory Authority of Kenya (GRAK).
             </p>
         ),
     },

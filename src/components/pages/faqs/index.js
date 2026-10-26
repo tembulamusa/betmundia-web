@@ -31,7 +31,7 @@ const FAQ_ITEMS = [
             <p>
                 betmundial is a leading betting site in Kenya, offering a wide range of sports
                 betting options and games. We are licensed by the Gambling Regulatory
-                Authority (GRA) and are committed to providing a safe and enjoyable betting experience
+                Authority (GRAK) and are committed to providing a safe and enjoyable betting experience
                 for all our users.
             </p>
         ),
@@ -65,7 +65,7 @@ const FAQ_ITEMS = [
                     <strong>Online Registration:</strong> Go to www.betmundial.com and click on the
                     Register button on the top right corner of the page. Fill the required fields
                     (including phone number and creating a unique password), read and accept the
-                    terms and conditions, and confirm that you are 21 years old or over.
+                    terms and conditions, and confirm that you are 18 years old or over.
                 </p>
             </>
         ),
