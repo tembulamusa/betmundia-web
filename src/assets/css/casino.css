@@ -221,6 +221,39 @@
     padding-right: 8px;
 }
 
+/* Live EGT Digital jackpot amount, anchored to the bottom of the thumbnail.
+   The bottom edge is deliberate: .game-buttons appears centred near the top
+   of the tile on hover, so a badge up there would sit under Play/Demo. */
+.casino-jackpot-badge {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    padding: 3px 6px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.45));
+    /* Below .game-buttons so hovering a jackpot tile still reaches them. */
+    z-index: 1;
+    pointer-events: none;
+}
+
+.casino-jackpot-badge-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.casino-jackpot-badge-amount {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffc63a;
+    white-space: nowrap;
+}
+
 .game-image-wrapper {
     width: 100%;
     height: 164px;
@@ -255,6 +288,20 @@
         height: 100px;
         overflow: hidden;
         position: relative;
+    }
+
+    .casino-jackpot-badge {
+        gap: 4px;
+        padding: 2px 4px;
+    }
+
+    .casino-jackpot-badge-label {
+        /* No room for both on a 100px tile; the amount is the point. */
+        display: none;
+    }
+
+    .casino-jackpot-badge-amount {
+        font-size: 11px;
     }
 
     .game-buttons {
