@@ -22,7 +22,10 @@ set -euo pipefail
 
 BRANCH="${BRANCH:-development}"
 HOST="${HOST:-betmundialAPI}"
-REMOTE_DIR="${REMOTE_DIR:-\$HOME/web-dev}"
+# Relative on purpose: both ssh and scp resolve a relative remote path against
+# the login home, but scp does not expand $HOME in a destination -- it takes it
+# literally and fails with "No such file or directory".
+REMOTE_DIR="${REMOTE_DIR:-web-dev}"
 COMPOSE_DIR="${COMPOSE_DIR:-/opt/betmundial-test/web/web-test}"
 IMAGE="${IMAGE:-ghcr.io/betmundial-ke/web-staging}"
 DEPLOY=1
