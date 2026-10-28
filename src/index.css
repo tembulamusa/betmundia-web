@@ -344,7 +344,7 @@ aside.ps-sidebar-root:focus-visible,
 }
 
 .ps-menu-button {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ps-menu-button:hover,
@@ -353,24 +353,10 @@ aside.ps-sidebar-root:focus-visible,
   background-color: #a71f66 !important;
   outline: none !important;
   border: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 
 }
 
-.ps-menu-button {
-  display: flex;
-  align-items: center;
-  height: 37px !important;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  box-sizing: border-box;
-  cursor: pointer;
-  padding-right: 20px;
-  padding-left: 5px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-  background: rgba(255, 255, 255, 0.02) !important;
-}
 
 .ps-submenu-content {
   padding: 0;
