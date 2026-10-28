@@ -273,7 +273,7 @@ aside.ps-sidebar-root:focus-visible,
 }
 
 .ps-menu-button {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .ps-menu-button:hover,
@@ -282,7 +282,7 @@ aside.ps-sidebar-root:focus-visible,
   background-color: #a71f66 !important;
   outline: none !important;
   border: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
 
 }
 
@@ -297,7 +297,7 @@ aside.ps-sidebar-root:focus-visible,
   cursor: pointer;
   padding-right: 20px;
   padding-left: 5px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
   background: rgba(255, 255, 255, 0.02) !important;
 }
 
