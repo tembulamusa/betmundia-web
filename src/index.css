@@ -212,29 +212,35 @@ input[type="password"].form-control {
   color: #ffffff;
 }
 
+/*
+ * Left sports menu panel — same frosted surface as .matches .top-matches
+ * (tolkits.css): background: rgba(255, 255, 255, 0.1) on the dark page.
+ */
 .ps-sidebar-container {
-  background: transparent !important;
+  background: rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
   margin-top: 0px;
   padding: 0;
 }
 
 /* Breathing room between left nav and main content column */
 .up.col-md-2 {
-  padding-right: 10px !important;
+  padding-right: 12px !important;
+  background: transparent;
 }
 
-/* Left menu scrollbar — dark theme (override global #e2e2e2 track) */
+/* Left menu scrollbar — early pass; final !important block lives at file end */
 .ps-sidebar-root,
 .ps-sidebar-container,
 .pro-sidebar,
 .live-sidebar,
 .jackpot-sidebar,
 .jackpot-sidebar-wrap,
-.up.col-md-2 {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15;
+.up.col-md-2,
+aside.ps-sidebar-root .ps-sidebar-container {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar,
@@ -243,10 +249,11 @@ input[type="password"].form-control {
 .live-sidebar::-webkit-scrollbar,
 .jackpot-sidebar::-webkit-scrollbar,
 .jackpot-sidebar-wrap::-webkit-scrollbar,
-.up.col-md-2::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-  background-color: #0a0a15;
+.up.col-md-2::-webkit-scrollbar,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #0a0a15 !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar-track,
@@ -255,8 +262,9 @@ input[type="password"].form-control {
 .live-sidebar::-webkit-scrollbar-track,
 .jackpot-sidebar::-webkit-scrollbar-track,
 .jackpot-sidebar-wrap::-webkit-scrollbar-track,
-.up.col-md-2::-webkit-scrollbar-track {
-  background: #0a0a15;
+.up.col-md-2::-webkit-scrollbar-track,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
+  background: #0a0a15 !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar-thumb,
@@ -265,11 +273,22 @@ input[type="password"].form-control {
 .live-sidebar::-webkit-scrollbar-thumb,
 .jackpot-sidebar::-webkit-scrollbar-thumb,
 .jackpot-sidebar-wrap::-webkit-scrollbar-thumb,
-.up.col-md-2::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.28);
-  border-radius: 4px;
+.up.col-md-2::-webkit-scrollbar-thumb,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-radius: 4px !important;
 }
 
+.ps-sidebar-root::-webkit-scrollbar-corner,
+.ps-sidebar-container::-webkit-scrollbar-corner,
+.pro-sidebar::-webkit-scrollbar-corner,
+.live-sidebar::-webkit-scrollbar-corner,
+.up.col-md-2::-webkit-scrollbar-corner,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
+  background: #0a0a15;
+}
+
+/* PerfectScrollbar — kill library hover rail #eee (white track) */
 .ps-sidebar-root .ps__rail-y,
 .ps-sidebar-container .ps__rail-y,
 .pro-sidebar .ps__rail-y,
@@ -279,7 +298,22 @@ input[type="password"].form-control {
 .ps-sidebar-container .ps__rail-x,
 .pro-sidebar .ps__rail-x,
 .live-sidebar .ps__rail-x,
-.up.col-md-2 .ps__rail-x {
+.up.col-md-2 .ps__rail-x,
+.ps-sidebar-root .ps .ps__rail-y,
+.ps-sidebar-root .ps .ps__rail-x,
+.ps-sidebar-root .ps__rail-y:hover,
+.ps-sidebar-root .ps__rail-x:hover,
+.ps-sidebar-root .ps__rail-y:focus,
+.ps-sidebar-root .ps__rail-x:focus,
+.ps-sidebar-root .ps__rail-y.ps--clicking,
+.ps-sidebar-root .ps__rail-x.ps--clicking,
+.ps-sidebar-container .ps__rail-y:hover,
+.ps-sidebar-container .ps__rail-x:hover,
+.up.col-md-2 .ps__rail-y:hover,
+.up.col-md-2 .ps__rail-x:hover,
+.up.col-md-2 .ps .ps__rail-y:hover,
+.up.col-md-2 .ps .ps__rail-y:focus,
+.up.col-md-2 .ps .ps__rail-y.ps--clicking {
   background-color: transparent !important;
 }
 
@@ -292,7 +326,12 @@ input[type="password"].form-control {
 .ps-sidebar-container .ps__thumb-x,
 .pro-sidebar .ps__thumb-x,
 .live-sidebar .ps__thumb-x,
-.up.col-md-2 .ps__thumb-x {
+.up.col-md-2 .ps__thumb-x,
+.ps-sidebar-root .ps__rail-y:hover > .ps__thumb-y,
+.ps-sidebar-root .ps__rail-y:focus > .ps__thumb-y,
+.ps-sidebar-root .ps__rail-y.ps--clicking .ps__thumb-y,
+.ps-sidebar-container .ps__rail-y:hover > .ps__thumb-y,
+.up.col-md-2 .ps__rail-y:hover > .ps__thumb-y {
   background-color: rgba(255, 255, 255, 0.28) !important;
 }
 
@@ -300,20 +339,20 @@ input[type="password"].form-control {
 .ps-sidebar-root {
   position: relative;
   border: none !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
   border-right-width: 1px !important;
   border-right-style: solid !important;
-  border-right-color: rgba(255, 255, 255, 0.15) !important;
+  border-right-color: rgba(0, 0, 0, 0.2) !important;
   outline: none !important;
   transition: width, left, right, 300ms;
   width: auto !important;
   min-width: auto !important;
   height: 100%;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.41);
-  background: rgba(0, 12, 36, 1) !important;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Additional specificity to ensure border color is applied - override any library styles */
+/* Additional specificity — frosted panel + calm edge (match top-matches border language) */
 aside.css-1wvake5,
 aside.ps-sidebar-root,
 .css-1wvake5.ps-sidebar-root,
@@ -324,9 +363,10 @@ aside[class*="ps-sidebar-root"],
 *[class*="ps-sidebar-root"],
 *[class*="css-1wvake5"] {
   border: none !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-right-color: rgba(255, 255, 255, 0.15) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
+  border-right-color: rgba(0, 0, 0, 0.2) !important;
   outline: none !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Kill blue :focus-visible outline on the sports menu sidebar when open/focused */
@@ -336,21 +376,22 @@ aside.ps-sidebar-root:focus,
 aside.ps-sidebar-root:focus-visible,
 *[class*="ps-sidebar-root"]:focus,
 *[class*="ps-sidebar-root"]:focus-visible {
-  outline: 1px solid rgba(255, 255, 255, 0.15) !important;
+  outline: 1px solid rgba(0, 0, 0, 0.2) !important;
   outline-offset: -1px;
-  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Target the pro-sidebar-inner as well */
 .pro-sidebar>.pro-sidebar-inner,
 .pro-sidebar .pro-sidebar-inner {
-  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-right-color: rgba(255, 255, 255, 0.15) !important;
+  border-right: none !important;
+  background: transparent !important;
 }
 
 /*
  * Left sports menu rows — SportPesa/Betika-inspired:
  * dense consistent height, hairline separators, no per-item fill stacks.
+ * Panel fill lives on the sidebar container (top-matches language).
  */
 .ps-menu-button {
   display: flex;
@@ -364,7 +405,7 @@ aside.ps-sidebar-root:focus-visible,
   padding-left: 12px !important;
   margin: 0 !important;
   border: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
   background: transparent !important;
   transition: background-color 0.12s ease;
 }
@@ -375,14 +416,14 @@ aside.ps-sidebar-root:focus-visible,
   background-color: #a71f66 !important;
   outline: none !important;
   border: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 .ps-submenu-content {
   padding: 0;
   width: 100%;
   border-right: none;
-  background: rgba(0, 0, 0, 0.22) !important;
+  background: rgba(0, 0, 0, 0.15) !important;
   margin: 0 auto;
 }
 
@@ -3748,6 +3789,70 @@ label {
   background: #e2e2e2;
 }
 
+/*
+ * Re-assert left-nav dark scrollbar AFTER the global #e2e2e2 track.
+ * Chromium webkit-scrollbar cascade often prefers later track rules;
+ * !important + post-global placement is required for .ps-sidebar-container.
+ */
+.ps-sidebar-root,
+.ps-sidebar-container,
+.pro-sidebar,
+.live-sidebar,
+.jackpot-sidebar,
+.jackpot-sidebar-wrap,
+.up.col-md-2,
+aside.ps-sidebar-root .ps-sidebar-container {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar,
+.ps-sidebar-container::-webkit-scrollbar,
+.pro-sidebar::-webkit-scrollbar,
+.live-sidebar::-webkit-scrollbar,
+.jackpot-sidebar::-webkit-scrollbar,
+.jackpot-sidebar-wrap::-webkit-scrollbar,
+.up.col-md-2::-webkit-scrollbar,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background: #0a0a15 !important;
+  background-color: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-track,
+.ps-sidebar-container::-webkit-scrollbar-track,
+.pro-sidebar::-webkit-scrollbar-track,
+.live-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar-wrap::-webkit-scrollbar-track,
+.up.col-md-2::-webkit-scrollbar-track,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
+  background: #0a0a15 !important;
+  background-color: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-thumb,
+.ps-sidebar-container::-webkit-scrollbar-thumb,
+.pro-sidebar::-webkit-scrollbar-thumb,
+.live-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar-wrap::-webkit-scrollbar-thumb,
+.up.col-md-2::-webkit-scrollbar-thumb,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28) !important;
+  background-color: rgba(255, 255, 255, 0.28) !important;
+  border-radius: 4px !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-corner,
+.ps-sidebar-container::-webkit-scrollbar-corner,
+.pro-sidebar::-webkit-scrollbar-corner,
+.up.col-md-2::-webkit-scrollbar-corner,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
+  background: #0a0a15 !important;
+}
+
 .big-icon-item {
   padding: 4px 0px;
   align-items: center;
@@ -5762,4 +5867,90 @@ button.locked-button:hover {
   background: #a71f66 !important;
   border-color: #a71f66 !important;
   color: #ffffff !important;
+}
+
+/*
+ * Left menu dark scrollbar — post-global placement + !important so it beats
+ * ::-webkit-scrollbar-track { background: #e2e2e2 } and PerfectScrollbar #eee rails.
+ */
+.ps-sidebar-root,
+.ps-sidebar-container,
+.pro-sidebar,
+.live-sidebar,
+.jackpot-sidebar,
+.jackpot-sidebar-wrap,
+.up.col-md-2,
+aside.ps-sidebar-root .ps-sidebar-container {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar,
+.ps-sidebar-container::-webkit-scrollbar,
+.pro-sidebar::-webkit-scrollbar,
+.live-sidebar::-webkit-scrollbar,
+.jackpot-sidebar::-webkit-scrollbar,
+.jackpot-sidebar-wrap::-webkit-scrollbar,
+.up.col-md-2::-webkit-scrollbar,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-track,
+.ps-sidebar-container::-webkit-scrollbar-track,
+.pro-sidebar::-webkit-scrollbar-track,
+.live-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar-wrap::-webkit-scrollbar-track,
+.up.col-md-2::-webkit-scrollbar-track,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
+  background: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-thumb,
+.ps-sidebar-container::-webkit-scrollbar-thumb,
+.pro-sidebar::-webkit-scrollbar-thumb,
+.live-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar-wrap::-webkit-scrollbar-thumb,
+.up.col-md-2::-webkit-scrollbar-thumb,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-radius: 4px !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-corner,
+.ps-sidebar-container::-webkit-scrollbar-corner,
+.pro-sidebar::-webkit-scrollbar-corner,
+.up.col-md-2::-webkit-scrollbar-corner,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
+  background: #0a0a15 !important;
+}
+
+.up.col-md-2 .ps .ps__rail-y,
+.up.col-md-2 .ps .ps__rail-x,
+.ps-sidebar-root .ps .ps__rail-y,
+.ps-sidebar-root .ps .ps__rail-x,
+.ps-sidebar-container .ps .ps__rail-y,
+.ps-sidebar-container .ps .ps__rail-x,
+.up.col-md-2 .ps .ps__rail-y:hover,
+.up.col-md-2 .ps .ps__rail-y:focus,
+.up.col-md-2 .ps .ps__rail-y.ps--clicking,
+.ps-sidebar-root .ps .ps__rail-y:hover,
+.ps-sidebar-root .ps .ps__rail-y:focus,
+.ps-sidebar-root .ps .ps__rail-y.ps--clicking,
+.ps-sidebar-container .ps .ps__rail-y:hover,
+.ps-sidebar-container .ps .ps__rail-y:focus,
+.ps-sidebar-container .ps .ps__rail-y.ps--clicking {
+  background-color: transparent !important;
+}
+
+.up.col-md-2 .ps .ps__thumb-y,
+.ps-sidebar-root .ps .ps__thumb-y,
+.ps-sidebar-container .ps .ps__thumb-y,
+.up.col-md-2 .ps .ps__rail-y:hover > .ps__thumb-y,
+.ps-sidebar-root .ps .ps__rail-y:hover > .ps__thumb-y {
+  background-color: rgba(255, 255, 255, 0.28) !important;
 }
