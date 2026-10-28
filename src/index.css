@@ -4028,7 +4028,7 @@ button.locked-button:hover {
   }
 
   .big-icon-bubble {
-    top: 0;
+    top: 4px;
     left: 80% !important;
     right: auto;
     transform: translate(-50%, calc(-100% - 2px));
@@ -4561,7 +4561,7 @@ button.locked-button:hover {
 /* HOT/NEW: sibling of icon + name under .big-icon-link; anchor to icon (left), not label */
 .big-icon-bubble {
   position: absolute;
-  top: 0;
+  top: 4px;
   left: 80% !important;
   right: auto;
   transform: translate(-50%, -45%);
