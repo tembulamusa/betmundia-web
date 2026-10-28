@@ -16,6 +16,8 @@ import {
     getPendingVerifyAuth,
 } from '../../utils/pending-verify-auth';
 import { getFromLocalStorage, setLocalStorage } from '../../utils/local-storage';
+import { resetUnauthorizedGuard } from '../../utils/session-auth';
+import { noteSessionAuthenticated } from '../../utils/session-keep-alive';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -288,6 +290,8 @@ const VerifyAccount = () => {
             ) {
                 setLocalStorage('user', response.data, 1000 * 60 * 60 * 24 * 7);
                 dispatch({ type: "SET", key: "user", payload: response.data });
+                resetUnauthorizedGuard();
+                noteSessionAuthenticated();
                 clearPendingVerifyAuth();
                 dispatch({ type: "DEL", key: "regpassword" });
                 dispatch({ type: "DEL", key: "showloginmodal" });

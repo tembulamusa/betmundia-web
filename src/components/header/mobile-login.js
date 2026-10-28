@@ -16,6 +16,8 @@ import Alert from '../utils/alert';
 import { type } from '@testing-library/user-event/dist/cjs/utility/type.js';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { clearLoginRedirect, resolveLoginRedirect } from '../utils/login-redirect';
+import { resetUnauthorizedGuard } from '../utils/session-auth';
+import { noteSessionAuthenticated } from '../utils/session-keep-alive';
 
 const BodyLogin = (props) => {
     const { setUser } = props
@@ -47,6 +49,8 @@ const BodyLogin = (props) => {
         if ([200, 201, 204].includes(message.status)) {
             setLocalStorage('user', message?.user, 1000 * 60 * 60 * 24 * 7);
             setUser(message.user);
+            resetUnauthorizedGuard();
+            noteSessionAuthenticated();
             // toast.success(`🚀 ${message.message || "Login successful"}`, options);
             if (state?.showloginmodal) {
                 dispatch({ type: "DEL", key: "showloginmodal" });

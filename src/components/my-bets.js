@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Context } from '../context/store';
+import React, { useEffect, useRef, useState } from "react";
 import makeRequest, { refreshUserSession } from './utils/fetch-request';
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
@@ -7,7 +6,7 @@ import { FaCheckCircle, FaCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { TbForbid2Filled } from "react-icons/tb";
 import { Tooltip } from "@mui/material";
-import { removeItem } from "./utils/local-storage";
+import { isUnauthorizedStatus, logoutDueToUnauthorized } from "./utils/session-auth";
 import NoEvents from "./utils/no-events";
 import ShareExistingbet from "./utils/shareexisting-bet";
 import getSportImageIcon from "./utils/get-sport-image-icon";
@@ -125,7 +124,6 @@ const isBetInDateRange = (bet, fromDate, toDate) => {
 };
 
 const MyBets = () => {
-    const [state, dispatch] = useContext(Context);
     const [userBets, setUserBets] = useState([]);
     const [casinoBets, setCasinoBets] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -207,19 +205,13 @@ const MyBets = () => {
         setIsLoading(true);
         setMessage(null);
 
-        const showUnauthorized = () => {
-            dispatch({ type: "DEL", key: "user" });
-            removeItem("user");
-            dispatch({ type: "SET", key: "showloginmodal", payload: true });
-            setMessage({ status: 400, message: "Unauthorized. Please login again." });
-        };
-
         try {
             // Share the header's startup refresh so a reload cannot race the
             // old access token still in localStorage.
             const refresh = await refreshUserSession();
-            if (!refresh.success && [400, 401, 403].includes(Number(refresh.status))) {
-                showUnauthorized();
+            if (!refresh.success && isUnauthorizedStatus(refresh.status)) {
+                logoutDueToUnauthorized();
+                setMessage({ status: 400, message: "Unauthorized. Please login again." });
                 return;
             }
 
@@ -231,8 +223,9 @@ const MyBets = () => {
 
             if ([200, 201].includes(status)) {
                 setUserBets(Array.isArray(result?.data) ? result.data : Array.isArray(result) ? result : []);
-            } else if ([401, 403].includes(Number(status)) || [401, 403].includes(Number(result?.status))) {
-                showUnauthorized();
+            } else if (isUnauthorizedStatus(status) || isUnauthorizedStatus(result?.status)) {
+                // makeRequest already coalesces logoutDueToUnauthorized for HTTP 401/403.
+                setMessage({ status: 400, message: "Unauthorized. Please login again." });
             } else {
                 setMessage({ status: 400, message: result?.message || result?.result || "Could not load your bets. Please try again." });
             }
