@@ -1,3 +1,7 @@
+/**
+ * localStorage TTL helper. Does NOT open the login modal.
+ * Session end / login is driven only by HTTP 401/403 (see session-auth).
+ */
 const checkIfExpired = () => {
     try {
         const raw = window.localStorage.getItem("user");
@@ -9,15 +13,7 @@ const checkIfExpired = () => {
         const expiry = parsed.now + parsed.ttl;
 
         if (parsed.ttl && expiry < Date.now()) {
-            // ❌ expired → cleanup
             window.localStorage.removeItem("user");
-
-            // remove from global state
-            dispatch({ type: "DEL", key: "user" });
-
-            // show login modal
-            dispatch({ type: "SET", key: "showloginmodal", payload: true });
-
             return true;
         }
 
@@ -27,3 +23,5 @@ const checkIfExpired = () => {
         return false;
     }
 };
+
+export default checkIfExpired;

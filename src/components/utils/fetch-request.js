@@ -1,4 +1,9 @@
-import { setLocalStorage, getFromLocalStorage, removeItem } from './local-storage';
+import { setLocalStorage, getFromLocalStorage } from './local-storage';
+import {
+    isUnauthorizedStatus,
+    logoutDueToUnauthorized,
+    shouldSkipUnauthorizedLogout,
+} from './session-auth';
 
 const ENC_KEY = '2bdVweTeI42s5mkLdYHyklTMxQS5gLA7MDS6FA9cs1uobDXeruACDic0YSU3si04JGZe4Y';
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -87,6 +92,15 @@ const makeRequest = async ({ url, method, data = null, use_jwt = false, api_vers
             result = await response?.json();
         }
         let status = response?.status;
+        // Dead session: only real HTTP 401/403 from non-auth requests force login.
+        // Timers never open login on their own; refresh failures are handled in keep-alive.
+        if (
+            isUnauthorizedStatus(status) &&
+            !shouldSkipUnauthorizedLogout(url) &&
+            getFromLocalStorage("user")
+        ) {
+            logoutDueToUnauthorized();
+        }
         return [status, result];
     } catch (err) {
         let status = err.response?.status,
