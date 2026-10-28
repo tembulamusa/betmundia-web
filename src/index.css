@@ -5307,6 +5307,17 @@ button.locked-button:hover {
     border: 1px solid rgba(255, 255, 255, 0.12);
   }
 
+  /* First card: drop full border from the rule above (sticky header is hidden here). */
+  .matches .match-list > .top-matches.mobile-match-card:first-child,
+  .matches .match-list > .top-matches.mobile-match-card:first-of-type,
+  .matches .web-element.match-list > .top-matches.mobile-match-card:first-child,
+  .matches .web-element.match-list > .top-matches.mobile-match-card:first-of-type,
+  .matches .web-element > .top-matches.mobile-match-card:first-child,
+  .matches .web-element > .top-matches.mobile-match-card:first-of-type {
+    border: none !important;
+    border-bottom: none !important;
+  }
+
   .mobile-match-card .match-time-desktop,
   .mobile-match-card .match-sidebets-desktop {
     display: none !important;
