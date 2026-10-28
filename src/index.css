@@ -5345,9 +5345,29 @@ button.locked-button:hover {
     display: block !important;
   }
 
+  /*
+   * Market groups (1X2 / Double Chance / Over-Under): do not use space-between.
+   * Leftover row width grows with CSS viewport (Windows display scaling / DPR
+   * changes effective CSS px), so % padding + space-between stretches gaps on
+   * some machines and keeps them tight on others. Fixed px gap keeps the same
+   * close-together look on all large-desktop ratios.
+   */
+  .match-list .matches-row,
+  .sticky-top .matches-row,
+  .matches .top-matches .matches-row {
+    justify-content: flex-start !important;
+    gap: 6px;
+    padding-right: 12px;
+  }
+
+  .sticky-top .matches-row {
+    padding-right: 16px;
+  }
+
   .tablet-market-panel {
     display: flex;
     align-self: center;
+    flex: 0 0 auto;
   }
 
   .tablet-market-panel.match-market-extra {
@@ -5357,6 +5377,30 @@ button.locked-button:hover {
   .tablet-market-panel .c-btn-group {
     display: flex;
     width: auto;
+    flex: 0 0 auto;
+  }
+}
+
+/* Slightly wider odds buttons on roomier large desktops; jackpot keeps 80px. */
+@media screen and (min-width: 1300px) {
+  .matches .top-matches .matches-row:not(.is-jackpot) .c-btn-group > .c-btn,
+  .matches .top-matches .matches-row:not(.is-jackpot) .c-btn-group > .locked-button,
+  .matches .top-matches .matches-row:not(.is-jackpot) .c-btn-group > button.locked-button {
+    width: 62px !important;
+    min-width: 62px;
+  }
+
+  .matches .top-matches .matches-row .c-btn-header {
+    min-width: 61px;
+    width: 62px;
+    box-sizing: border-box;
+  }
+
+  .matches .top-matches .matches-row:not(.is-jackpot) .no-bet-btn,
+  .matches .top-matches .matches-row:not(.is-jackpot) button.no-bet-btn,
+  .matches .top-matches .matches-row:not(.is-jackpot) .locked-button,
+  .matches .top-matches .matches-row:not(.is-jackpot) button.locked-button {
+    min-width: 62px;
   }
 }
 
