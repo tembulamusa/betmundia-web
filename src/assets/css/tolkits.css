@@ -2364,37 +2364,16 @@ events-header {
     padding-bottom: 16px;
 }
 
-/* Sticky market strip: no bottom edge (wrapper + header row). */
+/* Sticky market strip wrapper: no bottom edge. */
 .matches .full-mobile.sticky-top {
     border-bottom: 0 !important;
     box-shadow: none !important;
 }
 
-/* Header row inside sticky strip (has .sticky-top; listing cards do not). */
-.matches .full-mobile.sticky-top > .top-matches,
+/* Only the sticky market-header row (3-way / DC / O-U) — not first listing card. */
 .matches .top-matches.position-sticky.sticky-top,
-.matches .top-matches.sticky-top {
+.matches .full-mobile.sticky-top > .top-matches.sticky-top {
     border: none !important;
-    border-top: none !important;
-    border-bottom: none !important;
-}
-
-/* First listing row only — keep subsequent .top-matches borders.
-   Use sticky+sibling and :first-of-type so Fragment/map false nodes cannot
-   leave the first visible card unmatched by :first-child alone. */
-.matches > .full-mobile.sticky-top + .web-element > .top-matches:first-of-type,
-.matches > .full-mobile.sticky-top + .web-element.match-list > .top-matches:first-of-type,
-.matches > .full-mobile.sticky-top + .match-list > .top-matches:first-of-type,
-.matches .match-list > .top-matches:first-child,
-.matches .match-list > .top-matches:first-of-type,
-.matches .web-element > .top-matches.mobile-match-card:first-child,
-.matches .web-element > .top-matches.mobile-match-card:first-of-type,
-.matches .web-element.match-list > .top-matches:first-child,
-.matches .web-element.match-list > .top-matches:first-of-type,
-.matches .match-list > .top-matches.mobile-match-card:first-child,
-.matches .web-element.match-list > .top-matches.mobile-match-card:first-child {
-    border: none !important;
-    border-top: none !important;
     border-bottom: none !important;
 }
 
