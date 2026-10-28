@@ -213,11 +213,16 @@ input[type="password"].form-control {
 }
 
 .ps-sidebar-container {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: transparent !important;
   color: #ffffff !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: 0px;
   padding: 0;
+}
+
+/* Breathing room between left nav and main content column */
+.up.col-md-2 {
+  padding-right: 10px !important;
 }
 
 /* Left menu scrollbar — dark theme (override global #e2e2e2 track) */
@@ -343,8 +348,25 @@ aside.ps-sidebar-root:focus-visible,
   border-right-color: rgba(255, 255, 255, 0.15) !important;
 }
 
+/*
+ * Left sports menu rows — SportPesa/Betika-inspired:
+ * dense consistent height, hairline separators, no per-item fill stacks.
+ */
 .ps-menu-button {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  height: 38px !important;
+  text-decoration: none;
+  color: inherit;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding-right: 14px;
+  padding-left: 12px !important;
+  margin: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  background: transparent !important;
+  transition: background-color 0.12s ease;
 }
 
 .ps-menu-button:hover,
@@ -353,37 +375,22 @@ aside.ps-sidebar-root:focus-visible,
   background-color: #a71f66 !important;
   outline: none !important;
   border: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-
-}
-
-
-.ps-menu-button {
-  display: flex;
-  align-items: center;
-  height: 37px !important;
-  text-decoration: none;
-  color: inherit;
-  box-sizing: border-box;
-  cursor: pointer;
-  padding-right: 20px;
-  padding-left: 5px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  margin-bottom: 1px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
 }
 
 .ps-submenu-content {
   padding: 0;
   width: 100%;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.031) !important;
-  margin: 0px auto 0;
+  border-right: none;
+  background: rgba(0, 0, 0, 0.22) !important;
+  margin: 0 auto;
 }
 
 .ps-submenu-content .ps-menu-button {
-  margin-bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.4) !important;
+  margin: 0 !important;
+  padding-left: 22px !important;
+  background: transparent !important;
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .pc .navbar-nav>li>a {
