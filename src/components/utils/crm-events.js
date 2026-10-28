@@ -1,4 +1,4 @@
-import makeRequest from "./fetch-request";
+import { refreshUserSession } from "./fetch-request";
 import { getFromLocalStorage } from "./local-storage";
 
 const QUEUE_KEY = "crm_event_queue";
@@ -84,12 +84,18 @@ function requeueEvents(events) {
 }
 
 async function postEvents(events, keepalive) {
-  const headers = authHeaders();
-  if (!headers) {
-    requeueEvents(events);
-    return;
-  }
   try {
+    // Page-view tracking can flush while the header is rotating the session token.
+    // Wait for that shared refresh before sending the batch with a stale token.
+    const user = getFromLocalStorage("user");
+    if (user?.refresh_token) {
+      await refreshUserSession();
+    }
+    const headers = authHeaders();
+    if (!headers) {
+      requeueEvents(events);
+      return;
+    }
     const response = await fetch(trackUrl(), {
       method: "POST",
       mode: "cors",
@@ -99,9 +105,11 @@ async function postEvents(events, keepalive) {
       keepalive: Boolean(keepalive),
     });
     if (!response.ok) {
+      console.warn("[CRM events] Event batch was rejected", response.status);
       requeueEvents(events);
     }
-  } catch {
+  } catch (error) {
+    console.warn("[CRM events] Event batch request failed", error);
     requeueEvents(events);
   }
 }

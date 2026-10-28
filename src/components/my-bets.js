@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Context } from '../context/store';
-import makeRequest from './utils/fetch-request';
+import React, { useEffect, useRef, useState } from "react";
+import makeRequest, { refreshUserSession } from './utils/fetch-request';
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
 import { FaCheckCircle, FaCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { TbForbid2Filled } from "react-icons/tb";
 import { Tooltip } from "@mui/material";
-import { removeItem } from "./utils/local-storage";
+import { isUnauthorizedStatus, logoutDueToUnauthorized } from "./utils/session-auth";
 import NoEvents from "./utils/no-events";
 import ShareExistingbet from "./utils/shareexisting-bet";
 import getSportImageIcon from "./utils/get-sport-image-icon";
@@ -42,9 +41,22 @@ const getStatusBadge = (status) => {
     }
 };
 
+// The v2 bets list does not always carry jackpot_bet_id, so detect jackpot bets
+// from any of the markers the API may use (ids, flags, bet_type 9, or a
+// descriptive field that mentions "jackpot").
+const isJackpotBet = (bet) => {
+    if (!bet) return false;
+    if (bet.jackpot_bet_id || bet.jackpot_id || bet.jackpot_event_id || bet.jackpot_type_id) return true;
+    if (bet.is_jackpot === true || bet.is_jackpot === 1 || bet.is_jackpot === "1" || bet.jackpot === true || bet.jackpot === 1 || bet.jackpot === "1") return true;
+    if (String(bet.bet_type) === "9") return true;
+    return Object.entries(bet).some(([key, value]) =>
+        typeof value === "string" && (/jackpot/i.test(key) || /jackpot/i.test(value)) && key !== "bet_pick"
+    );
+};
+
 const getBetTypeLabel = (bet) => {
     const count = Number(bet?.total_games ?? bet?.betslip?.length ?? 0);
-    if (bet?.jackpot_bet_id) {
+    if (isJackpotBet(bet)) {
         return `Jackpot (${count})`;
     }
     if (count > 1) {
@@ -112,7 +124,6 @@ const isBetInDateRange = (bet, fromDate, toDate) => {
 };
 
 const MyBets = () => {
-    const [state, dispatch] = useContext(Context);
     const [userBets, setUserBets] = useState([]);
     const [casinoBets, setCasinoBets] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -192,25 +203,38 @@ const MyBets = () => {
     // ✅ FETCH SPORTS
     const fetchSports = async () => {
         setIsLoading(true);
+        setMessage(null);
 
-        const [status, result] = await makeRequest({
-            url: "/user/bets?size=20&page=1",
-            method: "GET",
-            api_version: 2
-        });
-
-        if ([200, 201].includes(status)) {
-            setUserBets(result?.data || result);
-        } else {
-            if (result?.status === 403) {
-                dispatch({ type: "DEL", key: "user" });
-                removeItem("user");
-                dispatch({ type: "SET", key: "showloginmodal", payload: true });
+        try {
+            // Share the header's startup refresh so a reload cannot race the
+            // old access token still in localStorage.
+            const refresh = await refreshUserSession();
+            if (!refresh.success && isUnauthorizedStatus(refresh.status)) {
+                logoutDueToUnauthorized();
                 setMessage({ status: 400, message: "Unauthorized. Please login again." });
+                return;
             }
-        }
 
-        setIsLoading(false);
+            const [status, result] = await makeRequest({
+                url: "/user/bets?size=20&page=1",
+                method: "GET",
+                api_version: 2
+            });
+
+            if ([200, 201].includes(status)) {
+                setUserBets(Array.isArray(result?.data) ? result.data : Array.isArray(result) ? result : []);
+            } else if (isUnauthorizedStatus(status) || isUnauthorizedStatus(result?.status)) {
+                // makeRequest already coalesces logoutDueToUnauthorized for HTTP 401/403.
+                setMessage({ status: 400, message: "Unauthorized. Please login again." });
+            } else {
+                setMessage({ status: 400, message: result?.message || result?.result || "Could not load your bets. Please try again." });
+            }
+        } catch (error) {
+            console.error("[My Bets] Failed to load sports bets", error);
+            setMessage({ status: 400, message: "Could not load your bets. Please try again." });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     // ✅ FETCH CASINO
@@ -296,9 +320,10 @@ const MyBets = () => {
                 <div className="my-bets-filters">
                     {/* Custom listbox — native <option> hover is not styleable in Chromium */}
                     <div
-                        className={`my-bets-filter-select-wrap${filterMenuOpen ? " is-open" : ""}`}
+                        className={`my-bets-filter-select-wrap my-bets-field${filterMenuOpen ? " is-open" : ""}`}
                         ref={filterSelectRef}
                     >
+                        <span className="my-bets-field-label">Type</span>
                         <button
                             type="button"
                             className="my-bets-filter-select"
@@ -339,24 +364,30 @@ const MyBets = () => {
                     </div>
 
                     <div className="my-bets-date-filters">
-                        <input
-                            type="date"
-                            className="my-bets-date-input"
-                            value={fromDate}
-                            onChange={(e) => setFromDate(e.target.value)}
-                            placeholder="From"
-                            aria-label="From"
-                            max={toDate || undefined}
-                        />
-                        <input
-                            type="date"
-                            className="my-bets-date-input"
-                            value={toDate}
-                            onChange={(e) => setToDate(e.target.value)}
-                            placeholder="To"
-                            aria-label="To"
-                            min={fromDate || undefined}
-                        />
+                        <label className="my-bets-field">
+                            <span className="my-bets-field-label">From</span>
+                            <input
+                                type="date"
+                                className="my-bets-date-input"
+                                value={fromDate}
+                                onChange={(e) => setFromDate(e.target.value)}
+                                placeholder="From"
+                                aria-label="From"
+                                max={toDate || undefined}
+                            />
+                        </label>
+                        <label className="my-bets-field">
+                            <span className="my-bets-field-label">To</span>
+                            <input
+                                type="date"
+                                className="my-bets-date-input"
+                                value={toDate}
+                                onChange={(e) => setToDate(e.target.value)}
+                                placeholder="To"
+                                aria-label="To"
+                                min={fromDate || undefined}
+                            />
+                        </label>
                     </div>
 
                     {hasActiveFilters && (
@@ -435,7 +466,7 @@ const MyBets = () => {
                                                 <div>{bet?.created}</div>
                                                 <div>{bet?.bet_id}</div>
                                                 <div>{bet?.total_games}</div>
-                                                <div>{bet?.total_odd}</div>
+                                                <div>{isJackpotBet(bet) ? "" : bet?.total_odd}</div>
                                                 <div>{bet?.bet_amount}</div>
                                                 <div>{bet?.possible_win}</div>
 

@@ -212,32 +212,147 @@ input[type="password"].form-control {
   color: #ffffff;
 }
 
+/*
+ * Left sports menu panel — same frosted surface as .matches .top-matches
+ * (tolkits.css): background: rgba(255, 255, 255, 0.1) on the dark page.
+ */
 .ps-sidebar-container {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: none;
   margin-top: 0px;
   padding: 0;
+}
+
+/* Breathing room between left nav and main content column */
+.up.col-md-2 {
+  padding-right: 12px !important;
+  background: transparent;
+}
+
+/* Left menu scrollbar — early pass; final !important block lives at file end */
+.ps-sidebar-root,
+.ps-sidebar-container,
+.pro-sidebar,
+.live-sidebar,
+.jackpot-sidebar,
+.jackpot-sidebar-wrap,
+.up.col-md-2,
+aside.ps-sidebar-root .ps-sidebar-container {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar,
+.ps-sidebar-container::-webkit-scrollbar,
+.pro-sidebar::-webkit-scrollbar,
+.live-sidebar::-webkit-scrollbar,
+.jackpot-sidebar::-webkit-scrollbar,
+.jackpot-sidebar-wrap::-webkit-scrollbar,
+.up.col-md-2::-webkit-scrollbar,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-track,
+.ps-sidebar-container::-webkit-scrollbar-track,
+.pro-sidebar::-webkit-scrollbar-track,
+.live-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar-wrap::-webkit-scrollbar-track,
+.up.col-md-2::-webkit-scrollbar-track,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
+  background: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-thumb,
+.ps-sidebar-container::-webkit-scrollbar-thumb,
+.pro-sidebar::-webkit-scrollbar-thumb,
+.live-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar-wrap::-webkit-scrollbar-thumb,
+.up.col-md-2::-webkit-scrollbar-thumb,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-radius: 4px !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-corner,
+.ps-sidebar-container::-webkit-scrollbar-corner,
+.pro-sidebar::-webkit-scrollbar-corner,
+.live-sidebar::-webkit-scrollbar-corner,
+.up.col-md-2::-webkit-scrollbar-corner,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
+  background: #0a0a15;
+}
+
+/* PerfectScrollbar — kill library hover rail #eee (white track) */
+.ps-sidebar-root .ps__rail-y,
+.ps-sidebar-container .ps__rail-y,
+.pro-sidebar .ps__rail-y,
+.live-sidebar .ps__rail-y,
+.up.col-md-2 .ps__rail-y,
+.ps-sidebar-root .ps__rail-x,
+.ps-sidebar-container .ps__rail-x,
+.pro-sidebar .ps__rail-x,
+.live-sidebar .ps__rail-x,
+.up.col-md-2 .ps__rail-x,
+.ps-sidebar-root .ps .ps__rail-y,
+.ps-sidebar-root .ps .ps__rail-x,
+.ps-sidebar-root .ps__rail-y:hover,
+.ps-sidebar-root .ps__rail-x:hover,
+.ps-sidebar-root .ps__rail-y:focus,
+.ps-sidebar-root .ps__rail-x:focus,
+.ps-sidebar-root .ps__rail-y.ps--clicking,
+.ps-sidebar-root .ps__rail-x.ps--clicking,
+.ps-sidebar-container .ps__rail-y:hover,
+.ps-sidebar-container .ps__rail-x:hover,
+.up.col-md-2 .ps__rail-y:hover,
+.up.col-md-2 .ps__rail-x:hover,
+.up.col-md-2 .ps .ps__rail-y:hover,
+.up.col-md-2 .ps .ps__rail-y:focus,
+.up.col-md-2 .ps .ps__rail-y.ps--clicking {
+  background-color: transparent !important;
+}
+
+.ps-sidebar-root .ps__thumb-y,
+.ps-sidebar-container .ps__thumb-y,
+.pro-sidebar .ps__thumb-y,
+.live-sidebar .ps__thumb-y,
+.up.col-md-2 .ps__thumb-y,
+.ps-sidebar-root .ps__thumb-x,
+.ps-sidebar-container .ps__thumb-x,
+.pro-sidebar .ps__thumb-x,
+.live-sidebar .ps__thumb-x,
+.up.col-md-2 .ps__thumb-x,
+.ps-sidebar-root .ps__rail-y:hover > .ps__thumb-y,
+.ps-sidebar-root .ps__rail-y:focus > .ps__thumb-y,
+.ps-sidebar-root .ps__rail-y.ps--clicking .ps__thumb-y,
+.ps-sidebar-container .ps__rail-y:hover > .ps__thumb-y,
+.up.col-md-2 .ps__rail-y:hover > .ps__thumb-y {
+  background-color: rgba(255, 255, 255, 0.28) !important;
 }
 
 .css-1wvake5,
 .ps-sidebar-root {
   position: relative;
   border: none !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
   border-right-width: 1px !important;
   border-right-style: solid !important;
-  border-right-color: rgba(255, 255, 255, 0.15) !important;
+  border-right-color: rgba(0, 0, 0, 0.2) !important;
   outline: none !important;
   transition: width, left, right, 300ms;
   width: auto !important;
   min-width: auto !important;
   height: 100%;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.41);
-  background: rgba(0, 12, 36, 1) !important;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Additional specificity to ensure border color is applied - override any library styles */
+/* Additional specificity — frosted panel + calm edge (match top-matches border language) */
 aside.css-1wvake5,
 aside.ps-sidebar-root,
 .css-1wvake5.ps-sidebar-root,
@@ -248,9 +363,10 @@ aside[class*="ps-sidebar-root"],
 *[class*="ps-sidebar-root"],
 *[class*="css-1wvake5"] {
   border: none !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-right-color: rgba(255, 255, 255, 0.15) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
+  border-right-color: rgba(0, 0, 0, 0.2) !important;
   outline: none !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Kill blue :focus-visible outline on the sports menu sidebar when open/focused */
@@ -260,20 +376,38 @@ aside.ps-sidebar-root:focus,
 aside.ps-sidebar-root:focus-visible,
 *[class*="ps-sidebar-root"]:focus,
 *[class*="ps-sidebar-root"]:focus-visible {
-  outline: 1px solid rgba(255, 255, 255, 0.15) !important;
+  outline: 1px solid rgba(0, 0, 0, 0.2) !important;
   outline-offset: -1px;
-  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Target the pro-sidebar-inner as well */
 .pro-sidebar>.pro-sidebar-inner,
 .pro-sidebar .pro-sidebar-inner {
-  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-right-color: rgba(255, 255, 255, 0.15) !important;
+  border-right: none !important;
+  background: transparent !important;
 }
 
+/*
+ * Left sports menu rows — SportPesa/Betika-inspired:
+ * dense consistent height, hairline separators, no per-item fill stacks.
+ * Panel fill lives on the sidebar container (top-matches language).
+ */
 .ps-menu-button {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  height: 38px !important;
+  text-decoration: none;
+  color: inherit;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding-right: 14px;
+  padding-left: 12px !important;
+  margin: 0 !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: transparent !important;
+  transition: background-color 0.12s ease;
 }
 
 .ps-menu-button:hover,
@@ -282,36 +416,22 @@ aside.ps-sidebar-root:focus-visible,
   background-color: #a71f66 !important;
   outline: none !important;
   border: none !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-
-}
-
-.ps-menu-button {
-  display: flex;
-  align-items: center;
-  height: 37px !important;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-  box-sizing: border-box;
-  cursor: pointer;
-  padding-right: 20px;
-  padding-left: 5px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
-  background: rgba(255, 255, 255, 0.02) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 .ps-submenu-content {
   padding: 0;
   width: 100%;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.031) !important;
-  margin: 0px auto 0;
+  border-right: none;
+  background: rgba(0, 0, 0, 0.15) !important;
+  margin: 0 auto;
 }
 
 .ps-submenu-content .ps-menu-button {
-  margin-bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.4) !important;
+  margin: 0 !important;
+  padding-left: 22px !important;
+  background: transparent !important;
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 .pc .navbar-nav>li>a {
@@ -571,7 +691,8 @@ aside.ps-sidebar-root:focus-visible,
     text-align: left;
     font-size: 10px;
     line-height: 1.3;
-    opacity: 0.85;
+    opacity: 1;
+    color: rgba(255, 255, 255, 0.95);
     margin-bottom: 2px;
   }
 
@@ -708,6 +829,7 @@ aside.ps-sidebar-root:focus-visible,
     padding: 6px 10px;
     border-radius: 4px 4px 0 0;
     background: #0A162DB0;
+    color: #ffffff;
   }
 
   /* Keep desktop-only markets (Double Chance, Over/Under) hidden on mobile:
@@ -3667,6 +3789,70 @@ label {
   background: #e2e2e2;
 }
 
+/*
+ * Re-assert left-nav dark scrollbar AFTER the global #e2e2e2 track.
+ * Chromium webkit-scrollbar cascade often prefers later track rules;
+ * !important + post-global placement is required for .ps-sidebar-container.
+ */
+.ps-sidebar-root,
+.ps-sidebar-container,
+.pro-sidebar,
+.live-sidebar,
+.jackpot-sidebar,
+.jackpot-sidebar-wrap,
+.up.col-md-2,
+aside.ps-sidebar-root .ps-sidebar-container {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar,
+.ps-sidebar-container::-webkit-scrollbar,
+.pro-sidebar::-webkit-scrollbar,
+.live-sidebar::-webkit-scrollbar,
+.jackpot-sidebar::-webkit-scrollbar,
+.jackpot-sidebar-wrap::-webkit-scrollbar,
+.up.col-md-2::-webkit-scrollbar,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background: #0a0a15 !important;
+  background-color: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-track,
+.ps-sidebar-container::-webkit-scrollbar-track,
+.pro-sidebar::-webkit-scrollbar-track,
+.live-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar-wrap::-webkit-scrollbar-track,
+.up.col-md-2::-webkit-scrollbar-track,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
+  background: #0a0a15 !important;
+  background-color: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-thumb,
+.ps-sidebar-container::-webkit-scrollbar-thumb,
+.pro-sidebar::-webkit-scrollbar-thumb,
+.live-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar-wrap::-webkit-scrollbar-thumb,
+.up.col-md-2::-webkit-scrollbar-thumb,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28) !important;
+  background-color: rgba(255, 255, 255, 0.28) !important;
+  border-radius: 4px !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-corner,
+.ps-sidebar-container::-webkit-scrollbar-corner,
+.pro-sidebar::-webkit-scrollbar-corner,
+.up.col-md-2::-webkit-scrollbar-corner,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
+  background: #0a0a15 !important;
+}
+
 .big-icon-item {
   padding: 4px 0px;
   align-items: center;
@@ -4026,7 +4212,7 @@ button.locked-button:hover {
   }
 
   .big-icon-bubble {
-    top: 0;
+    top: 4px;
     left: 80% !important;
     right: auto;
     transform: translate(-50%, calc(-100% - 2px));
@@ -4559,7 +4745,7 @@ button.locked-button:hover {
 /* HOT/NEW: sibling of icon + name under .big-icon-link; anchor to icon (left), not label */
 .big-icon-bubble {
   position: absolute;
-  top: 0;
+  top: 4px;
   left: 80% !important;
   right: auto;
   transform: translate(-50%, -45%);
@@ -4637,26 +4823,47 @@ button.locked-button:hover {
   padding: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.06);
   box-sizing: border-box;
 }
 
 .my-bets-filters {
   display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
   margin-bottom: 0.85rem;
   padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Labelled filter field (Type / From / To) */
+.my-bets-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1 1 150px;
+  min-width: 0;
+  margin: 0;
+}
+
+.my-bets-field-label {
+  padding: 0 0.1rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 /* Custom history-type dropdown (Sports|Casino|Jackpot) — native <option>
    hover/active cannot be purple in Chromium, so this uses a listbox menu. */
 .my-bets-filter-select-wrap {
   position: relative;
-  width: 100%;
 }
 
 .my-bets-filter-select {
@@ -4665,13 +4872,14 @@ button.locked-button:hover {
   justify-content: flex-start;
   width: 100%;
   padding: 0.5rem 2.25rem 0.5rem 0.75rem;
-  border-radius: 0.375rem;
+  min-height: 3.6rem;
+  border-radius: 4px;
   color: #fff;
   outline: none;
   cursor: pointer;
   text-align: left;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.04);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23ffffff' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
@@ -4680,8 +4888,11 @@ button.locked-button:hover {
 
 .my-bets-filter-select-wrap.is-open .my-bets-filter-select,
 .my-bets-filter-select:focus,
-.my-bets-date-input:focus {
-  border-color: rgba(255, 255, 255, 0.35);
+.my-bets-filter-select:hover,
+.my-bets-date-input:focus,
+.my-bets-date-input:hover {
+  border-color: #a71f66;
+  outline: none;
 }
 
 .my-bets-filter-select-menu {
@@ -4693,9 +4904,9 @@ button.locked-button:hover {
   margin: 0;
   padding: 0.25rem 0;
   list-style: none;
-  border-radius: 0.375rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: #151525;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 12, 36, 1);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   overflow: hidden;
 }
@@ -4719,22 +4930,21 @@ button.locked-button:hover {
   outline: none;
 }
 
+/* wrapper is layout-neutral so Type / From / To share one row */
 .my-bets-date-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  width: 100%;
+  display: contents;
 }
 
 .my-bets-date-input {
-  flex: 1 1 140px;
+  width: 100%;
   min-width: 0;
+  min-height: 3.6rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
+  border-radius: 4px;
   color: #fff;
   outline: none;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color-scheme: dark;
   /* Keep native date UI themable; Firefox uses color-scheme for the icon */
   -moz-appearance: textfield;
@@ -4763,16 +4973,28 @@ button.locked-button:hover {
 .my-bets-clear-filters {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.55rem 0.75rem;
-  border-radius: 0.375rem;
+  justify-content: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  min-height: 3.6rem;
+  padding: 0.55rem 1rem;
+  border-radius: 4px;
   color: rgba(255, 255, 255, 0.85);
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1.2rem;
   line-height: 1.2;
   cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.my-bets-clear-filters:hover,
+.my-bets-clear-filters:focus,
+.my-bets-clear-filters:active {
+  background: #a71f66;
+  border-color: #a71f66;
+  color: #fff;
+  outline: none;
 }
 
 .my-bets-clear-filters-x {
@@ -4803,12 +5025,8 @@ button.locked-button:hover {
     padding: 1rem;
   }
 
-  .my-bets-date-input {
-    max-width: 240px;
-  }
-
-  .my-bets-filter-select-wrap {
-    max-width: 280px;
+  .my-bets-field {
+    max-width: 260px;
   }
 }
 
@@ -5232,9 +5450,29 @@ button.locked-button:hover {
     display: block !important;
   }
 
+  /*
+   * Market groups (1X2 / Double Chance / Over-Under): do not use space-between.
+   * Leftover row width grows with CSS viewport (Windows display scaling / DPR
+   * changes effective CSS px), so % padding + space-between stretches gaps on
+   * some machines and keeps them tight on others. Fixed px gap keeps the same
+   * close-together look on all large-desktop ratios.
+   */
+  .match-list .matches-row,
+  .sticky-top .matches-row,
+  .matches .top-matches .matches-row {
+    justify-content: flex-start !important;
+    gap: 6px;
+    padding-right: 12px;
+  }
+
+  .sticky-top .matches-row {
+    padding-right: 16px;
+  }
+
   .tablet-market-panel {
     display: flex;
     align-self: center;
+    flex: 0 0 auto;
   }
 
   .tablet-market-panel.match-market-extra {
@@ -5244,6 +5482,30 @@ button.locked-button:hover {
   .tablet-market-panel .c-btn-group {
     display: flex;
     width: auto;
+    flex: 0 0 auto;
+  }
+}
+
+/* Slightly wider odds buttons on roomier large desktops; jackpot keeps 80px. */
+@media screen and (min-width: 1300px) {
+  .matches .top-matches .matches-row:not(.is-jackpot) .c-btn-group > .c-btn,
+  .matches .top-matches .matches-row:not(.is-jackpot) .c-btn-group > .locked-button,
+  .matches .top-matches .matches-row:not(.is-jackpot) .c-btn-group > button.locked-button {
+    width: 62px !important;
+    min-width: 62px;
+  }
+
+  .matches .top-matches .matches-row .c-btn-header {
+    min-width: 61px;
+    width: 62px;
+    box-sizing: border-box;
+  }
+
+  .matches .top-matches .matches-row:not(.is-jackpot) .no-bet-btn,
+  .matches .top-matches .matches-row:not(.is-jackpot) button.no-bet-btn,
+  .matches .top-matches .matches-row:not(.is-jackpot) .locked-button,
+  .matches .top-matches .matches-row:not(.is-jackpot) button.locked-button {
+    min-width: 62px;
   }
 }
 
@@ -5269,8 +5531,8 @@ button.locked-button:hover {
     font-size: 12px;
     border-radius: 6px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.061);
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
 
   .mobile-match-card .match-time-desktop,
@@ -5285,7 +5547,8 @@ button.locked-button:hover {
     text-align: left;
     font-size: 10px;
     line-height: 1.3;
-    opacity: 0.85;
+    opacity: 1;
+    color: rgba(255, 255, 255, 0.95);
     margin-bottom: 6px;
   }
 
@@ -5589,4 +5852,105 @@ button.locked-button:hover {
   .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.picked .mobile-odd-label {
     color: #ffffff !important;
   }
+}
+
+/* A pick from the match's inner markets: the more-markets counter takes the
+   same purple as a picked odds button. */
+.more-markets-count.more-markets-picked {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.more-markets-count.more-markets-picked,
+.mobile-match-action-btn.mobile-match-markets-count.more-markets-picked {
+  background: #a71f66 !important;
+  border-color: #a71f66 !important;
+  color: #ffffff !important;
+}
+
+/*
+ * Left menu dark scrollbar — post-global placement + !important so it beats
+ * ::-webkit-scrollbar-track { background: #e2e2e2 } and PerfectScrollbar #eee rails.
+ */
+.ps-sidebar-root,
+.ps-sidebar-container,
+.pro-sidebar,
+.live-sidebar,
+.jackpot-sidebar,
+.jackpot-sidebar-wrap,
+.up.col-md-2,
+aside.ps-sidebar-root .ps-sidebar-container {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar,
+.ps-sidebar-container::-webkit-scrollbar,
+.pro-sidebar::-webkit-scrollbar,
+.live-sidebar::-webkit-scrollbar,
+.jackpot-sidebar::-webkit-scrollbar,
+.jackpot-sidebar-wrap::-webkit-scrollbar,
+.up.col-md-2::-webkit-scrollbar,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-track,
+.ps-sidebar-container::-webkit-scrollbar-track,
+.pro-sidebar::-webkit-scrollbar-track,
+.live-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar-wrap::-webkit-scrollbar-track,
+.up.col-md-2::-webkit-scrollbar-track,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
+  background: #0a0a15 !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-thumb,
+.ps-sidebar-container::-webkit-scrollbar-thumb,
+.pro-sidebar::-webkit-scrollbar-thumb,
+.live-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar-wrap::-webkit-scrollbar-thumb,
+.up.col-md-2::-webkit-scrollbar-thumb,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-radius: 4px !important;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-corner,
+.ps-sidebar-container::-webkit-scrollbar-corner,
+.pro-sidebar::-webkit-scrollbar-corner,
+.up.col-md-2::-webkit-scrollbar-corner,
+aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
+  background: #0a0a15 !important;
+}
+
+.up.col-md-2 .ps .ps__rail-y,
+.up.col-md-2 .ps .ps__rail-x,
+.ps-sidebar-root .ps .ps__rail-y,
+.ps-sidebar-root .ps .ps__rail-x,
+.ps-sidebar-container .ps .ps__rail-y,
+.ps-sidebar-container .ps .ps__rail-x,
+.up.col-md-2 .ps .ps__rail-y:hover,
+.up.col-md-2 .ps .ps__rail-y:focus,
+.up.col-md-2 .ps .ps__rail-y.ps--clicking,
+.ps-sidebar-root .ps .ps__rail-y:hover,
+.ps-sidebar-root .ps .ps__rail-y:focus,
+.ps-sidebar-root .ps .ps__rail-y.ps--clicking,
+.ps-sidebar-container .ps .ps__rail-y:hover,
+.ps-sidebar-container .ps .ps__rail-y:focus,
+.ps-sidebar-container .ps .ps__rail-y.ps--clicking {
+  background-color: transparent !important;
+}
+
+.up.col-md-2 .ps .ps__thumb-y,
+.ps-sidebar-root .ps .ps__thumb-y,
+.ps-sidebar-container .ps .ps__thumb-y,
+.up.col-md-2 .ps .ps__rail-y:hover > .ps__thumb-y,
+.ps-sidebar-root .ps .ps__rail-y:hover > .ps__thumb-y {
+  background-color: rgba(255, 255, 255, 0.28) !important;
 }

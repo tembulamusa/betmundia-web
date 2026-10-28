@@ -129,12 +129,12 @@ const Footer = () => {
                         <h5 className="site-footer__heading">Legal</h5>
                         <div className="site-footer__age">
                             <span className="site-footer__age-badge" aria-hidden="true">
-                                21+
+                                18+
                             </span>
-                            <span>21 years and above</span>
+                            <span>18 years and above</span>
                         </div>
                         <p className="site-footer__legal-copy leading-[2.25]">
-                            You MUST be 21 years of age or older to register or play at Betmundial.
+                            You MUST be 18 years of age or older to register or play at Betmundial.
                             Gambling may have adverse effects if not done with moderation. When the
                             fun stops, STOP!
                         </p>
@@ -156,7 +156,7 @@ const Footer = () => {
                         <h5 className="site-footer__heading">Licensing</h5>
                         <p className="site-footer__licensing leading-[2.25]">
                             AIB Petals Limited is licensed by the Gambling Regulatory Authority of
-                            Kenya (GRA) under the Betting, Lotteries and gaming Act,
+                            Kenya (GRAK) under the Betting, Lotteries and gaming Act,
                             1966 (now repealed by the Gambling Control Act, 2025) and any regulations
                             made thereunder under License Numbers: Book Maker&apos;s - 0001303 and
                             Public Gaming 0001211

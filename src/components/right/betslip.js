@@ -6,6 +6,7 @@ import {
     removeFromJackpotSlip,
     getBetslip,
     getJackpotBetslip,
+    orderJackpotSlips,
     addToSlip,
 } from '../utils/betslip';
 
@@ -503,7 +504,10 @@ const BetSlip = (props) => {
                 )}
                 <div className="flow betslip-slips">
                     <ul className="betslip-slips__list">
-                        {Object.entries(betslipsData ?? {}).map(([match_id, slip]) => (<SlipEntry match_id={match_id} initialSlip={slip} />))
+                        {(is_jackpot
+                            ? orderJackpotSlips(betslipsData, localJPData || state?.jackpotdata)
+                            : Object.entries(betslipsData ?? {})
+                        ).map(([match_id, slip]) => (<SlipEntry key={match_id} match_id={match_id} initialSlip={slip} />))
                         }
                     </ul>
                 </div>

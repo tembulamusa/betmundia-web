@@ -8,6 +8,7 @@ import {
     addToJackpotSlip,
     getJackpotBetslip,
     clearJackpotSlip,
+    orderJackpotSlips,
     formatNumber
 } from '../utils/betslip';
 import { toast } from 'react-toastify';
@@ -25,7 +26,7 @@ import { TbRefreshAlert } from "react-icons/tb";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
-import { resolveBongeBonusPercent } from './bonge-bonus-utils';
+import { resolveBongeBonusPercent, countSgrQualifyingGames } from './bonge-bonus-utils';
 
 const Float = (equation, precision = 4) => {
     return Math.ceil(equation * (10 ** precision)) / (10 ** precision);
@@ -213,7 +214,10 @@ const BetslipSubmitForm = (props) => {
             return false
         }
 
-        let bs = Object.values(state?.[betslipkey] || []);
+        // Jackpot selections are submitted in the order of the games on the jackpot page.
+        let bs = jackpot
+            ? orderJackpotSlips(state?.[betslipkey], jackpotData || state?.jackpotdata).map(([, slip]) => slip)
+            : Object.values(state?.[betslipkey] || []);
 
         let slipHasOddsChange = false;
         let slipHasUnbettableEvents = false;
@@ -379,8 +383,7 @@ const BetslipSubmitForm = (props) => {
 
             // Get Bonus
             let max_games = dbWinMatrix?.sgr_bonus_max_games || 30;
-            let total_games = Object.values(state?.betslip || {})?.filter(
-                (slip) => slip.odd_value > (dbWinMatrix?.sgr_bonus_min_odds || 1.30))?.length;
+            let total_games = countSgrQualifyingGames(state?.betslip, dbWinMatrix);
 
             if (total_games > max_games) {
                 total_games = max_games;

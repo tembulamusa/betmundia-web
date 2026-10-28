@@ -57,25 +57,47 @@ export const persistSurvivorChallenges = (list) => {
 };
 
 /**
- * `games` should be an array, but the backend can also send an object
- * keyed by game number, or wrap the list ({ games: [...] } / { data: [...] }).
- * Always hand the UI a plain array, ordered by game_number.
+ * The detail endpoint returns games as
+ *   { past_games: [ ...settled games ], current_game: { ... } }
+ * (only games up to the current one are visible). Older/other shapes —
+ * a plain array, an object keyed by game number, or a wrapper like
+ * { games: [...] } — are also accepted. The UI always gets one flat array
+ * (past games + current game), ordered by game_number with no duplicates.
  */
 export const normalizeSurvivorGames = (games) => {
-    let list = [];
-    if (Array.isArray(games)) {
-        list = games;
-    } else if (games && typeof games === "object") {
-        const nested = [games.games, games.data, games.items, games.results].find(Array.isArray);
-        list = nested || Object.values(games).filter((g) => g && typeof g === "object");
-    }
-    return list
-        .filter((g) => g && typeof g === "object")
-        .sort((a, b) => Number(a.game_number ?? 0) - Number(b.game_number ?? 0));
+    const collected = [];
+    const visit = (value) => {
+        if (Array.isArray(value)) {
+            value.forEach(visit);
+        } else if (value && typeof value === "object") {
+            if (value.game_number != null) {
+                collected.push(value);
+            } else {
+                Object.values(value).forEach(visit);
+            }
+        }
+    };
+    visit(games);
+    const seen = new Set();
+    return collected
+        .filter((g) => {
+            const key = String(g.game_number);
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        })
+        .sort((a, b) => Number(a.game_number) - Number(b.game_number));
 };
 
 /** Games of a challenge as an array, whatever shape they arrived in. */
 export const survivorGameList = (challenge) => normalizeSurvivorGames(challenge?.games);
+
+/**
+ * Whether the user may place a new pick on this game. Only an explicit
+ * `eligible_to_play: true` (sent on current_game) counts — false, null or
+ * a missing field all mean not eligible.
+ */
+export const isSurvivorGameEligible = (game) => game?.eligible_to_play === true;
 
 /** GET /survivor/challenges — public list of challenges (lobby). */
 export const fetchSurvivorChallenges = async () => {

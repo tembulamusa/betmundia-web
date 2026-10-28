@@ -10,18 +10,24 @@
     padding: 0.5px 25px 0px 12px !important;
 }
 
+.pro-sidebar {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+}
+
 .pro-sidebar::-webkit-scrollbar {
-
     -webkit-appearance: none;
-    width: 15px;
-    background-color: lightgrey;
+    width: 6px !important;
+    background-color: #0a0a15 !important;
+}
 
+.pro-sidebar::-webkit-scrollbar-track {
+    background-color: #0a0a15 !important;
 }
 
 .pro-sidebar::-webkit-scrollbar-thumb {
-
-    background-color: red;
-
+    background-color: rgba(255, 255, 255, 0.28) !important;
+    border-radius: 4px;
 }
 
 .filter-icons {
@@ -2288,7 +2294,8 @@ events-header {
 
 .compt-detail {
     font-size: 12px;
-    opacity: 0.75;
+    opacity: 0.95;
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .compt-teams {
@@ -2351,6 +2358,50 @@ events-header {
     color: #797979;
     font-size: 12px;
     margin: 0px;
+    margin-bottom: 0px;
+    border-bottom: 2px solid rgba(0,0,0,0.2);
+    padding-top: 16px !important;
+    padding-bottom: 16px;
+}
+
+/* Sticky market strip wrapper: no bottom edge. */
+.matches .full-mobile.sticky-top {
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Only the sticky market-header row (3-way / DC / O-U) — not first listing card. */
+.matches .top-matches.position-sticky.sticky-top,
+.matches .full-mobile.sticky-top > .top-matches.sticky-top {
+    border: none !important;
+    border-bottom: none !important;
+}
+
+/* Match detail / time / id: brighter than inherited #797979 */
+.matches .top-matches .match-time-desktop,
+.matches .top-matches .match-meta-compact,
+.matches .top-matches .mobile-match-meta,
+.matches .top-matches .match-detail-container,
+.matches .top-matches .match-detail-container a,
+.matches .top-matches .compt-teams,
+.matches .top-matches .compt-teams .bold {
+    color: #ffffff;
+}
+
+/* Sticky market column labels: 3 WAY / Double Chance / Over-Under */
+.matches > .full-mobile.sticky-top .top-matches,
+.matches > .full-mobile.sticky-top .top-matches .bold,
+.matches > .full-mobile.sticky-top .top-matches .small,
+.matches > .full-mobile.sticky-top .top-matches .c-btn-header,
+.matches > .full-mobile.sticky-top .top-matches .match-detail-container,
+.matches > .full-mobile.sticky-top .top-matches .match-detail-container span,
+.matches > .full-mobile.sticky-top .top-matches .text-gray-500 {
+    color: #ffffff !important;
+}
+
+.mobile-market-bar,
+.tablet-market-bar {
+    color: #ffffff;
 }
 
 .match-list .top-matches {

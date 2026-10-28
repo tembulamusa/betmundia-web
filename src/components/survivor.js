@@ -6,11 +6,12 @@ import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
 import NoEvents from "./utils/no-events";
 import jackpotEmptyBall from "../assets/img/backgrounds/jackpot-empty-ball.png";
-import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus } from "react-icons/fa";
+import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus, FaBan } from "react-icons/fa";
 import {
     fetchSurvivorChallenges,
     fetchSurvivorChallenge,
     survivorGameList,
+    isSurvivorGameEligible,
     fetchSurvivorResults,
     fetchSurvivorProgress,
     submitSurvivorPrediction,
@@ -31,24 +32,20 @@ export const SURVIVOR_JOINED_STORAGE_KEY = "survivorJoinedChallenges";
  * per-challenge progress). */
 const BET_FEEDBACK_MS = 6000;
 
-// Per-game counts come straight off the game object. Field names aren't
-// fixed in the API doc yet, so a few likely spellings are accepted; the
-// stat shows "—" until the backend sends one of them.
-const SURVIVORS_KEYS = ["survivors_count", "survivor_count", "survivors_remaining", "survivors", "alive_count"];
-const NEW_MEMBERS_KEYS = ["new_members", "new_members_count", "new_participants", "new_entries", "joined_count"];
+// Per-game survivors count comes straight off the game object. The field
+// name isn't fixed in the API doc yet, so a few likely spellings are
+// accepted; the stat shows "—" until the backend sends one of them.
+const SURVIVORS_KEYS = ["still_standing", "survivors_count", "survivor_count", "survivors_remaining", "survivors", "alive_count"];
 const gameCount = (game, keys) => {
     const key = keys.find((k) => game?.[k] != null && game?.[k] !== "");
     return key ? game[key] : "—";
 };
 
-/** Survivors + new members for one game. */
+/** Survivors count for one game. */
 const GameCounts = ({ game }) => (
     <div className="survivor-game-counts">
         <span>
             Survivors: <b className="survivor-yellow">{gameCount(game, SURVIVORS_KEYS)}</b>
-        </span>
-        <span>
-            New members: <b className="survivor-yellow">{gameCount(game, NEW_MEMBERS_KEYS)}</b>
         </span>
     </div>
 );
@@ -305,18 +302,25 @@ const SurvivorChallengeGames = ({ id }) => {
 
     const loadAll = useCallback(async () => {
         setFetching(true);
-        const detail = await fetchSurvivorChallenge(id);
-        setChallenge(detail);
-        if (isSignedIn) {
-            const mine = await fetchSurvivorProgress(id);
-            setProgress(mine);
-            if (mine?.enrolled) {
-                rememberJoinedChallenge(id);
+        try {
+            const detail = await fetchSurvivorChallenge(id);
+            setChallenge(detail);
+            if (isSignedIn) {
+                const mine = await fetchSurvivorProgress(id);
+                setProgress(mine);
+                if (mine?.enrolled) {
+                    rememberJoinedChallenge(id);
+                }
+            } else {
+                setProgress(null);
             }
-        } else {
+        } catch (error) {
+            console.error("[Survivor Challenge] Failed to load challenge data", error);
+            setChallenge(null);
             setProgress(null);
+        } finally {
+            setFetching(false);
         }
-        setFetching(false);
     }, [id, isSignedIn]);
 
     useEffect(() => {
@@ -337,6 +341,11 @@ const SurvivorChallengeGames = ({ id }) => {
         }
         if (!canBetOnChallenge) {
             showBetFeedback(gameNumber, "error", "You cannot place a bet on this challenge.");
+            return;
+        }
+        const game = survivorGameList(challenge).find((g) => g.game_number === gameNumber);
+        if (!isSurvivorGameEligible(game)) {
+            showBetFeedback(gameNumber, "error", "Not eligible to play. You missed out on some matches.");
             return;
         }
         clearTimeout(betFeedbackTimer.current);
@@ -425,9 +434,11 @@ const SurvivorChallengeGames = ({ id }) => {
     // practice there's normally only one game open at a time anyway). It
     // always renders last in the list below, regardless of where it falls
     // in the challenge's own game order.
+    // The challenge payload also names it (current_game_number).
+    const currentGameNumber = progress?.current_game_number ?? challenge?.current_game_number ?? null;
     const currentGame =
         nonSettledGames.find(
-            (g) => progress?.current_game_number != null && g.game_number === progress.current_game_number
+            (g) => currentGameNumber != null && g.game_number === currentGameNumber
         ) || nonSettledGames[nonSettledGames.length - 1] || null;
     const orderedNonSettledGames = currentGame
         ? [
@@ -501,6 +512,7 @@ const SurvivorChallengeGames = ({ id }) => {
     const requestPick = (gameNumber, selection) => {
         if (!selection) return;
         const game = survivorGameList(challenge).find((g) => g.game_number === gameNumber);
+        if (isSignedIn && !isSurvivorGameEligible(game)) return;
         setPendingPick({ gameNumber, selection, existing: predictionFor(game) });
     };
 
@@ -555,7 +567,12 @@ const SurvivorChallengeGames = ({ id }) => {
                     const placedSelection = hasSubmittedPick
                         ? mine.selection
                         : placedPicks[game.game_number];
-                    const showPickControls = canBetOnThisGame && !placedSelection;
+                    // Eligibility only gates placing a new pick for a signed-in
+                    // user; an existing pick still shows below as usual. Guests
+                    // keep the pick buttons, which lead to the login prompt.
+                    const isEligibleToPlay = !isSignedIn || isSurvivorGameEligible(game);
+                    const showPickControls = canBetOnThisGame && !placedSelection && isEligibleToPlay;
+                    const showIneligibleNotice = canBetOnThisGame && !placedSelection && !isEligibleToPlay;
                     return (
                         <div
                             key={game.game_number}
@@ -654,6 +671,16 @@ const SurvivorChallengeGames = ({ id }) => {
                                         </div>
                                     )}
                                 </>
+                            )}
+
+                            {showIneligibleNotice && (
+                                <div className="survivor-ineligible-notice" role="status">
+                                    <FaBan className="survivor-ineligible-icon" aria-hidden="true" />
+                                    <div>
+                                        <div className="survivor-ineligible-title">Not eligible to play</div>
+                                        <div className="survivor-ineligible-text">You missed out on some matches.</div>
+                                    </div>
+                                </div>
                             )}
 
                             {canBetOnThisGame && placedSelection && (
@@ -890,6 +917,9 @@ const SurvivorChallengesList = () => {
                     if (defaultKey != null) setActiveKey(defaultKey);
                 }
             }
+        }).catch((error) => {
+            console.error("[Survivor Challenge] Failed to load challenge list", error);
+            if (!cancelled) setFetching(false);
         });
         return () => { cancelled = true; };
     }, []);
@@ -1069,16 +1099,23 @@ const SurvivorChallengeDetail = ({ id }) => {
                 setAllChallenges(list);
                 persistSurvivorChallenges(list);
             }
+        }).catch((error) => {
+            console.error("[Survivor Challenge] Failed to load challenge navigation", error);
         });
         return () => { cancelled = true; };
     }, [allChallenges.length]);
 
     const handleRefreshChallenges = async () => {
         setRefreshingChallenges(true);
-        const list = await fetchSurvivorChallenges();
-        setAllChallenges(list);
-        persistSurvivorChallenges(list);
-        setRefreshingChallenges(false);
+        try {
+            const list = await fetchSurvivorChallenges();
+            setAllChallenges(list);
+            persistSurvivorChallenges(list);
+        } catch (error) {
+            console.error("[Survivor Challenge] Failed to refresh challenge list", error);
+        } finally {
+            setRefreshingChallenges(false);
+        }
     };
 
     useEffect(() => {
@@ -1093,7 +1130,15 @@ const SurvivorChallengeDetail = ({ id }) => {
             setChallenge(detail);
             setResults(aggregate);
             setProgress(progressData);
-            setFetching(false);
+        }).catch((error) => {
+            console.error("[Survivor Challenge] Failed to load challenge detail", error);
+            if (!cancelled) {
+                setChallenge(null);
+                setResults(null);
+                setProgress(null);
+            }
+        }).finally(() => {
+            if (!cancelled) setFetching(false);
         });
         return () => { cancelled = true; };
     }, [id]);
@@ -1221,6 +1266,42 @@ const SurvivorChallengeDetail = ({ id }) => {
     );
 };
 
+class SurvivorErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        console.error("[Survivor Challenge] Render failed", error, errorInfo);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="survivor-page" role="alert">
+                    <SurvivorPageHeader />
+                    <SurvivorEmptyState
+                        title="This challenge could not be loaded."
+                        subtitle="Refresh the page to try again."
+                    />
+                    <div className="text-center mt-3">
+                        <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
+                            Refresh page
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        return this.props.children;
+    }
+}
+
 const Survivor = () => {
     const { id } = useParams();
     // Browser tab title for the lobby and the challenge page; restored on leave.
@@ -1231,7 +1312,11 @@ const Survivor = () => {
             document.title = previous;
         };
     }, [id]);
-    return id ? <SurvivorChallengeDetail id={id} /> : <SurvivorChallengesList />;
+    return (
+        <SurvivorErrorBoundary key={id || "survivor-lobby"}>
+            {id ? <SurvivorChallengeDetail id={id} /> : <SurvivorChallengesList />}
+        </SurvivorErrorBoundary>
+    );
 };
 
 export default Survivor;

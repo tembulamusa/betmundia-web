@@ -397,8 +397,8 @@
 }
 
 .survivor-status-active {
-  background: #00e676;
-  color: #04240f;
+  background: #ffc428;
+  color: #1a1400;
   padding: 1rem 14px !important;
   border-radius: 2px;
   font-size: 1rem;
@@ -908,10 +908,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffc428;
+  border: 1px solid #ffc428;
   border-radius: 6px;
-  color: #ffffff;
+  color: #1a1400;
   /* Same as the shared prematch odds buttons' own label/.theodds text -
      that text is unstyled beyond font:inherit + .theodds's own 15px/400
      (see application.css), not bold, so match that exactly rather than
@@ -925,34 +925,23 @@
 .survivor-pick-odd {
   display: block;
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 700;
   margin-top: 2px;
-  /* The app's established odds-yellow accent (#ffc428 / rgba(255,215,0),
-     used the same way for odds/highlighted-value text across the app —
-     see .theodds/.home-team in tolkits.css, free-bet.js, betslip-submit-
-     form.js) - this was missed in the last pass, which left it inheriting
-     the button's own (now uniform) white text color instead. */
-  color: #ffc428;
+  color: #1a1400;
 }
 
 .survivor-pick-btn:hover:not(:disabled) {
-  background: #a71f66;
-  border-color: #a71f66;
-  color: #ffffff;
+  background: #ffd45c;
+  border-color: #ffd45c;
 }
 
+/* All the buttons are yellow, so the chosen one is marked with a white
+   ring and a deeper amber rather than a different colour. */
 .survivor-pick-btn.selected {
-  background: #a71f66;
-  border-color: #a71f66;
-  color: #ffffff;
-}
-
-/* Same as .picked .theodds in tolkits.css: once picked (or previewed on
-   hover), the odd switches to white for contrast against the purple
-   background rather than staying yellow. */
-.survivor-pick-btn:hover:not(:disabled) .survivor-pick-odd,
-.survivor-pick-btn.selected .survivor-pick-odd {
-  color: #ffffff;
+  background: #f0b000;
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px #ffffff;
+  font-weight: 700;
 }
 
 .survivor-pick-btn:disabled {
@@ -1265,6 +1254,42 @@
   background: rgba(217, 60, 60, 0.16);
   border: 1px solid rgba(217, 60, 60, 0.45);
   color: #ff9b9b;
+}
+
+.survivor-ineligible-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 3px;
+  background: rgba(255, 196, 40, 0.08);
+  border: 1px solid rgba(255, 196, 40, 0.3);
+  line-height: 1.4;
+}
+
+.survivor-ineligible-icon {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+  font-size: 1.4rem;
+  color: #ffc428;
+}
+
+.survivor-ineligible-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffc428;
+}
+
+.survivor-ineligible-text {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media screen and (max-width: 575px) {
+  .survivor-ineligible-notice {
+    padding: 0.8rem 0.9rem;
+  }
 }
 
 /* ------------------------------------------------------------------

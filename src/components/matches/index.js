@@ -240,8 +240,8 @@ const MatchHeaderRow = (props) => {
 
 
     return (
-        first_match && <div className={`${live && 'live'} full-mobile sticky-top`} style={{ position: "sticky", paddingLeft: "0", paddingRight: "0" }}>
-            <div className={`${jackpot && 'jackpot-zero-top'} top-matches d-flex position-sticky sticky-top `}
+        first_match && <div className={`${live ? 'live' : ''} full-mobile sticky-top`} style={{ position: "sticky", paddingLeft: "0", paddingRight: "0" }}>
+            <div className={`${jackpot ? 'jackpot-zero-top' : ''} top-matches d-flex position-sticky sticky-top`}
                 style={{ opacity: "1", top: "100px", height: "" }}>
 
                 <div className={'col-2 col-xs-12 match-detail-container'} key="d4">
@@ -300,7 +300,7 @@ const MatchHeaderRow = (props) => {
                         ))
                     )}
                     <div
-                        className="bet-fix events-odd pad undefined align-self-center more-markets-container m-lg-2 col-3 hidden md:block">
+                        className="bet-fix events-odd pad align-self-center more-markets-container m-lg-2 col-3 hidden md:block">
                         &nbsp;
                     </div>
                 </div>
@@ -403,9 +403,41 @@ const MoreMarketsHeaderRow = (props) => {
     )
 }
 
+const INLINE_SOCCER_MARKETS = [
+    { name: "1x2", id: 1, line: "" },
+    { name: "Double Chance", id: 10, line: "" },
+    { name: "Total", id: 18, line: "2.5" },
+];
+
+// Outcomes rendered as odd buttons on the listing row (same markets MatchRow passes to MatchMarket).
+const getInlineOutcomes = (match) => {
+    const odds = match?.odds || {};
+    if (match?.sport_name?.toLowerCase() == "soccer") {
+        return INLINE_SOCCER_MARKETS.flatMap(({ name, id, line }) =>
+            orderMarketOutcomes(odds?.[name]?.outcomes, id, line));
+    }
+    return Object.keys(odds).flatMap((name) => orderMarketOutcomes(odds?.[name]?.outcomes, 1, ""));
+}
+
+// True when the slip pick for this match is not one an inline OddButton would show as picked.
+const isPickedInMoreMarkets = (match, slip) => {
+    if (!slip) {
+        return false;
+    }
+    const slipSbv = slip.special_bet_value || '';
+    return !getInlineOutcomes(match).some((outcome) =>
+        clean(match?.match_id + "" + (outcome?.sub_type_id || match?.sub_type_id) + (outcome?.odd_key || '')) == slip.ucn
+        && (outcome?.special_bet_value || '') == slipSbv
+    );
+}
+
 const SideBets = (props) => {
     const { match, live, mobile } = props;
     const [picked,] = useState();
+    const [state,] = useContext(Context);
+    const moreMarketsPicked = isPickedInMoreMarkets(
+        match, (getBetslip() || state?.betslip || {})?.[match?.match_id]
+    ) ? 'more-markets-picked' : '';
 
     const openLiveStats = (parent_match_id) => {
         window.open(`https://s5.sir.sportradar.com/betmundialsmts/en/match/${match?.parent_match_id}`, 'sportradderwindow', 'width=648,height=700');
@@ -424,7 +456,7 @@ const SideBets = (props) => {
                 </button>
                 <Link
                     to={`/match/${match?.match_id}`}
-                    className="mobile-match-action-btn mobile-match-markets-count"
+                    className={`mobile-match-action-btn mobile-match-markets-count ${moreMarketsPicked}`}
                 >
                     {match?.sidebets}+
                 </Link>
@@ -435,7 +467,7 @@ const SideBets = (props) => {
     return (
         <div
             className={`side mt-2 !pl-2 !ml-3 ${picked} align-self-center more-markets-container m-lg-2`}>
-            <Link to={`/match/${match?.match_id}`} className=''>+{match?.sidebets}</Link>
+            <Link to={`/match/${match?.match_id}`} className={`more-markets-count ${moreMarketsPicked}`}>+{match?.sidebets}</Link>
             <div
                 onClick={() => openLiveStats(match?.parent_match_id)}
                 className='ml-3 mt-1 text-white font-bold opacity-70 hover:opacity-100 cursor-pointer'>
@@ -939,6 +971,15 @@ const MatchMarket = (props) => {
     const handleGameSocket = (type, gameId) => {
         availableMarkets?.forEach((subTypeId) => {
             if (type == "listen" && socket?.connected) {
+                if (jackpot) {
+                    console.info("[JACKPOT MATCH SOCKET] listen", {
+                        match_id: match?.match_id,
+                        parent_match_id: gameId,
+                        sub_type_id: subTypeId,
+                        event: `socket-io#${gameId}#${subTypeId}`,
+                        connected: socket.connected,
+                    });
+                }
                 socket.emit('user.market.listen', { parent_match_id: gameId, sub_type_id: subTypeId });
             } else if (type == "leave") {
                 // socket?.emit("user.market.leave", { parent_match_id: gameId, sub_type_id: subTypeId });
@@ -948,14 +989,50 @@ const MatchMarket = (props) => {
 
 
     useEffect(() => {
+        // jackpots only show/update the 1x2 market
+        if (jackpot && marketId != 1) return;
         if (socket.connected) {
             handleGameSocket("listen", match?.parent_match_id);
-            socket?.on(`socket-io#${match?.parent_match_id}#${marketId}`, (data) => {
+            const socketEvent = `socket-io#${match?.parent_match_id}#${marketId}`;
+            socket?.on(socketEvent, (data) => {
+                const incomingOdds = Object.values(data?.event_odds || {});
+                const incomingMarketId = Number(data?.match_market?.sub_type_id);
+                const marketOneOdds = incomingOdds.filter(
+                    (odd) => Number(odd?.sub_type_id) === 1
+                );
+
+                if (jackpot) {
+                    const orderedOdds = orderMarketOutcomes(marketOneOdds, marketId, special_bet_value);
+                    console.info("[JACKPOT MATCH SOCKET] update", {
+                        match_id: match?.match_id,
+                        parent_match_id: match?.parent_match_id,
+                        market_id: marketId,
+                        socket_event: socketEvent,
+                        status: data?.match_market?.status,
+                        market_sub_type_id: incomingMarketId,
+                        special_bet_value: data?.match_market?.special_bet_value,
+                        incoming_count: incomingOdds.length,
+                        incoming_market_ids: [...new Set(incomingOdds.map((odd) => odd?.sub_type_id))],
+                        market_1_count: marketOneOdds.length,
+                        incoming_outcomes: incomingOdds.map(({ sub_type_id, outcome_id, odd_key, special_bet_value, odd_value }) => ({ sub_type_id, outcome_id, odd_key, special_bet_value, odd_value })),
+                        ordered_count: orderedOdds.length,
+                        ordered_outcomes: orderedOdds.map(({ sub_type_id, outcome_id, odd_key, special_bet_value }) => ({ sub_type_id, outcome_id, odd_key, special_bet_value })),
+                    });
+
+                    if (incomingMarketId !== 1) {
+                        console.warn("[JACKPOT MATCH SOCKET] ignored non-1X2 market update", {
+                            match_id: match?.match_id,
+                            socket_event: socketEvent,
+                            market_sub_type_id: incomingMarketId,
+                        });
+                        return;
+                    }
+                }
                 if (data.match_market.special_bet_value == special_bet_value) {
-                    if (Object.keys(data.event_odds).length > 0) {
+                    if (incomingOdds.length > 0) {
                         setOutcomes((prev) => {
                             let newOdds = orderMarketOutcomes(
-                                Object.values(data.event_odds), marketId, special_bet_value
+                                jackpot ? marketOneOdds : incomingOdds, marketId, special_bet_value
                             )
                             newOdds.forEach(odd => {
                                 odd.name = data.match_market.market_name;
@@ -1000,6 +1077,21 @@ const MatchMarket = (props) => {
         }
     }, [socket.connected]);
 
+    useEffect(() => {
+        if (jackpot && marketId === 1) {
+            console.info("[JACKPOT MATCH SOCKET] initial 1X2 outcomes", {
+                match_id: match?.match_id,
+                parent_match_id: match?.parent_match_id,
+                market_id: marketId,
+                market_name: marketName,
+                socket_event: `socket-io#${match?.parent_match_id}#${marketId}`,
+                status: market_status,
+                outcome_count: outcomes?.length || 0,
+                outcomes: (outcomes || []).map(({ sub_type_id, outcome_id, odd_key, special_bet_value, odd_value }) => ({ sub_type_id, outcome_id, odd_key, special_bet_value, odd_value })),
+            });
+        }
+    }, [jackpot, marketId, match, marketName, market_status, outcomes]);
+
     return (
         <>
             {
@@ -1020,15 +1112,14 @@ const MatchMarket = (props) => {
                                 && matchWithDetails.odd_value
                                 && (!pdown && matchWithDetails.odd_value !== 'NaN') || (jackpot && jackpotstatus == "ACTIVE")
                                 ?
-                                <>
+                                <React.Fragment key={`match-outcome-${marketOdd?.odd_key || marketOdd?.outcome_id || idx}`}>
                                     <OddButton
-                                        key={`match-with-detail-market-${idx}`}
                                         match={matchWithDetails}
                                         mkt={marketName}
                                         live={live}
                                         jackpot={jackpot} />
-                                </>
-                                : <><LockedButton /></>
+                                </React.Fragment>
+                                : <React.Fragment key={`locked-outcome-${marketOdd?.odd_key || marketOdd?.outcome_id || idx}`}><LockedButton /></React.Fragment>
                         )
                     })
             }
@@ -1036,10 +1127,10 @@ const MatchMarket = (props) => {
             {
 
                 !jackpot && !["active", "handedover"].includes(market_status?.toLowerCase()) &&
-                ((btnCount == 2) ? [1, 2].map((btn, idx) => (
-                    <><LockedButton btnStatus={market_status} /></>
-                )) : [1, 2, 3].map((btn, idx) => (
-                    <><LockedButton btnStatus={market_status} /></>
+                ((btnCount == 2) ? [1, 2].map((btn) => (
+                    <React.Fragment key={`locked-market-${marketId}-${btn}`}><LockedButton btnStatus={market_status} /></React.Fragment>
+                )) : [1, 2, 3].map((btn) => (
+                    <React.Fragment key={`locked-market-${marketId}-${btn}`}><LockedButton btnStatus={market_status} /></React.Fragment>
                 )))
             }
         </>
@@ -1057,7 +1148,7 @@ const MatchRow = (props) => {
         setReload,
         subTypes } = props;
     const [match, setMatch] = useState({ ...initialMatch })
-    const [availableMarkets,] = useState(subTypes || [1, 10, 18])
+    const [availableMarkets,] = useState(jackpot ? [1] : (subTypes || [1, 10, 18]))
     const [updatedMatchStatus, setUpdatedMatchStatus] = useState(initialMatch?.match_status);
     const [updatedMatchTime, setUpdatedMatchTime] = useState({});
     const [updatedMatchScore, setUpdatedMatchScore] = useState();
@@ -1260,11 +1351,11 @@ const MatchRow = (props) => {
                             </div>}
                     </div>
 
-                    <div className={`${jackpot && "is-jackpot"} ${live && 'live-game'} matches-row col block ${isSoccer ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
+                    <div className={`${jackpot ? "is-jackpot" : ""} ${live ? 'live-game' : ''} matches-row col block ${isSoccer ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
                         {
                             isSoccer &&
                             <>
-                                <div className={`tablet-market-panel tablet-market-full ${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${(live && (match?.score == "-" || match?.score == null))} ${live && 'live-group-buttons'} ${jackpot && "is-jackpot-bet-group-btns"} ${match?.outcome && "is-outcome"}`} key="222">
+                                <div className={`tablet-market-panel tablet-market-full ${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${live ? 'live-group-buttons' : ''} ${jackpot ? "is-jackpot-bet-group-btns" : ""} ${match?.outcome ? "is-outcome" : ""}`} key="222">
                                     <div className="mobile-market-bar">
                                         <span>{three_way ? "3 WAY" : "3 WAY"}</span>
                                     </div>
@@ -1288,7 +1379,8 @@ const MatchRow = (props) => {
                                     </div>
                                 </div>
 
-                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="223">
+                                {!jackpot && <>
+                                <div className={`tablet-market-panel ${live ? 'live-group-buttons' : ''} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="223">
                                     <div className="mobile-market-bar tablet-market-bar">
                                         <span>DOUBLE CHANCE</span>
                                     </div>
@@ -1312,7 +1404,7 @@ const MatchRow = (props) => {
                                     </div>
                                 </div>
 
-                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="224">
+                                <div className={`tablet-market-panel ${live ? 'live-group-buttons' : ''} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="224">
                                     <div className="mobile-market-bar tablet-market-bar">
                                         <span>OVER/UNDER 2.5</span>
                                     </div>
@@ -1335,6 +1427,7 @@ const MatchRow = (props) => {
                                         />
                                     </div>
                                 </div>
+                                </>}
                             </>
                         }
 
@@ -1343,7 +1436,7 @@ const MatchRow = (props) => {
                             !isSoccer &&
                             Object.keys(match?.odds || [])?.map((odd, idx) => {
                                 return (
-                                    <div className={`${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${(live && (match?.score == "-" || match?.score == null))} ${live && 'live-group-buttons'} c-btn-group align-self-center ${jackpot && "is-jackpot-bet-group-btns"} ${match?.outcome && "is-outcome"}`} key={`non-soccer-${idx}`}>
+                                    <div className={`${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${live ? 'live-group-buttons' : ''} c-btn-group align-self-center ${jackpot ? "is-jackpot-bet-group-btns" : ""} ${match?.outcome ? "is-outcome" : ""}`} key={`non-soccer-${idx}`}>
                                         <MatchMarket
                                             initialMatch={match}
                                             marketName={odd}
