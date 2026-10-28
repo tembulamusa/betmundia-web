@@ -2358,12 +2358,17 @@ events-header {
     padding-bottom: 16px;
 }
 
-/* First list header/row: no border so the top of the list is not double-cut */
+/* First list header/row: no border so the top of the list is not double-cut.
+   Prior match-list/> sticky-only selectors missed first .top-matches when it was
+   nested under .web-element (no .match-list) or otherwise not those exact paths. */
+.matches .top-matches:first-child,
 .matches > .full-mobile.sticky-top > .top-matches,
 .matches .match-list > .top-matches:first-child,
+.matches .web-element > .top-matches:first-child,
 .matches .web-element.match-list > .top-matches:first-child,
 .matches .match-list > .top-matches.mobile-match-card:first-child,
 .matches .web-element.match-list > .top-matches.mobile-match-card:first-child {
+    border: none !important;
     border-top: none !important;
     border-bottom: none !important;
 }
