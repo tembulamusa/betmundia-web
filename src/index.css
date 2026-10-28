@@ -220,6 +220,77 @@ input[type="password"].form-control {
   padding: 0;
 }
 
+/* Left menu scrollbar — dark theme (override global #e2e2e2 track) */
+.ps-sidebar-root,
+.ps-sidebar-container,
+.pro-sidebar,
+.live-sidebar,
+.jackpot-sidebar,
+.jackpot-sidebar-wrap,
+.up.col-md-2 {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15;
+}
+
+.ps-sidebar-root::-webkit-scrollbar,
+.ps-sidebar-container::-webkit-scrollbar,
+.pro-sidebar::-webkit-scrollbar,
+.live-sidebar::-webkit-scrollbar,
+.jackpot-sidebar::-webkit-scrollbar,
+.jackpot-sidebar-wrap::-webkit-scrollbar,
+.up.col-md-2::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: #0a0a15;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-track,
+.ps-sidebar-container::-webkit-scrollbar-track,
+.pro-sidebar::-webkit-scrollbar-track,
+.live-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar::-webkit-scrollbar-track,
+.jackpot-sidebar-wrap::-webkit-scrollbar-track,
+.up.col-md-2::-webkit-scrollbar-track {
+  background: #0a0a15;
+}
+
+.ps-sidebar-root::-webkit-scrollbar-thumb,
+.ps-sidebar-container::-webkit-scrollbar-thumb,
+.pro-sidebar::-webkit-scrollbar-thumb,
+.live-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar::-webkit-scrollbar-thumb,
+.jackpot-sidebar-wrap::-webkit-scrollbar-thumb,
+.up.col-md-2::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 4px;
+}
+
+.ps-sidebar-root .ps__rail-y,
+.ps-sidebar-container .ps__rail-y,
+.pro-sidebar .ps__rail-y,
+.live-sidebar .ps__rail-y,
+.up.col-md-2 .ps__rail-y,
+.ps-sidebar-root .ps__rail-x,
+.ps-sidebar-container .ps__rail-x,
+.pro-sidebar .ps__rail-x,
+.live-sidebar .ps__rail-x,
+.up.col-md-2 .ps__rail-x {
+  background-color: transparent !important;
+}
+
+.ps-sidebar-root .ps__thumb-y,
+.ps-sidebar-container .ps__thumb-y,
+.pro-sidebar .ps__thumb-y,
+.live-sidebar .ps__thumb-y,
+.up.col-md-2 .ps__thumb-y,
+.ps-sidebar-root .ps__thumb-x,
+.ps-sidebar-container .ps__thumb-x,
+.pro-sidebar .ps__thumb-x,
+.live-sidebar .ps__thumb-x,
+.up.col-md-2 .ps__thumb-x {
+  background-color: rgba(255, 255, 255, 0.28) !important;
+}
+
 .css-1wvake5,
 .ps-sidebar-root {
   position: relative;

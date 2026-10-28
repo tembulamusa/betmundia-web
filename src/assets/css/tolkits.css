@@ -10,18 +10,24 @@
     padding: 0.5px 25px 0px 12px !important;
 }
 
+.pro-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15;
+}
+
 .pro-sidebar::-webkit-scrollbar {
-
     -webkit-appearance: none;
-    width: 15px;
-    background-color: lightgrey;
+    width: 6px;
+    background-color: #0a0a15;
+}
 
+.pro-sidebar::-webkit-scrollbar-track {
+    background-color: #0a0a15;
 }
 
 .pro-sidebar::-webkit-scrollbar-thumb {
-
-    background-color: red;
-
+    background-color: rgba(255, 255, 255, 0.28);
+    border-radius: 4px;
 }
 
 .filter-icons {
