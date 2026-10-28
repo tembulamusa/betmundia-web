@@ -2288,7 +2288,8 @@ events-header {
 
 .compt-detail {
     font-size: 12px;
-    opacity: 0.75;
+    opacity: 0.95;
+    color: rgba(255, 255, 255, 0.95);
 }
 
 .compt-teams {
@@ -2351,6 +2352,47 @@ events-header {
     color: #797979;
     font-size: 12px;
     margin: 0px;
+    margin-bottom: 0px;
+    border-bottom: 2px solid rgba(0,0,0,0.2);
+    padding-top: 16px !important;
+    padding-bottom: 16px;
+}
+
+/* First list header/row: no border so the top of the list is not double-cut */
+.matches > .full-mobile.sticky-top > .top-matches,
+.matches .match-list > .top-matches:first-child,
+.matches .web-element.match-list > .top-matches:first-child,
+.matches .match-list > .top-matches.mobile-match-card:first-child,
+.matches .web-element.match-list > .top-matches.mobile-match-card:first-child {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+/* Match detail / time / id: brighter than inherited #797979 */
+.matches .top-matches .match-time-desktop,
+.matches .top-matches .match-meta-compact,
+.matches .top-matches .mobile-match-meta,
+.matches .top-matches .match-detail-container,
+.matches .top-matches .match-detail-container a,
+.matches .top-matches .compt-teams,
+.matches .top-matches .compt-teams .bold {
+    color: #ffffff;
+}
+
+/* Sticky market column labels: 3 WAY / Double Chance / Over-Under */
+.matches > .full-mobile.sticky-top .top-matches,
+.matches > .full-mobile.sticky-top .top-matches .bold,
+.matches > .full-mobile.sticky-top .top-matches .small,
+.matches > .full-mobile.sticky-top .top-matches .c-btn-header,
+.matches > .full-mobile.sticky-top .top-matches .match-detail-container,
+.matches > .full-mobile.sticky-top .top-matches .match-detail-container span,
+.matches > .full-mobile.sticky-top .top-matches .text-gray-500 {
+    color: #ffffff !important;
+}
+
+.mobile-market-bar,
+.tablet-market-bar {
+    color: #ffffff;
 }
 
 .match-list .top-matches {
