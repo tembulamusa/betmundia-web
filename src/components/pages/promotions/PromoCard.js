@@ -22,7 +22,7 @@ const promoDisplayContent = {
   "GET 50% DEPOSIT BONUS": {
     eyebrow: "Daily Deposit Bonus",
     title: "50% DAILY DEPOSIT BONUS",
-    summary: "Get 50% bonus on your first successful deposit of the day.",
+    summary: "Get 50% bonus on your first successful deposit of the day, up to a maximum of KES 200.",
     anchor: "deposit-bonus"
   }
 };
