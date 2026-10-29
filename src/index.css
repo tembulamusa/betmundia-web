@@ -866,9 +866,21 @@ aside.ps-sidebar-root:focus-visible,
     margin: 0 !important;
   }
 
+  /* Market bar sits above: round only the bottom outer corners of the odds row */
+  .mobile-match-card .c-btn-group>.c-btn:first-child,
+  .mobile-match-card .c-btn-group>.locked-button:first-child {
+    border-bottom-left-radius: 6px !important;
+  }
+
   .mobile-match-card .c-btn-group>.c-btn:last-child,
   .mobile-match-card .c-btn-group>.locked-button:last-child {
     border-right: none !important;
+    border-bottom-right-radius: 6px !important;
+  }
+
+  .mobile-match-card .c-btn-group>.c-btn:only-child,
+  .mobile-match-card .c-btn-group>.locked-button:only-child {
+    border-radius: 0 0 6px 6px !important;
   }
 
   .mobile-odd-label {
@@ -5699,6 +5711,21 @@ button.locked-button:hover {
     background: rgba(255, 255, 255, 0.2) !important;
   }
 
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:first-child,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .locked-button:first-child {
+    border-bottom-left-radius: 4px !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:last-child,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .locked-button:last-child {
+    border-bottom-right-radius: 4px !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:only-child,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .locked-button:only-child {
+    border-radius: 0 0 4px 4px !important;
+  }
+
   .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.picked,
   .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.home-team.picked,
   .matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > button.picked,
@@ -5818,6 +5845,21 @@ button.locked-button:hover {
     border-right: none !important;
     margin: 0 !important;
     color: #ffffff !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:first-child,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .locked-button:first-child {
+    border-bottom-left-radius: 4px !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:last-child,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .locked-button:last-child {
+    border-bottom-right-radius: 4px !important;
+  }
+
+  .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:only-child,
+  .mobile-match-card .tablet-market-panel .c-btn-group > .locked-button:only-child {
+    border-radius: 0 0 4px 4px !important;
   }
 
   /* beats tolkits.css's 0.25 mobile background so buttons match the tablet/desktop 0.2 */
