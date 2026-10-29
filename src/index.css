@@ -240,7 +240,7 @@ input[type="password"].form-control {
 .up.col-md-2,
 aside.ps-sidebar-root .ps-sidebar-container {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar,
@@ -253,7 +253,7 @@ aside.ps-sidebar-root .ps-sidebar-container {
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
-  background-color: #0a0a15 !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar-track,
@@ -264,7 +264,7 @@ aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
 .jackpot-sidebar-wrap::-webkit-scrollbar-track,
 .up.col-md-2::-webkit-scrollbar-track,
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
-  background: #0a0a15 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar-thumb,
@@ -285,10 +285,10 @@ aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
 .live-sidebar::-webkit-scrollbar-corner,
 .up.col-md-2::-webkit-scrollbar-corner,
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
-  background: #0a0a15;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* PerfectScrollbar — kill library hover rail #eee (white track) */
+/* PerfectScrollbar — frosted rail (beats library hover #eee) */
 .ps-sidebar-root .ps__rail-y,
 .ps-sidebar-container .ps__rail-y,
 .pro-sidebar .ps__rail-y,
@@ -314,7 +314,7 @@ aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
 .up.col-md-2 .ps .ps__rail-y:hover,
 .up.col-md-2 .ps .ps__rail-y:focus,
 .up.col-md-2 .ps .ps__rail-y.ps--clicking {
-  background-color: transparent !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root .ps__thumb-y,
@@ -3790,7 +3790,7 @@ label {
 }
 
 /*
- * Re-assert left-nav dark scrollbar AFTER the global #e2e2e2 track.
+ * Re-assert left-nav frosted scrollbar AFTER the global #e2e2e2 track.
  * Chromium webkit-scrollbar cascade often prefers later track rules;
  * !important + post-global placement is required for .ps-sidebar-container.
  */
@@ -3803,7 +3803,7 @@ label {
 .up.col-md-2,
 aside.ps-sidebar-root .ps-sidebar-container {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar,
@@ -3816,8 +3816,8 @@ aside.ps-sidebar-root .ps-sidebar-container {
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
-  background: #0a0a15 !important;
-  background-color: #0a0a15 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar-track,
@@ -3828,8 +3828,8 @@ aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
 .jackpot-sidebar-wrap::-webkit-scrollbar-track,
 .up.col-md-2::-webkit-scrollbar-track,
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
-  background: #0a0a15 !important;
-  background-color: #0a0a15 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar-thumb,
@@ -3850,7 +3850,7 @@ aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
 .pro-sidebar::-webkit-scrollbar-corner,
 .up.col-md-2::-webkit-scrollbar-corner,
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
-  background: #0a0a15 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .big-icon-item {
@@ -5870,7 +5870,7 @@ button.locked-button:hover {
 }
 
 /*
- * Left menu dark scrollbar — post-global placement + !important so it beats
+ * Left menu frosted scrollbar — post-global placement + !important so it beats
  * ::-webkit-scrollbar-track { background: #e2e2e2 } and PerfectScrollbar #eee rails.
  */
 .ps-sidebar-root,
@@ -5882,7 +5882,7 @@ button.locked-button:hover {
 .up.col-md-2,
 aside.ps-sidebar-root .ps-sidebar-container {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(255, 255, 255, 0.28) #0a0a15 !important;
+  scrollbar-color: rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar,
@@ -5895,7 +5895,7 @@ aside.ps-sidebar-root .ps-sidebar-container {
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
-  background-color: #0a0a15 !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar-track,
@@ -5906,7 +5906,7 @@ aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar {
 .jackpot-sidebar-wrap::-webkit-scrollbar-track,
 .up.col-md-2::-webkit-scrollbar-track,
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-track {
-  background: #0a0a15 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .ps-sidebar-root::-webkit-scrollbar-thumb,
@@ -5926,7 +5926,7 @@ aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-thumb {
 .pro-sidebar::-webkit-scrollbar-corner,
 .up.col-md-2::-webkit-scrollbar-corner,
 aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
-  background: #0a0a15 !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .up.col-md-2 .ps .ps__rail-y,
@@ -5944,7 +5944,7 @@ aside.ps-sidebar-root .ps-sidebar-container::-webkit-scrollbar-corner {
 .ps-sidebar-container .ps .ps__rail-y:hover,
 .ps-sidebar-container .ps .ps__rail-y:focus,
 .ps-sidebar-container .ps .ps__rail-y.ps--clicking {
-  background-color: transparent !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .up.col-md-2 .ps .ps__thumb-y,
