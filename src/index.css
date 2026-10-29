@@ -840,7 +840,7 @@ aside.ps-sidebar-root:focus-visible,
     border-radius: 0 0 6px 6px;
     overflow: hidden;
     gap: 1px;
-    background: rgba(255,255,255, 0.25) !important;
+    background: rgba(255,255,255, 0.08) !important;
   }
 
   .mobile-match-card .c-btn-group.hidden {
@@ -2002,7 +2002,7 @@ input.std-input::placeholder {
 @media screen and (max-width: 767px) {
   .matches .top-matches .match-detail > button.home-team,
   .home-team {
-    background: rgba(255, 255, 255, 0.25) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
   }
 }
 
@@ -5747,7 +5747,7 @@ button.locked-button:hover {
     border-right: none !important;
     margin: 0 !important;
     color: #ffffff !important;
-    background: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.07) !important;
   }
 
   .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:first-child,
@@ -5901,10 +5901,10 @@ button.locked-button:hover {
     border-radius: 0 0 4px 4px !important;
   }
 
-  /* beats tolkits.css's 0.25 mobile background so buttons match the tablet/desktop 0.2 */
+  /* beats tolkits.css home-team override so phone odds fill matches tablet */
   .matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > .c-btn:not(.picked),
   .matches .top-matches.mobile-match-card .tablet-market-panel .c-btn-group > .locked-button {
-    background: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.07) !important;
   }
 
   .mobile-match-card .tablet-market-panel .mobile-odd-label {
