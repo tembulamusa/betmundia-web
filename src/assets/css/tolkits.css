@@ -2322,14 +2322,14 @@ events-header {
     font-weight: 100 !important;
 }
 
-/* Phone: stronger home-team button fill */
+/* Phone: soft home-team fill (low white opacity) */
 @media screen and (max-width: 767px) {
     .home-team,
     .matches .top-matches .match-detail button.home-team,
     .matches .top-matches .match-detail > button.home-team,
     .mobile-match-card .c-btn.home-team,
     .mobile-match-card .tablet-market-panel .c-btn-group > .c-btn.home-team {
-        background: rgba(255, 255, 255, 0.25) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
     }
 }
 
