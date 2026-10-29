@@ -2,8 +2,12 @@ import { getFromLocalStorage } from "./local-storage";
 import { refreshUserSession } from "./fetch-request";
 import { isUnauthorizedStatus, logoutDueToUnauthorized } from "./session-auth";
 
-/** Re-refresh from the last successful refresh (or login). */
-export const TOKEN_REFRESH_INTERVAL_MS = 45 * 60 * 1000;
+/**
+ * Re-refresh from the last successful refresh (or login).
+ * Access JWTs are ~1h; stay well under that so background timer throttling
+ * does not leave the client on an expired Bearer until the next tick.
+ */
+export const TOKEN_REFRESH_INTERVAL_MS = 30 * 60 * 1000;
 const RETURN_DEBOUNCE_MS = 1000;
 const TRANSIENT_RETRY_MS = 60 * 1000;
 
@@ -30,7 +34,7 @@ const scheduleNext = (delayMs = TOKEN_REFRESH_INTERVAL_MS) => {
 const isLoggedIn = () => Boolean(getFromLocalStorage("user")?.refresh_token);
 
 /**
- * Mark tokens as fresh (login / verify success) and restart the 45-minute timer.
+ * Mark tokens as fresh (login / verify success) and restart the keep-alive timer.
  */
 export const noteSessionAuthenticated = () => {
     if (started && isLoggedIn()) {
@@ -102,7 +106,7 @@ const attachReturnListeners = () => {
 };
 
 /**
- * Single app-wide keep-alive: 45 min from last success + refresh on tab return.
+ * Single app-wide keep-alive: 30 min from last success + refresh on tab return.
  * Safe to call more than once; later calls only update the user callback.
  */
 export const startSessionKeepAlive = ({ onUserUpdated: cb } = {}) => {
@@ -116,7 +120,7 @@ export const startSessionKeepAlive = ({ onUserUpdated: cb } = {}) => {
     attachReturnListeners();
 
     if (isLoggedIn()) {
-        // Page load / first start: refresh now, then arm the 45-minute timer from success.
+        // Page load / first start: refresh now, then arm the timer from success.
         void runScheduledRefresh();
     }
 };

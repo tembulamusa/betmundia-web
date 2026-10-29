@@ -20,6 +20,7 @@ import BonusTermsModal, { findBonus, DEPOSIT_BONUS_CODE } from "../right/bonus-t
 import {
   getFromLocalStorage,
   setLocalStorage,
+  USER_STORAGE_TTL_MS,
 } from "../utils/local-storage";
 
 function formatMsisdn(msisdn) {
@@ -123,7 +124,7 @@ function MobileMenu(props) {
     // AffiliateGetCodeModal already persists user.promo_code; keep local drawer state in sync.
     const storedUser = getFromLocalStorage("user") || user || {};
     if (storedUser?.promo_code !== code) {
-      setLocalStorage("user", { ...storedUser, promo_code: code });
+      setLocalStorage("user", { ...storedUser, promo_code: code }, USER_STORAGE_TTL_MS);
     }
     if (state?.user && state.user.promo_code !== code) {
       dispatch({

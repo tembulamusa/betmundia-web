@@ -1,5 +1,8 @@
 const now = () => (new Date()).getTime();
 
+/** Persist logged-in user for a week (default setLocalStorage TTL is only 1 hour). */
+export const USER_STORAGE_TTL_MS = 1000 * 60 * 60 * 24 * 7;
+
 export const getFromLocalStorage = (key) => {
     let entry = window.localStorage.getItem(key);
     if (!entry || entry == undefined || entry == "undefined") {

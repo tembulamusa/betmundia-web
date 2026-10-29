@@ -6,7 +6,7 @@ import makeRequest from "../utils/fetch-request";
 import { Context } from '../../context/store';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getFromLocalStorage, setLocalStorage } from '../utils/local-storage';
+import { getFromLocalStorage, setLocalStorage, USER_STORAGE_TTL_MS } from '../utils/local-storage';
 import {
     Link,
     useLocation,
@@ -51,7 +51,7 @@ const BodyLogin = (props) => {
             toastId: 673738 /* this is hack to prevent multiple toasts */
         }
         if ([200, 201, 204].includes(message.status)) {
-            setLocalStorage('user', message?.user, 1000 * 60 * 60 * 24 * 7);
+            setLocalStorage('user', message?.user, USER_STORAGE_TTL_MS);
             setUser(message.user);
             resetUnauthorizedGuard();
             noteSessionAuthenticated();
