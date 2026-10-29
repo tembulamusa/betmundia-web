@@ -8,6 +8,7 @@ import {
     FaWhatsapp,
     FaLocationDot,
     FaPhone,
+    FaCommentSms,
     FaComments,
     FaShieldHalved,
     FaLock,
@@ -71,6 +72,12 @@ const Footer = () => {
                                     </span>
                                     <span>254143444142</span>
                                 </a>
+                            </li>
+                            <li>
+                                <span className="site-footer__contact-icon" aria-hidden="true">
+                                    <FaCommentSms />
+                                </span>
+                                <span>SMS shortcode: 29280</span>
                             </li>
                         </ul>
 
