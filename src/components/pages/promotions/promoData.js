@@ -194,10 +194,10 @@ Only 18+. Play responsibly.
 BetMundial – 50% First Deposit of the Day Bonus
 Terms & Conditions
 Promotion
-Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+Receive a 50% bonus on your first successful deposit of the day, up to a maximum of KES 200, subject to the following Terms & Conditions.
 Eligibility
 1.The bonus is awarded once per day on your first successful deposit.
-2.The maximum qualifying deposit for this promotion is KES 10,000.
+2.The bonus is awarded up to a maximum of KES 200.
 3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.To qualify, your bet slip must contain:
@@ -238,10 +238,10 @@ Term and conditions and Bonus rules.
 BetMundial – 50% First Deposit of the Day Bonus
 Terms & Conditions
 Promotion
-Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+Receive a 50% bonus on your first successful deposit of the day, up to a maximum of KES 200, subject to the following Terms & Conditions.
 Eligibility
 1.The bonus is awarded once per day on your first successful deposit.
-2.The maximum qualifying deposit for this promotion is KES 10,000.
+2.The bonus is awarded up to a maximum of KES 200.
 3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.To qualify, your bet slip must contain:
@@ -276,10 +276,10 @@ General Terms
 9.All bets are subject to the BetMundial General Terms & Conditions and Bonus Rules.
 
     `,
-    termsAndConditions: `Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+    termsAndConditions: `Receive a 50% bonus on your first successful deposit of the day, up to a maximum of KES 200, subject to the following Terms & Conditions.
 Eligibility
 1.	The bonus is awarded once per day on your first successful deposit.
-2.	The maximum qualifying deposit for this promotion is KES 10,000.
+2.	The bonus is awarded up to a maximum of KES 200.
 3.	This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.	To qualify, your bet slip must contain:
