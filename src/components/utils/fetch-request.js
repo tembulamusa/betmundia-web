@@ -1,4 +1,4 @@
-import { setLocalStorage, getFromLocalStorage } from './local-storage';
+import { setLocalStorage, getFromLocalStorage, USER_STORAGE_TTL_MS } from './local-storage';
 import {
     isUnauthorizedStatus,
     logoutDueToUnauthorized,
@@ -34,7 +34,19 @@ const joinBaseUrl = (base, path) => {
     return `${normalizedBase}/${normalizedPath}`;
 };
 
-const makeRequest = async ({ url, method, data = null, use_jwt = false, api_version = 1, responseType = "json" }) => {
+const makeRequest = async (options = {}) => {
+    const {
+        url: inputUrl,
+        method,
+        data = null,
+        use_jwt = false,
+        api_version = 1,
+        responseType = "json",
+        omitAuth = false,
+        _authRetried = false,
+    } = options;
+
+    let url = inputUrl;
     // const 
     if (api_version == 2) {
         // BASE2_URL is typically .../v2 with no trailing slash; paths may or may not start with /
@@ -67,7 +79,8 @@ const makeRequest = async ({ url, method, data = null, use_jwt = false, api_vers
 
 
     const token = user?.token;
-    if (token) {
+    // Refresh uses the refresh_token body; skip Bearer so an expired access JWT cannot fail the call.
+    if (token && !omitAuth) {
         headers = { ...headers, ...{ Authorization: "Bearer " + token } }
     }
 
@@ -92,13 +105,19 @@ const makeRequest = async ({ url, method, data = null, use_jwt = false, api_vers
             result = await response?.json();
         }
         let status = response?.status;
-        // Dead session: only real HTTP 401/403 from non-auth requests force login.
-        // Timers never open login on their own; refresh failures are handled in keep-alive.
+        // Access JWT often lasts ~1h. Keep-alive refreshes on a timer, but background
+        // tabs throttle timers — so a 401 must try refresh+retry before opening login.
         if (
             isUnauthorizedStatus(status) &&
             !shouldSkipUnauthorizedLogout(url) &&
             getFromLocalStorage("user")
         ) {
+            if (!_authRetried && getFromLocalStorage("user")?.refresh_token) {
+                const refresh = await refreshUserSession({ force: true });
+                if (refresh.success) {
+                    return makeRequest({ ...options, _authRetried: true });
+                }
+            }
             logoutDueToUnauthorized();
         }
         return [status, result];
@@ -114,19 +133,21 @@ const makeRequest = async ({ url, method, data = null, use_jwt = false, api_vers
 export default makeRequest;
 
 /** Refresh and persist the current user's session, sharing concurrent calls. */
-export const refreshUserSession = async () => {
+export const refreshUserSession = async ({ force = false } = {}) => {
     const current = getFromLocalStorage("user");
     if (!current?.refresh_token) {
         return { success: false, status: 401, response: null };
     }
 
-    // Header and protected pages mount together. Reuse a just-completed refresh
-    // so they don't rotate the same refresh token twice in quick succession.
-    if (Date.now() - tokenRefreshCompletedAt < 30_000) {
-        return { success: true, user: getFromLocalStorage("user") || current, status: 200 };
-    }
     if (tokenRefreshPromise) {
         return tokenRefreshPromise;
+    }
+
+    // Header and protected pages mount together. Reuse a just-completed refresh
+    // so they don't rotate the same refresh token twice in quick succession.
+    // Forced refresh (after HTTP 401) always hits the network.
+    if (!force && Date.now() - tokenRefreshCompletedAt < 30_000) {
+        return { success: true, user: getFromLocalStorage("user") || current, status: 200 };
     }
 
     tokenRefreshPromise = (async () => {
@@ -135,11 +156,12 @@ export const refreshUserSession = async () => {
             method: "POST",
             data: { refresh_token: current.refresh_token },
             api_version: 2,
+            omitAuth: true,
         });
         if ([200, 201, 204].includes(status) && [200, 201, "200", "201"].includes(response?.status) && response?.data) {
             const latest = getFromLocalStorage("user") || current;
             const user = { ...latest, ...response.data };
-            setLocalStorage("user", user, 1000 * 60 * 60 * 24 * 7);
+            setLocalStorage("user", user, USER_STORAGE_TTL_MS);
             tokenRefreshCompletedAt = Date.now();
             return { success: true, user, status, response };
         }

@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Context } from '../../context/store';
-import { getFromLocalStorage, removeItem } from '../utils/local-storage';
+import { getFromLocalStorage, removeItem, setLocalStorage, USER_STORAGE_TTL_MS } from '../utils/local-storage';
 import makeRequest from '../utils/fetch-request';
-import { setLocalStorage } from '../utils/local-storage';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import ShareModal from "../sharemodal";
 import logo from '../../assets/img/logo.svg';
@@ -39,8 +38,8 @@ const Header = (props) => {
     const location = useLocation();
     const [searchParams] = useSearchParams();
 
-    // Centralized session keep-alive (45m after success + refresh on tab return).
-    // Login is never opened from timers alone — only real HTTP 401/403.
+    // Centralized session keep-alive (30m after success + refresh on tab return).
+    // Login is never opened from timers alone — only real HTTP 401/403 after refresh fails.
     useEffect(() => {
         registerSessionAuthHandlers({ dispatch, setUser });
         startSessionKeepAlive({
@@ -104,7 +103,7 @@ const Header = (props) => {
     }, []);
     useEffect(() => {
         if (user) {
-            setLocalStorage("user", user, 1000 * 60 * 60 * 24 * 7);
+            setLocalStorage("user", user, USER_STORAGE_TTL_MS);
         }
     }, [user]);
     useEffect(() => {

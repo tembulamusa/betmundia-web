@@ -14,6 +14,7 @@ import makeRequest from "../../utils/fetch-request";
 import {
     getFromLocalStorage,
     setLocalStorage,
+    USER_STORAGE_TTL_MS,
 } from "../../utils/local-storage";
 import { Context } from "../../../context/store";
 import { formatToFloat } from "../../utils/formatters";
@@ -429,7 +430,7 @@ export function AffiliateGetCodeModal({ show, onHide, onCreated }) {
 
     const persistPromoCode = (code) => {
         const updatedUser = { ...(user || {}), promo_code: code };
-        setLocalStorage("user", updatedUser);
+        setLocalStorage("user", updatedUser, USER_STORAGE_TTL_MS);
         if (state?.user) {
             dispatch({
                 type: "SET",
@@ -791,7 +792,7 @@ const PromoCode = ({
     const persistPromoCode = (code) => {
         setLocalPromoCode(code);
         const updatedUser = { ...(user || {}), promo_code: code };
-        setLocalStorage("user", updatedUser);
+        setLocalStorage("user", updatedUser, USER_STORAGE_TTL_MS);
         if (state?.user) {
             dispatch({
                 type: "SET",
