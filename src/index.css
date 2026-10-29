@@ -5398,9 +5398,16 @@ button.locked-button:hover {
     box-sizing: border-box;
     min-height: 100%;
     align-self: stretch;
-    background: rgba(255, 255, 255, 0.07);
+    /* soft frost — was 0.07; keep Betmundial-dark (desktop ≥1211 unchanged) */
+    background: rgba(255, 255, 255, 0.025);
     margin: 0;
     padding: 8px 8px 8px 8px;
+  }
+
+  /* Parent match cards: tone down tolkits.css rgba(255,255,255,0.1) frost on mobile/tablet */
+  .matches .top-matches,
+  .matches .top-matches.mobile-match-card {
+    background: rgba(255, 255, 255, 0.035);
   }
 
   .matches.full-width:has(> .web-element.match-list) > .web-element.match-list {
@@ -5582,7 +5589,8 @@ button.locked-button:hover {
     font-size: 12px;
     border-radius: 6px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.14);
+    /* soft frost — was 0.14; match mobile card tone-down */
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.12);
   }
 
