@@ -1,0 +1,165 @@
+/* Frozen account reactivation guidance */
+
+.reactivate-account-page {
+  --ra-text: #ffffff;
+  --ra-muted: rgba(255, 255, 255, 0.78);
+  --ra-pink: #e91e8c;
+  --ra-pink-soft: #ff52d4;
+  --ra-pink-deep: #a71f66;
+  --ra-card: rgba(255, 255, 255, 0.08);
+  --ra-border: rgba(255, 255, 255, 0.12);
+  color: var(--ra-text);
+  min-height: 100%;
+  padding: 0 0 2rem;
+  background:
+    radial-gradient(circle at top center, rgba(82, 38, 130, 0.18), transparent 28%),
+    linear-gradient(180deg, #071225 0%, #06101f 100%);
+}
+
+.reactivate-account-page * {
+  box-sizing: border-box;
+}
+
+.reactivate-account-header {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reactivate-account-page .reactivate-account-back {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  padding: 0 !important;
+}
+
+.reactivate-account-page .reactivate-account-back:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.reactivate-account-page .reactivate-account-back svg {
+  font-size: 1.35rem;
+}
+
+.reactivate-account-header-title {
+  margin: 0;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ra-text);
+}
+
+.reactivate-account-inner {
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 0 1rem 1rem;
+}
+
+.reactivate-account-lead {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ra-muted);
+}
+
+.reactivate-account-step {
+  padding: 1.1rem 1rem;
+  background: var(--ra-card);
+  border: 1px solid var(--ra-border);
+  border-radius: 12px;
+}
+
+.reactivate-account-step-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ra-pink-soft);
+}
+
+.reactivate-account-step-title {
+  margin: 0 0 0.55rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ra-text);
+}
+
+.reactivate-account-step p {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ra-muted);
+}
+
+.reactivate-account-quote {
+  display: block;
+  margin: 0 0 0.9rem;
+  padding: 0.75rem 0.9rem;
+  background: rgba(0, 0, 0, 0.28);
+  border-left: 3px solid var(--ra-pink);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: #fff;
+  font-style: italic;
+}
+
+.reactivate-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.reactivate-account-actions a.ra-primary,
+.reactivate-account-actions a.ra-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none !important;
+  color: #fff !important;
+}
+
+.reactivate-account-actions a.ra-primary {
+  background: var(--ra-pink-deep);
+}
+
+.reactivate-account-actions a.ra-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--ra-border);
+}
+
+.reactivate-account-actions a.ra-primary:hover,
+.reactivate-account-actions a.ra-secondary:hover {
+  filter: brightness(1.08);
+}
+
+.reactivate-account-or {
+  margin: 1rem 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.reactivate-account-note {
+  margin: 1.5rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--ra-muted);
+}
