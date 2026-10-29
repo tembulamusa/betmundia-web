@@ -42,6 +42,7 @@ const LoyaltyPointsHowToUse = () => {
                     <h2 className="loyalty-points-step-title">How to use points</h2>
                     <ul>
                         <li>Redeem points for bonuses, free bets, or rewards shown in Promotions.</li>
+                        <li>Use points for shopping at select shops.</li>
                         <li>Open the Promotions page to see current redemption options and costs.</li>
                         <li>Points are not cash and cannot be withdrawn directly.</li>
                         <li>Some rewards may require a minimum points balance or active account status.</li>
