@@ -1915,6 +1915,45 @@ input.std-input::placeholder {
   }
 }
 
+/*
+ * Large desktop: equal corridors beside the main column.
+ * Left: .up.col-md-2 { padding-right: 12px } (empty strip after sports menu).
+ * Right previously used padding-left: 6px with the 768px edge border flush to
+ * .home, so the left gap looked wider. Match 12px padding and paint the
+ * divider at that inset (avoids position:!important fights with sticky rules).
+ * Also clear the left column's inline margin-right:-5px and .home mx-auto
+ * leftover so both 12px gutters measure the same.
+ * Tablet/mobile keep padding-left: 6px + edge border.
+ */
+@media screen and (min-width: 1211px) {
+  .diminish-mobile-row > .up.col-md-2 {
+    padding-right: 12px !important;
+    margin-right: 0 !important;
+  }
+
+  .diminish-mobile-row > .col-md-7.home.mx-auto {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .diminish-mobile-row > .betslip-container.sticky-top,
+  .diminish-mobile-row > .betslip-container {
+    padding-left: 12px !important;
+    border-left: none !important;
+    background-image: linear-gradient(
+      to right,
+      transparent 0,
+      transparent 11px,
+      rgba(255, 255, 255, 0.10) 11px,
+      rgba(255, 255, 255, 0.10) 12px,
+      transparent 12px
+    );
+    background-repeat: no-repeat;
+    background-size: 12px 100%;
+    background-position: left top;
+  }
+}
+
 /* Match detail market rows — listing-style outcome buttons (label over odds) */
 .matches .top-matches.event-row {
   margin-bottom: 0.65rem;
