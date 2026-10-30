@@ -39,7 +39,7 @@ General Terms
 12.Any abuse of the promotion may result in disqualification and forfeiture of any associated rewards.
 13.By participating in this promotion, customers agree to these Terms & Conditions and all other BetMundial rules and policies.
 
-Bet Responsibly. 21+ Only.
+Bet Responsibly. 18+ Only.
         `
   },
   {
@@ -57,7 +57,7 @@ The BET MUNDIAL Aviator Rains Promotion rewards eligible Aviator players with fr
 2. Promotion Period
 The promotion runs from the announced start date until further notice. BET MUNDIAL reserves the right to amend, suspend, or terminate the promotion at any time without prior notice.
 3. Eligibility
-Players must be 21+. Must comply with all BET MUNDIAL Terms & Conditions.
+Players must be 18+. Must comply with all BET MUNDIAL Terms & Conditions.
 4. Claim Process
 Players must claim FreeBet within 10 minutes of Rain release. First-come, first-served. Unclaimed FreeBets expire.
 5. FreeBet Validity
@@ -71,7 +71,7 @@ BET MUNDIAL may suspend or cancel accounts involved in fraud or abuse.
 9. General Terms
 BET MUNDIAL may change or terminate promotion at any time. Decisions are final.
 11. Responsible Gaming
-Only 21+. Play responsibly.
+Only 18+. Play responsibly.
       `
   },
   //   {
@@ -194,10 +194,10 @@ Only 21+. Play responsibly.
 BetMundial – 50% First Deposit of the Day Bonus
 Terms & Conditions
 Promotion
-Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+Receive a 50% bonus on your first successful deposit of the day, up to a maximum of KES 200, subject to the following Terms & Conditions.
 Eligibility
 1.The bonus is awarded once per day on your first successful deposit.
-2.The maximum qualifying deposit for this promotion is KES 10,000.
+2.The bonus is awarded up to a maximum of KES 200.
 3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.To qualify, your bet slip must contain:
@@ -238,10 +238,10 @@ Term and conditions and Bonus rules.
 BetMundial – 50% First Deposit of the Day Bonus
 Terms & Conditions
 Promotion
-Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+Receive a 50% bonus on your first successful deposit of the day, up to a maximum of KES 200, subject to the following Terms & Conditions.
 Eligibility
 1.The bonus is awarded once per day on your first successful deposit.
-2.The maximum qualifying deposit for this promotion is KES 10,000.
+2.The bonus is awarded up to a maximum of KES 200.
 3.This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.To qualify, your bet slip must contain:
@@ -276,10 +276,10 @@ General Terms
 9.All bets are subject to the BetMundial General Terms & Conditions and Bonus Rules.
 
     `,
-    termsAndConditions: `Receive a 50% bonus on your first successful deposit of the day, subject to the following Terms & Conditions.
+    termsAndConditions: `Receive a 50% bonus on your first successful deposit of the day, up to a maximum of KES 200, subject to the following Terms & Conditions.
 Eligibility
 1.	The bonus is awarded once per day on your first successful deposit.
-2.	The maximum qualifying deposit for this promotion is KES 10,000.
+2.	The bonus is awarded up to a maximum of KES 200.
 3.	This promotion is available for Sports Betting only and does not apply to Casino or Crash Games.
 Bonus Bet Requirements
 4.	To qualify, your bet slip must contain:

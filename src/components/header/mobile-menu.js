@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import Modal from "react-bootstrap/Modal";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../../context/store";
 
@@ -21,6 +20,7 @@ import BonusTermsModal, { findBonus, DEPOSIT_BONUS_CODE } from "../right/bonus-t
 import {
   getFromLocalStorage,
   setLocalStorage,
+  USER_STORAGE_TTL_MS,
 } from "../utils/local-storage";
 
 function formatMsisdn(msisdn) {
@@ -64,7 +64,6 @@ function MobileMenu(props) {
   // Daily deposit bonus terms come from GET /bonuses (fetched once, cached).
   const { catalog, bonusStakePct, cashStakePct, minOdds, maxGames, minGames, expiryHours } = useBonusCatalog();
   const depositBonus = findBonus(catalog?.bonuses, DEPOSIT_BONUS_CODE);
-  const [showLoyaltyModal, setShowLoyaltyModal] = useState(false);
   const [affiliateCode, setAffiliateCode] = useState(
     user?.promo_code || null
   );
@@ -125,7 +124,7 @@ function MobileMenu(props) {
     // AffiliateGetCodeModal already persists user.promo_code; keep local drawer state in sync.
     const storedUser = getFromLocalStorage("user") || user || {};
     if (storedUser?.promo_code !== code) {
-      setLocalStorage("user", { ...storedUser, promo_code: code });
+      setLocalStorage("user", { ...storedUser, promo_code: code }, USER_STORAGE_TTL_MS);
     }
     if (state?.user && state.user.promo_code !== code) {
       dispatch({
@@ -348,18 +347,18 @@ function MobileMenu(props) {
                 <span className="account-drawer-loyalty-icon" aria-hidden="true">
                   <FaStar />
                 </span>
-                <span className="account-drawer-loyalty-label">Loyalty Points</span>
+                <div className="account-drawer-loyalty-copy">
+                  <span className="account-drawer-loyalty-label">Loyalty Points</span>
+                  <Link
+                    to="/loyalty-points"
+                    className="account-drawer-loyalty-use"
+                    onClick={handleClose}
+                  >
+                    How to use
+                  </Link>
+                </div>
               </div>
               <div className="account-drawer-loyalty-right">
-                <button
-                  type="button"
-                  className="account-drawer-loyalty-info"
-                  aria-label="Loyalty points guide"
-                  aria-haspopup="dialog"
-                  onClick={() => setShowLoyaltyModal(true)}
-                >
-                  <FaInfoCircle aria-hidden="true" />
-                </button>
                 <span className="account-drawer-loyalty-amount">
                   {loyaltyPointsDisplay}
                 </span>
@@ -517,61 +516,6 @@ function MobileMenu(props) {
           </p>
         )}
       />
-      <Modal
-        show={showLoyaltyModal}
-        onHide={() => setShowLoyaltyModal(false)}
-        centered
-        className="account-drawer-loyalty-modal"
-      >
-        <Modal.Header closeButton closeVariant="white">
-          <Modal.Title>
-            <span className="account-drawer-loyalty-modal-title-icon" aria-hidden="true">
-              <FaStar />
-            </span>
-            Loyalty Points Guide
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p className="account-drawer-loyalty-modal-intro">
-            Loyalty points reward your activity on Betmundial. Track your balance in
-            the wallet, then use points toward available rewards.
-          </p>
-
-          <section className="account-drawer-loyalty-modal-section">
-            <h3>How to earn points</h3>
-            <ul>
-              <li>Place eligible sports and casino bets with your cash balance.</li>
-              <li>Complete qualifying deposits and account milestones when offered.</li>
-              <li>Join promotions and campaigns that list loyalty points as a reward.</li>
-              <li>Points are credited after bets settle or after the promotion rules are met.</li>
-            </ul>
-          </section>
-
-          <section className="account-drawer-loyalty-modal-section">
-            <h3>How to use points</h3>
-            <ul>
-              <li>Redeem points for bonuses, free bets, or rewards shown in Promotions.</li>
-              <li>Open the Promotions page to see current redemption options and costs.</li>
-              <li>Points are not cash and cannot be withdrawn directly.</li>
-              <li>Some rewards may require a minimum points balance or active account status.</li>
-            </ul>
-          </section>
-
-          <p className="account-drawer-loyalty-modal-note">
-            Offer details can change. Check each promotion for exact earn rates, expiry,
-            and redemption rules.
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <button
-            type="button"
-            className="account-drawer-loyalty-modal-close"
-            onClick={() => setShowLoyaltyModal(false)}
-          >
-            Got it
-          </button>
-        </Modal.Footer>
-      </Modal>
     </span>
   );
 }

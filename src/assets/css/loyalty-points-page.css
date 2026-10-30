@@ -1,0 +1,140 @@
+/* Loyalty points how-to-use guidance */
+
+.loyalty-points-page {
+  --lp-text: #ffffff;
+  --lp-muted: rgba(255, 255, 255, 0.78);
+  --lp-pink: #e91e8c;
+  --lp-pink-soft: #ff52d4;
+  --lp-pink-deep: #a71f66;
+  --lp-gold: #ffc428;
+  --lp-card: rgba(255, 255, 255, 0.08);
+  --lp-border: rgba(255, 255, 255, 0.12);
+  color: var(--lp-text);
+  min-height: 100%;
+  padding: 0 0 2rem;
+  background:
+    radial-gradient(circle at top center, rgba(82, 38, 130, 0.18), transparent 28%),
+    linear-gradient(180deg, #071225 0%, #06101f 100%);
+}
+
+.loyalty-points-page * {
+  box-sizing: border-box;
+}
+
+.loyalty-points-header {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.loyalty-points-page .loyalty-points-back {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  padding: 0 !important;
+}
+
+.loyalty-points-page .loyalty-points-back:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.loyalty-points-page .loyalty-points-back svg {
+  font-size: 1.35rem;
+}
+
+.loyalty-points-header-title {
+  margin: 0;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--lp-text);
+}
+
+.loyalty-points-inner {
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 0 1rem 1rem;
+}
+
+.loyalty-points-lead {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--lp-muted);
+}
+
+.loyalty-points-step {
+  margin: 0 0 1rem;
+  padding: 1.1rem 1rem;
+  background: var(--lp-card);
+  border: 1px solid var(--lp-border);
+  border-radius: 12px;
+}
+
+.loyalty-points-step-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lp-pink-soft);
+}
+
+.loyalty-points-step-title {
+  margin: 0 0 0.55rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--lp-gold);
+}
+
+.loyalty-points-step ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.loyalty-points-step li + li {
+  margin-top: 0.4rem;
+}
+
+.loyalty-points-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.95rem;
+}
+
+.loyalty-points-actions a.lp-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none !important;
+  color: #fff !important;
+  background: var(--lp-pink-deep);
+}
+
+.loyalty-points-actions a.lp-primary:hover {
+  filter: brightness(1.08);
+}
+
+.loyalty-points-note {
+  margin: 1.25rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--lp-muted);
+}

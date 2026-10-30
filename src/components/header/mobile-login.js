@@ -6,7 +6,7 @@ import makeRequest from "../utils/fetch-request";
 import { Context } from '../../context/store';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getFromLocalStorage, setLocalStorage } from '../utils/local-storage';
+import { getFromLocalStorage, setLocalStorage, USER_STORAGE_TTL_MS } from '../utils/local-storage';
 import {
     Link,
     useLocation,
@@ -16,6 +16,12 @@ import Alert from '../utils/alert';
 import { type } from '@testing-library/user-event/dist/cjs/utility/type.js';
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { clearLoginRedirect, resolveLoginRedirect } from '../utils/login-redirect';
+import { resetUnauthorizedGuard } from '../utils/session-auth';
+import { noteSessionAuthenticated } from '../utils/session-keep-alive';
+import {
+    isAccountFrozenMessage,
+    REACTIVATE_ACCOUNT_PATH,
+} from '../utils/account-frozen';
 
 const BodyLogin = (props) => {
     const { setUser } = props
@@ -45,8 +51,10 @@ const BodyLogin = (props) => {
             toastId: 673738 /* this is hack to prevent multiple toasts */
         }
         if ([200, 201, 204].includes(message.status)) {
-            setLocalStorage('user', message?.user, 1000 * 60 * 60 * 24 * 7);
+            setLocalStorage('user', message?.user, USER_STORAGE_TTL_MS);
             setUser(message.user);
+            resetUnauthorizedGuard();
+            noteSessionAuthenticated();
             // toast.success(`🚀 ${message.message || "Login successful"}`, options);
             if (state?.showloginmodal) {
                 dispatch({ type: "DEL", key: "showloginmodal" });
@@ -234,7 +242,23 @@ const BodyLogin = (props) => {
 
                         {
                             generalErrorMessage &&
-                            <div><Alert message={generalErrorMessage} /></div>
+                            <div>
+                                <Alert message={generalErrorMessage} />
+                                {isAccountFrozenMessage(generalErrorMessage) && (
+                                    <div
+                                        className="mt-2"
+                                        onClick={() => dispatch({ type: "DEL", key: "showloginmodal" })}
+                                    >
+                                        <Link
+                                            className="underline font-bold"
+                                            style={{ color: '#a71f66' }}
+                                            to={REACTIVATE_ACCOUNT_PATH}
+                                        >
+                                            Account frozen? How to reactivate
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
                         }
                         <div className='row !pr-0 px-0 !mr-0'>
                             <div className='col-3'><button className='mt-4 btn btn-default btn-lg' style={{

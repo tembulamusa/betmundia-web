@@ -11,6 +11,7 @@ import Notify from "../../utils/Notify";
 import Alert from "../../utils/alert";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { useGameJackpot, formatJackpot } from "../../utils/egt-jackpots";
 import defaultImage from "../../../assets/img/casino/casino-default-thumbnail.jpeg";
 import aviatrixImage from "../../../assets/img/casino/aviatrix/aviatrix.jpg";
 
@@ -23,6 +24,10 @@ const CasinoGame = (props) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { filterType, filterName } = useParams();
+    // Live pot for this tile, or null for the games that have none. Only
+    // EGT Digital titles carry one, so every other tile skips the feed.
+    const jackpot = useGameJackpot(game?.game_id, game?.provider_name);
+    const jackpotAmount = jackpot ? formatJackpot(jackpot.grand, jackpot.currency) : null;
 
     const onlyInclude = ["expanse", "elbet", "onlyplay", "galaxsys"];
     const inProduction = ['pragmatic', 'aviatrix', "bitville", "spribe", "3 oaks", "aviatorllc", "kagaming", "splitthepot", "smartsoft", "galaxsys", "elbet", "expanse", 'fazi', "blackbird", "egtdigital"];
@@ -112,6 +117,13 @@ const CasinoGame = (props) => {
                             decoding="async"
                             wrapperClassName="casino-game-image-lazy-wrapper"
                         />
+
+                        {jackpotAmount &&
+                            <div className="casino-jackpot-badge" title={`${jackpot.name} jackpot`}>
+                                <span className="casino-jackpot-badge-label">JACKPOT</span>
+                                <span className="casino-jackpot-badge-amount">{jackpotAmount}</span>
+                            </div>
+                        }
 
                         {alertMessage && <div className="game-launch-issue"><Alert message={alertMessage} /></div>}
 

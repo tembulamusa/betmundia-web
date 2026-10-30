@@ -240,8 +240,8 @@ const MatchHeaderRow = (props) => {
 
 
     return (
-        first_match && <div className={`${live && 'live'} full-mobile sticky-top`} style={{ position: "sticky", paddingLeft: "0", paddingRight: "0" }}>
-            <div className={`${jackpot && 'jackpot-zero-top'} top-matches d-flex position-sticky sticky-top `}
+        first_match && <div className={`${live ? 'live' : ''} full-mobile sticky-top`} style={{ position: "sticky", paddingLeft: "0", paddingRight: "0" }}>
+            <div className={`${jackpot ? 'jackpot-zero-top' : ''} top-matches d-flex position-sticky sticky-top`}
                 style={{ opacity: "1", top: "100px", height: "" }}>
 
                 <div className={'col-2 col-xs-12 match-detail-container'} key="d4">
@@ -300,7 +300,7 @@ const MatchHeaderRow = (props) => {
                         ))
                     )}
                     <div
-                        className="bet-fix events-odd pad undefined align-self-center more-markets-container m-lg-2 col-3 hidden md:block">
+                        className="bet-fix events-odd pad align-self-center more-markets-container m-lg-2 col-3 hidden md:block">
                         &nbsp;
                     </div>
                 </div>
@@ -1351,11 +1351,11 @@ const MatchRow = (props) => {
                             </div>}
                     </div>
 
-                    <div className={`${jackpot && "is-jackpot"} ${live && 'live-game'} matches-row col block ${isSoccer ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
+                    <div className={`${jackpot ? "is-jackpot" : ""} ${live ? 'live-game' : ''} matches-row col block ${isSoccer ? "md:flex" : "single-market-container"} justify-content-between`} key="24">
                         {
                             isSoccer &&
                             <>
-                                <div className={`tablet-market-panel tablet-market-full ${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${(live && (match?.score == "-" || match?.score == null))} ${live && 'live-group-buttons'} ${jackpot && "is-jackpot-bet-group-btns"} ${match?.outcome && "is-outcome"}`} key="222">
+                                <div className={`tablet-market-panel tablet-market-full ${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${live ? 'live-group-buttons' : ''} ${jackpot ? "is-jackpot-bet-group-btns" : ""} ${match?.outcome ? "is-outcome" : ""}`} key="222">
                                     <div className="mobile-market-bar">
                                         <span>{three_way ? "3 WAY" : "3 WAY"}</span>
                                     </div>
@@ -1380,7 +1380,7 @@ const MatchRow = (props) => {
                                 </div>
 
                                 {!jackpot && <>
-                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="223">
+                                <div className={`tablet-market-panel ${live ? 'live-group-buttons' : ''} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="223">
                                     <div className="mobile-market-bar tablet-market-bar">
                                         <span>DOUBLE CHANCE</span>
                                     </div>
@@ -1404,7 +1404,7 @@ const MatchRow = (props) => {
                                     </div>
                                 </div>
 
-                                <div className={`tablet-market-panel ${(live && (match?.score == "-" || !match?.score))} ${live && 'live-group-buttons'} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="224">
+                                <div className={`tablet-market-panel ${live ? 'live-group-buttons' : ''} match-market-extra ${jackpot ? "hidden md:flex" : "flex"}`} key="224">
                                     <div className="mobile-market-bar tablet-market-bar">
                                         <span>OVER/UNDER 2.5</span>
                                     </div>
@@ -1436,7 +1436,7 @@ const MatchRow = (props) => {
                             !isSoccer &&
                             Object.keys(match?.odds || [])?.map((odd, idx) => {
                                 return (
-                                    <div className={`${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${(live && (match?.score == "-" || match?.score == null))} ${live && 'live-group-buttons'} c-btn-group align-self-center ${jackpot && "is-jackpot-bet-group-btns"} ${match?.outcome && "is-outcome"}`} key={`non-soccer-${idx}`}>
+                                    <div className={`${match?.sport_name?.toLowerCase() == "soccer" ? "" : "single-market-content"} ${live ? 'live-group-buttons' : ''} c-btn-group align-self-center ${jackpot ? "is-jackpot-bet-group-btns" : ""} ${match?.outcome ? "is-outcome" : ""}`} key={`non-soccer-${idx}`}>
                                         <MatchMarket
                                             initialMatch={match}
                                             marketName={odd}

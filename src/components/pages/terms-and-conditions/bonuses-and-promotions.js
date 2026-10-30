@@ -76,7 +76,7 @@ const BonusesAndPromotions = () => {
                 <br />
                 <ol>
                     <li>
-                        Daily deposit bonus: 50% on your first successful deposit of each calendar day; valid 24 hours from award.
+                        Daily deposit bonus: 50% on your first successful deposit of each calendar day, up to a maximum of KES 200; valid 24 hours from award.
                     </li>
                     <li>
                         Bonus balance cannot be withdrawn directly; winnings from qualifying bonus bets are credited to your cash balance and may be withdrawn.

@@ -34,6 +34,23 @@ const SlipCounter = (props) => {
   return <span className="">{state?.sliptype?.count || 0}</span>;
 };
 
+const SmsShortcodeSection = () => (
+  <section className='betslip-paybill bg-secondary'>
+    <div className="paybillnumbers">
+      <h2 style={{ marginBottom: "3px" }}>SMS Shortcode</h2>
+      <p style={{ marginTop: "0" }}>Send JOIN to register or bet via SMS.</p>
+      <ul>
+        <li className="mpesa">
+          <span className="lazy lazy-loaded" style={{ fontWeight: "bold", minWidth: "110px" }}>
+            SMS
+          </span>
+          <span style={{ paddingRight: "10px" }}>29280</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+);
+
 const PaybillNumbersSection = () => (
   <section className='betslip-paybill bg-secondary'>
     <div className="paybillnumbers">
@@ -239,6 +256,7 @@ const Right = (props) => {
                 <BetSlip jackpot={state?.isjackpot} betslipValidationData={betslipValidationData} jackpotData={jackpotData} dbWinMatrix={dbWinMatrix} sharedCode={sharedSlipCode} />
               </div>
             </section>
+            <SmsShortcodeSection />
             <PaybillNumbersSection />
 
           </>

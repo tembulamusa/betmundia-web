@@ -91,6 +91,10 @@ import './assets/css/forgot-password-page.css';
 import LiveCasino from "./components/pages/casino/LiveCasino";
 import CrashTerms from "./components/pages/terms-and-conditions/crash-terms";
 import AffiliateTerms from "./components/pages/affiliate-terms";
+import ReactivateAccount from "./components/pages/reactivate-account";
+import './assets/css/reactivate-account-page.css';
+import LoyaltyPointsHowToUse from "./components/pages/loyalty-points";
+import './assets/css/loyalty-points-page.css';
 
 const container = document.getElementById("app");
 
@@ -150,6 +154,8 @@ const AppShell = () => {
                                     <Route exact path="/signup" element={<Signup />} />
                                     <Route exact path="/signup/:promoCode" element={<Signup />} />
                                     <Route exact path="/login" element={<Login />} />
+                                    <Route exact path="/reactivate-account" element={<ReactivateAccount />} />
+                                    <Route exact path="/loyalty-points" element={<LoyaltyPointsHowToUse />} />
                                     <Route exact path="/reset-password" element={<ResetPassword />} />
                                     <Route exact path="/forgot-password" element={<ForgotPassword />} />
                                     <Route exact path="/verify-account" element={<VerifyAccount />} />

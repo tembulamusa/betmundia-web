@@ -5,7 +5,7 @@ import makeRequest from "../utils/fetch-request";
 import { GiSoccerBall } from "react-icons/gi";
 import HomeTeamDefaultFlag from "../../assets/team-jersies/home-default.png"
 import AwayTeamDefaultFlag from "../../assets/team-jersies/away-default.png"
-import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
+import { getFromLocalStorage, setLocalStorage, USER_STORAGE_TTL_MS } from "../utils/local-storage";
 import { getStoredIpAddress } from "../utils/ip-address";
 import NoEvents from "../utils/no-events";
 import { normalizeFreebetOdds } from "../utils/freebet-odds";
@@ -50,7 +50,7 @@ const FreeBet = ({ isFreebetPage = false, inModal = false } = {}) => {
                 setFreebet(null);
                 let updatedUser = { ...getFromLocalStorage("user") };
                 updatedUser.has_freebet = 0;
-                setLocalStorage("user", updatedUser);
+                setLocalStorage("user", updatedUser, USER_STORAGE_TTL_MS);
                 window.dispatchEvent(new Event("freebet:placed"));
                 setTimeout(() => {
                     setAlert(null)
