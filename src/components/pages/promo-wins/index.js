@@ -1,3 +1,4 @@
+import '../../../assets/css/promo-wins-page.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";

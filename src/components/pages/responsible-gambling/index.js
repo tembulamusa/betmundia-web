@@ -1,3 +1,4 @@
+import '../../../assets/css/responsible-gambling-page.css';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {

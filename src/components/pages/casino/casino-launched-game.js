@@ -1,3 +1,4 @@
+import '../../../assets/css/casino.css';
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../../context/store";
 import { getFromLocalStorage, setLocalStorage, removeItem } from "../../utils/local-storage";
@@ -8,6 +9,7 @@ import { isMobile } from "react-device-detect";
 import makeRequest from "../../utils/fetch-request";
 import { MdFullscreen } from "react-icons/md";
 import { useLocation } from "react-router-dom";
+import { ensureCasinoExternalScripts } from '../../utils/load-external-script';
 
 
 const CasinoLaunchedGame = (props) => {
@@ -107,6 +109,7 @@ const CasinoLaunchedGame = (props) => {
 
 
     useEffect(() => {
+        void ensureCasinoExternalScripts();
         dispatch({ type: "SET", key: "iscasinopage", payload: true });
         // Keep launched shell alive across game-to-game navigations so sidebars never remount.
         const existingShell =

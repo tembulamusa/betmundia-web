@@ -1,3 +1,4 @@
+import '../../../assets/css/anti-money-laundering-page.css';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {

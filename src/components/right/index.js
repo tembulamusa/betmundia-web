@@ -15,6 +15,7 @@ import {
   withSgrDefaults,
   countSgrQualifyingGames,
 } from './bonge-bonus-utils';
+import { scheduleIdle } from '../utils/defer-idle';
 
 const AlertMessage = (props) => {
   return (
@@ -203,13 +204,17 @@ const Right = (props) => {
 
   useEffect(() => {
     let cancelled = false;
-    loadSgrOncePerPageLoad().then((data) => {
-      if (data && !cancelled) {
-        setDbWinMatrix(data);
-      }
-    });
+    // Sequence after shell paint — still loads every page load.
+    const cancelIdle = scheduleIdle(() => {
+      loadSgrOncePerPageLoad().then((data) => {
+        if (data && !cancelled) {
+          setDbWinMatrix(data);
+        }
+      });
+    }, 2400);
     return () => {
       cancelled = true;
+      cancelIdle();
     };
   }, []);
   useEffect(() => {

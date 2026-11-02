@@ -3,6 +3,7 @@ import React, {
     useEffect,
     useState,
     useRef,
+    useCallback,
     Suspense
 } from "react";
 
@@ -11,13 +12,15 @@ import { Context } from '../context/store';
 import makeRequest from './utils/fetch-request';
 import useInterval from "../hooks/set-interval.hook";
 import HighlightsBoard from "./highlights-board";
-import socket from "./utils/socket-connect";
+import socket, { ensureSocketConnected } from "./utils/socket-connect";
 import MatchList from './matches/index';
-import { getFromLocalStorage, removeItem } from "./utils/local-storage";
+import { getFromLocalStorage } from "./utils/local-storage";
 const CarouselLoader = React.lazy(() => import('./carousel/index'));
 const MainTabs = React.lazy(() => import('./header/main-tabs'));
 const PopupBanner = React.lazy(() => import('./pop_up_banner'));
 
+/** Initial page size — more matches load on scrollEnd via pagination. */
+const MATCH_PAGE_SIZE = 50;
 
 const Index = (props) => {
     const location = useLocation();
@@ -25,25 +28,37 @@ const Index = (props) => {
     const [allSportId, setAllSportId] = useState();
     const [three_way, setThreeWay] = useState(true);
     const [matches, setMatches] = useState();
-    const [limit, setLimit] = useState(300);
-    const [page, setPage] = useState(1);
+    const [limit] = useState(MATCH_PAGE_SIZE);
+    const [, setPage] = useState(1);
+    const [, setHasMore] = useState(true);
     const [state, dispatch] = useContext(Context);
     const [fetching, setFetching] = useState(false)
     const [fetchingCount, setFetchingCount] = useState(0)
     const homePageRef = useRef()
     const [searchParams] = useSearchParams();
     const [producers, setProducers] = useState([])
+    const pageRef = useRef(1);
+    const hasMoreRef = useRef(true);
+    const fetchingRef = useRef(false);
+    const controlTextRef = useRef("filtered");
 
+    useEffect(() => {
+        ensureSocketConnected();
+    }, []);
 
-    const fetchData = (controlText) => {
+    const fetchData = useCallback((controlText, options = {}) => {
+        const { pageNo = 1, append = false } = options;
+        const nextControl = controlText || controlTextRef.current || "filtered";
+        controlTextRef.current = nextControl;
+
         setFetching(true);
+        fetchingRef.current = true;
         let fetchcount = fetchingCount + 1;
         let filtersport = state?.filtersport || getFromLocalStorage("filtersport");
         if (location?.pathname == "/") {
             filtersport = null
         }
-        let pageNo = 1;
-        let limitSize = limit || 300;
+        let limitSize = limit || MATCH_PAGE_SIZE;
         let tab = 'highlights';
         let method = "GET";
         let endpoint = "/sports/matches/pre-match/"
@@ -53,7 +68,6 @@ const Index = (props) => {
                 + filtersport?.default_market : "")
             + "?page=" + pageNo + `&size=${limitSize}`;
 
-        let url = new URL(window.location.href);
         let search_term = state?.searchterm || "";
         if (state?.filtercategory) {
             endpoint += "&category_id =" + state?.filtercategory?.category_id;
@@ -67,14 +81,14 @@ const Index = (props) => {
 
         endpoint += "&tab=" + tab;
 
-        if (state?.filtercompetition && controlText !== "fetchAll") {
-            endpoint = (controlText == "filtered") &&
+        if (state?.filtercompetition && nextControl !== "fetchAll") {
+            endpoint = (nextControl == "filtered") &&
                 `/sports/matches/pre-match-sport/${filtersport?.sport_id || allSportId || 79}/${state?.filtercompetition?.competition_id}/${filtersport?.default_market}`
                 + "?page=" + pageNo + `&size=${limitSize}`;
 
 
             if (filtersport?.sport_name?.toLowerCase() === "soccer" || !filtersport) {
-                endpoint = (controlText == "filtered") && `/sports/competitions/matches/${state?.filtercompetition?.competition_id}`;
+                endpoint = (nextControl == "filtered") && `/sports/competitions/matches/${state?.filtercompetition?.competition_id}`;
             }
         }
         let data = null;
@@ -83,15 +97,6 @@ const Index = (props) => {
             data = { search: search_term, sport_id: filtersport?.sport_id || allSportId || 79 };
             endpoint = `/ sports / matches / search`;
         }
-        // else {
-        //     if(state?.filtercompetition ) {
-        //         endpoint = `/ v1 / sports / competition / matches ? id = ${ state?.filtercompetition?.competition_id } `;
-
-        //         if (state?.filtercompetition?.competition_id == 0){
-        //             endpoint = "/v1/matches?page=" + (page || 1) + "&sport_id = " + (state?.filtersport?.sport_id||sportid || 79) + `& limit=${ limit || 200 } `;
-        //         }
-        //     }
-        // } 
         endpoint = endpoint.replaceAll(" ", '');
         if (filtersport) {
             setThreeWay((['competition', 'threeway'].includes(filtersport?.sport_type?.toLowerCase())));
@@ -102,31 +107,53 @@ const Index = (props) => {
         makeRequest({ url: endpoint, method: method, data: data, api_version: 2, }).then(([status, result]) => {
             setFetchingCount(fetchcount);
             if ([200, 201].includes(status)) {
-                setMatches(result?.data?.items || result) //(matches?.length > 0 && page > 1) ? [...matches, ...result?.data?.items] : result?.data?.items || result)
-                setFetching(false);
+                const raw = result?.data?.items || result;
+                const list = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+                setMatches((prev) => (append && Array.isArray(prev) ? [...prev, ...list] : list));
+                const more = list.length >= limitSize;
+                setHasMore(more);
+                hasMoreRef.current = more;
                 setProducers(result?.producer_statuses);
+            } else if (!append) {
+                setHasMore(false);
+                hasMoreRef.current = false;
             }
+            setFetching(false);
+            fetchingRef.current = false;
+        }).catch(() => {
+            setFetching(false);
+            fetchingRef.current = false;
         });
 
-    };
-
-    // useEffect(() => {
-
-    // }, [location])
-
-
-    const poll = () => {
-
-    }
+    }, [
+        fetchingCount,
+        limit,
+        location?.pathname,
+        allSportId,
+        categoryid,
+        state?.filtersport,
+        state?.filtercategory,
+        state?.filtercompetition,
+        state?.filtermenuclicked,
+        state?.active_tab,
+        state?.searchterm,
+    ]);
 
     useEffect(() => {
+        pageRef.current = 1;
+        setPage(1);
+        setHasMore(true);
+        hasMoreRef.current = true;
         let newSportId = searchParams.get('sportId');
         if (newSportId !== null) {
-            fetchData("fetchAll");
+            controlTextRef.current = "fetchAll";
+            fetchData("fetchAll", { pageNo: 1, append: false });
         } else {
-            fetchData("filtered")
+            controlTextRef.current = "filtered";
+            fetchData("filtered", { pageNo: 1, append: false })
             setFetchingCount(0);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sportid,
         location,
         state?.filtercategory,
@@ -138,29 +165,41 @@ const Index = (props) => {
 
     useInterval(async () => {
         if (!socket.connected) {
-            fetchData()
+            fetchData(controlTextRef.current, { pageNo: 1, append: false })
         }
     }, 1000 * 60);
 
-    document.addEventListener('scrollEnd', (event) => {
-        if (!fetching) {
-            setFetching(true);
-            setPage(page + 1);
-        }
-    })
+    // scrollEnd → next page (preserves full match list via append)
+    useEffect(() => {
+        const onScrollEnd = () => {
+            if (fetchingRef.current || !hasMoreRef.current) {
+                return;
+            }
+            const nextPage = pageRef.current + 1;
+            pageRef.current = nextPage;
+            setPage(nextPage);
+            fetchData(controlTextRef.current, { pageNo: nextPage, append: true });
+        };
+        document.addEventListener('scrollEnd', onScrollEnd);
+        return () => document.removeEventListener('scrollEnd', onScrollEnd);
+    }, [fetchData]);
 
     return (
 
         <>
             <div className="homepage" ref={homePageRef}>
-                <CarouselLoader />
+                <Suspense fallback={<div className="banner-imgs" aria-hidden="true" style={{ minHeight: 120 }} />}>
+                    <CarouselLoader />
+                </Suspense>
                 <section className="highlights-board">
                     <HighlightsBoard />
                 </section>
                 {/* End of highlights board */}
 
                 {/* Start tabs */}
-                <MainTabs tab={location.pathname.replace("/", "") || 'highlights'} />
+                <Suspense fallback={null}>
+                    <MainTabs tab={location.pathname.replace("/", "") || 'highlights'} />
+                </Suspense>
                 {
                     <MatchList
                         socket={socket}
