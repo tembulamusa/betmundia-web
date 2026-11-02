@@ -1058,7 +1058,11 @@ const SurvivorChallengesList = () => {
                                     {/* Only the expanded row actually fetches/renders its games —
                                         mounting SurvivorChallengeGames for every challenge in the
                                         list at once would fire one request per challenge. */}
-                                    {activeKey === key && <SurvivorChallengeGames id={challenge.id} />}
+                                    {activeKey === key && (
+                                        <SurvivorErrorBoundary variant="panel" resetKey={key}>
+                                            <SurvivorChallengeGames id={challenge.id} />
+                                        </SurvivorErrorBoundary>
+                                    )}
                                 </Accordion.Body>
                             </Accordion.Item>
                         );
@@ -1260,7 +1264,9 @@ const SurvivorChallengeDetail = ({ id }) => {
             </div>
 
             <div className="survivor-detail-body">
-                <SurvivorChallengeGames id={id} />
+                <SurvivorErrorBoundary variant="panel" resetKey={id}>
+                    <SurvivorChallengeGames id={id} />
+                </SurvivorErrorBoundary>
             </div>
             </div>
         </div>
@@ -1270,25 +1276,49 @@ const SurvivorChallengeDetail = ({ id }) => {
 class SurvivorErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { hasError: false };
+        this.state = { hasError: false, message: null };
     }
 
-    static getDerivedStateFromError() {
-        return { hasError: true };
+    static getDerivedStateFromError(error) {
+        return { hasError: true, message: error?.message || null };
     }
 
     componentDidCatch(error, errorInfo) {
         console.error("[Survivor Challenge] Render failed", error, errorInfo);
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.state.hasError && prevProps.resetKey !== this.props.resetKey) {
+            this.setState({ hasError: false, message: null });
+        }
+    }
+
     render() {
         if (this.state.hasError) {
+            const subtitle = this.state.message
+                ? `${this.state.message} — refresh the page to try again.`
+                : "Refresh the page to try again.";
+            if (this.props.variant === "panel") {
+                return (
+                    <div className="survivor-games-error" role="alert">
+                        <SurvivorEmptyState
+                            title="This challenge's games could not be loaded."
+                            subtitle={subtitle}
+                        />
+                        <div className="text-center mt-3">
+                            <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
+                                Refresh page
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
             return (
                 <div className="survivor-page" role="alert">
                     <SurvivorPageHeader />
                     <SurvivorEmptyState
                         title="This challenge could not be loaded."
-                        subtitle="Refresh the page to try again."
+                        subtitle={subtitle}
                     />
                     <div className="text-center mt-3">
                         <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
