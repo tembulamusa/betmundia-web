@@ -1,3 +1,4 @@
+import '../../../assets/css/jumprope.css';
 import React, { useState, useEffect, useRef } from "react";
 import {
   LineChart,

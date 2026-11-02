@@ -1,3 +1,4 @@
+import '../../../assets/css/freebet-page.css';
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";

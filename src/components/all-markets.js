@@ -14,9 +14,8 @@ import { getBetslip } from './utils/betslip';
 
 import { MarketList } from './matches/index';
 import { Context } from "../context/store";
-import socket from "./utils/socket-connect";
+import socket, { ensureSocketConnected } from "./utils/socket-connect";
 import AllMarketsUnavailable from "./utils/all-markets-unavailable";
-import { data } from "jquery";
 
 const Header = React.lazy(() => import('./header/header'));
 const Footer = React.lazy(() => import('./footer/footer'));
@@ -81,6 +80,7 @@ const MatchAllMarkets = (props) => {
     }, !socketIsConnected ? 10000 : null);
 
     useEffect(() => {
+        ensureSocketConnected();
 
         const handleConnect = () => setSockectIsConnected(true);
         const handleDisconnect = () => setSockectIsConnected(false);

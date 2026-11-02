@@ -8,6 +8,8 @@ import Notify from "../../utils/Notify";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChair, faCircle, faDotCircle } from "@fortawesome/free-solid-svg-icons";
+import { ensureCasinoExternalScripts } from '../../utils/load-external-script';
+import '../../../assets/css/casino.css';
 
 const LiveCasino = (props) => {
 
@@ -109,9 +111,14 @@ const LiveCasino = (props) => {
     }
 
     useEffect(() => {
-        initializeDGA().then(() => {
-            initializeDGAEvents()
-        })
+        let cancelled = false;
+        (async () => {
+            await ensureCasinoExternalScripts();
+            if (cancelled) return;
+            await initializeDGA();
+            if (!cancelled) initializeDGAEvents();
+        })();
+        return () => { cancelled = true; };
         //fetchGames()
     }, [])
 

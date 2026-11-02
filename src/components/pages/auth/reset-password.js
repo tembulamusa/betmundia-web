@@ -1,3 +1,4 @@
+import '../../../assets/css/change-password-page.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Formik, Form } from 'formik';
 import { useNavigate } from 'react-router-dom';

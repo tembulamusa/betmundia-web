@@ -19,7 +19,7 @@ import moment from 'moment';
 import Notify from "../utils/Notify";
 import Alert from '../utils/alert';
 import useInterval from '../../hooks/set-interval.hook';
-import socket from '../utils/socket-connect';
+import socket, { ensureSocketConnected } from '../utils/socket-connect';
 import BongeBonusCard from './bonge-bonus-card';
 import { buildBongeBonusAdvice } from './bonge-bonus-utils';
 const clean_rep = (str) => {
@@ -59,6 +59,7 @@ const BetSlip = (props) => {
         setBetslipsData(b);
         if (Object.keys(b).length > 0) {
             setHasBetslip(true);
+            ensureSocketConnected();
         } else {
             setHasBetslip(false);
         }

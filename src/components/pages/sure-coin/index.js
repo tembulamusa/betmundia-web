@@ -1,3 +1,4 @@
+import '../../../assets/css/surecoin.css';
 import React, { useContext, useEffect, useState } from "react";
 import RotatingCoin from "./rotating-coin";
 import CoinStakeChoice from "./coin-stake-choice";

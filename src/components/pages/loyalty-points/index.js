@@ -1,3 +1,4 @@
+import '../../../assets/css/loyalty-points-page.css';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';

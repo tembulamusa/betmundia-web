@@ -1,3 +1,4 @@
+import '../../../assets/css/reactivate-account-page.css';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';

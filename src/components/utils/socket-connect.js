@@ -1,5 +1,9 @@
 import { io } from "socket.io-client";
 
+/**
+ * autoConnect: false — connect only when sports/live/markets/betslip/auth
+ * surfaces need odds or profile updates. Call ensureSocketConnected() there.
+ */
 const socket = io("https://wss.betmundial.com/socket-io", {
   transports: ["websocket"],
   reconnection: true,
@@ -8,7 +12,9 @@ const socket = io("https://wss.betmundial.com/socket-io", {
   reconnectionDelay: 800,
   reconnectionDelayMax: 5000,
   timeout: 10000,
+  autoConnect: false,
 });
+
 socket.on('connect', () => {
   console.log('[socket] connected', socket.id);
 });
@@ -43,5 +49,14 @@ if (socket.io && typeof socket.io.on === 'function') {
     console.log('[socket] manager error', error?.message || error);
   });
 }
+
+/** Connect (or reconnect) when live odds / profile sockets are needed. */
+export const ensureSocketConnected = () => {
+  if (!socket.connected) {
+    console.log('[socket] ensureSocketConnected: connecting');
+    socket.connect();
+  }
+  return socket;
+};
 
 export default socket;

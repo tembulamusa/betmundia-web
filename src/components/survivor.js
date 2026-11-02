@@ -1,3 +1,4 @@
+import '../assets/css/survivor-page.css';
 import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Modal, Accordion } from "react-bootstrap";

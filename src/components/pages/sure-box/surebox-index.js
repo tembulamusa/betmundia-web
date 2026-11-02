@@ -1,3 +1,4 @@
+import '../../../assets/css/surebox.css';
 import React, { useEffect, useContext, useState, useRef } from "react";
 import { Context } from "../../../context/store";
 import { getFromLocalStorage, setLocalStorage } from "../../utils/local-storage";
