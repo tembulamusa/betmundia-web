@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect, useEffect, useCallback, useState, useRef } from "react";
+import React, { useContext, useLayoutEffect, useEffect, useCallback, useState, useRef, Suspense } from "react";
 import { useLocation, useParams } from 'react-router-dom';
 import makeRequest from './utils/fetch-request';
 import { getJackpotBetslip, getBetslip } from './utils/betslip';
@@ -157,7 +157,9 @@ const Live = (props) => {
 
     return (
         <>
-            <CarouselLoader />
+            <Suspense fallback={<div className="banner-imgs" aria-hidden="true" style={{ minHeight: 120 }} />}>
+                <CarouselLoader />
+            </Suspense>
             {<MatchList
                 fetching={fetching}
                 three_way={threeWay}
