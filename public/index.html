@@ -4,8 +4,7 @@
 <head>
   <meta charset="utf-8" />
 
-
-  <!--Start of Tawk.to Script (fail-safe)-->
+  <!-- Tawk noise filters only at boot; embed script is deferred via app idle loader -->
   <script type="text/javascript">
     (function () {
       function isTawkNoise(message, source) {
@@ -14,7 +13,6 @@
         return /tawk/i.test(msg) || /tawk\.to/i.test(src) || /embed\.tawk/i.test(src) || /twk-/i.test(msg);
       }
 
-      // Keep Tawk failures from showing as visible page / overlay errors
       window.addEventListener('error', function (event) {
         if (isTawkNoise(event && event.message, event && event.filename)) {
           event.preventDefault();
@@ -32,42 +30,11 @@
         }
       });
 
-      try {
-        window.Tawk_API = window.Tawk_API || {};
-        window.Tawk_LoadStart = new Date();
-        var s1 = document.createElement('script');
-        var s0 = document.getElementsByTagName('script')[0];
-        s1.async = true;
-        s1.src = 'https://embed.tawk.to/69aeee647f65b51c3392421d/1jj9l6f39';
-        s1.charset = 'UTF-8';
-        s1.setAttribute('crossorigin', '*');
-        s1.onerror = function () {
-          window.__tawkLoadFailed = true;
-        };
-        if (s0 && s0.parentNode) {
-          s0.parentNode.insertBefore(s1, s0);
-        } else if (document.head) {
-          document.head.appendChild(s1);
-        }
-      } catch (e) {
-        window.__tawkLoadFailed = true;
-      }
+      window.Tawk_API = window.Tawk_API || {};
+      window.Tawk_LoadStart = new Date();
     })();
   </script>
-  <!--End of Tawk.to Script-->
-  <!-- Google Tag Manager -->
-  <script>
-    (function (w, d, s, l, i) {
-      w[l] = w[l] || [];
-      w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-      var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s),
-        dl = l != 'dataLayer' ? '&l=' + l : '';
-      j.async = true;
-      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-      f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-MQXFR5QP');
-  </script>
+  <!-- GTM / Pixel / gtag / Tawk embed: deferred in src (idle after first paint) -->
 
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -78,37 +45,6 @@
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
   <title>Betmundial - Sports Betting</title>
-
-  <!-- Facebook Pixel -->
-  <script>
-    !function (f, b, e, v, n, t, s) {
-      if (f.fbq) return;
-      n = f.fbq = function () {
-        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      };
-      if (!f._fbq) f._fbq = n;
-      n.push = n; n.loaded = !0; n.version = '2.0';
-      n.queue = [];
-      t = b.createElement(e); t.async = true;
-      t.src = v;
-      s = b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t, s);
-    }(window, document, 'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-
-    fbq('init', '643603111457269');
-    fbq('track', 'PageView');
-  </script>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPXC9NS5G9"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-VPXC9NS5G9');
-  </script>
 
 </head>
 
@@ -124,9 +60,8 @@
 
   <div id="app"></div>
 
-  <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://client.pragmaticplaylive.net/desktop/assets/api/fullscreenApi.js"></script>
+  <!-- jQuery CDN + Pragmatic fullscreen removed from critical path.
+       Loaded on casino routes via ensureCasinoExternalScripts (npm jquery). -->
 
   <!-- Scroll Detector -->
   <script>
@@ -141,7 +76,6 @@
     let userInteracted = false;
     let isInternalNavigation = false;
 
-    // ✅ Track user interaction (required)
     const markInteraction = () => {
       userInteracted = true;
     };
@@ -151,7 +85,6 @@
     window.addEventListener("keydown", markInteraction);
     window.addEventListener("scroll", markInteraction);
 
-    // ✅ Detect internal navigation (same domain links)
     document.addEventListener("click", function (e) {
       const link = e.target.closest("a");
 
@@ -159,36 +92,24 @@
 
       const url = new URL(link.href, window.location.origin);
 
-      // If same origin → internal navigation
       if (url.origin === window.location.origin) {
         isInternalNavigation = true;
       }
     });
 
-    // ✅ Detect SPA navigation (React Router)
     window.addEventListener("popstate", function () {
       isInternalNavigation = true;
     });
 
-    // ✅ Main unload handler
     window.addEventListener("beforeunload", function (e) {
       if (!userInteracted) return;
 
-      // ❌ Skip alert for internal navigation
       if (isInternalNavigation) return;
 
       e.preventDefault();
       e.returnValue = "";
     });
   </script>
-
-  <!-- Vortex Script -->
-  <!-- <script>
-    window.VortexConfig = {
-      token: "vtx_1b0685f3-c50"
-    };
-  </script>
-  <script src="https://vortexcomtech.com/widget/loader.js" async></script> -->
 
 </body>
 

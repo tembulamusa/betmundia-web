@@ -16,6 +16,8 @@ import CategoryListing from './category-listing';
 import CasinoJackpots from './casino-jackpots';
 import CasinoSidebar from './casino-sidebar';
 import MobileCategoriesMenu from './mobile-categories-menu';
+import { ensureCasinoExternalScripts } from '../../utils/load-external-script';
+import '../../../assets/css/casino.css';
 
 const Casino = (props) => {
     const { filterType, filterName } = useParams();
@@ -105,24 +107,32 @@ const Casino = (props) => {
         }
     }, [])
     useEffect(() => {
-        // Check if script already exists or if dga/xlg is already loaded
-        const existingScript = document.querySelector('script[src="/dgAPI.js"]');
-        if (existingScript || (typeof window !== 'undefined' && window.dga)) {
-            return;
-        }
+        let cancelled = false;
+        let script = null;
 
-        // Dynamically add Pragmatic DGA script
-        const script = document.createElement("script");
-        script.src = "/dgAPI.js";
-        script.async = true;
-        script.defer = true;
-        script.id = "dgAPI-script"; // Add ID for easier identification
-        document.body.appendChild(script);
+        const bootCasinoScripts = async () => {
+            await ensureCasinoExternalScripts();
+            if (cancelled) return;
+
+            const existingScript = document.querySelector('script[src="/dgAPI.js"]');
+            if (existingScript || (typeof window !== 'undefined' && window.dga)) {
+                return;
+            }
+
+            script = document.createElement("script");
+            script.src = "/dgAPI.js";
+            script.async = true;
+            script.defer = true;
+            script.id = "dgAPI-script";
+            document.body.appendChild(script);
+        };
+
+        void bootCasinoScripts();
 
         return () => {
-            // Only cleanup if script was added by this component
+            cancelled = true;
             const scriptToRemove = document.getElementById("dgAPI-script");
-            if (scriptToRemove && scriptToRemove === script) {
+            if (scriptToRemove && script && scriptToRemove === script) {
                 document.body.removeChild(scriptToRemove);
             }
         };

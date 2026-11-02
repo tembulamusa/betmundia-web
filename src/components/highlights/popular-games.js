@@ -7,8 +7,9 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import MundialLeagueImg from '../../assets/img/casino/mundial-league-thumbnail.jpg';
 import { Button } from "react-bootstrap";
 import { isMobile } from 'react-device-detect';
+import { scheduleIdle } from "../utils/defer-idle";
 
-
+const POPULAR_CASINO_TTL_MS = 1000 * 60 * 30;
 
 const PopularGames = (props) => {
     const [state, dispatch] = useContext(Context);
@@ -20,20 +21,23 @@ const PopularGames = (props) => {
         let endpoint = "top-games-list";
         await makeRequest({ url: endpoint, method: "GET", api_version: "casinoGames" }).then(([status, result]) => {
             if (status == 200) {
-                setLocalStorage("toppopularcasino", result)
+                setLocalStorage("toppopularcasino", result, POPULAR_CASINO_TTL_MS)
                 dispatch({ type: "SET", key: "toppopularcasino", payload: result });
             }
         });
     }
     useEffect(() => {
-        // check for casino top
+        // Hydrate from cache immediately; network refresh after shell/matches.
         const getTopCasino = getFromLocalStorage("toppopularcasino");
-        if (!getTopCasino) {
-            fetchTopCasino();
-        } else {
+        if (getTopCasino) {
             dispatch({ type: "SET", key: "toppopularcasino", payload: getTopCasino });
         }
-
+        return scheduleIdle(() => {
+            if (!getFromLocalStorage("toppopularcasino")) {
+                fetchTopCasino();
+            }
+        }, 2600);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const getCasinoImageIcon = (imgUrl) => {

@@ -1,3 +1,4 @@
+import '../../../assets/css/casino.css';
 import React, { useContext, useEffect, useState } from 'react';
 import CasinoCarousel from '../../carousel/casino-carousel';
 import { ShimmerTable } from 'react-shimmer-effects';

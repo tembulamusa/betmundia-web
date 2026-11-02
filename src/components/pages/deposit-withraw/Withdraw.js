@@ -1,3 +1,4 @@
+import '../../../assets/css/withdraw-page.css';
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';

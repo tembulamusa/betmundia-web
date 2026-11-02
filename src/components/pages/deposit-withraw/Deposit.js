@@ -1,3 +1,4 @@
+import '../../../assets/css/deposit-page.css';
 import React, { useState, useContext } from 'react';
 import { Formik, Form } from 'formik';
 import { useNavigate } from 'react-router-dom';

@@ -1,24 +1,19 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, Suspense } from 'react';
 import Container from 'react-bootstrap/Container';
 import { Context } from '../../context/store';
 import { getFromLocalStorage, removeItem, setLocalStorage, USER_STORAGE_TTL_MS } from '../utils/local-storage';
 import makeRequest from '../utils/fetch-request';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import ShareModal from "../sharemodal";
 import logo from '../../assets/img/logo.svg';
 import { Navbar } from "react-bootstrap";
-import LoginModal from '../loginmodal';
 import BigIconNav from './big-icon-nav';
-import CheckMpesaDepositStatus from '../webmodals/check-mpesa-deposit-status';
-import DepositModal from '../webmodals/deposit-modal';
 import useInterval from "../../hooks/set-interval.hook";
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import socket from '../utils/socket-connect';
+import socket, { ensureSocketConnected } from '../utils/socket-connect';
 import HeaderNav from './header-nav';
 import MobileChat from './mobile-chat';
 import MobileTopBar from './mobile-top-bar';
 import FreebetNotice from './freebet-notice';
-import FreeBetModal from '../webmodals/freebet-modal';
 import {
     getJackpotTypes,
     persistJackpotTypes,
@@ -26,10 +21,42 @@ import {
 } from '../utils/jackpot-data';
 import { registerSessionAuthHandlers } from '../utils/session-auth';
 import { startSessionKeepAlive } from '../utils/session-keep-alive';
-
+import { scheduleIdle } from '../utils/defer-idle';
 
 const ProfileMenu = React.lazy(() => import('./profile-menu'));
 const HeaderLogin = React.lazy(() => import('./top-login'));
+const ShareModal = React.lazy(() => import('../sharemodal'));
+const LoginModal = React.lazy(() => import('../loginmodal'));
+const CheckMpesaDepositStatus = React.lazy(() => import('../webmodals/check-mpesa-deposit-status'));
+const DepositModal = React.lazy(() => import('../webmodals/deposit-modal'));
+const FreeBetModal = React.lazy(() => import('../webmodals/freebet-modal'));
+
+/** Keep modal chunk mounted after first open so close/reopen stays instant. */
+const useKeepWhen = (when) => {
+    const [armed, setArmed] = useState(Boolean(when));
+    useEffect(() => {
+        if (when) setArmed(true);
+    }, [when]);
+    return armed;
+};
+
+const sportsSocketPath = (pathname = '') => {
+    if (!pathname) return true;
+    if (
+        pathname === '/' ||
+        pathname.startsWith('/live') ||
+        pathname.startsWith('/match') ||
+        pathname.startsWith('/jackpot') ||
+        pathname.startsWith('/survivor') ||
+        pathname.startsWith('/my-bets') ||
+        pathname.startsWith('/betslip') ||
+        pathname.startsWith('/sports') ||
+        pathname.startsWith('/verify-account')
+    ) {
+        return true;
+    }
+    return false;
+};
 
 const Header = (props) => {
     const [user, setUser] = useState(getFromLocalStorage("user"));
@@ -37,6 +64,16 @@ const Header = (props) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchParams] = useSearchParams();
+
+    const needsSocket = Boolean(user) || sportsSocketPath(location.pathname);
+    const showLogin = state?.showloginmodal === true;
+    const showShare = state?.showsharemodal === true;
+    const showDeposit = Boolean(state?.promptdepositrequest?.show);
+    const showMpesa = state?.showcheckmpesadepositstatus === true;
+    const keepLogin = useKeepWhen(showLogin);
+    const keepShare = useKeepWhen(showShare);
+    const keepDeposit = useKeepWhen(showDeposit);
+    const keepMpesa = useKeepWhen(showMpesa);
 
     // Centralized session keep-alive (30m after success + refresh on tab return).
     // Login is never opened from timers alone — only real HTTP 401/403 after refresh fails.
@@ -49,15 +86,28 @@ const Header = (props) => {
         });
     }, [dispatch]);
 
-    // Prefetch jackpot types on header load → localStorage + context.
+    // Prefetch jackpot types after shell paint (still runs; timing only).
     useEffect(() => {
         const cached = getJackpotTypes(state);
         if (cached.length) {
             persistJackpotTypes(cached, dispatch);
         }
-        void refreshJackpotTypes(dispatch);
+        return scheduleIdle(() => {
+            void refreshJackpotTypes(dispatch);
+        }, 2200);
         // Intentionally once on header mount.
         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Prefetch modal chunks on idle so first open is snappy without blocking boot.
+    useEffect(() => {
+        return scheduleIdle(() => {
+            import('../loginmodal');
+            import('../sharemodal');
+            import('../webmodals/deposit-modal');
+            import('../webmodals/check-mpesa-deposit-status');
+            import('../webmodals/freebet-modal');
+        }, 3500);
     }, []);
 
     const updateUserOnHistory = async () => {
@@ -88,13 +138,19 @@ const Header = (props) => {
         }
     }, user ? 1000 * 60 : null);
 
-    // Every 2 minutes: if the socket dropped, reconnect from the main header.
-    useInterval(() => {
-        if (!socket.connected) {
-            console.log('[socket] header reconnect check: disconnected, connecting again');
-            socket.connect();
+    // Connect when sports / logged-in surfaces need the socket; reconnect if dropped.
+    useEffect(() => {
+        if (needsSocket) {
+            ensureSocketConnected();
         }
-    }, 1000 * 60 * 2);
+    }, [needsSocket]);
+
+    useInterval(() => {
+        if (needsSocket && !socket.connected) {
+            console.log('[socket] header reconnect check: disconnected, connecting again');
+            ensureSocketConnected();
+        }
+    }, needsSocket ? 1000 * 60 * 2 : null);
 
     useEffect(() => {
         const onFreebetPlaced = () => setUser((prev) => (prev ? { ...prev, has_freebet: 0 } : prev));
@@ -108,6 +164,7 @@ const Header = (props) => {
     }, [user]);
     useEffect(() => {
         if (user) {
+            ensureSocketConnected();
             if (socket.connected) {
                 socket.emit('user.profile', user?.profile_id);
             }
@@ -138,21 +195,6 @@ const Header = (props) => {
     return (
         <>
             <Navbar expand="md" className="mb-0 ck pc os app-navbar top-nav" fixed="top" variant="dark" style={{ flexWrap: "wrap" }}>
-                {/* <div className="flex items-center md:!hidden w-full gap-2 bg-yellow-400 px-2 py-2">                    <div className="flex-1 text-black text-[10px] font-[500]">
-                    Download the App and Enjoy bonuses of Upto 500!
-                </div>
-
-                    <Link
-                        to="/app"
-                        className="
-                        bg-pink-700 px-3 py-2 
-                        rounded-md text-[10px] 
-                        font-bold flex 
-                        items-center justify-center"
-                    >
-                        Download Now
-                    </Link>
-                </div> */}
                 <div className='main-header-top w-full px-2 pt-2 md:!p-0'>
                     <MobileTopBar user={user} />
                     <Container fluid className="d-none d-xl-grid mobile-change position-relative header-top-grid">
@@ -170,7 +212,9 @@ const Header = (props) => {
                         <div className="header-top-actions d-none d-md-flex" id="navbar-collapse-main">
                             <div className="flex justify-end items-center">
                                 <FreebetNotice user={user} className="mr-3" />
-                                {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
+                                <Suspense fallback={null}>
+                                    {user ? <ProfileMenu user={user} /> : <HeaderLogin setUser={setUser} />}
+                                </Suspense>
                             </div>
                         </div>
                     </Container>
@@ -181,20 +225,13 @@ const Header = (props) => {
                 </div>
             </Navbar >
 
-            {/* mobile bottom menu */}
-
-
-            {/* Only show if they are visible/third nav is available */}
-
-
-
-
-            <ShareModal shown={state?.showsharemodal == false} />
-
-            <LoginModal setUser={setUser} />
-            <CheckMpesaDepositStatus />
-            <DepositModal />
-            <FreeBetModal user={user} />
+            <Suspense fallback={null}>
+                {keepShare && <ShareModal shown={state?.showsharemodal == false} />}
+                {keepLogin && <LoginModal setUser={setUser} />}
+                {keepMpesa && <CheckMpesaDepositStatus />}
+                {keepDeposit && <DepositModal />}
+                {user && <FreeBetModal user={user} />}
+            </Suspense>
         </>
 
     )

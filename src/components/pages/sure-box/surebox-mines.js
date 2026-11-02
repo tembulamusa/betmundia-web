@@ -1,3 +1,4 @@
+import '../../../assets/css/surebox.css';
 import React, { useState } from "react";
 import { FaBolt, FaQuestion, FaMinus, FaPlus, FaMusic, FaCompass } from "react-icons/fa";
 import { IoIosFlash } from "react-icons/io";

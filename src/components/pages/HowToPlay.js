@@ -1,3 +1,4 @@
+import '../../assets/css/how-to-play-page.css';
 import React, { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {

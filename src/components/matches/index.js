@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import NoEvents from '../utils/no-events';
 import usePrevious from "../../hooks/previous.hook"
 import { match } from 'assert';
-import socket from '../utils/socket-connect';
+import socket, { ensureSocketConnected } from '../utils/socket-connect';
 import { ShimmerTable } from "react-shimmer-effects";
 import LockedButton, { EmptyButton } from '../utils/locked-button';
 import betslip from '../right/betslip';
@@ -1730,6 +1730,7 @@ const MatchList = (props) => {
     const [state, dispatch] = useContext(Context);
 
     useEffect(() => {
+        ensureSocketConnected();
         dispatch({ type: "SET", key: "matchlisttype", payload: "normal" });
         return () => {
 

@@ -1,3 +1,4 @@
+import '../../../assets/css/forgot-password-page.css';
 
 // This component is also in charge of verifying phone number/account.
 // We use the same thing to forgot password and 

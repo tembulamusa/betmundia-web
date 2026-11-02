@@ -5,7 +5,7 @@ import { getJackpotBetslip, getBetslip } from './utils/betslip';
 
 import useInterval from "../hooks/set-interval.hook";
 import { Context } from '../context/store';
-import socket from "./utils/socket-connect.js";
+import socket, { ensureSocketConnected } from "./utils/socket-connect.js";
 import MatchList from "./matches/index.js";
 import betslip from "./right/betslip.js";
 import { getFromLocalStorage } from "./utils/local-storage.js";
@@ -18,7 +18,7 @@ const Live = (props) => {
     const [delay,] = useState(3000);
     const [fetching, setFetching] = useState(false)
     const { sportid, categoryid, competitionid } = useParams();
-    const [limit, setLimit] = useState(300);
+    const [limit, setLimit] = useState(100);
     const [producers, setProducers] = useState([]);
     const [threeWay, setThreeWay] = useState(true);
     const [refresh, setRefresh] = useState(false);
@@ -48,6 +48,7 @@ const Live = (props) => {
     }, !socketIsConnected ? 3000 : null);
 
     useEffect(() => {
+        ensureSocketConnected();
         handleGameSocket("listen");
         socket.on(`socket-io#live-match-page#${state?.selectedLivesport?.betradar_sport_id || 1}`, (data) => {
             setMatches((preveMatches) => {

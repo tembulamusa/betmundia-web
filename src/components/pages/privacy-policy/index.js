@@ -1,3 +1,4 @@
+import '../../../assets/css/privacy-policy-page.css';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {

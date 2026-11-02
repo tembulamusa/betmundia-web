@@ -9,7 +9,7 @@ import {
 } from '../../utils/login-redirect';
 import Notify from '../../utils/Notify';
 import Alert from '../../utils/alert';
-import socket from '../../utils/socket-connect';
+import socket, { ensureSocketConnected } from '../../utils/socket-connect';
 import { getOrCreateDeviceId } from '../../utils/device-id';
 import {
     clearPendingVerifyAuth,
@@ -213,6 +213,8 @@ const VerifyAccount = () => {
     // Socket subscribe + listen
     useEffect(() => {
         if (!msisdn || !deviceId.current) return undefined;
+
+        ensureSocketConnected();
 
         const eventPrimary = `socket-io#otp#${deviceId.current}`;
         const eventFallback = `user#otp#${deviceId.current}`;

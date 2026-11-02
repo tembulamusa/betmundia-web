@@ -1,3 +1,4 @@
+import '../../../assets/css/skip-rope.css';
 import React, { useState, useEffect, useRef } from "react";
 import { getFromLocalStorage, setLocalStorage } from "../../utils/local-storage";
 import { BiSolidVolumeMute } from "react-icons/bi";
