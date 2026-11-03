@@ -931,13 +931,13 @@
 }
 
 .survivor-pick-btn:hover:not(:disabled):not(.selected) {
-  background: #a71f66;
-  border-color: #a71f66;
-  color: #ffc428;
+  background: #ffc428;
+  border-color: #ffc428;
+  color: #1a1400;
 }
 
 .survivor-pick-btn:hover:not(:disabled):not(.selected) .survivor-pick-odd {
-  color: #ffc428;
+  color: #1a1400;
 }
 
 /* Selected / draft pick — solid brand yellow (only this state is yellow). */
