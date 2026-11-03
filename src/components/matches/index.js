@@ -53,6 +53,98 @@ const formatMobileMatchMeta = (startTime) => {
     return raw;
 }
 
+const parseMatchStartMs = (startTime) => {
+    if (startTime === 0 || startTime === '0' || startTime == null || startTime === '') {
+        return null;
+    }
+    const raw = String(startTime).trim();
+    const ms = Date.parse(raw.includes('T') || raw.includes('-') ? raw.replace(' ', 'T') : raw);
+    return Number.isFinite(ms) ? ms : null;
+}
+
+/** In-play on the live feed: has a match clock, or kickoff time has passed. */
+export const isLiveMatchInPlay = (match, nowMs = Date.now()) => {
+    if (!match) return false;
+    if (String(match?.match_status || '').toLowerCase().trim() === 'ended') {
+        return false;
+    }
+    if (match?.match_time) {
+        return true;
+    }
+    const startMs = parseMatchStartMs(match?.start_time);
+    if (startMs == null) {
+        return false;
+    }
+    return startMs <= nowMs;
+}
+
+export const isUpcomingLiveMatch = (match, nowMs = Date.now()) => {
+    if (!match) return false;
+    if (String(match?.match_status || '').toLowerCase().trim() === 'ended') {
+        return false;
+    }
+    return !isLiveMatchInPlay(match, nowMs);
+}
+
+const LiveSectionHeader = ({ title, count, variant = 'live' }) => (
+    <div
+        className={`live-section-header live-section-header--${variant} d-flex align-items-center`}
+        role="separator"
+        aria-label={title}
+    >
+        {variant === 'live' ? (
+            <span className="colored-circle" style={{ backgroundColor: '#cc5500' }} aria-hidden="true" />
+        ) : (
+            <span className="colored-circle" style={{ backgroundColor: '#FFB200' }} aria-hidden="true" />
+        )}
+        <span className="live-section-header__title">
+            {title}
+            {typeof count === 'number' ? (
+                <span className="live-section-header__count">({count})</span>
+            ) : null}
+        </span>
+    </div>
+)
+
+/** Countdown until kickoff for upcoming live fixtures (ticks while mounted). */
+const TimeToLiveStarting = (props) => {
+    const { starttime } = props;
+    const [, setTick] = useState(0);
+
+    useInterval(() => {
+        setTick((n) => n + 1);
+    }, 15000);
+
+    if (starttime === '0' || starttime === 0 || starttime == null || starttime === '') {
+        return <span>Not Started</span>;
+    }
+
+    const startMs = parseMatchStartMs(starttime);
+    if (startMs == null) {
+        return <span>Not Started</span>;
+    }
+
+    const startDiff = startMs - Date.now();
+    if (startDiff <= 0) {
+        return <span className="text-[#FFB200] font-[500]">Starting…</span>;
+    }
+
+    const diffDays = Math.floor(startDiff / 86400000);
+    const diffHrs = Math.floor((startDiff % 86400000) / 3600000);
+    const diffMins = Math.max(0, Math.round(((startDiff % 86400000) % 3600000) / 60000));
+
+    return (
+        <span>
+            <span className="text-[#f0f0f0]">
+                {diffDays > 0 ? `${diffDays}d ` : null}
+                {diffHrs > 0 ? `${diffHrs} Hrs ` : null}
+                {diffMins} Mins
+            </span>
+            {' '}to start
+        </span>
+    );
+}
+
 const getMobileOddLabel = (match, mkt) => {
     const key = String(match?.odd_key || '').trim().toLowerCase();
     const outcomeId = String(match?.outcome_id ?? '').trim();
@@ -487,6 +579,8 @@ const OddButton = (props) => {
     const [state, dispatch] = useContext(Context);
     const ref = useRef();
     const [betslip_key, setBetslipKey] = useState('betslip');
+    // Live page can list not-started fixtures; only in-play selections are live bets.
+    const selectionIsLive = Boolean(live) && isLiveMatchInPlay(match);
     const updateBeslipKey = useCallback(() => {
         if (jackpot) {
             setBetslipKey("jackpotbetslip");
@@ -588,6 +682,13 @@ const OddButton = (props) => {
         let start_time = event.currentTarget.getAttribute("start_time");
         let producer_id = event.currentTarget.getAttribute("producer_id");
         let cstm = clean(mid + "" + stid + oddk + (marketKey != undefined ? marketKey : ''));
+        // Re-evaluate at click time in case kickoff just happened.
+        const slipIsLive = Boolean(live) && isLiveMatchInPlay({
+            ...match,
+            start_time: start_time || match?.start_time,
+            match_time: match?.match_time,
+            match_status: match?.match_status || match?.status,
+        });
 
         let slip = {
             "match_id": mid,
@@ -598,10 +699,10 @@ const OddButton = (props) => {
             "odd_value": odd_value,
             "home_team": home_team,
             "away_team": away_team,
-            "bet_type": bet_type,
+            "bet_type": slipIsLive ? 1 : 0,
             "odd_type": odd_type,
             "sport_name": sport_name,
-            "live": live ? 1 : 0,
+            "live": slipIsLive ? 1 : 0,
             "ucn": cstm,
             "event_status": match?.status,
             "market_active": market_active,
@@ -633,7 +734,7 @@ const OddButton = (props) => {
             className={`secondary-bg-2 home-team ${match.match_id} ${ucn} ${picked} c-btn`}
             home_team={match.home_team}
             odd_type={match?.name || match?.market_name}
-            bet_type={live ? 1 : 0}
+            bet_type={selectionIsLive ? 1 : 0}
             away_team={match.away_team}
             market_active={match.market_active}
             odd_value={oddValue}
@@ -1224,45 +1325,40 @@ const MatchRow = (props) => {
 
     }, []);
 
-    const TimeToLiveStarting = (props) => {
-        const { starttime } = props;
+    const matchIsUpcoming = live && isUpcomingLiveMatch({
+        ...match,
+        match_time: updatedMatchTime?.minutes != null
+            ? `${updatedMatchTime.minutes}:${updatedMatchTime.seconds ?? 0}`
+            : match?.match_time,
+        match_status: updatedMatchStatus || match?.match_status,
+    });
+    const matchIsInPlay = live && !matchIsUpcoming;
 
-        let startDiff = Date.parse(starttime) - Date.now();
-        let diffHrs = Math.floor((startDiff % 86400000) / 3600000);
-        let diffMins = Math.round(((startDiff % 86400000) % 3600000) / 60000);
-        return (
-            <>
-                {
-                    starttime === '0'
-                        ?
-                        <span className=''>Not  Started</span>
-                        :
-                        <span><span className='text-[#f0f0f0]'>{diffHrs > 0 && diffHrs + " Hrs"} {startDiff >= 0 && diffMins + " Mins"}</span> to start</span>
-
-                }
-
-            </>
-        )
-    }
     return (
         <>
             {(updatedMatchStatus?.toLowerCase()?.trim() !== "ended" && !transitioned) &&
                 <div className="top-matches d-flex mobile-match-card" key={"match-list-" + match?.match_id}>
                     <div className="match-time-desktop col-sm-2 col-xs-12 pad left-text" key="21">
-                        {updatedLive &&
+                        {updatedLive && matchIsInPlay &&
                             <>
                                 <small style={{ color: "red" }}> { } </small>
                                 <br />
                             </>
                         }
                         <div className="d-flex flex-column" key="20">
-                            {(live && (Date.parse(match?.start_time) >= Date.now() && !match?.match_time)) && <div className='w-full float-right font-[500]'><TimeToLiveStarting starttime={match?.start_time} /></div>}
+                            {matchIsUpcoming && (
+                                <div className='w-full float-right font-[500]'>
+                                    <TimeToLiveStarting starttime={match?.start_time} />
+                                </div>
+                            )}
 
                             <span className={'small'}>
-                                {(live && (updatedMatchStatus || match?.match_status))
+                                {(matchIsInPlay && (updatedMatchStatus || match?.match_status))
                                     ?
                                     <span className='font-[500] uppercase'>{updatedMatchStatus || match?.match_status}</span>
-                                    : match?.start_time == 0 ? "NOT STARTED" : match?.start_time
+                                    : !live
+                                        ? (match?.start_time == 0 ? "NOT STARTED" : match?.start_time)
+                                        : null
                                 }
                             </span>
                             {
@@ -1270,26 +1366,29 @@ const MatchRow = (props) => {
                                     ?
                                     <>ID: {match?.game_id} </>
                                     :
-                                    <span className='text-[#f0f0f0] ml-2'>
-                                        {updatedMatchTime?.minutes == 90
-                                            ?
-                                            "90:00+"
-                                            :
-                                            <TimeCounter minutes={updatedMatchTime?.minutes} seconds={updatedMatchTime?.seconds} />
-                                        }
-
-                                    </span>
+                                    matchIsInPlay
+                                        ? (
+                                            <span className='text-[#f0f0f0] ml-2'>
+                                                {updatedMatchTime?.minutes == 90
+                                                    ?
+                                                    "90:00+"
+                                                    :
+                                                    <TimeCounter minutes={updatedMatchTime?.minutes} seconds={updatedMatchTime?.seconds} />
+                                                }
+                                            </span>
+                                        )
+                                        : null
                             }
                         </div>
                     </div>
 
                     <div className="match-meta-compact mobile-match-meta">
-                        {(live && Date.parse(match?.start_time) > Date.now()) && (
+                        {matchIsUpcoming && (
                             <div className='w-full font-[500]'>
                                 <TimeToLiveStarting starttime={match?.start_time} />
                             </div>
                         )}
-                        {(live && (updatedMatchStatus || match?.match_status || match?.status)) && (
+                        {matchIsInPlay && (updatedMatchStatus || match?.match_status || match?.status) && (
                             <div className="mobile-match-meta-live">
                                 <small style={{ color: "red" }}>
                                     {updatedMatchStatus || match?.match_status}
@@ -1305,13 +1404,16 @@ const MatchRow = (props) => {
                                 )}
                             </div>
                         )}
-                        {!(live && (updatedMatchStatus || match?.match_status || match?.status)) && (
+                        {!live && (
                             <span>
                                 {formatMobileMatchMeta(match?.start_time) || (match?.start_time == 0 ? "NOT STARTED" : match?.start_time)}
                                 {" | ID: "}{match?.game_id}
                             </span>
                         )}
-                        {(live && (updatedMatchStatus || match?.match_status || match?.status)) && (
+                        {matchIsInPlay && (
+                            <span className="mobile-match-meta-id">ID: {match?.game_id}</span>
+                        )}
+                        {matchIsUpcoming && (
                             <span className="mobile-match-meta-id">ID: {match?.game_id}</span>
                         )}
                     </div>
@@ -1336,7 +1438,7 @@ const MatchRow = (props) => {
                             </Link>
                         </div>
 
-                        {(live) &&
+                        {matchIsInPlay &&
                             <div className="text-[#FFB200] font-bold mx-3 mobile-match-score" key="25">
                                 <br className="match-score-desktop-break" />
                                 {teamScore((updatedMatchScore || match?.score), true)}
@@ -1728,6 +1830,12 @@ const MatchList = (props) => {
         fetchingcount
     } = props;
     const [state, dispatch] = useContext(Context);
+    const [nowTick, setNowTick] = useState(Date.now());
+
+    // Re-partition Live vs Upcoming as kickoff times pass.
+    useInterval(() => {
+        setNowTick(Date.now());
+    }, live ? 15000 : null);
 
     useEffect(() => {
         ensureSocketConnected();
@@ -1738,6 +1846,41 @@ const MatchList = (props) => {
         }
     }, [matches]);
 
+    const activeMatches = useMemo(() => {
+        if (!matches) return [];
+        const list = Array.isArray(matches) ? matches : Object.values(matches);
+        return list.filter((match) => match?.match_status?.toLowerCase() !== "ended");
+    }, [matches]);
+
+    const { inPlayMatches, upcomingMatches } = useMemo(() => {
+        if (!live) {
+            return { inPlayMatches: activeMatches, upcomingMatches: [] };
+        }
+        const inPlay = [];
+        const upcoming = [];
+        activeMatches.forEach((match) => {
+            if (isLiveMatchInPlay(match, nowTick)) {
+                inPlay.push(match);
+            } else {
+                upcoming.push(match);
+            }
+        });
+        return { inPlayMatches: inPlay, upcomingMatches: upcoming };
+    }, [activeMatches, live, nowTick]);
+
+    const renderMatchRows = (list) =>
+        list.map((match) => (
+            <MatchRow
+                initialMatch={match}
+                key={match?.parent_match_id || match?.match_id}
+                live={live}
+                producers={producers}
+                setReload={setReload}
+                three_way={three_way}
+                subTypes={subTypes}
+                sub_types={subTypes}
+            />
+        ));
 
     return (
         <div className="matches full-width">
@@ -1751,21 +1894,32 @@ const MatchList = (props) => {
             />
 
             <div className="web-element match-list" style={{ paddingLeft: "0", paddingRight: "0" }}>
-                {matches &&
-                    Object.entries(matches).map(([key, match]) => (
-                        match?.match_status?.toLowerCase() !== "ended" &&
-                        <MatchRow
-                            initialMatch={match}
-                            key={match?.parent_match_id}
-                            live={live}
-                            producers={producers}
-                            setReload={setReload}
-                            three_way={three_way}
-                            subTypes={subTypes}
-                            sub_types={subTypes} />
-
-                    ))
-                }
+                {live ? (
+                    <>
+                        {inPlayMatches.length > 0 && (
+                            <>
+                                <LiveSectionHeader
+                                    title="Live"
+                                    count={inPlayMatches.length}
+                                    variant="live"
+                                />
+                                {renderMatchRows(inPlayMatches)}
+                            </>
+                        )}
+                        {upcomingMatches.length > 0 && (
+                            <>
+                                <LiveSectionHeader
+                                    title="Upcoming Live"
+                                    count={upcomingMatches.length}
+                                    variant="upcoming"
+                                />
+                                {renderMatchRows(upcomingMatches)}
+                            </>
+                        )}
+                    </>
+                ) : (
+                    renderMatchRows(activeMatches)
+                )}
 
                 {(((matches || []).length) == 0 && fetching) &&
                     <ShimmerTable row={3} />

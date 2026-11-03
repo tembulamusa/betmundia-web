@@ -2408,6 +2408,37 @@ events-header {
     padding-right: 30px;
 }
 
+.live-section-header {
+    gap: 8px;
+    padding: 8px 12px;
+    margin: 0;
+    background: rgba(0, 0, 0, 0.28);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f0f0f0;
+}
+
+.live-section-header--live {
+    border-left: 3px solid #cc5500;
+}
+
+.live-section-header--upcoming {
+    border-left: 3px solid #FFB200;
+    margin-top: 6px;
+}
+
+.live-section-header__title {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.live-section-header__count {
+    margin-left: 8px;
+    opacity: 0.7;
+    font-weight: 500;
+}
+
 .mobi #search-event {
     padding-top: 0;
     padding-bottom: 0;
