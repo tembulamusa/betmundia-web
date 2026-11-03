@@ -431,9 +431,26 @@ aside.ps-sidebar-root:focus-visible,
 
 .ps-submenu-content .ps-menu-button {
   margin: 0 !important;
-  padding-left: 22px !important;
+  padding-left: 14px !important;
   background: transparent !important;
   border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/*
+ * Submenu league/country rows: tighten icon→label (pro-sidebar defaults
+ * are 35px icon box + 10px margin-right). Scope to submenu only so
+ * collapsed top-level sports keep their icon slot.
+ */
+.ps-submenu-content .ps-menu-icon {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin-right: 4px;
+}
+
+.ps-submenu-content .ps-menu-icon img {
+  margin-right: 0 !important;
 }
 
 /*
