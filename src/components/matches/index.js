@@ -86,17 +86,12 @@ export const isUpcomingLiveMatch = (match, nowMs = Date.now()) => {
     return !isLiveMatchInPlay(match, nowMs);
 }
 
-const LiveSectionHeader = ({ title, count, variant = 'live' }) => (
+const LiveSectionHeader = ({ title, count }) => (
     <div
-        className={`live-section-header live-section-header--${variant} d-flex align-items-center`}
+        className="live-section-header live-section-header--upcoming d-flex align-items-center"
         role="separator"
         aria-label={title}
     >
-        {variant === 'live' ? (
-            <span className="colored-circle" style={{ backgroundColor: '#cc5500' }} aria-hidden="true" />
-        ) : (
-            <span className="colored-circle" style={{ backgroundColor: '#FFB200' }} aria-hidden="true" />
-        )}
         <span className="live-section-header__title">
             {title}
             {typeof count === 'number' ? (
@@ -1896,22 +1891,12 @@ const MatchList = (props) => {
             <div className="web-element match-list" style={{ paddingLeft: "0", paddingRight: "0" }}>
                 {live ? (
                     <>
-                        {inPlayMatches.length > 0 && (
-                            <>
-                                <LiveSectionHeader
-                                    title="Live"
-                                    count={inPlayMatches.length}
-                                    variant="live"
-                                />
-                                {renderMatchRows(inPlayMatches)}
-                            </>
-                        )}
+                        {inPlayMatches.length > 0 && renderMatchRows(inPlayMatches)}
                         {upcomingMatches.length > 0 && (
                             <>
                                 <LiveSectionHeader
                                     title="Upcoming Live"
                                     count={upcomingMatches.length}
-                                    variant="upcoming"
                                 />
                                 {renderMatchRows(upcomingMatches)}
                             </>
