@@ -276,53 +276,7 @@ const ProSidebar = (props) => {
                                                 open={focusSportId == sport?.sport_id}
                                                 className={`${['bandy', 'pesapallo', 'dota 2', 'starcraft', 'gaelic football', 'gaelic hurling', 'gaelic football'].includes(sport?.sport_name?.toLowerCase()) && 'force-reduce-img'}`}
                                                 key={idx}>
-                                                {/*
-                                                  Countries sits immediately under the sport header
-                                                  (SportPesa/Betika-style), not after the leagues list
-                                                  inside PerfectScrollbar — that shoved it to the bottom.
-                                                */}
-                                                <div
-                                                    className="sport-countries-entry"
-                                                    onClick={() => getSportCategories()}
-                                                >
-                                                    <SubMenu
-                                                        title="Countries"
-                                                        label="Countries"
-                                                        icon={<img style={{ borderRadius: '50%', height: '15px' }}
-                                                            className=''
-                                                            src={getSportImageIcon("more", 'img/flags-1-1')}
-                                                            alt=''
-                                                        />}
-                                                    >
-                                                        {sport?.sport_id == focusSportId &&
-                                                            sport?.categories?.map((category, idx) => (
-                                                                <SubMenu
-                                                                    title={category?.category_name}
-                                                                    label={category?.category_name}
-                                                                    icon={<img style={{ borderRadius: '50%', height: '15px' }}
-                                                                        className=''
-                                                                        src={getSportImageIcon(category?.cat_flag, 'img/flags-1-1')}
-                                                                        alt='' />}
-                                                                    className={`inner-submenu`}
-                                                                    key={idx}>
-
-                                                                    {category?.competitions?.map((league, leagueKey) => (
-                                                                        <MenuItem
-                                                                            title={league.competition_name}
-                                                                            key={league?.competition_id}
-                                                                        >
-                                                                            <Link className='country-competition-item' to={`/competition/country/league/${league.competition_id}/all`}
-                                                                                onClick={() => changeMatches("competition", league)}>
-                                                                                <span>{league?.competition_name}</span>
-                                                                            </Link>
-                                                                        </MenuItem>
-                                                                    ))}
-
-                                                                </SubMenu>))}
-                                                    </SubMenu>
-                                                </div>
-
-                                                <PerfectScrollbar className="sport-leagues-scroll">
+                                                <PerfectScrollbar className="sport-leagues-scroll" options={{ suppressScrollX: true }}>
                                                     {
                                                         sport?.sport_id == focusSportId &&
                                                         sport?.competitions?.map((competition, idx) => (
@@ -340,6 +294,46 @@ const ProSidebar = (props) => {
                                                             </MenuItem>
                                                         ))
                                                     }
+                                                    <div
+                                                        className="sport-countries-entry"
+                                                        onClick={() => getSportCategories()}
+                                                    >
+                                                        <SubMenu
+                                                            title="Countries"
+                                                            label="Countries"
+                                                            icon={<img style={{ borderRadius: '50%', height: '15px' }}
+                                                                className=''
+                                                                src={getSportImageIcon("more", 'img/flags-1-1')}
+                                                                alt=''
+                                                            />}
+                                                        >
+                                                            {sport?.sport_id == focusSportId &&
+                                                                sport?.categories?.map((category, idx) => (
+                                                                    <SubMenu
+                                                                        title={category?.category_name}
+                                                                        label={category?.category_name}
+                                                                        icon={<img style={{ borderRadius: '50%', height: '15px' }}
+                                                                            className=''
+                                                                            src={getSportImageIcon(category?.cat_flag, 'img/flags-1-1')}
+                                                                            alt='' />}
+                                                                        className={`inner-submenu`}
+                                                                        key={idx}>
+
+                                                                        {category?.competitions?.map((league, leagueKey) => (
+                                                                            <MenuItem
+                                                                                title={league.competition_name}
+                                                                                key={league?.competition_id}
+                                                                            >
+                                                                                <Link className='country-competition-item' to={`/competition/country/league/${league.competition_id}/all`}
+                                                                                    onClick={() => changeMatches("competition", league)}>
+                                                                                    <span>{league?.competition_name}</span>
+                                                                                </Link>
+                                                                            </MenuItem>
+                                                                        ))}
+
+                                                                    </SubMenu>))}
+                                                        </SubMenu>
+                                                    </div>
                                                 </PerfectScrollbar>
                                             </SubMenu>
                                         </div>

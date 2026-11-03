@@ -426,6 +426,7 @@ aside.ps-sidebar-root:focus-visible,
   background: rgba(0, 0, 0, 0.15) !important;
   margin: 0;
   padding-top: 0;
+  overflow-x: hidden;
 }
 
 .ps-submenu-content .ps-menu-button {
@@ -436,30 +437,22 @@ aside.ps-sidebar-root:focus-visible,
 }
 
 /*
- * Open sport: Countries row is a sibling above the leagues PerfectScrollbar
- * so it stays pinned under the sport header (not last in the scroll list).
+ * Countries stays after the leagues list (end of open-sport scroll).
+ * Lift it far off the bottom edge of the submenu / leftbar.
  */
 .ps-sidebar-root .sport-countries-entry,
 .up.col-md-2 .sport-countries-entry {
   display: block;
   width: 100%;
-  flex-shrink: 0;
-  margin: 0;
-  padding: 0;
-  order: -1;
-}
-
-.ps-sidebar-root .ps-submenu-content > ul,
-.up.col-md-2 .ps-submenu-content > ul {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  margin: 0 0 48px;
+  padding: 0 0 56px;
 }
 
 /*
- * Leagues-only scroll area under Countries.
+ * Open sport accordion scroll area (PerfectScrollbar inside SubMenu).
  * Scope to left sports menu so global .scrollbar-container { max-height: 200px }
  * in tolkits.css does not stay short for expanded Soccer/etc.
+ * Suppress horizontal overflow so Countries is not clipped by an x-axis bar.
  */
 .ps-sidebar-root .ps-submenu-content .sport-leagues-scroll.scrollbar-container,
 .ps-sidebar-root .ps-submenu-content .scrollbar-container,
@@ -467,6 +460,15 @@ aside.ps-sidebar-root:focus-visible,
 .up.col-md-2 .ps-submenu-content .scrollbar-container,
 aside.ps-sidebar-root .ps-submenu-content .scrollbar-container {
   max-height: min(42vh, 360px) !important;
+  overflow-x: hidden !important;
+}
+
+.ps-sidebar-root .ps-submenu-content .ps__rail-x,
+.up.col-md-2 .ps-submenu-content .ps__rail-x,
+aside.ps-sidebar-root .ps-submenu-content .ps__rail-x {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .pc .navbar-nav>li>a {
