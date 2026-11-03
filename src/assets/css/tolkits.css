@@ -2417,12 +2417,7 @@ events-header {
     color: #f0f0f0;
 }
 
-.live-section-header--live {
-    border-left: 3px solid #cc5500;
-}
-
 .live-section-header--upcoming {
-    border-left: 3px solid #FFB200;
     margin-top: 6px;
 }
 
