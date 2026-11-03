@@ -424,8 +424,7 @@ aside.ps-sidebar-root:focus-visible,
   width: 100%;
   border-right: none;
   background: rgba(0, 0, 0, 0.15) !important;
-  /* Pull country/league list a bit closer under the open sport header */
-  margin: -6px auto 0;
+  margin: 0;
   padding-top: 0;
 }
 
@@ -437,14 +436,37 @@ aside.ps-sidebar-root:focus-visible,
 }
 
 /*
- * Open sport accordion scroll area (PerfectScrollbar inside SubMenu).
+ * Open sport: Countries row is a sibling above the leagues PerfectScrollbar
+ * so it stays pinned under the sport header (not last in the scroll list).
+ */
+.ps-sidebar-root .sport-countries-entry,
+.up.col-md-2 .sport-countries-entry {
+  display: block;
+  width: 100%;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  order: -1;
+}
+
+.ps-sidebar-root .ps-submenu-content > ul,
+.up.col-md-2 .ps-submenu-content > ul {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/*
+ * Leagues-only scroll area under Countries.
  * Scope to left sports menu so global .scrollbar-container { max-height: 200px }
  * in tolkits.css does not stay short for expanded Soccer/etc.
  */
+.ps-sidebar-root .ps-submenu-content .sport-leagues-scroll.scrollbar-container,
 .ps-sidebar-root .ps-submenu-content .scrollbar-container,
+.up.col-md-2 .ps-submenu-content .sport-leagues-scroll.scrollbar-container,
 .up.col-md-2 .ps-submenu-content .scrollbar-container,
 aside.ps-sidebar-root .ps-submenu-content .scrollbar-container {
-  max-height: 300px !important;
+  max-height: min(42vh, 360px) !important;
 }
 
 .pc .navbar-nav>li>a {
