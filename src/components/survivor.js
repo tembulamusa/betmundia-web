@@ -219,10 +219,9 @@ const PickButtons = ({ game, currentSelection, draftSelection, disabled, onPick 
         <div className="survivor-pick-buttons">
             {options.map((opt) => {
                 const isSelected = normalizeSelection(currentSelection) === opt.value;
-                // Turns purple the instant it's clicked, same click-feel as
-                // the shared prematch odds buttons' own "picked" toggle —
-                // this is only a local draft, though, until "Place" is
-                // pressed and the confirmation modal is accepted.
+                // Turns yellow the instant it's clicked (local draft); other
+                // options keep the shared prematch odd-button look until
+                // "Place" is pressed and the confirmation modal is accepted.
                 const isDraft = normalizeSelection(draftSelection) === opt.value;
                 const isPicked = isSelected || isDraft;
                 return (
