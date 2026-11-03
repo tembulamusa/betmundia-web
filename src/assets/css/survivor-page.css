@@ -152,6 +152,20 @@
   color: rgba(255, 255, 255, 0.75);
 }
 
+/* Global [class*="loading"] rules paint a solid panel behind survivor
+   loaders; inside challenge accordion rows the parent already supplies
+   the card background — keep only the spinner and label visible. */
+.survivor-challenge-accordion .accordion-body .survivor-loading,
+.survivor-challenge-accordion .accordion-body .survivor-loading-text,
+.survivor-challenge-accordion .accordion-body .survivor-loading-dots {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.survivor-challenge-accordion .accordion-body .survivor-loading-dots span {
+  background: #ffc428 !important;
+}
+
 .survivor-spinner {
   width: 34px;
   height: 34px;
