@@ -964,10 +964,44 @@
   cursor: not-allowed;
 }
 
-/* Phone: softer unselected fill, same as .home-team market buttons. */
+/* Phone: softer unselected fill (same as .home-team), joined 1X2
+   segment like .c-btn-group — no gaps, 1px divider, outer-end radii only. */
 @media screen and (max-width: 767px) {
+  .survivor-pick-buttons {
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .survivor-pick-btn {
+    height: 38px;
+    margin: 0;
+    border-radius: 0;
+    border-color: transparent;
+  }
+
+  .survivor-pick-btn:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+
+  .survivor-pick-btn:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  .survivor-pick-btn:only-child {
+    border-radius: 6px;
+  }
+
   .survivor-pick-btn:not(.selected) {
     background: rgba(255, 255, 255, 0.08);
+  }
+
+  .survivor-pick-odd {
+    margin-top: 1px;
+    font-size: 14px;
   }
 }
 
