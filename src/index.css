@@ -424,7 +424,9 @@ aside.ps-sidebar-root:focus-visible,
   width: 100%;
   border-right: none;
   background: rgba(0, 0, 0, 0.15) !important;
-  margin: 0 auto;
+  /* Pull country/league list a bit closer under the open sport header */
+  margin: -6px auto 0;
+  padding-top: 0;
 }
 
 .ps-submenu-content .ps-menu-button {
@@ -432,6 +434,17 @@ aside.ps-sidebar-root:focus-visible,
   padding-left: 22px !important;
   background: transparent !important;
   border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/*
+ * Open sport accordion scroll area (PerfectScrollbar inside SubMenu).
+ * Scope to left sports menu so global .scrollbar-container { max-height: 200px }
+ * in tolkits.css does not stay short for expanded Soccer/etc.
+ */
+.ps-sidebar-root .ps-submenu-content .scrollbar-container,
+.up.col-md-2 .ps-submenu-content .scrollbar-container,
+aside.ps-sidebar-root .ps-submenu-content .scrollbar-container {
+  max-height: 300px !important;
 }
 
 .pc .navbar-nav>li>a {
