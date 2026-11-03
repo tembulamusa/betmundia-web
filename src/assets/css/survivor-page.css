@@ -891,11 +891,10 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
-/* Same click-feel as the shared prematch 1X2 odds buttons (clicking one
-   turns it purple straight away — a local draft — the same way their own
-   "picked" toggle does; nothing is sent to the server until "Place"
-   below is pressed and the confirmation modal accepted), but all three
-   buttons share one neutral look until picked — no per-outcome coloring. */
+/* Prematch-style 1X2 pick buttons: unselected matches the shared market
+   odd buttons (.c-btn / .home-team — soft translucent fill + gold text);
+   only the draft/confirmed selection gets the solid yellow fill. Nothing
+   is sent until "Place" / confirm. No per-outcome coloring. */
 .survivor-pick-buttons {
   display: flex;
   gap: 0.4rem;
@@ -908,10 +907,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #ffc428;
-  border: 1px solid #ffc428;
+  /* Match .home-team / match-detail odd buttons (unselected). */
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 6px;
-  color: #1a1400;
+  color: #ffc428;
   /* Same as the shared prematch odds buttons' own label/.theodds text -
      that text is unstyled beyond font:inherit + .theodds's own 15px/400
      (see application.css), not bold, so match that exactly rather than
@@ -919,7 +919,7 @@
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .survivor-pick-odd {
@@ -927,26 +927,48 @@
   font-size: 15px;
   font-weight: 700;
   margin-top: 2px;
+  color: #ffc428;
+}
+
+.survivor-pick-btn:hover:not(:disabled):not(.selected) {
+  background: #a71f66;
+  border-color: #a71f66;
+  color: #ffc428;
+}
+
+.survivor-pick-btn:hover:not(:disabled):not(.selected) .survivor-pick-odd {
+  color: #ffc428;
+}
+
+/* Selected / draft pick — solid brand yellow (only this state is yellow). */
+.survivor-pick-btn.selected {
+  background: #ffc428;
+  border-color: #ffc428;
+  box-shadow: none;
+  color: #1a1400;
+  font-weight: 700;
+}
+
+.survivor-pick-btn.selected .survivor-pick-odd {
   color: #1a1400;
 }
 
-.survivor-pick-btn:hover:not(:disabled) {
+.survivor-pick-btn.selected:hover:not(:disabled) {
   background: #ffd45c;
   border-color: #ffd45c;
-}
-
-/* All the buttons are yellow, so the chosen one is marked with a white
-   ring and a deeper amber rather than a different colour. */
-.survivor-pick-btn.selected {
-  background: #f0b000;
-  border-color: #ffffff;
-  box-shadow: 0 0 0 2px #ffffff;
-  font-weight: 700;
+  color: #1a1400;
 }
 
 .survivor-pick-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Phone: softer unselected fill, same as .home-team market buttons. */
+@media screen and (max-width: 767px) {
+  .survivor-pick-btn:not(.selected) {
+    background: rgba(255, 255, 255, 0.08);
+  }
 }
 
 /* Small button anchored bottom-right of the pick buttons on desktop,
