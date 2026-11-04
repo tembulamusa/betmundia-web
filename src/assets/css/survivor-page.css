@@ -152,6 +152,20 @@
   color: rgba(255, 255, 255, 0.75);
 }
 
+/* Global [class*="loading"] rules paint a solid panel behind survivor
+   loaders; inside challenge accordion rows the parent already supplies
+   the card background — keep only the spinner and label visible. */
+.survivor-challenge-accordion .accordion-body .survivor-loading,
+.survivor-challenge-accordion .accordion-body .survivor-loading-text,
+.survivor-challenge-accordion .accordion-body .survivor-loading-dots {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.survivor-challenge-accordion .accordion-body .survivor-loading-dots span {
+  background: #ffc428 !important;
+}
+
 .survivor-spinner {
   width: 34px;
   height: 34px;
@@ -904,27 +918,31 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
-/* Same click-feel as the shared prematch 1X2 odds buttons (clicking one
-   turns it purple straight away — a local draft — the same way their own
-   "picked" toggle does; nothing is sent to the server until "Place"
-   below is pressed and the confirmation modal accepted), but all three
-   buttons share one neutral look until picked — no per-outcome coloring. */
+/* Prematch-style 1X2 pick buttons: joined segment like .c-btn-group
+   (1px divider, outer-end radii only). Unselected matches .home-team
+   translucent fill + gold text; only selected/hover get solid yellow.
+   Nothing is sent until "Place" / confirm. No per-outcome coloring. */
 .survivor-pick-buttons {
   display: flex;
-  gap: 0.4rem;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .survivor-pick-btn {
   flex: 1 1 0;
   height: 48px;
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #ffc428;
-  border: 1px solid #ffc428;
-  border-radius: 6px;
-  color: #1a1400;
+  /* Match .home-team / match-detail odd buttons (unselected). */
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid transparent;
+  border-radius: 0;
+  color: #ffc428;
   /* Same as the shared prematch odds buttons' own label/.theodds text -
      that text is unstyled beyond font:inherit + .theodds's own 15px/400
      (see application.css), not bold, so match that exactly rather than
@@ -932,7 +950,21 @@
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.survivor-pick-btn:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.survivor-pick-btn:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.survivor-pick-btn:only-child {
+  border-radius: 6px;
 }
 
 .survivor-pick-odd {
@@ -940,26 +972,57 @@
   font-size: 15px;
   font-weight: 700;
   margin-top: 2px;
+  color: #ffc428;
+}
+
+.survivor-pick-btn:hover:not(:disabled):not(.selected) {
+  background: #ffc428;
+  border-color: #ffc428;
   color: #1a1400;
 }
 
-.survivor-pick-btn:hover:not(:disabled) {
-  background: #ffd45c;
-  border-color: #ffd45c;
+.survivor-pick-btn:hover:not(:disabled):not(.selected) .survivor-pick-odd {
+  color: #1a1400;
 }
 
-/* All the buttons are yellow, so the chosen one is marked with a white
-   ring and a deeper amber rather than a different colour. */
+/* Selected / draft pick — solid brand yellow (only this state is yellow). */
 .survivor-pick-btn.selected {
-  background: #f0b000;
-  border-color: #ffffff;
-  box-shadow: 0 0 0 2px #ffffff;
+  background: #ffc428;
+  border-color: #ffc428;
+  box-shadow: none;
+  color: #1a1400;
   font-weight: 700;
+}
+
+.survivor-pick-btn.selected .survivor-pick-odd {
+  color: #1a1400;
+}
+
+.survivor-pick-btn.selected:hover:not(:disabled) {
+  background: #ffd45c;
+  border-color: #ffd45c;
+  color: #1a1400;
 }
 
 .survivor-pick-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Phone: shorter row + softer unselected fill (same as .home-team mobile). */
+@media screen and (max-width: 767px) {
+  .survivor-pick-btn {
+    height: 38px;
+  }
+
+  .survivor-pick-btn:not(.selected) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .survivor-pick-odd {
+    margin-top: 1px;
+    font-size: 14px;
+  }
 }
 
 /* Small button anchored bottom-right of the pick buttons on desktop,

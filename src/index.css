@@ -424,14 +424,68 @@ aside.ps-sidebar-root:focus-visible,
   width: 100%;
   border-right: none;
   background: rgba(0, 0, 0, 0.15) !important;
-  margin: 0 auto;
+  margin: 0;
+  padding-top: 0;
+  overflow-x: hidden;
 }
 
 .ps-submenu-content .ps-menu-button {
   margin: 0 !important;
-  padding-left: 22px !important;
+  padding-left: 14px !important;
   background: transparent !important;
   border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/*
+ * Submenu league/country rows: tighten icon→label (pro-sidebar defaults
+ * are 35px icon box + 10px margin-right). Scope to submenu only so
+ * collapsed top-level sports keep their icon slot.
+ */
+.ps-submenu-content .ps-menu-icon {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin-right: 4px;
+}
+
+.ps-submenu-content .ps-menu-icon img {
+  margin-right: 0 !important;
+}
+
+/*
+ * Countries stays after the leagues list (end of open-sport scroll).
+ * Lift it far off the bottom edge of the submenu / leftbar.
+ */
+.ps-sidebar-root .sport-countries-entry,
+.up.col-md-2 .sport-countries-entry {
+  display: block;
+  width: 100%;
+  margin: 0 0 48px;
+  padding: 0 0 56px;
+}
+
+/*
+ * Open sport accordion scroll area (PerfectScrollbar inside SubMenu).
+ * Scope to left sports menu so global .scrollbar-container { max-height: 200px }
+ * in tolkits.css does not stay short for expanded Soccer/etc.
+ * Suppress horizontal overflow so Countries is not clipped by an x-axis bar.
+ */
+.ps-sidebar-root .ps-submenu-content .sport-leagues-scroll.scrollbar-container,
+.ps-sidebar-root .ps-submenu-content .scrollbar-container,
+.up.col-md-2 .ps-submenu-content .sport-leagues-scroll.scrollbar-container,
+.up.col-md-2 .ps-submenu-content .scrollbar-container,
+aside.ps-sidebar-root .ps-submenu-content .scrollbar-container {
+  max-height: min(42vh, 360px) !important;
+  overflow-x: hidden !important;
+}
+
+.ps-sidebar-root .ps-submenu-content .ps__rail-x,
+.up.col-md-2 .ps-submenu-content .ps__rail-x,
+aside.ps-sidebar-root .ps-submenu-content .ps__rail-x {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .pc .navbar-nav>li>a {
@@ -699,6 +753,15 @@ aside.ps-sidebar-root:focus-visible,
   .mobile-match-meta-live,
   .mobile-match-meta-id {
     display: inline;
+  }
+
+  .matches .top-matches .mobile-match-meta-live + .mobile-match-meta-id {
+    margin-left: 8px;
+  }
+
+  .matches .top-matches .mobile-match-meta > .w-full + .mobile-match-meta-id {
+    margin-left: 0;
+    margin-top: 4px;
   }
 
   .mobile-match-mid {

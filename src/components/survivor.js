@@ -54,6 +54,12 @@ const GameCounts = ({ game }) => (
 
 /** Empty state for the lobby — same look as the empty jackpots page
  * (illustration, title, subtitle). */
+/** Shown when challenge/games UI cannot render yet — calm “check back” copy, not an error. */
+const SURVIVOR_CHALLENGE_UNAVAILABLE_TITLE = "Next challenge coming soon";
+const SURVIVOR_CHALLENGE_UNAVAILABLE_SUBTITLE =
+    "The next challenge will be available in the next few hours. Check back and play.";
+const SURVIVOR_GAMES_UNAVAILABLE_TITLE = "Games aren't available yet";
+
 const SurvivorEmptyState = ({ title, subtitle }) => (
     <div className="col-md-12 text-center background-primary mt-2 no-events-div jackpot-empty-state">
         <img
@@ -220,10 +226,9 @@ const PickButtons = ({ game, currentSelection, draftSelection, disabled, onPick 
         <div className="survivor-pick-buttons">
             {options.map((opt) => {
                 const isSelected = normalizeSelection(currentSelection) === opt.value;
-                // Turns purple the instant it's clicked, same click-feel as
-                // the shared prematch odds buttons' own "picked" toggle —
-                // this is only a local draft, though, until "Place" is
-                // pressed and the confirmation modal is accepted.
+                // Turns yellow the instant it's clicked (local draft); other
+                // options keep the shared prematch odd-button look until
+                // "Place" is pressed and the confirmation modal is accepted.
                 const isDraft = normalizeSelection(draftSelection) === opt.value;
                 const isPicked = isSelected || isDraft;
                 return (
@@ -1080,7 +1085,11 @@ const SurvivorChallengesList = () => {
                                     {/* Only the expanded row actually fetches/renders its games —
                                         mounting SurvivorChallengeGames for every challenge in the
                                         list at once would fire one request per challenge. */}
-                                    {activeKey === key && <SurvivorChallengeGames id={challenge.id} />}
+                                    {activeKey === key && (
+                                        <SurvivorErrorBoundary variant="panel" resetKey={key}>
+                                            <SurvivorChallengeGames id={challenge.id} />
+                                        </SurvivorErrorBoundary>
+                                    )}
                                 </Accordion.Body>
                             </Accordion.Item>
                         );
@@ -1282,7 +1291,9 @@ const SurvivorChallengeDetail = ({ id }) => {
             </div>
 
             <div className="survivor-detail-body">
-                <SurvivorChallengeGames id={id} />
+                <SurvivorErrorBoundary variant="panel" resetKey={id}>
+                    <SurvivorChallengeGames id={id} />
+                </SurvivorErrorBoundary>
             </div>
             </div>
         </div>
@@ -1292,31 +1303,42 @@ const SurvivorChallengeDetail = ({ id }) => {
 class SurvivorErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { hasError: false };
+        this.state = { hasError: false, message: null };
     }
 
-    static getDerivedStateFromError() {
-        return { hasError: true };
+    static getDerivedStateFromError(error) {
+        return { hasError: true, message: error?.message || null };
     }
 
     componentDidCatch(error, errorInfo) {
         console.error("[Survivor Challenge] Render failed", error, errorInfo);
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.state.hasError && prevProps.resetKey !== this.props.resetKey) {
+            this.setState({ hasError: false, message: null });
+        }
+    }
+
     render() {
         if (this.state.hasError) {
+            if (this.props.variant === "panel") {
+                return (
+                    <div className="survivor-games-unavailable" role="status">
+                        <SurvivorEmptyState
+                            title={SURVIVOR_GAMES_UNAVAILABLE_TITLE}
+                            subtitle={SURVIVOR_CHALLENGE_UNAVAILABLE_SUBTITLE}
+                        />
+                    </div>
+                );
+            }
             return (
-                <div className="survivor-page" role="alert">
+                <div className="survivor-page" role="status">
                     <SurvivorPageHeader />
                     <SurvivorEmptyState
-                        title="This challenge could not be loaded."
-                        subtitle="Refresh the page to try again."
+                        title={SURVIVOR_CHALLENGE_UNAVAILABLE_TITLE}
+                        subtitle={SURVIVOR_CHALLENGE_UNAVAILABLE_SUBTITLE}
                     />
-                    <div className="text-center mt-3">
-                        <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
-                            Refresh page
-                        </button>
-                    </div>
                 </div>
             );
         }
