@@ -25,7 +25,7 @@ import bonanzaTrophyHero from "../../assets/img/bonanza-trophy-hero.svg";
 import useMobileViewport from "../../hooks/use-mobile-viewport";
 import { ANDROID_PLAY_STORE_URL, getAppDownloadTarget } from "../utils/app-download";
 import { getFromLocalStorage, setLocalStorage } from "../utils/local-storage";
-import { openLoginWithRedirect } from "../utils/login-redirect";
+import { dismissLoginModalIfSessionPresent, openLoginWithRedirect } from "../utils/login-redirect";
 import {
     JACKPOT_PATH,
     getJackpotTypes,
@@ -590,7 +590,12 @@ const BigIconMenu = () => {
             >
                 <ListGroup as="ul" horizontal className="flex space-x-2 big-icon-list">
                     <li key={"home-menu-item"} className={`${pathname === "/" || pathname === "/home" ? "active" : ''} big-icon-item text-left capitalize`}>
-                        <a href={"/"} title={"home"} className="big-icon-link">
+                        <a
+                            href={"/"}
+                            title={"home"}
+                            className="big-icon-link"
+                            onClick={() => dismissLoginModalIfSessionPresent(dispatch)}
+                        >
                             <div className="big-icon-icon"><img className="mx-auto" src={getSportImageIcon("home.svg")} alt={"home"} /></div>
                             <div className="big-icon-name">{"Home"}</div>
                         </a>

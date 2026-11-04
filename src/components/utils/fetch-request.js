@@ -107,18 +107,25 @@ const makeRequest = async (options = {}) => {
         let status = response?.status;
         // Access JWT often lasts ~1h. Keep-alive refreshes on a timer, but background
         // tabs throttle timers — so a 401 must try refresh+retry before opening login.
+        // Only force the login modal when refresh proves the session is dead (401/403),
+        // or there is no refresh_token left — never on network / 5xx refresh failures.
         if (
             isUnauthorizedStatus(status) &&
             !shouldSkipUnauthorizedLogout(url) &&
             getFromLocalStorage("user")
         ) {
-            if (!_authRetried && getFromLocalStorage("user")?.refresh_token) {
+            const stored = getFromLocalStorage("user");
+            if (!_authRetried && stored?.refresh_token) {
                 const refresh = await refreshUserSession({ force: true });
                 if (refresh.success) {
                     return makeRequest({ ...options, _authRetried: true });
                 }
+                if (isUnauthorizedStatus(refresh.status)) {
+                    logoutDueToUnauthorized();
+                }
+            } else if (!stored?.refresh_token || _authRetried) {
+                logoutDueToUnauthorized();
             }
-            logoutDueToUnauthorized();
         }
         return [status, result];
     } catch (err) {

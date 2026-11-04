@@ -21,6 +21,7 @@ import {
 } from '../utils/jackpot-data';
 import { registerSessionAuthHandlers } from '../utils/session-auth';
 import { startSessionKeepAlive } from '../utils/session-keep-alive';
+import { dismissLoginModalIfSessionPresent } from '../utils/login-redirect';
 import { scheduleIdle } from '../utils/defer-idle';
 
 const ProfileMenu = React.lazy(() => import('./profile-menu'));
@@ -199,7 +200,12 @@ const Header = (props) => {
                     <MobileTopBar user={user} />
                     <Container fluid className="d-none d-xl-grid mobile-change position-relative header-top-grid">
                         <div className="e logo align-self-start items-center pl-0" title="betmundial">
-                            <a className="header-logo-link mt-2 inline-block" href="/" style={{ display: "inline-block" }}>
+                            <a
+                                className="header-logo-link mt-2 inline-block"
+                                href="/"
+                                style={{ display: "inline-block" }}
+                                onClick={() => dismissLoginModalIfSessionPresent(dispatch)}
+                            >
                                 <img src={logo} alt="betmundial" title="betmundial" effects="blur" style={{ height: "auto" }} className="w-[220px]" />
                             </a>
                         </div>

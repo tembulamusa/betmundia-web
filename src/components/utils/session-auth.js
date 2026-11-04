@@ -1,9 +1,10 @@
-import { removeItem } from "./local-storage";
+import { getFromLocalStorage, removeItem } from "./local-storage";
 import { openLoginWithRedirect } from "./login-redirect";
 
 let unauthorizedInFlight = false;
 let authDispatch = null;
-let clearUserCb = null;
+let setUserCb = null;
+let promptLoginPromise = null;
 
 /** Auth endpoints where 401/403 means bad credentials, not a dead session. */
 const AUTH_STATUS_SKIP_PREFIXES = [
@@ -20,7 +21,7 @@ const AUTH_STATUS_SKIP_PREFIXES = [
 /** Wire React state from Header so forced logout can clear context + user. */
 export const registerSessionAuthHandlers = ({ dispatch, setUser } = {}) => {
     authDispatch = dispatch || null;
-    clearUserCb = setUser || null;
+    setUserCb = setUser || null;
 };
 
 export const isUnauthorizedStatus = (status) => [401, 403].includes(Number(status));
@@ -45,6 +46,17 @@ export const resetUnauthorizedGuard = () => {
     unauthorizedInFlight = false;
 };
 
+const applyRecoveredUser = (user) => {
+    if (typeof setUserCb === "function") {
+        setUserCb(user);
+    }
+    if (authDispatch) {
+        authDispatch({ type: "SET", key: "user", payload: user });
+        authDispatch({ type: "DEL", key: "showloginmodal" });
+        authDispatch({ type: "DEL", key: "sessionMessage" });
+    }
+};
+
 /**
  * Clear auth and open login once per dead-session wave.
  * Only call for real HTTP 401/403 (or refresh that proves the session is dead).
@@ -60,8 +72,8 @@ export const logoutDueToUnauthorized = ({ next } = {}) => {
     const destination = next || getCurrentPageNext();
 
     removeItem("user");
-    if (typeof clearUserCb === "function") {
-        clearUserCb(null);
+    if (typeof setUserCb === "function") {
+        setUserCb(null);
     }
 
     if (authDispatch) {
@@ -77,4 +89,57 @@ export const logoutDueToUnauthorized = ({ next } = {}) => {
     }
     const loginUrl = `/login?next=${encodeURIComponent(destination || "/")}`;
     window.location.assign(loginUrl);
+};
+
+/**
+ * Attempt refresh_token before opening the login modal.
+ * Recovers the session when only the access JWT is stale; opens login only when
+ * there is no user / no refresh_token, or refresh returns 401/403.
+ * Concurrent callers share one in-flight attempt.
+ * @returns {Promise<{ opened: boolean, recovered: boolean, transient?: boolean, user?: object }>}
+ */
+export const promptLoginModal = async ({ next } = {}) => {
+    if (promptLoginPromise) {
+        return promptLoginPromise;
+    }
+
+    promptLoginPromise = (async () => {
+        const user = getFromLocalStorage("user");
+        if (user?.refresh_token) {
+            // Dynamic import avoids a static cycle with fetch-request → session-auth.
+            const { refreshUserSession } = await import("./fetch-request");
+            const refresh = await refreshUserSession({ force: true });
+            if (refresh.success) {
+                applyRecoveredUser(refresh.user);
+                resetUnauthorizedGuard();
+                return { opened: false, recovered: true, user: refresh.user };
+            }
+            // Network / 5xx: keep stored user and do not pop login.
+            if (!isUnauthorizedStatus(refresh.status)) {
+                console.warn("[session] refresh before login modal failed transiently", refresh.status);
+                return { opened: false, recovered: false, transient: true };
+            }
+        } else if (!user) {
+            // Intentional logged-out surface: open modal without clearing anything.
+            if (unauthorizedInFlight) {
+                return { opened: true, recovered: false };
+            }
+            if (authDispatch) {
+                openLoginWithRedirect(authDispatch, next || getCurrentPageNext() || "/");
+                return { opened: true, recovered: false };
+            }
+            logoutDueToUnauthorized({ next });
+            return { opened: true, recovered: false };
+        }
+
+        // User present but refresh_token missing, or refresh returned 401/403.
+        logoutDueToUnauthorized({ next });
+        return { opened: true, recovered: false };
+    })();
+
+    try {
+        return await promptLoginPromise;
+    } finally {
+        promptLoginPromise = null;
+    }
 };

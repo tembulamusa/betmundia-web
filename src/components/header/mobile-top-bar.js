@@ -11,6 +11,7 @@ import FreebetNotice from './freebet-notice';
 import MobileChat from './mobile-chat';
 import MobileMenu from './mobile-menu';
 import { ANDROID_PLAY_STORE_URL, getAppDownloadTarget } from '../utils/app-download';
+import { dismissLoginModalIfSessionPresent } from '../utils/login-redirect';
 import '../../assets/css/mobile-top-bar.css';
 
 const MobileTopBar = ({ user }) => {
@@ -56,7 +57,12 @@ const MobileTopBar = ({ user }) => {
             )}
 
             <div className="mobile-top-bar__brand">
-                <Link to="/" className="mobile-top-bar__logo" title="Betmundial">
+                <Link
+                    to="/"
+                    className="mobile-top-bar__logo"
+                    title="Betmundial"
+                    onClick={() => dismissLoginModalIfSessionPresent(dispatch)}
+                >
                     <img src={logo} alt="Betmundial" />
                 </Link>
 
