@@ -20,7 +20,6 @@ import {
     readStoredSurvivorChallenges,
     persistSurvivorChallenges,
     normalizeSelection,
-    normalizeSurvivorGamesView,
     caseInsensitiveLabel,
     SURVIVOR_STATUS_LABELS,
     GAME_STATUS_LABELS,
@@ -551,48 +550,20 @@ const SurvivorChallengeGames = ({ id }) => {
             )}
 
             <div className="survivor-games-list">
-                {pastGames.map((game) => {
-                    const mine = predictionFor(game);
-                    return (
-                        <div key={game.game_number} className="survivor-game-row survivor-game-row--past">
-                            <div className="survivor-game-row-top">
-                                <span className="survivor-game-number">Game {game.game_number}</span>
-                                <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
-                            </div>
-                            <div className="survivor-game-teams">
-                                {game.home_team || "Home"} Vs {game.away_team || "Away"}
-                            </div>
-                            <div className="survivor-game-stats">
-                                <span>Bets: <b>{game.total_bets ?? "—"}</b></span>
-                                <span>Dropped: <b>{game.total_dropped ?? "—"}</b></span>
-                                <span>Still standing: <b>{game.still_standing ?? "—"}</b></span>
-                                {game.result && (
-                                    <span>
-                                        Result: <b>{normalizeSelection(game.result)}</b>
-                                    </span>
-                                )}
-                            </div>
-                            {(isEnrolled || mine) && (
-                                <div className="survivor-game-outcome">
-                                    <span className="survivor-your-pick">
-                                        Your pick:{" "}
-                                        <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b>
-                                    </span>
-                                    {mine?.result_status && (
-                                        <span className="survivor-outcome-line">
-                                            Outcome: <OutcomeBadge resultStatus={mine.result_status} />
-                                        </span>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    );
-                })}
-
-                {currentGame && (() => {
-                    const game = currentGame;
+                {orderedNonSettledGames.map((game, gameIndex) => {
                     const mine = predictionFor(game);
                     const canPick = isGamePickable(game);
+                    const isCurrentGame = currentGame?.game_number === game.game_number;
+                    // Position of this game within the currently-shown list
+                    // (1-based), distinct from game.game_number - this is
+                    // what "your game number" next to the current-game badge
+                    // refers to, per explicit product decision.
+                    const yourGameNumber = gameIndex + 1;
+                    // Locked (picks closed) but betting on the challenge as a
+                    // whole isn't currently allowed (challenge closed, user
+                    // eliminated, or already won) - the specific case this
+                    // row's controls need to reflect, rather than hiding the
+                    // whole games list behind one summary row.
                     const isLockedOut = statusIs(game.status, "LOCKED") && !canBetOnChallenge;
                     const hasSubmittedPick = mine?.selection != null && mine.selection !== "";
                     const canBetOnThisGame = canPick && canBetOnChallenge && isCurrentGame;
@@ -611,25 +582,35 @@ const SurvivorChallengeGames = ({ id }) => {
                     return (
                         <div
                             key={game.game_number}
-                            className="survivor-game-row survivor-game-row--current"
-                            ref={currentGameRowRef}
+                            className="survivor-game-row"
+                            ref={isCurrentGame ? currentGameRowRef : undefined}
                         >
                             <div className="survivor-game-row-top">
-                                <span
-                                    className={`survivor-current-game-badge${
-                                        isLockedOut ? " survivor-current-game-blocked" : ""
-                                    }`}
-                                >
-                                    {isLockedOut
-                                        ? "Not Allowed to Place bet."
-                                        : `Today's Game ${game.game_number}`}
-                                </span>
-                                <span className="survivor-your-game-number">
-                                    your game number {yourGameNumber}
-                                </span>
+                                {isCurrentGame ? (
+                                    <span
+                                        className={`survivor-current-game-badge${
+                                            isLockedOut ? " survivor-current-game-blocked" : ""
+                                        }`}
+                                    >
+                                        {isLockedOut
+                                            ? "Not Allowed to Place bet."
+                                            : `Today's Game ${game.game_number}`}
+                                    </span>
+                                ) : (
+                                    <span className="survivor-game-number">Game {game.game_number}</span>
+                                )}
+                                {isCurrentGame && (
+                                    <span className="survivor-your-game-number">
+                                        your game number {yourGameNumber}
+                                    </span>
+                                )}
                                 <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
                             </div>
                             <div className="survivor-game-teams">
+                                {/* The survivor game payload has no home_team/away_team yet (only
+                                    parent_match_id) - shows the literal placeholder for now, and
+                                    will pick up real names automatically once the backend adds
+                                    them, same fallback convention as betPickForSelection. */}
                                 {game.home_team || "Home"} Vs {game.away_team || "Away"}
                             </div>
                             <div className="survivor-game-time">
@@ -746,10 +727,7 @@ const SurvivorChallengeGames = ({ id }) => {
 
                             {!canBetOnThisGame && !isLockedOut && (
                                 <div className="survivor-game-outcome">
-                                    <span className="survivor-your-pick">
-                                        Your pick:{" "}
-                                        <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b>
-                                    </span>
+                                    <span className="survivor-your-pick">Your pick: <b>{mine?.selection ? normalizeSelection(mine.selection) : "N/A"}</b></span>
                                     {mine?.selection && (
                                         <span className="survivor-result-status survivor-result-pending">
                                             Pending

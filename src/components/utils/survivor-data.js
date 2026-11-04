@@ -112,24 +112,7 @@ export const fetchSurvivorChallenges = async () => {
     return [];
 };
 
-/** Default games payload on detail and GET .../games. */
-export const emptySurvivorGamesView = () => ({
-    past_games: [],
-    current_game: null,
-});
-
-/** Normalize API `games` object (ignores legacy flat arrays). */
-export const normalizeSurvivorGamesView = (games) => {
-    if (!games || Array.isArray(games)) {
-        return emptySurvivorGamesView();
-    }
-    return {
-        past_games: Array.isArray(games.past_games) ? games.past_games : [],
-        current_game: games.current_game ?? null,
-    };
-};
-
-/** GET /survivor/challenges/{id}/games — past rounds + current round (poll-friendly). */
+/** GET /survivor/challenges/{id}/games — visible games only (poll-friendly). */
 export const fetchSurvivorGames = async (id) => {
     const [httpStatus, response] = await makeRequest({
         url: `/survivor/challenges/${id}/games`,
@@ -139,7 +122,7 @@ export const fetchSurvivorGames = async (id) => {
     if (isSurvivorSuccess(httpStatus, response)) {
         return normalizeSurvivorGames(response?.data);
     }
-    return emptySurvivorGamesView();
+    return [];
 };
 
 /** GET /survivor/challenges/{id} — public challenge detail + games list. */
