@@ -10,6 +10,7 @@ import makeRequest from "../../utils/fetch-request";
 import { MdFullscreen } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import { ensureCasinoExternalScripts } from '../../utils/load-external-script';
+import { promptLoginModal } from "../../utils/session-auth";
 
 
 const CasinoLaunchedGame = (props) => {
@@ -25,14 +26,14 @@ const CasinoLaunchedGame = (props) => {
     const location = useLocation();
 
 
-    const handleSessionExpired = () => {
-        removeItem("user");
+    const handleSessionExpired = async () => {
         removeItem("casinolaunch");
-        dispatch({ type: "DEL", key: "user" });
         dispatch({ type: "SET", key: "casinolaunch", payload: { game: "", url: "" } });
-        dispatch({ type: "SET", key: "showloginmodal", payload: true });
-        dispatch({ type: "SET", key: "sessionMessage", payload: "Session expired. Please log in again." });
         navigate("/casino");
+        const auth = await promptLoginModal({ next: "/casino" });
+        if (auth.opened) {
+            dispatch({ type: "SET", key: "sessionMessage", payload: "Session expired. Please log in again." });
+        }
     };
 
     const findGameId = (provider, gameName) => {

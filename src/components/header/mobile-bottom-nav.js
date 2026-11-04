@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaHome, FaGamepad, FaTrophy, FaUser } from "react-icons/fa";
 import { Context } from "../../context/store";
 import { getFromLocalStorage } from "../utils/local-storage";
+import { dismissLoginModalIfSessionPresent } from "../utils/login-redirect";
 import { JACKPOT_PATH, jackpotsPathWithType, getJackpotTypes, typeParamValue } from "../utils/jackpot-data";
 
 const isJackpotPath = (pathname) =>
@@ -55,6 +56,7 @@ const MobileBottomNav = () => {
     const openAccount = () => {
         const user = getFromLocalStorage("user") || state?.user;
         if (!user) {
+            // Intentional logged-out CTA — open login immediately.
             dispatch({ type: "SET", key: "showloginmodal", payload: true });
             return;
         }
@@ -73,6 +75,7 @@ const MobileBottomNav = () => {
             <Link
                 to="/"
                 className={`mobile-bottom-nav__item${isHome && !isCasino && !onJackpotPage ? " is-active" : ""}`}
+                onClick={() => dismissLoginModalIfSessionPresent(dispatch)}
             >
                 <FaHome className="mobile-bottom-nav__icon" aria-hidden="true" />
                 <span className="mobile-bottom-nav__label">Home</span>

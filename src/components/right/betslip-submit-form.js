@@ -26,6 +26,7 @@ import { TbRefreshAlert } from "react-icons/tb";
 import { getFromLocalStorage, removeItem, setLocalStorage } from '../utils/local-storage';
 import { getStoredIpAddress } from '../utils/ip-address';
 import { formatToFloat } from '../utils/formatters';
+import { promptLoginModal } from '../utils/session-auth';
 import { resolveBongeBonusPercent, countSgrQualifyingGames } from './bonge-bonus-utils';
 
 const Float = (equation, precision = 4) => {
@@ -295,13 +296,18 @@ const BetslipSubmitForm = (props) => {
         }
 
         makeRequest({ url: endpoint, method: method, data: payload, api_version: 2 })
-            .then(([status, response]) => {
+            .then(async ([status, response]) => {
                 if (isUnauthorizedBetResponse(status, response)) {
-                    removeItem("user");
-                    dispatch({ type: "DEL", key: "user" });
                     dispatch({ type: "SET", key: "showmobileslip", payload: false });
-                    dispatch({ type: "SET", key: "showloginmodal", payload: true });
-                    setMessage({ status: 401, message: "Your session has expired. Please log in to place your bet." });
+                    // makeRequest may already have refreshed; try once more before login modal.
+                    const auth = await promptLoginModal({ next: "/" });
+                    if (auth.recovered) {
+                        setMessage({ status: 400, message: "Session refreshed. Please place your bet again." });
+                    } else if (auth.opened) {
+                        setMessage({ status: 401, message: "Your session has expired. Please log in to place your bet." });
+                    } else {
+                        setMessage({ status: 400, message: "Unable to verify session. Please try again." });
+                    }
                     setSubmitting(false);
                     return;
                 }

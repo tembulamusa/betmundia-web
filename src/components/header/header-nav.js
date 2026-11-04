@@ -4,7 +4,7 @@ import { Context } from "../../context/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandshake, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { getFromLocalStorage } from "../utils/local-storage";
-import { openLoginWithRedirect } from "../utils/login-redirect";
+import { dismissLoginModalIfSessionPresent, openLoginWithRedirect } from "../utils/login-redirect";
 
 const HeaderNav = () => {
     const [state, dispatch] = useContext(Context);
@@ -98,6 +98,7 @@ const HeaderNav = () => {
                             <Link
                                 to="/"
                                 className={`header-search-float__btn ${!isCasino ? "header-search-float__btn--active" : ""}`}
+                                onClick={() => dismissLoginModalIfSessionPresent(dispatch)}
                             >
                                 Sports
                             </Link>

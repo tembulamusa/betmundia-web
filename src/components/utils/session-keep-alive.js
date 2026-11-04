@@ -66,6 +66,8 @@ export const runScheduledRefresh = () => {
                 return refresh;
             }
             const status = Number(refresh.status);
+            // Refresh already ran; 401/403 means the session is dead — open login once.
+            // Network / 5xx retry below and must never pop the modal from the timer alone.
             if (isUnauthorizedStatus(status)) {
                 logoutDueToUnauthorized();
                 clearSchedule();
