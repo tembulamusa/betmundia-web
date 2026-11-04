@@ -162,13 +162,11 @@
   margin-top: 1.35rem;
 }
 
-.survivor-lobby-section-title {
-  margin: 0 0 0.75rem;
-  padding: 0 0.15rem;
-  font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.88);
+/* Match live Upcoming Live bar (tolkits .live-section-header); bleed to panel edges */
+.survivor-lobby-section-header {
+  margin-left: -0.65rem;
+  margin-right: -0.65rem;
+  margin-bottom: 0.65rem;
 }
 
 .survivor-won-badge {
@@ -204,8 +202,9 @@
     padding: 1rem 0.85rem 0.9rem;
   }
 
-  .survivor-lobby-section-title {
-    font-size: 1.3rem;
+  .survivor-lobby-section-header {
+    margin-left: -0.85rem;
+    margin-right: -0.85rem;
   }
 }
 
