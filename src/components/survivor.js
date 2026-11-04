@@ -53,6 +53,12 @@ const GameCounts = ({ game }) => (
 
 /** Empty state for the lobby — same look as the empty jackpots page
  * (illustration, title, subtitle). */
+/** Shown when challenge/games UI cannot render yet — calm “check back” copy, not an error. */
+const SURVIVOR_CHALLENGE_UNAVAILABLE_TITLE = "Next challenge coming soon";
+const SURVIVOR_CHALLENGE_UNAVAILABLE_SUBTITLE =
+    "The next challenge will be available in the next few hours. Check back and play.";
+const SURVIVOR_GAMES_UNAVAILABLE_TITLE = "Games aren't available yet";
+
 const SurvivorEmptyState = ({ title, subtitle }) => (
     <div className="col-md-12 text-center background-primary mt-2 no-events-div jackpot-empty-state">
         <img
@@ -1294,36 +1300,23 @@ class SurvivorErrorBoundary extends React.Component {
 
     render() {
         if (this.state.hasError) {
-            const subtitle = this.state.message
-                ? `${this.state.message} — refresh the page to try again.`
-                : "Refresh the page to try again.";
             if (this.props.variant === "panel") {
                 return (
-                    <div className="survivor-games-error" role="alert">
+                    <div className="survivor-games-unavailable" role="status">
                         <SurvivorEmptyState
-                            title="This challenge's games could not be loaded."
-                            subtitle={subtitle}
+                            title={SURVIVOR_GAMES_UNAVAILABLE_TITLE}
+                            subtitle={SURVIVOR_CHALLENGE_UNAVAILABLE_SUBTITLE}
                         />
-                        <div className="text-center mt-3">
-                            <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
-                                Refresh page
-                            </button>
-                        </div>
                     </div>
                 );
             }
             return (
-                <div className="survivor-page" role="alert">
+                <div className="survivor-page" role="status">
                     <SurvivorPageHeader />
                     <SurvivorEmptyState
-                        title="This challenge could not be loaded."
-                        subtitle={subtitle}
+                        title={SURVIVOR_CHALLENGE_UNAVAILABLE_TITLE}
+                        subtitle={SURVIVOR_CHALLENGE_UNAVAILABLE_SUBTITLE}
                     />
-                    <div className="text-center mt-3">
-                        <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
-                            Refresh page
-                        </button>
-                    </div>
                 </div>
             );
         }
