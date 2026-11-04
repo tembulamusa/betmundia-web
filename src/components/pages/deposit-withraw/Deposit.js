@@ -8,15 +8,18 @@ import { Context } from '../../../context/store';
 import Notify from '../../utils/Notify';
 import '../../../assets/css/accordion.react.css';
 import { getFromLocalStorage, removeItem } from '../../utils/local-storage';
+import mpesaLogo from '../../../assets/img/mpesa-3.png';
 import {
     FaArrowLeft,
     FaShieldAlt,
-    FaMobileAlt,
     FaCoins,
     FaWallet,
     FaInfoCircle,
     FaFileAlt,
     FaChevronDown,
+    FaCcVisa,
+    FaCcMastercard,
+    FaCreditCard,
 } from 'react-icons/fa';
 import { MdPhoneIphone } from 'react-icons/md';
 
@@ -25,6 +28,7 @@ const Deposit = (props) => {
 
     const [state, dispatch] = useContext(Context);
     const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState('mpesa');
 
     const app_name = "desktop-web";
     const promoName = state?.promoInfo;
@@ -34,13 +38,22 @@ const Deposit = (props) => {
     const [success, setSuccess] = useState(false);
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [cardSuccess, setCardSuccess] = useState(false);
+    const [cardMessage, setCardMessage] = useState(null);
+    const [cardLoading, setCardLoading] = useState(false);
     const user = getFromLocalStorage("user");
 
     const initialValues = {
         amount: '',
         msisdn: user?.msisdn || ''
+    };
 
-    }
+    const cardInitialValues = {
+        amount: '',
+        card_number: '',
+        expiry: '',
+        cvc: '',
+    };
 
 
     const handleSubmit = values => {
@@ -77,6 +90,58 @@ const Deposit = (props) => {
             })
     }
 
+    const handleCardSubmit = values => {
+        const endpoint = 'v2/deposits/card/new';
+        setCardLoading(true);
+        setCardMessage(null);
+        setCardSuccess(false);
+
+        const expiryParts = String(values.expiry || '').split('/');
+        const requestData = {
+            amount: values.amount,
+            card_number: String(values.card_number || '').replace(/\s+/g, ''),
+            expiry_month: expiryParts[0] || '',
+            expiry_year: expiryParts[1] || '',
+            cvc: values.cvc,
+            app_name: app,
+        };
+
+        makeRequest({ url: endpoint, method: 'POST', data: requestData, api_version: 3 })
+            .then(([status, response]) => {
+                setCardLoading(false);
+                dispatch({
+                    type: "SET",
+                    key: "toggleuserbalance",
+                    payload: state?.toggleuserbalance ? !state?.toggleuserbalance : true,
+                });
+
+                if (status == 200 || status == 201) {
+                    setCardSuccess(true);
+                    setCardMessage({
+                        status: 200,
+                        message: response?.message || "Card payment initiated. Complete the secure checkout if prompted.",
+                    });
+                    if (response?.redirect_url) {
+                        window.location.href = response.redirect_url;
+                    }
+                } else if (response?.status == 403 || response?.status == 401 || status == 401) {
+                    dispatch({ type: "DEL", key: "user" });
+                    removeItem("user");
+                    dispatch({ type: "SET", key: "showloginmodal", payload: true });
+                } else {
+                    const errMsg = response?.message || response?.error || "Card payment is not available yet. Please use M-Pesa.";
+                    setCardMessage({ status: 400, message: errMsg });
+                    Notify({ status: 400, message: errMsg });
+                }
+            })
+            .catch(() => {
+                setCardLoading(false);
+                const errMsg = "Card payment is not available yet. Please use M-Pesa.";
+                setCardMessage({ status: 400, message: errMsg });
+                Notify({ status: 400, message: errMsg });
+            });
+    };
+
 
 
     const validate = values => {
@@ -93,15 +158,42 @@ const Deposit = (props) => {
         return errors
     }
 
+    const validateCard = values => {
+        const errors = {};
+        const digits = String(values.card_number || '').replace(/\s+/g, '');
+        const expiry = String(values.expiry || '').trim();
+        const cvc = String(values.cvc || '').trim();
 
-    const Alert = () => {
-        if (!message) return null;
+        if (!values.amount || values.amount < 1 || values.amount > 70000) {
+            errors.amount = "Please enter amount between KES 1.00 and KES 70,000.00";
+        }
+        if (!digits || digits.length < 13 || digits.length > 19 || !/^\d+$/.test(digits)) {
+            errors.card_number = "Enter a valid card number";
+        }
+        if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+            errors.expiry = "Use MM/YY";
+        }
+        if (!/^\d{3,4}$/.test(cvc)) {
+            errors.cvc = "Enter a valid CVC";
+        }
+        return errors;
+    };
+
+
+    const Alert = ({ variant = 'mpesa' }) => {
+        const activeMessage = variant === 'card' ? cardMessage : message;
+        const isOk = variant === 'card' ? cardSuccess : success;
+        if (!activeMessage) return null;
         return (
             <div
                 role="alert"
-                className={`deposit-alert deposit-alert--${success ? 'success' : 'danger'}`}
+                className={`deposit-alert deposit-alert--${isOk ? 'success' : 'danger'}`}
             >
-                <a href="#pay-via-mobile">{message?.message}</a>
+                {variant === 'mpesa' ? (
+                    <a href="#pay-via-mobile">{activeMessage?.message}</a>
+                ) : (
+                    <span>{activeMessage?.message}</span>
+                )}
             </div>
         );
     };
@@ -256,9 +348,11 @@ const Deposit = (props) => {
             <Form className="deposit-form">
                 <div className="deposit-card">
                     <div className="deposit-mpesa-head">
-                        <span className="deposit-mpesa-icon-wrap" aria-hidden="true">
-                            <FaMobileAlt />
-                        </span>
+                        <img
+                            src={mpesaLogo}
+                            alt=""
+                            className="deposit-method-logo deposit-method-logo--mpesa"
+                        />
                         <div>
                             <h2 className="deposit-mpesa-title">Lipa na Mpesa</h2>
                             <p className="deposit-mpesa-sub">Fast. Secure. Convenient.</p>
@@ -320,6 +414,148 @@ const Deposit = (props) => {
         );
     }
 
+    const formatCardNumber = (raw) => {
+        const digits = String(raw || '').replace(/\D/g, '').slice(0, 19);
+        return digits.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+    };
+
+    const formatExpiry = (raw) => {
+        const digits = String(raw || '').replace(/\D/g, '').slice(0, 4);
+        if (digits.length <= 2) return digits;
+        return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    };
+
+    const CardDepositFormFields = ({ values, errors, setFieldValue }) => {
+        const onFieldChanged = (ev) => {
+            const { name, value } = ev.target;
+            if (name === 'card_number') {
+                setFieldValue(name, formatCardNumber(value));
+                return;
+            }
+            if (name === 'expiry') {
+                setFieldValue(name, formatExpiry(value));
+                return;
+            }
+            if (name === 'cvc') {
+                setFieldValue(name, String(value || '').replace(/\D/g, '').slice(0, 4));
+                return;
+            }
+            setFieldValue(name, value);
+        };
+
+        return (
+            <Form className="deposit-form">
+                <div className="deposit-card">
+                    <div className="deposit-mpesa-head">
+                        <span className="deposit-card-logos" aria-hidden="true">
+                            <FaCcVisa className="deposit-card-brand deposit-card-brand--visa" />
+                            <FaCcMastercard className="deposit-card-brand deposit-card-brand--mc" />
+                        </span>
+                        <div>
+                            <h2 className="deposit-card-title">Card Payment</h2>
+                            <p className="deposit-mpesa-sub">Visa &amp; Mastercard</p>
+                        </div>
+                    </div>
+
+                    {cardMessage && <Alert variant="card" />}
+
+                    <div className="deposit-field">
+                        <label className="deposit-field-label" htmlFor="card-amount">
+                            <FaCoins aria-hidden="true" />
+                            Amount To Deposit
+                        </label>
+                        <div className="deposit-input-wrap deposit-input-wrap--amount">
+                            <input
+                                onChange={onFieldChanged}
+                                className="deposit-field-input"
+                                id="card-amount"
+                                name="amount"
+                                type="text"
+                                value={values.amount}
+                                placeholder="Enter amount"
+                                inputMode="decimal"
+                            />
+                            <span className="deposit-currency-suffix">KSh</span>
+                        </div>
+                        {errors.amount && <div className="deposit-field-error">{errors.amount}</div>}
+                    </div>
+
+                    <div className="deposit-field">
+                        <label className="deposit-field-label" htmlFor="card-number">
+                            <FaCreditCard aria-hidden="true" />
+                            Card Number
+                        </label>
+                        <div className="deposit-input-wrap deposit-input-wrap--wide">
+                            <input
+                                onChange={onFieldChanged}
+                                className="deposit-field-input"
+                                id="card-number"
+                                name="card_number"
+                                type="text"
+                                inputMode="numeric"
+                                autoComplete="cc-number"
+                                placeholder="ACCT-000003"
+                                value={values.card_number}
+                            />
+                        </div>
+                        {errors.card_number && <div className="deposit-field-error">{errors.card_number}</div>}
+                    </div>
+
+                    <div className="deposit-card-row">
+                        <div className="deposit-field">
+                            <label className="deposit-field-label" htmlFor="card-expiry">
+                                Expiry
+                            </label>
+                            <div className="deposit-input-wrap">
+                                <input
+                                    onChange={onFieldChanged}
+                                    className="deposit-field-input"
+                                    id="card-expiry"
+                                    name="expiry"
+                                    type="text"
+                                    inputMode="numeric"
+                                    autoComplete="cc-exp"
+                                    placeholder="MM/YY"
+                                    value={values.expiry}
+                                />
+                            </div>
+                            {errors.expiry && <div className="deposit-field-error">{errors.expiry}</div>}
+                        </div>
+
+                        <div className="deposit-field">
+                            <label className="deposit-field-label" htmlFor="card-cvc">
+                                CVC
+                            </label>
+                            <div className="deposit-input-wrap">
+                                <input
+                                    onChange={onFieldChanged}
+                                    className="deposit-field-input"
+                                    id="card-cvc"
+                                    name="cvc"
+                                    type="password"
+                                    inputMode="numeric"
+                                    autoComplete="cc-csc"
+                                    placeholder="123"
+                                    value={values.cvc}
+                                />
+                            </div>
+                            {errors.cvc && <div className="deposit-field-error">{errors.cvc}</div>}
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={cardLoading}
+                        className="deposit-submit-btn"
+                    >
+                        <FaWallet aria-hidden="true" />
+                        {cardLoading ? "WAIT..." : "PAY WITH CARD"}
+                    </button>
+                </div>
+            </Form>
+        );
+    };
+
     const DepositForm = () => {
         return (
             <Formik
@@ -332,6 +568,19 @@ const Deposit = (props) => {
         );
     }
 
+    const CardDepositForm = () => {
+        return (
+            <Formik
+                initialValues={cardInitialValues}
+                onSubmit={handleCardSubmit}
+                validateOnChange={false}
+                validateOnBlur={false}
+                validate={validateCard}
+                render={(props) => <CardDepositFormFields {...props} />}
+            />
+        );
+    };
+
     return (
         <div className="deposit-page">
             <header className="deposit-page-header">
@@ -343,14 +592,60 @@ const Deposit = (props) => {
                 >
                     <FaArrowLeft />
                 </button>
-                <h1 className="deposit-page-title">Deposit Funds (Mobile Money)</h1>
+                <h1 className="deposit-page-title">Deposit Funds</h1>
                 <span className="deposit-page-secure-icon" aria-hidden="true" title="Secure">
                     <FaShieldAlt />
                 </span>
             </header>
 
             <div className="deposit-page-inner">
-                <DepositForm />
+                <div className="deposit-tabs" role="tablist" aria-label="Deposit method">
+                    <button
+                        type="button"
+                        role="tab"
+                        id="deposit-tab-mpesa"
+                        aria-selected={activeTab === 'mpesa'}
+                        aria-controls="deposit-panel-mpesa"
+                        className={`deposit-tab${activeTab === 'mpesa' ? ' is-active' : ''}`}
+                        onClick={() => setActiveTab('mpesa')}
+                    >
+                        <img src={mpesaLogo} alt="" className="deposit-tab-logo" />
+                        <span>M-Pesa</span>
+                    </button>
+                    <button
+                        type="button"
+                        role="tab"
+                        id="deposit-tab-card"
+                        aria-selected={activeTab === 'card'}
+                        aria-controls="deposit-panel-card"
+                        className={`deposit-tab${activeTab === 'card' ? ' is-active' : ''}`}
+                        onClick={() => setActiveTab('card')}
+                    >
+                        <span className="deposit-tab-card-icons" aria-hidden="true">
+                            <FaCcVisa />
+                            <FaCcMastercard />
+                        </span>
+                        <span>Card</span>
+                    </button>
+                </div>
+
+                <div
+                    id="deposit-panel-mpesa"
+                    role="tabpanel"
+                    aria-labelledby="deposit-tab-mpesa"
+                    hidden={activeTab !== 'mpesa'}
+                >
+                    {activeTab === 'mpesa' && <DepositForm />}
+                </div>
+
+                <div
+                    id="deposit-panel-card"
+                    role="tabpanel"
+                    aria-labelledby="deposit-tab-card"
+                    hidden={activeTab !== 'card'}
+                >
+                    {activeTab === 'card' && <CardDepositForm />}
+                </div>
 
                 <div className="deposit-trust">
                     <FaShieldAlt className="deposit-trust-icon" aria-hidden="true" />

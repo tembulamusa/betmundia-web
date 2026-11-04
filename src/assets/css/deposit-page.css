@@ -1,10 +1,10 @@
-/* Deposit Funds (Mobile Money) page */
+/* Deposit Funds page */
 
 .deposit-page {
-  --dep-pink: #e91e8c;
-  --dep-pink-soft: #ff52d4;
-  --dep-pink-deep: #a71f66;
-  --dep-magenta: #d81b60;
+  --dep-pink: #a71f66;
+  --dep-pink-soft: #c43a7d;
+  --dep-pink-deep: #8d1a56;
+  --dep-magenta: #a71f66;
   --dep-green: #00c853;
   --dep-mpesa: #4caf50;
   --dep-card: rgba(255, 255, 255, 0.15);
@@ -13,8 +13,8 @@
   --dep-border: rgba(255, 255, 255, 0.1);
   --dep-text: #ffffff;
   --dep-muted: rgba(255, 255, 255, 0.55);
-  --dep-radius: 8px;
-  --dep-radius-sm: 8px;
+  --dep-radius: 4px;
+  --dep-radius-sm: 4px;
   color: var(--dep-text);
   background: transparent;
   min-height: 100%;
@@ -45,10 +45,113 @@
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-  margin: 0 0 4rem;
-  padding: 1.15rem 1rem 1.25rem;
+  margin: 0 0 0.65rem;
+  padding: 0.85rem 1rem 0.9rem;
   background: rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Method tabs */
+.deposit-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  margin: 0 0 0.75rem;
+  padding: 0.3rem;
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--dep-border);
+  border-radius: var(--dep-radius);
+}
+
+.deposit-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.85rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid transparent;
+  border-radius: var(--dep-radius-sm);
+  background: transparent;
+  color: var(--dep-muted);
+  font-size: 1.39rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.deposit-tab.is-active {
+  background: rgba(167, 31, 102, 0.22);
+  border-color: rgba(167, 31, 102, 0.45);
+  color: #fff;
+}
+
+.deposit-tab-logo {
+  height: 1.55rem;
+  width: auto;
+  max-width: 4.5rem;
+  object-fit: contain;
+  display: block;
+}
+
+.deposit-tab-card-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  font-size: 1.85rem;
+  line-height: 1;
+  color: #fff;
+}
+
+.deposit-method-logo {
+  display: block;
+  height: 2.1rem;
+  width: auto;
+  max-width: 5.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.deposit-card-logos {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 2.35rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.deposit-card-brand--visa {
+  color: #1a1f71;
+  background: #fff;
+  border-radius: 3px;
+  padding: 0.05rem 0.12rem;
+}
+
+.deposit-card-brand--mc {
+  color: #eb001b;
+  background: #fff;
+  border-radius: 3px;
+  padding: 0.05rem 0.12rem;
+}
+
+.deposit-card-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.deposit-card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.deposit-input-wrap--wide {
+  max-width: none;
 }
 
 .deposit-page-back {
@@ -193,7 +296,7 @@
 }
 
 .deposit-page .deposit-field-input:focus {
-  border-color: rgba(233, 30, 140, 0.45) !important;
+  border-color: rgba(167, 31, 102, 0.55) !important;
 }
 
 .deposit-page .deposit-field-input::placeholder {
@@ -319,8 +422,8 @@
 }
 
 .deposit-status-box:hover {
-  border-color: rgba(233, 30, 140, 0.35);
-  background: rgba(233, 30, 140, 0.06);
+  border-color: rgba(167, 31, 102, 0.4);
+  background: rgba(167, 31, 102, 0.08);
 }
 
 .deposit-status-icon {
@@ -330,7 +433,7 @@
   width: 1.85rem;
   height: 1.85rem;
   border-radius: 50%;
-  background: rgba(233, 30, 140, 0.15);
+  background: rgba(167, 31, 102, 0.18);
   color: var(--dep-pink);
   font-size: 1.32rem;
   flex-shrink: 0;
@@ -363,7 +466,7 @@
   justify-content: center;
   padding: 0.45rem 0.7rem;
   border: 1.5px solid var(--dep-pink);
-  border-radius: 6px;
+  border-radius: 4px;
   background: transparent;
   color: var(--dep-pink);
   font-size: 1.18rem;
@@ -375,7 +478,7 @@
 }
 
 .deposit-status-box:hover .deposit-status-btn {
-  background: rgba(233, 30, 140, 0.1);
+  background: rgba(167, 31, 102, 0.12);
 }
 
 /* Paybill accordion card */
@@ -494,7 +597,7 @@
   top: 1.55rem;
   bottom: 0;
   width: 0;
-  border-left: 1.5px dashed rgba(233, 30, 140, 0.55);
+  border-left: 1.5px dashed rgba(167, 31, 102, 0.55);
 }
 
 .deposit-step-num {
@@ -548,14 +651,14 @@
   background:
     radial-gradient(ellipse 70% 65% at 50% 48%, rgba(88, 40, 140, 0.18) 0%, transparent 70%),
     #0b0e1b;
-  border-radius: 10px;
+  border-radius: 4px;
   overflow: visible;
 }
 
 .deposit-phone-frame {
   width: 82px;
   height: 140px;
-  border-radius: 16px;
+  border-radius: 10px;
   border: 1.5px solid var(--phone-neon);
   background:
     linear-gradient(165deg, var(--phone-body-mid) 0%, var(--phone-body) 45%, #080b14 100%);
@@ -730,8 +833,12 @@
   }
 
   .deposit-page-header {
-    margin: 0 0 4rem;
-    padding: 1.25rem 1.25rem 1.35rem;
+    margin: 0 0 0.75rem;
+    padding: 0.95rem 1.25rem 1rem;
+  }
+
+  .deposit-tabs {
+    margin-bottom: 0.9rem;
   }
 
   .deposit-page-title {
