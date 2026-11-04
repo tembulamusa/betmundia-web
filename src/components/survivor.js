@@ -627,6 +627,11 @@ const SurvivorChallengeGames = ({ id }) => {
                     const isEligibleToPlay = !isSignedIn || isSurvivorGameEligible(game);
                     const showPickControls = canBetOnThisGame && !placedSelection && isEligibleToPlay;
                     const showIneligibleNotice = canBetOnThisGame && !placedSelection && !isEligibleToPlay;
+                    // "Pick now" is the SCHEDULED / OPEN_FOR_PICKS status label —
+                    // hide that CTA once the user already has a pick on this game
+                    // (API selection, progress prediction, or just-submitted local).
+                    const statusLabel = caseInsensitiveLabel(GAME_STATUS_LABELS, game.status);
+                    const showStatusPill = !(placedSelection && statusLabel === "Pick now");
                     return (
                         <div
                             key={game.game_number}
@@ -652,7 +657,9 @@ const SurvivorChallengeGames = ({ id }) => {
                                         your game number {yourGameNumber}
                                     </span>
                                 )}
-                                <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
+                                {showStatusPill && (
+                                    <StatusPill status={game.status} labels={GAME_STATUS_LABELS} />
+                                )}
                             </div>
                             <div className="survivor-game-teams">
                                 {/* The survivor game payload has no home_team/away_team yet (only
