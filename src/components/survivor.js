@@ -675,7 +675,13 @@ const SurvivorChallengeGames = ({ id }) => {
                     <span>
                         {isEliminated
                             ? `You were eliminated after surviving ${progress.games_survived} game(s).`
-                            : `You're ${caseInsensitiveLabel(PARTICIPANT_STATUS_LABELS, progress.participant_status)?.toLowerCase() || "still in"} — ${progress.games_survived} game(s) survived so far.`}
+                            : (
+                                <>
+                                    {`You're ${caseInsensitiveLabel(PARTICIPANT_STATUS_LABELS, progress.participant_status)?.toLowerCase() || "still in"}`}
+                                    <br />
+                                    {`${progress.games_survived} game(s) survived so far.`}
+                                </>
+                            )}
                     </span>
                 </div>
             )}
