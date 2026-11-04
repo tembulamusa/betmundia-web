@@ -5878,16 +5878,16 @@ button.locked-button:hover {
 }
 
 /*
- * Mobile (< 768px): use the same odds-button design and market layout as the
- * tablet/desktop card (the 768-1210 block above): 3 WAY full width, with
- * Double Chance + Over/Under 2.5 side by side underneath.
- * Soccer rows only (they carry Tailwind's md:flex); other sports keep their layout.
+ * Mobile (< 768px): same odds-button design as tablet, but each market on its
+ * own full-width row (3 WAY, Double Chance, Over/Under stacked — not DC|O/U
+ * side by side). Soccer rows only (Tailwind md:flex); other sports unchanged.
+ * Tablet 768–1210 keeps the 2-column DC + O/U grid; desktop ≥1211 untouched.
  */
 @media screen and (max-width: 767px) {
   .mobile-match-card .matches-row.md\:flex {
     display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
     gap: 8px;
     width: 100%;
     max-width: 100%;
@@ -5902,6 +5902,7 @@ button.locked-button:hover {
     min-width: 0;
     width: 100%;
     margin: 0;
+    grid-column: 1 / -1;
   }
 
   .mobile-match-card .matches-row .tablet-market-full {
