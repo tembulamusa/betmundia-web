@@ -51,39 +51,60 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Method tabs */
+/* Method sheet — folder/tab → content blend */
+.deposit-method-sheet {
+  margin: 0 0 0.75rem;
+}
+
 .deposit-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.45rem;
-  margin: 0 0 0.75rem;
-  padding: 0.3rem;
-  background: rgba(0, 0, 0, 0.12);
-  border: 1px solid var(--dep-border);
-  border-radius: var(--dep-radius);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
 }
 
 .deposit-tab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
   min-height: 2.85rem;
-  padding: 0.45rem 0.65rem;
+  margin: 0;
+  padding: 0.55rem 0.65rem 0.5rem;
   border: 1px solid transparent;
-  border-radius: var(--dep-radius-sm);
-  background: transparent;
+  border-bottom: 1px solid var(--dep-border);
+  border-radius: var(--dep-radius) var(--dep-radius) 0 0;
+  background: rgba(0, 0, 0, 0.14);
   color: var(--dep-muted);
   font-size: 1.39rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
+.deposit-tab + .deposit-tab {
+  border-left-color: rgba(255, 255, 255, 0.08);
+}
+
 .deposit-tab.is-active {
-  background: rgba(167, 31, 102, 0.22);
-  border-color: rgba(167, 31, 102, 0.45);
+  z-index: 1;
+  background: var(--dep-card);
+  border-color: var(--dep-border);
+  border-top: 3px solid var(--dep-pink);
+  border-bottom-color: transparent;
   color: #fff;
+  font-weight: 800;
+}
+
+.deposit-method-panels .deposit-form > .deposit-card:first-child {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .deposit-tab-logo {
@@ -837,7 +858,7 @@
     padding: 0.95rem 1.25rem 1rem;
   }
 
-  .deposit-tabs {
+  .deposit-method-sheet {
     margin-bottom: 0.9rem;
   }
 
