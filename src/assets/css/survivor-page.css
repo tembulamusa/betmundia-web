@@ -905,26 +905,30 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
-/* Prematch-style 1X2 pick buttons: unselected matches the shared market
-   odd buttons (.c-btn / .home-team — soft translucent fill + gold text);
-   only the draft/confirmed selection gets the solid yellow fill. Nothing
-   is sent until "Place" / confirm. No per-outcome coloring. */
+/* Prematch-style 1X2 pick buttons: joined segment like .c-btn-group
+   (1px divider, outer-end radii only). Unselected matches .home-team
+   translucent fill + gold text; only selected/hover get solid yellow.
+   Nothing is sent until "Place" / confirm. No per-outcome coloring. */
 .survivor-pick-buttons {
   display: flex;
-  gap: 0.4rem;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .survivor-pick-btn {
   flex: 1 1 0;
   height: 48px;
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   /* Match .home-team / match-detail odd buttons (unselected). */
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid transparent;
+  border-radius: 0;
   color: #ffc428;
   /* Same as the shared prematch odds buttons' own label/.theodds text -
      that text is unstyled beyond font:inherit + .theodds's own 15px/400
@@ -934,6 +938,20 @@
   font-weight: 400;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.survivor-pick-btn:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.survivor-pick-btn:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.survivor-pick-btn:only-child {
+  border-radius: 6px;
 }
 
 .survivor-pick-odd {
@@ -978,35 +996,10 @@
   cursor: not-allowed;
 }
 
-/* Phone: softer unselected fill (same as .home-team), joined 1X2
-   segment like .c-btn-group — no gaps, 1px divider, outer-end radii only. */
+/* Phone: shorter row + softer unselected fill (same as .home-team mobile). */
 @media screen and (max-width: 767px) {
-  .survivor-pick-buttons {
-    gap: 1px;
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: 6px;
-    overflow: hidden;
-  }
-
   .survivor-pick-btn {
     height: 38px;
-    margin: 0;
-    border-radius: 0;
-    border-color: transparent;
-  }
-
-  .survivor-pick-btn:first-child {
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
-
-  .survivor-pick-btn:last-child {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-  }
-
-  .survivor-pick-btn:only-child {
-    border-radius: 6px;
   }
 
   .survivor-pick-btn:not(.selected) {
