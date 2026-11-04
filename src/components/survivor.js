@@ -28,6 +28,17 @@ import {
 
 export const SURVIVOR_JOINED_STORAGE_KEY = "survivorJoinedChallenges";
 
+/** Shared Survivor Challenge terms — shown in the pick-confirm toggle and
+ * in the dedicated Terms modal opened from game-row "Terms" links. */
+const SURVIVOR_CHALLENGE_TERMS = [
+    "Pick one result (1, X or 2) for each game; picks close at the game's lock time.",
+    "A correct pick keeps you in the challenge; one wrong pick eliminates you.",
+    "The prize pool is shared among the participants who survive every game.",
+    "Your stake for this game is debited when you submit your pick and is non-refundable once the game locks.",
+    "Each game round requires a new stake; picks cannot be changed after submission.",
+    "Game results are settled on the official 90-minute result.",
+];
+
 /** Remember locally which challenges this browser has joined, so My Bets
  * can list them (the API has no "my challenges" endpoint yet — only
  * per-challenge progress). */
@@ -49,6 +60,38 @@ const GameCounts = ({ game }) => (
             Survivors: <b className="survivor-yellow">{gameCount(game, SURVIVORS_KEYS)}</b>
         </span>
     </div>
+);
+
+/** Opens the challenge Terms & Conditions modal from game rows. */
+const SurvivorTermsLink = ({ onOpen }) => (
+    <button type="button" className="survivor-terms-link" onClick={onOpen}>
+        Terms
+    </button>
+);
+
+const SurvivorTermsModal = ({ show, onHide }) => (
+    <Modal
+        show={show}
+        onHide={onHide}
+        centered
+        className="survivor-terms-modal"
+    >
+        <Modal.Header closeButton>
+            <Modal.Title>Survivor Terms &amp; Conditions</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <ul className="survivor-terms-modal-list">
+                {SURVIVOR_CHALLENGE_TERMS.map((term) => (
+                    <li key={term}>{term}</li>
+                ))}
+            </ul>
+        </Modal.Body>
+        <Modal.Footer>
+            <button type="button" className="survivor-terms-modal-close" onClick={onHide}>
+                Close
+            </button>
+        </Modal.Footer>
+    </Modal>
 );
 
 /** Empty state for the lobby — same look as the empty jackpots page
@@ -275,6 +318,8 @@ const SurvivorChallengeGames = ({ id }) => {
     // opens a confirmation modal instead of placing the bet immediately.
     const [pendingPick, setPendingPick] = useState(null);
     const [showPickTerms, setShowPickTerms] = useState(false);
+    const [showTermsModal, setShowTermsModal] = useState(false);
+    const openTermsModal = () => setShowTermsModal(true);
     // Local, unsubmitted picks per game (gameNumber -> "1"/"X"/"2") — set
     // by clicking 1/X/2, cleared once that game's pick is confirmed (or
     // the confirm attempt finishes). Nothing is sent to the server until
@@ -522,7 +567,10 @@ const SurvivorChallengeGames = ({ id }) => {
         setPendingPick({ gameNumber, selection, existing: predictionFor(game) });
     };
 
-    const cancelPendingPick = () => setPendingPick(null);
+    const cancelPendingPick = () => {
+        setPendingPick(null);
+        setShowPickTerms(false);
+    };
 
     const confirmPendingPick = async () => {
         if (!pendingPick) return;
@@ -639,7 +687,6 @@ const SurvivorChallengeGames = ({ id }) => {
                                             <span className="survivor-next-prize">
                                                 Next prize will be: <b>—</b>
                                             </span>
-                                            <span className="survivor-terms-link">Terms</span>
                                         </div>
                                     )}
                                     <div className="survivor-place-btn-row">
@@ -667,6 +714,9 @@ const SurvivorChallengeGames = ({ id }) => {
                                                 "Submit pick"
                                             )}
                                         </button>
+                                    </div>
+                                    <div className="survivor-game-terms-row">
+                                        <SurvivorTermsLink onOpen={openTermsModal} />
                                     </div>
                                     {betFeedback?.gameNumber === game.game_number && (
                                         <div
@@ -703,6 +753,10 @@ const SurvivorChallengeGames = ({ id }) => {
                                                 Pending
                                             </span>
                                         )}
+                                        <span className="survivor-next-prize">
+                                            Next prize will be: <b>—</b>
+                                        </span>
+                                        <SurvivorTermsLink onOpen={openTermsModal} />
                                     </div>
                                     {betFeedback?.gameNumber === game.game_number && (
                                         <div
@@ -736,7 +790,7 @@ const SurvivorChallengeGames = ({ id }) => {
                                     <span className="survivor-next-prize">
                                         Next prize will be: <b>—</b>
                                     </span>
-                                    <span className="survivor-terms-link">Terms</span>
+                                    <SurvivorTermsLink onOpen={openTermsModal} />
                                 </div>
                             )}
                         </div>
@@ -844,12 +898,9 @@ const SurvivorChallengeGames = ({ id }) => {
                     </button>
                     {showPickTerms && (
                         <ul className="survivor-pick-confirm-terms">
-                            <li>Pick one result (1, X or 2) for each game; picks close at the game's lock time.</li>
-                            <li>A correct pick keeps you in the challenge; one wrong pick eliminates you.</li>
-                            <li>The prize pool is shared among the participants who survive every game.</li>
-                            <li>Your stake for this game is debited when you submit your pick and is non-refundable once the game locks.</li>
-                            <li>Each game round requires a new stake; picks cannot be changed after submission.</li>
-                            <li>Game results are settled on the official 90-minute result.</li>
+                            {SURVIVOR_CHALLENGE_TERMS.map((term) => (
+                                <li key={term}>{term}</li>
+                            ))}
                         </ul>
                     )}
                     <p className="survivor-pick-confirm-note">
@@ -873,6 +924,11 @@ const SurvivorChallengeGames = ({ id }) => {
                     </button>
                 </Modal.Footer>
             </Modal>
+
+            <SurvivorTermsModal
+                show={showTermsModal}
+                onHide={() => setShowTermsModal(false)}
+            />
         </>
     );
 };

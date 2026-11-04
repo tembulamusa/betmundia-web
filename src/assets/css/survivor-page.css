@@ -1156,12 +1156,91 @@
   font-size: 1.2rem;
 }
 
+.survivor-game-terms-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.55rem;
+}
+
 .survivor-terms-link {
-  color: #a71f66;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #ffc428;
   font-size: 1.2rem;
   text-decoration: underline dotted;
   text-underline-offset: 3px;
   cursor: pointer;
+}
+
+.survivor-terms-link:hover,
+.survivor-terms-link:focus-visible {
+  color: #ffe08a;
+  outline: none;
+}
+
+/* Dedicated Terms modal — same dark pattern as pick-confirm / block modals. */
+.survivor-terms-modal.modal-dialog {
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.survivor-terms-modal .modal-content {
+  background: rgba(0, 12, 36, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #ffffff;
+}
+
+.survivor-terms-modal .modal-header,
+.survivor-terms-modal .modal-footer {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 1.8rem 2rem 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.survivor-terms-modal .modal-footer {
+  padding: 1.2rem 2rem 2rem;
+}
+
+.survivor-terms-modal .modal-body {
+  padding: 0.8rem 2rem 1.2rem;
+}
+
+.survivor-terms-modal .modal-title {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 1.7rem;
+}
+
+.survivor-terms-modal .btn-close {
+  filter: invert(1);
+}
+
+.survivor-terms-modal-list {
+  margin: 0.4rem 0 0;
+  padding-left: 1.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.35rem;
+  line-height: 1.7;
+}
+
+.survivor-terms-modal-close {
+  background: #a71f66;
+  border: none;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 0.9rem 1.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.survivor-terms-modal-close:hover {
+  background: #8c1a55;
 }
 
 /* Mobile: give the accordion title / challenge header room to breathe —
