@@ -158,9 +158,9 @@ const statusIs = (value, expected) =>
     String(value ?? "").toLowerCase() === String(expected).toLowerCase();
 
 /**
- * Lobby status filter buckets. The API's own challenge statuses are
- * OPEN/ACTIVE/COMPLETED; mapped here to the "active/ended/inactive"
- * wording asked for on the filter bar — OPEN (not started yet) reads as
+ * Lobby status filter buckets (challenge detail nav only). The API's own
+ * challenge statuses are OPEN/ACTIVE/COMPLETED; mapped here to the
+ * "active/ended/inactive" wording — OPEN (not started yet) reads as
  * "inactive", ACTIVE as "active", COMPLETED as "ended".
  */
 const SURVIVOR_LOBBY_FILTERS = [
@@ -178,6 +178,94 @@ const challengeMatchesFilter = (challenge, filterKey) => {
     }
     const filter = SURVIVOR_LOBBY_FILTERS.find((f) => f.key === filterKey);
     return filter ? statusIs(challenge?.status, filter.matchesStatus) : true;
+};
+
+/** Lobby tabs: Latest/Active (default) vs My History. */
+const SURVIVOR_LOBBY_TABS = [
+    { key: "latest", label: "Latest / Active" },
+    { key: "history", label: "My History" },
+];
+
+/** OPEN (entries) and ACTIVE (in progress) both count as current/active. */
+const isChallengeCurrentlyActive = (challenge) =>
+    statusIs(challenge?.status, "OPEN") || statusIs(challenge?.status, "ACTIVE");
+
+const isChallengeCompleted = (challenge) => statusIs(challenge?.status, "COMPLETED");
+
+/** Prefer live /progress.enrolled; fall back to local joined-ids cache. */
+const isEnrolledInChallenge = (challenge, progressByChallenge) => {
+    const progress = progressByChallenge?.[challenge?.id];
+    if (progress) return !!progress.enrolled;
+    return getJoinedChallengeIds().includes(String(challenge?.id));
+};
+
+/** Win detection: progress.participant_status === "WINNER" (any case). */
+const isWinnerOfChallenge = (challenge, progressByChallenge) =>
+    statusIs(progressByChallenge?.[challenge?.id]?.participant_status, "WINNER");
+
+/**
+ * First game the user got wrong / dropped at. Prefers the first prediction
+ * with result_status INCORRECT; falls back to games_survived + 1. Returns
+ * null when we can't tell. Label includes team names when the challenge
+ * games payload has them.
+ */
+const resolveDroppedAtGame = (challenge, progress) => {
+    const predictions = progress?.predictions || [];
+    const incorrect = predictions.find((p) => statusIs(p.result_status, "INCORRECT"));
+    let gameNumber = incorrect?.game_number ?? null;
+    if (gameNumber == null && progress?.games_survived != null) {
+        gameNumber = Number(progress.games_survived) + 1;
+    }
+    if (gameNumber == null && progress?.current_game_number != null && statusIs(progress?.participant_status, "ELIMINATED")) {
+        gameNumber = progress.current_game_number;
+    }
+    if (gameNumber == null) return null;
+
+    const game = survivorGameList(challenge).find((g) => Number(g.game_number) === Number(gameNumber));
+    const hasTeams = !!(game?.home_team || game?.away_team);
+    const matchup = hasTeams
+        ? `${game.home_team || "Home"} vs ${game.away_team || "Away"}`
+        : null;
+    return {
+        gameNumber,
+        label: matchup ? `Game ${gameNumber} (${matchup})` : `Game ${gameNumber}`,
+    };
+};
+
+/**
+ * Ineligible / missed-games copy. Enrolled vs not enrolled must not share
+ * the same "you missed matches" implication — guests/non-enrolled players
+ * never started, so they get join-oriented wording. Eliminated / dropped
+ * players also get the first drop-out game when we can resolve it.
+ */
+const resolveIneligibleCopy = ({ enrolled, eliminated, challenge, progress }) => {
+    if (!enrolled) {
+        return {
+            title: "Not eligible to join",
+            text: "You aren't enrolled in this challenge. Earlier games have already progressed, so you can't start picking from here.",
+            feedback: "Not eligible to join. You aren't enrolled, and earlier games have already progressed.",
+        };
+    }
+
+    const dropped =
+        eliminated ||
+        (progress?.predictions || []).some((p) => statusIs(p.result_status, "INCORRECT"))
+            ? resolveDroppedAtGame(challenge, progress)
+            : null;
+
+    if (dropped) {
+        return {
+            title: "Not eligible to play",
+            text: `You dropped at ${dropped.label}. You can't continue in this challenge.`,
+            feedback: `Not eligible to play. You dropped at ${dropped.label}.`,
+        };
+    }
+
+    return {
+        title: "Not eligible to play",
+        text: "You missed out on some matches.",
+        feedback: "Not eligible to play. You missed out on some matches.",
+    };
 };
 
 const formatMoney = (value) =>
@@ -396,7 +484,13 @@ const SurvivorChallengeGames = ({ id }) => {
         }
         const game = survivorGameList(challenge).find((g) => g.game_number === gameNumber);
         if (!isSurvivorGameEligible(game)) {
-            showBetFeedback(gameNumber, "error", "Not eligible to play. You missed out on some matches.");
+            const ineligible = resolveIneligibleCopy({
+                enrolled: !!progress?.enrolled,
+                eliminated: statusIs(progress?.participant_status, "ELIMINATED"),
+                challenge,
+                progress,
+            });
+            showBetFeedback(gameNumber, "error", ineligible.feedback);
             return;
         }
         clearTimeout(betFeedbackTimer.current);
@@ -498,17 +592,6 @@ const SurvivorChallengeGames = ({ id }) => {
           ]
         : nonSettledGames;
 
-    /** First game the user got wrong, for the "you lost at game N" modal
-     * copy — falls back to games_survived + 1 when predictions aren't
-     * available to inspect directly. */
-    const resolveLostAtGame = () => {
-        const predictions = progress?.predictions || [];
-        const incorrect = predictions.find((p) => statusIs(p.result_status, "INCORRECT"));
-        if (incorrect) return incorrect.game_number;
-        if (progress?.games_survived != null) return progress.games_survived + 1;
-        return progress?.current_game_number ?? null;
-    };
-
     /** Why the odds buttons are replaced with a reason link, and what the
      * modal behind it should say. Only meaningful when !canBetOnChallenge. */
     const resolveBlockReason = () => {
@@ -521,13 +604,13 @@ const SurvivorChallengeGames = ({ id }) => {
             };
         }
         if (isEliminated) {
-            const lostAtGame = resolveLostAtGame();
+            const dropped = resolveDroppedAtGame(challenge, progress);
             return {
                 key: "lost",
                 label: "Not allowed (You lost)",
                 title: "You lost",
-                body: lostAtGame
-                    ? `You lost at game ${lostAtGame}.`
+                body: dropped
+                    ? `You dropped at ${dropped.label}.`
                     : "You were eliminated from this challenge.",
             };
         }
@@ -627,6 +710,14 @@ const SurvivorChallengeGames = ({ id }) => {
                     const isEligibleToPlay = !isSignedIn || isSurvivorGameEligible(game);
                     const showPickControls = canBetOnThisGame && !placedSelection && isEligibleToPlay;
                     const showIneligibleNotice = canBetOnThisGame && !placedSelection && !isEligibleToPlay;
+                    const ineligibleCopy = showIneligibleNotice
+                        ? resolveIneligibleCopy({
+                              enrolled: isEnrolled,
+                              eliminated: isEliminated,
+                              challenge,
+                              progress,
+                          })
+                        : null;
                     // "Pick now" is the SCHEDULED / OPEN_FOR_PICKS status label —
                     // hide that CTA once the user already has a pick on this game
                     // (API selection, progress prediction, or just-submitted local).
@@ -736,12 +827,12 @@ const SurvivorChallengeGames = ({ id }) => {
                                 </>
                             )}
 
-                            {showIneligibleNotice && (
+                            {showIneligibleNotice && ineligibleCopy && (
                                 <div className="survivor-ineligible-notice" role="status">
                                     <FaBan className="survivor-ineligible-icon" aria-hidden="true" />
                                     <div>
-                                        <div className="survivor-ineligible-title">Not eligible to play</div>
-                                        <div className="survivor-ineligible-text">You missed out on some matches.</div>
+                                        <div className="survivor-ineligible-title">{ineligibleCopy.title}</div>
+                                        <div className="survivor-ineligible-text">{ineligibleCopy.text}</div>
                                     </div>
                                 </div>
                             )}
@@ -952,24 +1043,86 @@ const defaultActiveKeyFor = (list) => {
     return String((firstJoined || challenges[0]).id);
 };
 
-/** /survivor — the lobby: every open/active/completed challenge, as an
- * accordion — one row per challenge, collapsed to the same summary the
- * card used to show, expanding in place to the same games/picks panel the
- * challenge's own page shows (SurvivorChallengeGames above). */
+/** One lobby accordion row — summary card + expand-to-games panel. */
+const SurvivorLobbyChallengeItem = ({
+    challenge,
+    activeKey,
+    progressByChallenge,
+    showWonBadge = false,
+}) => {
+    const key = String(challenge.id);
+    const isEnrolled = isEnrolledInChallenge(challenge, progressByChallenge);
+    const won = showWonBadge && isWinnerOfChallenge(challenge, progressByChallenge);
+
+    return (
+        <Accordion.Item eventKey={key}>
+            <Accordion.Header>
+                <div className="survivor-accordion-content">
+                    <div className="survivor-challenge-card-top">
+                        <span className="survivor-challenge-name">{challenge.name}</span>
+                        {won && (
+                            <span className="survivor-won-badge" title="You won this challenge">
+                                <FaTrophy aria-hidden="true" /> You won
+                            </span>
+                        )}
+                        <ChallengeStatusPill
+                            status={challenge.status}
+                            labels={SURVIVOR_STATUS_LABELS}
+                            enrolled={isEnrolled}
+                        />
+                        <div className="survivor-challenge-card-pool">
+                            {formatMoney(challenge.current_prize_pool)}
+                            <span className="survivor-challenge-card-pool-label">prize pool</span>
+                        </div>
+                    </div>
+                    <div className="survivor-challenge-card-meta">
+                        <span className="survivor-challenge-card-meta-item">
+                            <FaUsers aria-hidden="true" />{" "}
+                            <b className="survivor-yellow">{challenge.participant_count}</b> participants
+                        </span>
+                        {(challenge.maximum_games ?? challenge.minimum_games) != null && (
+                            <span className="survivor-challenge-card-meta-item">
+                                Game <b className="survivor-yellow">{challenge.current_game_number ?? 1}</b> of{" "}
+                                <b className="survivor-yellow">
+                                    {challenge.maximum_games ?? challenge.minimum_games}
+                                </b>
+                            </span>
+                        )}
+                    </div>
+                    <div className="survivor-challenge-card-time">
+                        {statusIs(challenge.status, "OPEN")
+                            ? `Entries close ${formatDateTime(challenge.registration_closes_at)}`
+                            : statusIs(challenge.status, "COMPLETED")
+                              ? `Ended ${formatDateTime(challenge.end_at || challenge.start_at)}`
+                              : `Started ${formatDateTime(challenge.start_at)}`}
+                    </div>
+                </div>
+            </Accordion.Header>
+            <Accordion.Body>
+                {/* Only the expanded row fetches/renders games — mounting
+                    SurvivorChallengeGames for every challenge would fire one
+                    request per challenge. */}
+                {activeKey === key && (
+                    <SurvivorErrorBoundary variant="panel" resetKey={key}>
+                        <SurvivorChallengeGames id={challenge.id} />
+                    </SurvivorErrorBoundary>
+                )}
+            </Accordion.Body>
+        </Accordion.Item>
+    );
+};
+
+/** /survivor — lobby with Latest/Active + My History tabs. Expanding a
+ * challenge still shows the same games/picks panel as /survivor/:id. */
 const SurvivorChallengesList = () => {
     // Hydrate instantly from whatever was saved on the last visit, then
-    // refresh from the network in the background — the status filter and
-    // its counts work immediately from "earlier saved" data either way.
+    // refresh from the network in the background.
     const [challenges, setChallenges] = useState(() => readStoredSurvivorChallenges());
     const [fetching, setFetching] = useState(() => !readStoredSurvivorChallenges());
-    const [statusFilter, setStatusFilter] = useState("all");
+    const [lobbyTab, setLobbyTab] = useState("latest");
 
-    // Which challenge's row is expanded. Defaults to the most recently
-    // joined challenge so a returning player lands with their own
-    // challenge already open — everything else starts collapsed. Computed
-    // once from whatever's cached, and again once the network fetch below
-    // lands if nothing was cached yet — but never after that, so it never
-    // clobbers the user's own manual toggling.
+    // Which challenge's row is expanded. Defaults once from cache / first
+    // fetch, then never clobbers the user's own manual toggling.
     const [activeKey, setActiveKey] = useState(() => defaultActiveKeyFor(readStoredSurvivorChallenges()));
     const appliedDefaultActiveKeyRef = useRef(activeKey != null);
 
@@ -993,11 +1146,8 @@ const SurvivorChallengesList = () => {
         return () => { cancelled = true; };
     }, []);
 
-    // One /progress call per challenge shown, purely so the status badge
-    // can reflect the USER's own enrolled/active state (not just the
-    // locally-cached "joined" record) - independent of which row is
-    // expanded. Only fetches ids it doesn't already have, so this never
-    // loops or re-fetches once populated.
+    // One /progress call per challenge shown so enrolled/won badges reflect
+    // the user's real state — only fetches ids not already populated.
     const [progressByChallenge, setProgressByChallenge] = useState({});
     useEffect(() => {
         const idsToFetch = (challenges || [])
@@ -1024,12 +1174,47 @@ const SurvivorChallengesList = () => {
         return () => { cancelled = true; };
     }, [challenges, progressByChallenge]);
 
-    const filterCounts = SURVIVOR_LOBBY_FILTERS.reduce((acc, filter) => {
-        acc[filter.key] = (challenges || []).filter((c) => challengeMatchesFilter(c, filter.key)).length;
-        return acc;
-    }, {});
+    const list = challenges || [];
 
-    const filteredChallenges = (challenges || []).filter((c) => challengeMatchesFilter(c, statusFilter));
+    // Tab 1 — Latest / Active:
+    //   available: current (OPEN/ACTIVE) challenges the user is NOT enrolled in
+    //   mineActive: enrolled challenges that are still current
+    const availableActive = list.filter(
+        (c) => isChallengeCurrentlyActive(c) && !isEnrolledInChallenge(c, progressByChallenge)
+    );
+    const myActiveChallenges = list.filter(
+        (c) => isChallengeCurrentlyActive(c) && isEnrolledInChallenge(c, progressByChallenge)
+    );
+
+    // Tab 2 — My History: challenges the user participated in that are finished
+    // (or still marked enrolled via local cache once completed).
+    const historyChallenges = list.filter(
+        (c) => isChallengeCompleted(c) && isEnrolledInChallenge(c, progressByChallenge)
+    );
+
+    const latestHasRows = availableActive.length > 0 || myActiveChallenges.length > 0;
+    const historyHasRows = historyChallenges.length > 0;
+
+    const renderAccordion = (rows, { showWonBadge = false } = {}) => {
+        if (!rows.length) return null;
+        return (
+            <Accordion
+                activeKey={activeKey}
+                onSelect={(k) => setActiveKey(k)}
+                className="survivor-challenge-accordion"
+            >
+                {rows.map((challenge) => (
+                    <SurvivorLobbyChallengeItem
+                        key={challenge.id}
+                        challenge={challenge}
+                        activeKey={activeKey}
+                        progressByChallenge={progressByChallenge}
+                        showWonBadge={showWonBadge}
+                    />
+                ))}
+            </Accordion>
+        );
+    };
 
     return (
         <div className="survivor-page">
@@ -1039,104 +1224,89 @@ const SurvivorChallengesList = () => {
                 last player standing takes the pool.
             </p>
 
-            {challenges && challenges.length > 0 && (
-                <div className="survivor-lobby-filter-bar">
-                    <label className="survivor-lobby-filter-label" htmlFor="survivor-status-filter">
-                        Filter by status
-                    </label>
-                    <select
-                        id="survivor-status-filter"
-                        className="survivor-lobby-filter-select"
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                        {SURVIVOR_LOBBY_FILTERS.map((filter) => (
-                            <option key={filter.key} value={filter.key}>
-                                {filter.label} ({filterCounts[filter.key]})
-                            </option>
-                        ))}
-                    </select>
+            <div className="survivor-lobby-sheet">
+                <div className="survivor-lobby-tabs" role="tablist" aria-label="Survivor lobby">
+                    {SURVIVOR_LOBBY_TABS.map((tab) => (
+                        <button
+                            key={tab.key}
+                            type="button"
+                            role="tab"
+                            id={`survivor-tab-${tab.key}`}
+                            aria-selected={lobbyTab === tab.key}
+                            aria-controls={`survivor-panel-${tab.key}`}
+                            className={`survivor-lobby-tab${lobbyTab === tab.key ? " is-active" : ""}`}
+                            onClick={() => setLobbyTab(tab.key)}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
-            )}
 
-            {fetching && !challenges && <SurvivorLoading label="Loading challenges" />}
+                <div className="survivor-lobby-panels">
+                    <div
+                        id="survivor-panel-latest"
+                        role="tabpanel"
+                        aria-labelledby="survivor-tab-latest"
+                        hidden={lobbyTab !== "latest"}
+                    >
+                        {lobbyTab === "latest" && (
+                            <>
+                                {fetching && !challenges && (
+                                    <SurvivorLoading label="Loading challenges" />
+                                )}
 
-            {!fetching && (!challenges || challenges.length < 1) && (
-                <SurvivorEmptyState
-                    title="There are no survivor challenges at the moment."
-                    subtitle="Check back later for new challenges and a chance to be the last one standing!"
-                />
-            )}
+                                {!fetching && list.length < 1 && (
+                                    <SurvivorEmptyState
+                                        title="There are no survivor challenges at the moment."
+                                        subtitle="Check back later for new challenges and a chance to be the last one standing!"
+                                    />
+                                )}
 
-            {challenges && challenges.length > 0 && filteredChallenges.length < 1 && (
-                <SurvivorEmptyState
-                    title="No challenges match this filter."
-                    subtitle="Try a different status to see more survivor challenges."
-                />
-            )}
+                                {list.length > 0 && !latestHasRows && (
+                                    <SurvivorEmptyState
+                                        title="No active challenges right now."
+                                        subtitle="When a new challenge opens, it will show up here."
+                                    />
+                                )}
 
-            {challenges && filteredChallenges.length > 0 && (
-                <Accordion
-                    activeKey={activeKey}
-                    onSelect={(k) => setActiveKey(k)}
-                    className="survivor-challenge-accordion"
-                >
-                    {filteredChallenges.map((challenge) => {
-                        const key = String(challenge.id);
-                        // Prefer the real /progress fetch for this challenge once it
-                        // lands - falls back to the locally-cached "joined" record so
-                        // the badge still shows something sensible before it resolves.
-                        const challengeProgress = progressByChallenge[challenge.id];
-                        const isEnrolled = challengeProgress
-                            ? !!challengeProgress.enrolled
-                            : getJoinedChallengeIds().includes(String(challenge.id));
-                        return (
-                            <Accordion.Item key={challenge.id} eventKey={key}>
-                                <Accordion.Header>
-                                    <div className="survivor-accordion-content">
-                                    <div className="survivor-challenge-card-top">
-                                        <span className="survivor-challenge-name">{challenge.name}</span>
-                                        <ChallengeStatusPill
-                                            status={challenge.status}
-                                            labels={SURVIVOR_STATUS_LABELS}
-                                            enrolled={isEnrolled}
-                                        />
-                                        <div className="survivor-challenge-card-pool">
-                                            {formatMoney(challenge.current_prize_pool)}
-                                            <span className="survivor-challenge-card-pool-label">prize pool</span>
-                                        </div>
-                                    </div>
-                                    <div className="survivor-challenge-card-meta">
-                                        <span className="survivor-challenge-card-meta-item"><FaUsers aria-hidden="true" /> <b className="survivor-yellow">{challenge.participant_count}</b> participants</span>
-                                        {(challenge.maximum_games ?? challenge.minimum_games) != null && (
-                                            <span className="survivor-challenge-card-meta-item">
-                                                Game <b className="survivor-yellow">{challenge.current_game_number ?? 1}</b> of{" "}
-                                                <b className="survivor-yellow">{challenge.maximum_games ?? challenge.minimum_games}</b>
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="survivor-challenge-card-time">
-                                        {statusIs(challenge.status, "OPEN")
-                                            ? `Entries close ${formatDateTime(challenge.registration_closes_at)}`
-                                            : `Started ${formatDateTime(challenge.start_at)}`}
-                                    </div>
-                                    </div>
-                                </Accordion.Header>
-                                <Accordion.Body>
-                                    {/* Only the expanded row actually fetches/renders its games —
-                                        mounting SurvivorChallengeGames for every challenge in the
-                                        list at once would fire one request per challenge. */}
-                                    {activeKey === key && (
-                                        <SurvivorErrorBoundary variant="panel" resetKey={key}>
-                                            <SurvivorChallengeGames id={challenge.id} />
-                                        </SurvivorErrorBoundary>
-                                    )}
-                                </Accordion.Body>
-                            </Accordion.Item>
-                        );
-                    })}
-                </Accordion>
-            )}
+                                {availableActive.length > 0 && renderAccordion(availableActive)}
+
+                                {myActiveChallenges.length > 0 && (
+                                    <section className="survivor-lobby-section">
+                                        <h2 className="survivor-lobby-section-title">My active challenges</h2>
+                                        {renderAccordion(myActiveChallenges)}
+                                    </section>
+                                )}
+                            </>
+                        )}
+                    </div>
+
+                    <div
+                        id="survivor-panel-history"
+                        role="tabpanel"
+                        aria-labelledby="survivor-tab-history"
+                        hidden={lobbyTab !== "history"}
+                    >
+                        {lobbyTab === "history" && (
+                            <>
+                                {fetching && !challenges && (
+                                    <SurvivorLoading label="Loading challenges" />
+                                )}
+
+                                {!fetching && !historyHasRows && (
+                                    <SurvivorEmptyState
+                                        title="No challenge history yet."
+                                        subtitle="Challenges you join will appear here once they finish."
+                                    />
+                                )}
+
+                                {historyHasRows &&
+                                    renderAccordion(historyChallenges, { showWonBadge: true })}
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

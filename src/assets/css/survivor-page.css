@@ -100,6 +100,115 @@
   max-width: 560px;
 }
 
+/* Lobby sheet tabs — same folder/tab → content blend as deposit page. */
+.survivor-lobby-sheet {
+  margin: 0 0 1rem;
+}
+
+.survivor-lobby-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.survivor-lobby-tab {
+  position: relative;
+  display: inline-flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 3.25rem;
+  margin: 0;
+  padding: 0.75rem 1rem 0.7rem;
+  border: 1px solid transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px 8px 0 0;
+  background: rgba(0, 0, 0, 0.14);
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.survivor-lobby-tab + .survivor-lobby-tab {
+  border-left-color: rgba(255, 255, 255, 0.08);
+}
+
+.survivor-lobby-tab.is-active {
+  z-index: 1;
+  background: rgb(38, 48, 69);
+  border-color: rgba(255, 255, 255, 0.14);
+  border-bottom-color: transparent;
+  color: #fff;
+  font-weight: 800;
+}
+
+.survivor-lobby-panels {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 0.85rem 0.65rem 0.75rem;
+}
+
+.survivor-lobby-section {
+  margin-top: 1.35rem;
+}
+
+.survivor-lobby-section-title {
+  margin: 0 0 0.75rem;
+  padding: 0 0.15rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.survivor-won-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 3px;
+  background: rgba(255, 196, 40, 0.18);
+  border: 1px solid rgba(255, 196, 40, 0.45);
+  color: #ffc428;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.survivor-won-badge svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+@media screen and (min-width: 768px) {
+  .survivor-lobby-tab {
+    flex: 0 0 auto;
+    min-width: 11rem;
+    font-size: 1.25rem;
+    padding: 0.85rem 1.25rem 0.8rem;
+  }
+
+  .survivor-lobby-panels {
+    padding: 1rem 0.85rem 0.9rem;
+  }
+
+  .survivor-lobby-section-title {
+    font-size: 1.3rem;
+  }
+}
+
 .survivor-lobby-filter-bar {
   display: flex;
   align-items: center;
