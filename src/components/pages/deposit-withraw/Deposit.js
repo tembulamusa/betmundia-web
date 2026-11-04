@@ -599,63 +599,65 @@ const Deposit = (props) => {
             </header>
 
             <div className="deposit-page-inner">
-                <div className="deposit-method-sheet">
-                    <div className="deposit-tabs" role="tablist" aria-label="Deposit method">
-                        <button
-                            type="button"
-                            role="tab"
-                            id="deposit-tab-mpesa"
-                            aria-selected={activeTab === 'mpesa'}
-                            aria-controls="deposit-panel-mpesa"
-                            className={`deposit-tab${activeTab === 'mpesa' ? ' is-active' : ''}`}
-                            onClick={() => setActiveTab('mpesa')}
-                        >
-                            <img src={mpesaLogo} alt="" className="deposit-tab-logo" />
-                            <span>M-Pesa</span>
-                        </button>
-                        <button
-                            type="button"
-                            role="tab"
-                            id="deposit-tab-card"
-                            aria-selected={activeTab === 'card'}
-                            aria-controls="deposit-panel-card"
-                            className={`deposit-tab${activeTab === 'card' ? ' is-active' : ''}`}
-                            onClick={() => setActiveTab('card')}
-                        >
-                            <span className="deposit-tab-card-icons" aria-hidden="true">
-                                <FaCcVisa />
-                                <FaCcMastercard />
-                            </span>
-                            <span>Card</span>
-                        </button>
-                    </div>
-
-                    <div className="deposit-method-panels">
-                        <div
-                            id="deposit-panel-mpesa"
-                            role="tabpanel"
-                            aria-labelledby="deposit-tab-mpesa"
-                            hidden={activeTab !== 'mpesa'}
-                        >
-                            {activeTab === 'mpesa' && <DepositForm />}
+                <div className="deposit-page-panel">
+                    <div className="deposit-method-sheet">
+                        <div className="deposit-tabs" role="tablist" aria-label="Deposit method">
+                            <button
+                                type="button"
+                                role="tab"
+                                id="deposit-tab-mpesa"
+                                aria-selected={activeTab === 'mpesa'}
+                                aria-controls="deposit-panel-mpesa"
+                                className={`deposit-tab${activeTab === 'mpesa' ? ' is-active' : ''}`}
+                                onClick={() => setActiveTab('mpesa')}
+                            >
+                                <img src={mpesaLogo} alt="" className="deposit-tab-logo" />
+                                <span>M-Pesa</span>
+                            </button>
+                            <button
+                                type="button"
+                                role="tab"
+                                id="deposit-tab-card"
+                                aria-selected={activeTab === 'card'}
+                                aria-controls="deposit-panel-card"
+                                className={`deposit-tab${activeTab === 'card' ? ' is-active' : ''}`}
+                                onClick={() => setActiveTab('card')}
+                            >
+                                <span className="deposit-tab-card-icons" aria-hidden="true">
+                                    <FaCcVisa />
+                                    <FaCcMastercard />
+                                </span>
+                                <span>Card</span>
+                            </button>
                         </div>
 
-                        <div
-                            id="deposit-panel-card"
-                            role="tabpanel"
-                            aria-labelledby="deposit-tab-card"
-                            hidden={activeTab !== 'card'}
-                        >
-                            {activeTab === 'card' && <CardDepositForm />}
+                        <div className="deposit-method-panels">
+                            <div
+                                id="deposit-panel-mpesa"
+                                role="tabpanel"
+                                aria-labelledby="deposit-tab-mpesa"
+                                hidden={activeTab !== 'mpesa'}
+                            >
+                                {activeTab === 'mpesa' && <DepositForm />}
+                            </div>
+
+                            <div
+                                id="deposit-panel-card"
+                                role="tabpanel"
+                                aria-labelledby="deposit-tab-card"
+                                hidden={activeTab !== 'card'}
+                            >
+                                {activeTab === 'card' && <CardDepositForm />}
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="deposit-trust">
-                    <FaShieldAlt className="deposit-trust-icon" aria-hidden="true" />
-                    <div>
-                        <p className="deposit-trust-title">Your transactions are secure and encrypted</p>
-                        <p className="deposit-trust-sub">We never share your details with anyone.</p>
+                    <div className="deposit-trust">
+                        <FaShieldAlt className="deposit-trust-icon" aria-hidden="true" />
+                        <div>
+                            <p className="deposit-trust-title">Your transactions are secure and encrypted</p>
+                            <p className="deposit-trust-sub">We never share your details with anyone.</p>
+                        </div>
                     </div>
                 </div>
             </div>
