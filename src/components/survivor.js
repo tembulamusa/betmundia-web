@@ -719,10 +719,12 @@ const SurvivorChallengeGames = ({ id }) => {
                           })
                         : null;
                     // "Pick now" is the SCHEDULED / OPEN_FOR_PICKS status label —
-                    // hide that CTA once the user already has a pick on this game
-                    // (API selection, progress prediction, or just-submitted local).
+                    // only show that CTA when the user can actually pick (same gates
+                    // as the 1X2 controls: pickable current game, challenge open,
+                    // no existing pick, and eligible_to_play when signed in).
                     const statusLabel = caseInsensitiveLabel(GAME_STATUS_LABELS, game.status);
-                    const showStatusPill = !(placedSelection && statusLabel === "Pick now");
+                    const showStatusPill =
+                        statusLabel !== "Pick now" || showPickControls;
                     return (
                         <div
                             key={game.game_number}
