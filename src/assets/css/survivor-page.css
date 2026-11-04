@@ -907,7 +907,7 @@
 
 /* Prematch-style 1X2 pick buttons: joined segment like .c-btn-group
    (1px divider, outer-end radii only). Unselected matches .home-team
-   translucent fill + gold text; only selected/hover get solid yellow.
+   translucent fill + gold text; selected/hover get brand purple.
    Nothing is sent until "Place" / confirm. No per-outcome coloring. */
 .survivor-pick-buttons {
   display: flex;
@@ -963,32 +963,36 @@
 }
 
 .survivor-pick-btn:hover:not(:disabled):not(.selected) {
-  background: #ffc428;
-  border-color: #ffc428;
-  color: #1a1400;
+  background: #a71f66;
+  border-color: #a71f66;
+  color: #ffffff;
 }
 
 .survivor-pick-btn:hover:not(:disabled):not(.selected) .survivor-pick-odd {
-  color: #1a1400;
+  color: #ffc428;
 }
 
-/* Selected / draft pick — solid brand yellow (only this state is yellow). */
+/* Selected / draft pick — brand purple (same as prematch .picked). */
 .survivor-pick-btn.selected {
-  background: #ffc428;
-  border-color: #ffc428;
+  background: #a71f66;
+  border-color: #a71f66;
   box-shadow: none;
-  color: #1a1400;
+  color: #ffffff;
   font-weight: 700;
 }
 
 .survivor-pick-btn.selected .survivor-pick-odd {
-  color: #1a1400;
+  color: #ffffff;
 }
 
 .survivor-pick-btn.selected:hover:not(:disabled) {
-  background: #ffd45c;
-  border-color: #ffd45c;
-  color: #1a1400;
+  background: #a71f66;
+  border-color: #a71f66;
+  color: #ffffff;
+}
+
+.survivor-pick-btn.selected:hover:not(:disabled) .survivor-pick-odd {
+  color: #ffc428;
 }
 
 .survivor-pick-btn:disabled {
