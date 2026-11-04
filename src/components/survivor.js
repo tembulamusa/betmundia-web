@@ -1281,7 +1281,15 @@ const SurvivorChallengesList = () => {
 
                                 {myActiveChallenges.length > 0 && (
                                     <section className="survivor-lobby-section">
-                                        <h2 className="survivor-lobby-section-title">My active challenges</h2>
+                                        <div
+                                            className="live-section-header live-section-header--upcoming d-flex align-items-center survivor-lobby-section-header"
+                                            role="separator"
+                                            aria-label="My active challenges"
+                                        >
+                                            <span className="live-section-header__title">
+                                                My active challenges
+                                            </span>
+                                        </div>
                                         {renderAccordion(myActiveChallenges)}
                                     </section>
                                 )}
