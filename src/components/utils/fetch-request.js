@@ -1,5 +1,7 @@
 import { setLocalStorage, getFromLocalStorage, USER_STORAGE_TTL_MS } from './local-storage';
 import {
+    isDeadSessionFailure,
+    isJwtExpiredBusinessFailure,
     isUnauthorizedStatus,
     logoutDueToUnauthorized,
     shouldSkipUnauthorizedLogout,
@@ -107,8 +109,9 @@ const makeRequest = async (options = {}) => {
         let status = response?.status;
         // Access JWT often lasts ~1h. Keep-alive refreshes on a timer, but background
         // tabs throttle timers — so a 401 must try refresh+retry before opening login.
-        // Only force the login modal when refresh proves the session is dead (401/403),
-        // or there is no refresh_token left — never on network / 5xx refresh failures.
+        // Only force the login modal when refresh proves the session is dead (401/403
+        // or HTTP 200 + E0006 / "JWT token expired"), or there is no refresh_token left
+        // — never on network / 5xx refresh failures.
         if (
             isUnauthorizedStatus(status) &&
             !shouldSkipUnauthorizedLogout(url) &&
@@ -120,7 +123,7 @@ const makeRequest = async (options = {}) => {
                 if (refresh.success) {
                     return makeRequest({ ...options, _authRetried: true });
                 }
-                if (isUnauthorizedStatus(refresh.status)) {
+                if (isDeadSessionFailure(refresh.status, refresh.response)) {
                     logoutDueToUnauthorized();
                 }
             } else if (!stored?.refresh_token || _authRetried) {
@@ -171,6 +174,11 @@ export const refreshUserSession = async ({ force = false } = {}) => {
             setLocalStorage("user", user, USER_STORAGE_TTL_MS);
             tokenRefreshCompletedAt = Date.now();
             return { success: true, user, status, response };
+        }
+        // HTTP 200 with business E0006 / "JWT token expired" is a dead session.
+        // Normalize to 401 so keep-alive / promptLoginModal / callers treat it like HTTP auth failure.
+        if (isJwtExpiredBusinessFailure(response) || isUnauthorizedStatus(status)) {
+            return { success: false, status: 401, response };
         }
         return { success: false, status: response?.status || status, response };
     })();
