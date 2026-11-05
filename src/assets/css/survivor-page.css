@@ -351,13 +351,17 @@
   --bs-accordion-border-width: 0px;
 }
 
-/* One item, not two: the title, the collapse wrapper and the body all
-   share one background with no seam (border / shadow / gap) between. */
-.survivor-challenge-accordion .accordion-collapse,
-.survivor-challenge-accordion .accordion-button:not(.collapsed) {
+/* Collapse/body keep the item tint; open header matches .survivor-page-header. */
+.survivor-challenge-accordion .accordion-collapse {
   background: rgb(54, 66, 94) !important;
   border: none !important;
   box-shadow: none !important;
+}
+
+.survivor-challenge-accordion .accordion-button:not(.collapsed) {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: none !important;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.12) !important;
 }
 
 .survivor-challenge-accordion .accordion-item {
@@ -376,7 +380,7 @@
   align-items: center;
   gap: 1rem;
   width: 100%;
-  background: rgb(54, 66, 94) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
   border: none;
   padding: 1rem 1.1rem;
   color: #ffffff;
@@ -422,7 +426,7 @@
 }
 
 .survivor-challenge-accordion .accordion-button.collapsed:hover {
-  background: rgb(60, 73, 104) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
 }
 
 .survivor-challenge-accordion .accordion-body {
@@ -1564,6 +1568,10 @@
   --survivor-acc-border: rgba(255, 255, 255, 0.14);
   --survivor-acc-body-bg: rgb(23, 34, 56);
   --survivor-acc-frame-border: rgba(255, 255, 255, 0.06);
+  /* Same surface as .survivor-page-header (page title bar). */
+  --survivor-acc-header-bg: rgba(255, 255, 255, 0.1);
+  --survivor-acc-header-hover-bg: rgba(255, 255, 255, 0.14);
+  --survivor-acc-header-border: rgba(255, 255, 255, 0.12);
   gap: 0.6rem;
   padding: 0.6rem;
   border: 1px solid var(--survivor-acc-frame-border);
@@ -1583,20 +1591,20 @@
 }
 
 .survivor-challenge-accordion .accordion-button {
-  background: var(--survivor-acc-bg) !important;
+  background: var(--survivor-acc-header-bg) !important;
   padding: 1.2rem 1.4rem;
   border-radius: 0;
   transition: background-color 0.15s ease-in-out;
 }
 
 .survivor-challenge-accordion .accordion-button.collapsed:hover {
-  background: rgb(43, 54, 78) !important;
+  background: var(--survivor-acc-header-hover-bg) !important;
 }
 
-/* Open header: Bootstrap's active tint + the hairline under the header. */
+/* Open header: page-title surface + hairline under the header. */
 .survivor-challenge-accordion .accordion-button:not(.collapsed) {
-  background: var(--survivor-acc-active-bg) !important;
-  box-shadow: inset 0 -1px 0 var(--survivor-acc-border) !important;
+  background: var(--survivor-acc-header-bg) !important;
+  box-shadow: inset 0 -1px 0 var(--survivor-acc-header-border) !important;
 }
 
 .survivor-challenge-accordion .accordion-collapse {
