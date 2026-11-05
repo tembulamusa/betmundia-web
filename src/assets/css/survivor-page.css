@@ -162,11 +162,22 @@
   margin-top: 1.35rem;
 }
 
-/* Match live Upcoming Live bar (tolkits .live-section-header); align with accordion listing width */
-.survivor-lobby-section-header {
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 0;
+/*
+ * "My active challenges" separator + accordion must share one outer edge and
+ * sit flush. Remaining mismatch after fb5fb812: .survivor-challenge-accordion
+ * frame padding (0.6rem / 0.4rem) + frame border inset the listing under a
+ * full-width header, so edges didn't match and padding-top read as a gap.
+ * Drop that frame when the accordion follows the separator; match item border
+ * on the header; square the join (header bottom radius 0, first item top 0).
+ */
+.survivor-lobby-section-header.live-section-header {
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  /* Same border token as .survivor-challenge-accordion .accordion-item */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
 }
 
 .survivor-lobby-section-header.live-section-header--upcoming {
@@ -175,6 +186,23 @@
 
 .survivor-lobby-section-header + .survivor-challenge-accordion {
   margin-top: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  gap: 0.6rem;
+}
+
+.survivor-lobby-section-header + .survivor-challenge-accordion > .accordion-item:first-of-type {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+@media screen and (max-width: 575px) {
+  .survivor-lobby-section-header + .survivor-challenge-accordion {
+    padding: 0;
+    gap: 0.5rem;
+  }
 }
 
 .survivor-won-badge {
