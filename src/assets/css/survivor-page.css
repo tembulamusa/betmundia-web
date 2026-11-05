@@ -387,7 +387,7 @@
 }
 
 .survivor-challenge-accordion .accordion-button:not(.collapsed) {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
   border: none !important;
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.12) !important;
 }
@@ -1598,6 +1598,7 @@
   --survivor-acc-frame-border: rgba(255, 255, 255, 0.06);
   /* Same surface as .survivor-page-header (page title bar). */
   --survivor-acc-header-bg: rgba(255, 255, 255, 0.1);
+  --survivor-acc-header-open-bg: rgba(255, 255, 255, 0.03);
   --survivor-acc-header-hover-bg: rgba(255, 255, 255, 0.14);
   --survivor-acc-header-border: rgba(255, 255, 255, 0.12);
   gap: 0.6rem;
@@ -1629,9 +1630,9 @@
   background: var(--survivor-acc-header-hover-bg) !important;
 }
 
-/* Open header: page-title surface + hairline under the header. */
+/* Open header: subtle tint + hairline under the header. */
 .survivor-challenge-accordion .accordion-button:not(.collapsed) {
-  background: var(--survivor-acc-header-bg) !important;
+  background: var(--survivor-acc-header-open-bg) !important;
   box-shadow: inset 0 -1px 0 var(--survivor-acc-header-border) !important;
 }
 
