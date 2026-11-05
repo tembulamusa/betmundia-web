@@ -162,11 +162,19 @@
   margin-top: 1.35rem;
 }
 
-/* Match live Upcoming Live bar (tolkits .live-section-header); bleed to panel edges */
+/* Match live Upcoming Live bar (tolkits .live-section-header); align with accordion listing width */
 .survivor-lobby-section-header {
-  margin-left: -0.65rem;
-  margin-right: -0.65rem;
-  margin-bottom: 0.65rem;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+.survivor-lobby-section-header.live-section-header--upcoming {
+  margin-top: 0;
+}
+
+.survivor-lobby-section-header + .survivor-challenge-accordion {
+  margin-top: 0;
 }
 
 .survivor-won-badge {
@@ -202,10 +210,6 @@
     padding: 1rem 0.85rem 0.9rem;
   }
 
-  .survivor-lobby-section-header {
-    margin-left: -0.85rem;
-    margin-right: -0.85rem;
-  }
 }
 
 .survivor-lobby-filter-bar {
