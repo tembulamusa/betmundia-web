@@ -1576,6 +1576,33 @@
   color: rgba(255, 255, 255, 0.75);
 }
 
+.survivor-guest-login-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.survivor-guest-login-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 196, 40, 0.55);
+  background: rgba(255, 196, 40, 0.14);
+  color: #ffc428;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 0.45rem 0.9rem;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.survivor-guest-login-btn:hover,
+.survivor-guest-login-btn:focus-visible {
+  background: rgba(255, 196, 40, 0.22);
+  outline: none;
+}
+
 @media screen and (max-width: 575px) {
   .survivor-ineligible-notice {
     padding: 0.8rem 0.9rem;
