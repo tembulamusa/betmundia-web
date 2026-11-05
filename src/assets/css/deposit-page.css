@@ -7,12 +7,13 @@
   --dep-magenta: #a71f66;
   --dep-green: #00c853;
   --dep-mpesa: #4caf50;
-  /* Inner surfaces — aligned with Survivor accordion / lobby panels */
+  /* Surfaces — Survivor accordion: shell rgb(38,48,69), body rgb(23,34,56) */
   --dep-surface: rgb(38, 48, 69);
   --dep-surface-inner: rgb(23, 34, 56);
-  --dep-card: var(--dep-surface);
-  --dep-card-alt: var(--dep-surface-inner);
-  --dep-input: rgba(0, 0, 0, 0.22);
+  --dep-surface-deep: rgb(14, 22, 38);
+  --dep-card: var(--dep-surface-inner);
+  --dep-card-alt: var(--dep-surface-deep);
+  --dep-input: rgba(0, 0, 0, 0.32);
   --dep-border: rgba(255, 255, 255, 0.1);
   --dep-text: #ffffff;
   --dep-muted: rgba(255, 255, 255, 0.55);
@@ -105,7 +106,7 @@
 
 .deposit-tab.is-active {
   z-index: 1;
-  background: rgb(38, 48, 69);
+  background: var(--dep-surface);
   border-color: rgba(255, 255, 255, 0.14);
   border-bottom-color: transparent;
   color: #fff;
@@ -118,6 +119,12 @@
   border-top: none;
   border-radius: 0 0 8px 8px;
   padding: 0.85rem 0.65rem 0.75rem;
+}
+
+/* Nested method content — Survivor accordion-body navy */
+.deposit-method-panels .deposit-card {
+  background: var(--dep-surface-inner);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .deposit-method-panels .deposit-form > .deposit-card:last-child {
@@ -585,7 +592,7 @@
 .deposit-page .deposit-paybill-card .accordion-body {
   padding: 0 1rem 1rem;
   color: var(--dep-text);
-  background: var(--dep-surface-inner);
+  background: var(--dep-surface-deep);
 }
 
 .deposit-paybill-body {
