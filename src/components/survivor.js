@@ -1311,8 +1311,8 @@ const SurvivorChallengesList = () => {
 
                                 {!fetching && !historyHasRows && (
                                     <SurvivorEmptyState
-                                        title="No challenge history yet."
-                                        subtitle="Challenges you join will appear here once they finish."
+                                        title="Your challenge history will come here"
+                                        subtitle="When you finish a challenge you've joined, it'll show up in this list."
                                     />
                                 )}
 
