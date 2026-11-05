@@ -6,7 +6,7 @@ import { FaCheckCircle, FaCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { TbForbid2Filled } from "react-icons/tb";
 import { Tooltip } from "@mui/material";
-import { isUnauthorizedStatus, logoutDueToUnauthorized } from "./utils/session-auth";
+import { isDeadSessionFailure, isUnauthorizedStatus, logoutDueToUnauthorized } from "./utils/session-auth";
 import NoEvents from "./utils/no-events";
 import ShareExistingbet from "./utils/shareexisting-bet";
 import getSportImageIcon from "./utils/get-sport-image-icon";
@@ -209,7 +209,7 @@ const MyBets = () => {
             // Share the header's startup refresh so a reload cannot race the
             // old access token still in localStorage.
             const refresh = await refreshUserSession();
-            if (!refresh.success && isUnauthorizedStatus(refresh.status)) {
+            if (!refresh.success && isDeadSessionFailure(refresh.status, refresh.response)) {
                 logoutDueToUnauthorized();
                 setMessage({ status: 400, message: "Unauthorized. Please login again." });
                 return;

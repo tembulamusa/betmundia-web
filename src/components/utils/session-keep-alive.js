@@ -1,6 +1,6 @@
 import { getFromLocalStorage } from "./local-storage";
 import { refreshUserSession } from "./fetch-request";
-import { isUnauthorizedStatus, logoutDueToUnauthorized } from "./session-auth";
+import { isDeadSessionFailure, logoutDueToUnauthorized } from "./session-auth";
 
 /**
  * Re-refresh from the last successful refresh (or login).
@@ -65,10 +65,10 @@ export const runScheduledRefresh = () => {
                 scheduleNext();
                 return refresh;
             }
-            const status = Number(refresh.status);
-            // Refresh already ran; 401/403 means the session is dead — open login once.
-            // Network / 5xx retry below and must never pop the modal from the timer alone.
-            if (isUnauthorizedStatus(status)) {
+            // Refresh already ran; 401/403 or E0006 / "JWT token expired" means the
+            // session is dead — open login once. Network / 5xx retry below and must
+            // never pop the modal from the timer alone.
+            if (isDeadSessionFailure(refresh.status, refresh.response)) {
                 logoutDueToUnauthorized();
                 clearSchedule();
                 return refresh;
