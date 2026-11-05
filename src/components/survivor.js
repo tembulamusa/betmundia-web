@@ -7,7 +7,7 @@ import { getFromLocalStorage, setLocalStorage } from "./utils/local-storage";
 import { openLoginWithRedirect } from "./utils/login-redirect";
 import NoEvents from "./utils/no-events";
 import jackpotEmptyBall from "../assets/img/backgrounds/jackpot-empty-ball.png";
-import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus, FaBan } from "react-icons/fa";
+import { FaArrowLeft, FaSkullCrossbones, FaTrophy, FaUsers, FaCheck, FaTimes, FaMinus, FaBan, FaSignInAlt } from "react-icons/fa";
 import {
     fetchSurvivorChallenges,
     fetchSurvivorChallenge,
@@ -233,8 +233,9 @@ const resolveDroppedAtGame = (challenge, progress) => {
 };
 
 /**
- * Ineligible / missed-games copy. Enrolled vs not enrolled must not share
- * the same "you missed matches" implication — guests/non-enrolled players
+ * Ineligible / missed-games copy for signed-in users only. Guests never see
+ * this — they get a please-log-in CTA instead. Enrolled vs not enrolled must
+ * not share the same "you missed matches" implication: non-enrolled players
  * never started, so they get join-oriented wording. Eliminated / dropped
  * players also get the first drop-out game when we can resolve it.
  */
@@ -645,9 +646,17 @@ const SurvivorChallengeGames = ({ id }) => {
 
     const requestPick = (gameNumber, selection) => {
         if (!selection) return;
+        if (!user) {
+            openLoginWithRedirect(dispatch, `/survivor/${id}`);
+            return;
+        }
         const game = survivorGameList(challenge).find((g) => g.game_number === gameNumber);
-        if (isSignedIn && !isSurvivorGameEligible(game)) return;
+        if (!isSurvivorGameEligible(game)) return;
         setPendingPick({ gameNumber, selection, existing: predictionFor(game) });
+    };
+
+    const promptGuestLogin = () => {
+        openLoginWithRedirect(dispatch, `/survivor/${id}`);
     };
 
     const cancelPendingPick = () => {
@@ -710,12 +719,16 @@ const SurvivorChallengeGames = ({ id }) => {
                     const placedSelection = hasSubmittedPick
                         ? mine.selection
                         : placedPicks[game.game_number];
-                    // Eligibility only gates placing a new pick for a signed-in
-                    // user; an existing pick still shows below as usual. Guests
-                    // keep the pick buttons, which lead to the login prompt.
-                    const isEligibleToPlay = !isSignedIn || isSurvivorGameEligible(game);
-                    const showPickControls = canBetOnThisGame && !placedSelection && isEligibleToPlay;
-                    const showIneligibleNotice = canBetOnThisGame && !placedSelection && !isEligibleToPlay;
+                    // Game-state gates for a new pick UI (pickable current game,
+                    // challenge open, no existing pick). Personal eligible_to_play
+                    // only applies once signed in — guests still see pick controls
+                    // (submit prompts login) and a please-log-in notice instead of
+                    // "Not eligible to join/play".
+                    const gameAllowsNewPickUi = canBetOnThisGame && !placedSelection;
+                    const apiEligible = isSurvivorGameEligible(game);
+                    const showPickControls = gameAllowsNewPickUi && (!isSignedIn || apiEligible);
+                    const showIneligibleNotice = isSignedIn && gameAllowsNewPickUi && !apiEligible;
+                    const showGuestLoginNotice = !isSignedIn && gameAllowsNewPickUi;
                     const ineligibleCopy = showIneligibleNotice
                         ? resolveIneligibleCopy({
                               enrolled: isEnrolled,
@@ -730,7 +743,7 @@ const SurvivorChallengeGames = ({ id }) => {
                     // no existing pick, and eligible_to_play when signed in).
                     const statusLabel = caseInsensitiveLabel(GAME_STATUS_LABELS, game.status);
                     const showStatusPill =
-                        statusLabel !== "Pick now" || showPickControls;
+                        statusLabel !== "Pick now" || showPickControls || showGuestLoginNotice;
                     return (
                         <div
                             key={game.game_number}
@@ -771,6 +784,25 @@ const SurvivorChallengeGames = ({ id }) => {
                                 Active until {formatDateTime(game.lock_at)}
                             </div>
                             <GameCounts game={game} />
+
+                            {showGuestLoginNotice && (
+                                <div className="survivor-ineligible-notice survivor-guest-login-notice" role="status">
+                                    <FaSignInAlt className="survivor-ineligible-icon" aria-hidden="true" />
+                                    <div className="survivor-guest-login-copy">
+                                        <div className="survivor-ineligible-title">Please log in</div>
+                                        <div className="survivor-ineligible-text">
+                                            Log in to join this challenge and submit your pick.
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className="survivor-guest-login-btn"
+                                            onClick={promptGuestLogin}
+                                        >
+                                            Log in
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
 
                             {showPickControls && (
                                 <>
