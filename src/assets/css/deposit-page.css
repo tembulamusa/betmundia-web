@@ -585,7 +585,7 @@
 .deposit-page .deposit-paybill-card .accordion-body {
   padding: 0 1rem 1rem;
   color: var(--dep-text);
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--dep-surface-inner);
 }
 
 .deposit-paybill-body {
