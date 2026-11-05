@@ -7,9 +7,12 @@
   --dep-magenta: #a71f66;
   --dep-green: #00c853;
   --dep-mpesa: #4caf50;
-  --dep-card: rgba(255, 255, 255, 0.15);
-  --dep-card-alt: rgba(0, 0, 0, 0.1);
-  --dep-input: rgba(0, 0, 0, 0.1);
+  /* Inner surfaces — aligned with Survivor accordion / lobby panels */
+  --dep-surface: rgb(38, 48, 69);
+  --dep-surface-inner: rgb(23, 34, 56);
+  --dep-card: var(--dep-surface);
+  --dep-card-alt: var(--dep-surface-inner);
+  --dep-input: rgba(0, 0, 0, 0.22);
   --dep-border: rgba(255, 255, 255, 0.1);
   --dep-text: #ffffff;
   --dep-muted: rgba(255, 255, 255, 0.55);
@@ -51,9 +54,10 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* Content panel — soft nest around method sheet + trust */
+/* Content panel — faint frame (Survivor accordion shell) around method sheet + trust */
 .deposit-page-panel {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   padding: 1rem;
   border-radius: var(--dep-radius);
 }
@@ -109,7 +113,7 @@
 }
 
 .deposit-method-panels {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--dep-surface);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-top: none;
   border-radius: 0 0 8px 8px;
